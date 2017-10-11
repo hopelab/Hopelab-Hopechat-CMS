@@ -1,0 +1,20 @@
+{
+    "_sources": {
+        "image": "http://publicdomainarchive.com/",
+        "video": "https://www.videezy.com"
+    },
+    "image": [
+        { "id": 1, "url": "http://publicdomainarchive.com/wp-content/uploads/2014/02/public-domain-images-free-high-resolution-quality-photos-unsplash-0002-1024x612.jpg" },
+        { "id": 2, "url": "http://publicdomainarchive.com/wp-content/uploads/2014/02/public-domain-images-free-high-resolution-quality-photos-unsplash-0001-1024x819-172373_1024x675.jpg" },
+        { "id": 3, "url": "http://publicdomainarchive.com/wp-content/uploads/2014/03/public-domain-images-archive-high-quality-resolution-free-download-0036-1080x675.jpg" },
+        { "id": 4, "url": "http://publicdomainarchive.com/wp-content/uploads/2014/02/public-domain-images-archive-free-download-24-1080x675.jpg" },
+        { "id": 5, "url": "http://publicdomainarchive.com/wp-content/uploads/2014/10/public-domain-images-free-stock-photos-high-quality-resolution-downloads-nashville-tennessee-32-1000x666.jpg" }
+    ],
+    "video": [
+        { "id": 1, "url": "https://static.videezy.com/system/resources/previews/000/007/293/original/StarContainerTunnel.mp4" },
+        { "id": 2, "url": "https://static.videezy.com/system/resources/previews/000/004/950/original/Snow_Day_4K_Living_Background.mp4" },
+        { "id": 3, "url": "https://static.videezy.com/system/resources/previews/000/000/731/original/MVI_1268.mp4" },
+        { "id": 4, "url": "https://static.videezy.com/system/resources/previews/000/002/669/original/star-trails.mp4" },
+        { "id": 5, "url": "https://static.videezy.com/system/resources/previews/000/000/168/original/Record.mp4" }
+    ]
+}

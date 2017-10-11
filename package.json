@@ -5,6 +5,7 @@
   "main": "cms.js",
   "scripts": {
     "lint": "eslint **/*.js",
+    "mock-db": "node ./server/helpers/mockDatabaseSetup.js",
     "start": "node cms.js",
     "prettify": "prettier --write './**/*.js'",
     "test": "node_modules/.bin/mocha tests/**"
