@@ -4,7 +4,7 @@ const {
     setSeries,
     updateSeries,
     deleteSeries
-} = require('../db');
+} = require('../db')(require('../utils/store'));
 
 /**
  * Create Series

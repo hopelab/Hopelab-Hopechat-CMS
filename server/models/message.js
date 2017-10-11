@@ -4,7 +4,7 @@ const {
     setMessage,
     updateMessage,
     deleteMessage
-} = require('../db');
+} = require('../db')(require('../utils/store'));
 
 /**
  * Create Message

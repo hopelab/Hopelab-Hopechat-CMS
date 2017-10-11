@@ -4,7 +4,7 @@ const {
     setCollection,
     updateCollection,
     deleteCollection
-} = require('../db');
+} = require('../db')(require('../utils/store'));
 
 /**
  * Create Collection

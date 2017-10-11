@@ -4,7 +4,7 @@ const {
     setBlock,
     updateBlock,
     deleteBlock
-} = require('../db');
+} = require('../db')(require('../utils/store'));
 
 /**
  * Create Block

@@ -4,7 +4,7 @@ const {
     setConversation,
     updateConversation,
     deleteConversation
-} = require('../db');
+} = require('../db')(require('../utils/store'));
 
 /**
  * Create Conversation
