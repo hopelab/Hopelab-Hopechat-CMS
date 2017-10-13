@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset='utf-8'>
+    <title>Hopelab AYA Chatbot CMS</title>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='description' content='Hopelab AYA Chatbot CMS'>
+    <link rel='stylesheet' href='css/style.css'>
+</head>
+<body>
+    <section class="head">
+        <p class="title">Hello!</p>
+    </section>
+
+    <script>
+        const postHeaders = {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        };
+
+        fetch('/conversations/all')
+            .then(res => res.json())
+            .then(res => {
+                console.log('Conversations:', res);
+            })
+            .catch(console.error);
+
+        fetch('/collections/all')
+            .then(res => res.json())
+            .then(res => {
+                console.log('Collections:', res);
+            })
+            .catch(console.error);
+
+        fetch('/series/all')
+            .then(res => res.json())
+            .then(res => {
+                console.log('Series:', res);
+            })
+            .catch(console.error);
+
+        fetch('/blocks/all')
+            .then(res => res.json())
+            .then(res => {
+                console.log('Blocks:', res);
+            })
+            .catch(console.error);
+
+        fetch('/messages/all')
+            .then(res => res.json())
+            .then(res => {
+                console.log('Messages:', res);
+            })
+            .catch(console.error);
+
+        fetch('/blocks/create', {
+            method: 'POST',
+            headers: postHeaders,
+            body: JSON.stringify({ type: 'block' })
+        });
+    </script>
+</body>
+</html>
