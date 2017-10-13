@@ -1,5 +1,6 @@
 [
     {
+        "type": "conversation",
         "id": "intro",
         "collection": [
             "intro"

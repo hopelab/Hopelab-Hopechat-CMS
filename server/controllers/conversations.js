@@ -3,7 +3,9 @@ const router = express.Router();
 const Conversation = require('../models/conversation');
 
 router.post('/create', (req, res) => {
-    Conversation.create(req.body).then(r => res.send(r));
+    Conversation.create(req.body).then(r => {
+        res.send(r)
+    });
 });
 
 router.post('/update', (req, res) => {

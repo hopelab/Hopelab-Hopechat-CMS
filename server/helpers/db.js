@@ -5,7 +5,7 @@ const shortid = require('shortid');
 // ADD
 const addNewConversationToList = conversation => conversations =>
     conversations.concat(
-        Object.assign({}, conversation, { id: shortid.generate() })
+        Object.assign({}, conversation, { id: shortid.generate(), created: Date.now() })
     );
 const addNewCollectionToList = collection => collections =>
     collections.concat(

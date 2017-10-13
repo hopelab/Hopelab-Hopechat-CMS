@@ -11,7 +11,32 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prettify": "prettier --write './src/**/*.js'",
+    "lint": "eslint ./src/**/*.js"
   },
-  "proxy": "http://localhost:5000"
+  "proxy": "http://localhost:4000",
+  "devDependencies": {
+    "babel-eslint": "^8.0.1",
+    "lint": "^1.1.2",
+    "prettier": "^1.7.4"
+  },
+  "prettier": {
+    "single-quote": true,
+    "tab-width": 2
+  },
+  "eslintConfig": {
+    "env": {
+      "node": false,
+      "es6": true
+    },
+    "parser": "babel-eslint",
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module"
+    },
+    "rules": {
+      "no-unused-vars": 1
+    }
+  }
 }

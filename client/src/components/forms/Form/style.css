@@ -1,0 +1,100 @@
+.Form {
+    display: flex;
+    flex-direction: column;
+}
+
+.Form .EntityName {
+    height: 50px;
+    border-bottom: 1px solid black;
+}
+
+.Form .EntityName input {
+    border: 1px solid black;
+}
+
+.TagsContainer {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid black;
+}
+
+.Tags {
+    display: flex;
+}
+
+.Tags textarea {
+    height: 100px;
+    width: 300px;
+
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.AddContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+}
+
+.AddButtonWrapper {
+    width: 25%;
+    height: 50px;
+    border: 1px solid black;
+    border-radius: 5px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+
+    font-size: 15px;
+}
+
+.AddButtonWrapper .Add {
+    flex-basis: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.AddButtonWrapper .Add:hover {
+    cursor: pointer;
+}
+
+.AddButtonWrapper select {
+    border: 0;
+    height: inherit;
+    float: right;
+    width: 75%;
+    flex-basis: 75%;
+
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -webkit-padding-end: 20px;
+    -moz-padding-end: 20px;
+    -webkit-padding-start: 2px;
+    -moz-padding-start: 2px;
+    background-position: right right;
+    background-repeat: no-repeat;
+    background: transparent;
+    border: 0;
+    border-radius: 2px;
+    font-size: inherit;
+    margin: 0;
+    overflow: hidden;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.AddButtonWrapper select:hover {
+    cursor: pointer;
+}
+
+label {
+    margin-right: 15px;
+}

@@ -55,6 +55,7 @@ module.exports = store => {
                 .then(JSON.parse)
                 .then(helpers.addNewConversationToList(conversation))
                 .then(store.setItem(DB_CONVERSATIONS, ONE_DAY_IN_MILLISECONDS))
+                .then(resolve)
                 .catch(console.error);
         });
 
@@ -71,6 +72,7 @@ module.exports = store => {
                 .then(JSON.parse)
                 .then(helpers.updateConversationInList(conversation))
                 .then(store.setItem(DB_CONVERSATIONS, ONE_DAY_IN_MILLISECONDS))
+                .then(resolve)
                 .catch(console.error);
         });
 
@@ -87,6 +89,7 @@ module.exports = store => {
                 .then(JSON.parse)
                 .then(helpers.deleteConversationFromList(id))
                 .then(store.setItem(DB_CONVERSATIONS, ONE_DAY_IN_MILLISECONDS))
+                .then(resolve)
                 .catch(console.error);
         });
 
@@ -133,6 +136,7 @@ module.exports = store => {
                 .then(JSON.parse)
                 .then(helpers.addNewCollectionToList(collection))
                 .then(store.setItem(DB_COLLECTIONS, ONE_DAY_IN_MILLISECONDS))
+                .then(resolve)
                 .catch(console.error);
         });
 
@@ -149,6 +153,7 @@ module.exports = store => {
                 .then(JSON.parse)
                 .then(helpers.updateCollectionInList(collection))
                 .then(store.setItem(DB_COLLECTIONS, ONE_DAY_IN_MILLISECONDS))
+                .then(resolve)
                 .catch(console.error);
         });
 
@@ -165,6 +170,7 @@ module.exports = store => {
                 .then(JSON.parse)
                 .then(helpers.deleteCollectionFromList(id))
                 .then(store.setItem(DB_COLLECTIONS, ONE_DAY_IN_MILLISECONDS))
+                .then(resolve)
                 .catch(console.error);
         });
 
@@ -211,6 +217,7 @@ module.exports = store => {
                 .then(JSON.parse)
                 .then(helpers.addNewSeriesToList(series))
                 .then(store.setItem(DB_SERIES, ONE_DAY_IN_MILLISECONDS))
+                .then(resolve)
                 .catch(console.error);
         });
 
@@ -227,6 +234,7 @@ module.exports = store => {
                 .then(JSON.parse)
                 .then(helpers.updateSeriesInList(series))
                 .then(store.setItem(DB_SERIES, ONE_DAY_IN_MILLISECONDS))
+                .then(resolve)
                 .catch(console.error);
         });
 
@@ -243,6 +251,7 @@ module.exports = store => {
                 .then(JSON.parse)
                 .then(helpers.deleteSeriesFromList(id))
                 .then(store.setItem(DB_SERIES, ONE_DAY_IN_MILLISECONDS))
+                .then(resolve)
                 .catch(console.error);
         });
 
@@ -289,6 +298,7 @@ module.exports = store => {
                 .then(JSON.parse)
                 .then(helpers.addNewMessageToList(message))
                 .then(store.setItem(DB_MESSAGES, ONE_DAY_IN_MILLISECONDS))
+                .then(resolve)
                 .catch(console.error);
         });
 
@@ -305,6 +315,7 @@ module.exports = store => {
                 .then(JSON.parse)
                 .then(helpers.updateMessageInList(message))
                 .then(store.setItem(DB_MESSAGES, ONE_DAY_IN_MILLISECONDS))
+                .then(resolve)
                 .catch(console.error);
         });
 
@@ -321,6 +332,7 @@ module.exports = store => {
                 .then(JSON.parse)
                 .then(helpers.deleteMessageFromList(id))
                 .then(store.setItem(DB_MESSAGES, ONE_DAY_IN_MILLISECONDS))
+                .then(resolve)
                 .catch(console.error);
         });
 
@@ -367,6 +379,7 @@ module.exports = store => {
                 .then(JSON.parse)
                 .then(helpers.addNewBlockToList(block))
                 .then(store.setItem(DB_BLOCKS, ONE_DAY_IN_MILLISECONDS))
+                .then(resolve)
                 .catch(console.error);
         });
 
@@ -383,6 +396,7 @@ module.exports = store => {
                 .then(JSON.parse)
                 .then(helpers.updateBlockInList(block))
                 .then(store.setItem(DB_BLOCKS, ONE_DAY_IN_MILLISECONDS))
+                .then(resolve)
                 .catch(console.error);
         });
 
@@ -399,6 +413,7 @@ module.exports = store => {
                 .then(JSON.parse)
                 .then(helpers.deleteBlockFromList(id))
                 .then(store.setItem(DB_BLOCKS, ONE_DAY_IN_MILLISECONDS))
+                .then(resolve)
                 .catch(console.error);
         });
 
