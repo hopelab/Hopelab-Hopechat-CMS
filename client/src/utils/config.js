@@ -38,7 +38,10 @@ const forms = {
     fields: ['name', 'tags', 'children'],
     children: ['message', 'question', 'quick_reply', 'video', 'image']
   },
-  message: {}
+  message: {
+    fields: [],
+    children: []
+  }
 };
 
 /**
@@ -64,21 +67,81 @@ function getRoutes(route) {
  * All Server Route Listings
 */
 const routes = {
-  conversations: {
+  conversation: {
     ...getRoutes('conversations')
   },
-  collections: {
+  collection: {
     ...getRoutes('collections')
   },
   series: {
     ...getRoutes('series')
   },
-  blocks: {
+  block: {
     ...getRoutes('blocks')
   },
-  messages: {
+  message: {
     ...getRoutes('messages')
   }
 };
 
-export { entities, forms, routes };
+/**
+ * Initial State for pieces of UI state
+*/
+const initialState = {
+  App: {
+    conversation: [],
+    collection: [],
+    series: [],
+    block: [],
+    message: [],
+    itemEditing: null,
+    entitiesToAdd: [],
+    treeData: {},
+    cursor: {}
+  },
+
+  conversation: {
+    type: entities.conversation,
+    name: '',
+    userId: '',
+    tags: []
+  },
+
+  collection: {
+    type: entities.collection,
+    name: '',
+    conversationId: '',
+    tags: []
+  },
+
+  series: {
+    type: entities.series,
+    name: '',
+    collectionId: '',
+    tags: []
+  },
+
+  block: {
+    type: entities.block,
+    name: '',
+    seriesId: '',
+    tags: []
+  },
+
+  message: {
+    type: entities.message,
+    name: '',
+    blockId: '',
+    tags: []
+  }
+};
+
+const http = {
+  getPostHeaders: () => ({
+    Accept: 'application/json, text/plain, */*',
+    'Content-Type': 'application/json'
+  }),
+  post: 'POST'
+};
+
+export { entities, forms, initialState, routes, http };

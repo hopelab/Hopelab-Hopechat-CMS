@@ -5,7 +5,8 @@
   "dependencies": {
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "react-scripts": "1.0.14"
+    "react-scripts": "1.0.14",
+    "react-treebeard": "^2.0.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -18,7 +19,7 @@
   "proxy": "http://localhost:4000",
   "devDependencies": {
     "babel-eslint": "^8.0.1",
-    "lint": "^1.1.2",
+    "eslint": "^4.8.0",
     "prettier": "^1.7.4"
   },
   "prettier": {

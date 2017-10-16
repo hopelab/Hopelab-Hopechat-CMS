@@ -1,9 +1,9 @@
 const {
-    getSeries,
-    getSeriesById,
-    setSeries,
-    updateSeries,
-    deleteSeries
+  getSeries,
+  getSeriesById,
+  setSeries,
+  updateSeries,
+  deleteSeries
 } = require('../db')(require('../utils/store'));
 
 /**
@@ -12,9 +12,7 @@ const {
  * @param {Object} series
  * @return {Promise}
 */
-exports.create = series => {
-    return setSeries(series);
-};
+exports.create = setSeries;
 
 /**
  * Update Series
@@ -22,9 +20,7 @@ exports.create = series => {
  * @param {Object} series
  * @return {Promise}
 */
-exports.update = series => {
-    return updateSeries(series);
-};
+exports.update = updateSeries;
 
 /**
  * Get a Series by ID
@@ -32,18 +28,14 @@ exports.update = series => {
  * @param {String} id
  * @return {Promise}
 */
-exports.get = id => {
-    return getSeriesById(id);
-};
+exports.get = getSeriesById;
 
 /**
  * Get all Series
  *
  * @return {Promise}
 */
-exports.all = () => {
-    return getSeries();
-};
+exports.all = getSeries;
 
 /**
  * Delete Series
@@ -51,6 +43,4 @@ exports.all = () => {
  * @param {String} id
  * @return {Promise}
 */
-exports.delete = id => {
-    return deleteSeries(id);
-};
+exports.delete = deleteSeries;

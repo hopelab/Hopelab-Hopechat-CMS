@@ -8,7 +8,7 @@ router.use('/blocks', require('./blocks'));
 router.use('/messages', require('./messages'));
 
 router.get('/', (req, res) => {
-    res.render('index');
+  res.render('index');
 });
 
 module.exports = router;

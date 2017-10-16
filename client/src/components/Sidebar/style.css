@@ -6,7 +6,7 @@
 
 .Sidebar .Inner {
     height: 100%;
-    border: 1px solid black;
+    border: 1px solid #333;
     border-radius: 10px;
     padding: 20px 10px;
 }

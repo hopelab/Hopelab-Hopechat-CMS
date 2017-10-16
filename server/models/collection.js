@@ -1,9 +1,9 @@
 const {
-    getCollections,
-    getCollectionById,
-    setCollection,
-    updateCollection,
-    deleteCollection
+  getCollections,
+  getCollectionById,
+  setCollection,
+  updateCollection,
+  deleteCollection
 } = require('../db')(require('../utils/store'));
 
 /**
@@ -12,9 +12,7 @@ const {
  * @param {Object} collection
  * @return {Promise}
 */
-exports.create = collection => {
-    return setCollection(collection);
-};
+exports.create = setCollection;
 
 /**
  * Update Collection
@@ -22,9 +20,7 @@ exports.create = collection => {
  * @param {Object} collection
  * @return {Promise}
 */
-exports.update = collection => {
-    return updateCollection(collection);
-};
+exports.update = updateCollection;
 
 /**
  * Get a Collection by ID
@@ -32,18 +28,14 @@ exports.update = collection => {
  * @param {String} id
  * @return {Promise}
 */
-exports.get = id => {
-    return getCollectionById(id);
-};
+exports.get = getCollectionById;
 
 /**
  * Get all Collections
  *
  * @return {Promise}
 */
-exports.all = () => {
-    return getCollections();
-};
+exports.all = getCollections;
 
 /**
  * Delete Collection
@@ -51,6 +43,4 @@ exports.all = () => {
  * @param {String} id
  * @return {Promise}
 */
-exports.delete = id => {
-    return deleteCollection(id);
-};
+exports.delete = deleteCollection;

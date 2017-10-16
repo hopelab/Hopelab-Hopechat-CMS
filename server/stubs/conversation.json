@@ -2,6 +2,7 @@
     {
         "type": "conversation",
         "id": "intro",
+        "name": "intro",
         "collection": [
             "intro"
         ]

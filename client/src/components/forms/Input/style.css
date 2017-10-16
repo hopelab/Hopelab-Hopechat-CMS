@@ -1,6 +1,6 @@
 .Input {
     padding: 5px; 
-    border: 2px solid black; 
+    border: 2px solid #333; 
     -webkit-border-radius: 5px;
     border-radius: 5px;
     width: 250px;

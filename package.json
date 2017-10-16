@@ -27,7 +27,7 @@
   },
   "prettier": {
     "single-quote": true,
-    "tab-width": 4
+    "tab-width": 2
   },
   "eslintConfig": {
     "env": {
