@@ -66,7 +66,12 @@ class App extends Component {
       .then(dataUtil.throwIfEmptyArray)
       .then(res => {
         this.setState({
+          [entity.type]: res,
           childEntities: this.state.childEntities.concat(res[res.length - 1])
+        }, () => {
+          this.setState({
+            treeData: dataUtil.createTreeView({ ...this.state }, config.entities),
+          })
         });
       })
       .catch(console.error);
