@@ -24,8 +24,19 @@
     height: 30px;
 }
 
-.TagsContainer {
+.TagsContainer,
+.RulesContainer {
     flex-basis: 50%;
+ }
+
+ .RulesContainer {
+     display: flex;
+     flex-direction: column;
+     padding: 0 30px;
+ }
+
+ .RulesContainer select {
+     width: 60%;
  }
 
 .Tags {

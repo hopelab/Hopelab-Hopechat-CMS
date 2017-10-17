@@ -1,12 +1,38 @@
 const shortid = require('shortid');
 
+const entityTypes = {
+  conversation: 'Conversation',
+  collection: 'Collection',
+  series: 'Series',
+  block: 'Block',
+  message: 'Message'
+};
+
+const defaultData = {
+  [entityTypes.collection]: {
+    rule: 'sequential'
+  },
+  [entityTypes.series]: {
+    rule: 'sequential'
+  }
+};
+
+function getDefaultDataForEntityType(type) {
+  return defaultData[type];
+}
+
 const createNewEntity = (type, entity) => entities =>
   entities.concat(
-    Object.assign({}, entity, {
-      id: shortid.generate(),
-      name: `${type} ${entities.length + 1}`,
-      created: Date.now()
-    })
+    Object.assign(
+      {},
+      entity,
+      {
+        id: shortid.generate(),
+        name: `${type} ${entities.length + 1}`,
+        created: Date.now()
+      },
+      getDefaultDataForEntityType(type)
+    )
   );
 const updateEntityInList = entity => entities =>
   entities.map(e => (e.id === entity.id ? entity : e));
@@ -18,5 +44,6 @@ module.exports = {
   createNewEntity,
   updateEntityInList,
   findEntityById,
-  deleteEntityFromList
+  deleteEntityFromList,
+  entityTypes
 };

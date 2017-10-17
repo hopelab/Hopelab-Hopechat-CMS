@@ -53,7 +53,7 @@ module.exports = store => {
       store
         .getItem(DB_CONVERSATIONS)
         .then(JSON.parse)
-        .then(helpers.createNewEntity('Conversation', conversation))
+        .then(helpers.createNewEntity(helpers.entityTypes.conversation, conversation))
         .then(store.setItem(DB_CONVERSATIONS, ONE_DAY_IN_MILLISECONDS))
         .then(resolve)
         .catch(console.error);
@@ -134,7 +134,7 @@ module.exports = store => {
       store
         .getItem(DB_COLLECTIONS)
         .then(JSON.parse)
-        .then(helpers.createNewEntity('Collection', collection))
+        .then(helpers.createNewEntity(helpers.entityTypes.collection, collection))
         .then(store.setItem(DB_COLLECTIONS, ONE_DAY_IN_MILLISECONDS))
         .then(resolve)
         .catch(console.error);
@@ -215,7 +215,7 @@ module.exports = store => {
       store
         .getItem(DB_SERIES)
         .then(JSON.parse)
-        .then(helpers.createNewEntity('Series', series))
+        .then(helpers.createNewEntity(helpers.entityTypes.series, series))
         .then(store.setItem(DB_SERIES, ONE_DAY_IN_MILLISECONDS))
         .then(resolve)
         .catch(console.error);
@@ -296,7 +296,7 @@ module.exports = store => {
       store
         .getItem(DB_MESSAGES)
         .then(JSON.parse)
-        .then(helpers.createNewEntity('Message', message))
+        .then(helpers.createNewEntity(helpers.entityTypes.message, message))
         .then(store.setItem(DB_MESSAGES, ONE_DAY_IN_MILLISECONDS))
         .then(resolve)
         .catch(console.error);
@@ -377,7 +377,7 @@ module.exports = store => {
       store
         .getItem(DB_BLOCKS)
         .then(JSON.parse)
-        .then(helpers.createNewEntity('Block', block))
+        .then(helpers.createNewEntity(helpers.entityTypes.block, block))
         .then(store.setItem(DB_BLOCKS, ONE_DAY_IN_MILLISECONDS))
         .then(resolve)
         .catch(console.error);
