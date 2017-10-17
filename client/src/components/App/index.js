@@ -35,6 +35,7 @@ class App extends Component {
           ...config.initialState[config.entities.conversation]
         })
         .then(res => res.json())
+        .then(dataUtil.throwIfEmptyArray)
         .then(res => {
           this.setState({
             itemEditing: res[res.length - 1],
@@ -61,6 +62,7 @@ class App extends Component {
     dataUtil
       .post(config.routes[entity.type].create, entity)
       .then(res => res.json())
+      .then(dataUtil.throwIfEmptyArray)
       .then(res => {
         this.setState({
           childEntities: this.state.childEntities.concat(res[res.length - 1])
@@ -94,6 +96,7 @@ class App extends Component {
     dataUtil
       .post(config.routes[item.type][route], item)
       .then(res => res.json())
+      .then(dataUtil.throwIfEmptyArray)
       .then(res => {
         this.setState(
           {
@@ -111,6 +114,7 @@ class App extends Component {
     dataUtil
       .post(config.routes[item.type][route], item)
       .then(res => res.json())
+      .then(dataUtil.throwIfEmptyArray)
       .then(res => {
         this.setState(
           {

@@ -34,6 +34,21 @@ export function createInitialEntityState(data) {
 /**
  * Fetch All Data For App
  * 
+ * @param {Array} data
+ * @throws data length error
+ * @returns {Array}
+*/
+export function throwIfEmptyArray(data) {
+  if (!data || !data.length) {
+    throw new Error('Error: API data was empty');
+  }
+
+  return data;
+}
+
+/**
+ * Fetch All Data For App
+ * 
  * @param {Object} route
  * @returns {Promise}
 */
@@ -44,7 +59,7 @@ export function fetchAllDataForApp(routes) {
     fetch(routes.series.all).then(res => res.json()),
     fetch(routes.block.all).then(res => res.json()),
     fetch(routes.message.all).then(res => res.json())
-  ]);
+  ]).then(throwIfEmptyArray);
 }
 
 /**
