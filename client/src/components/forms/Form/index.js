@@ -37,6 +37,10 @@ class Form extends Component {
     this.state = createInitialFormState(props);
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState(createInitialFormState(nextProps));
+  }
+
   handleChildEntityAddition = () => {
     this.props.onEntityAddition({
       type: this.state.entityToAdd,
@@ -47,7 +51,7 @@ class Form extends Component {
     });
   };
 
-  handleChildSelection = e => this.setState({ selectInput: e.target.value });
+  handleChildSelection = e => this.setState({ entityToAdd: e.target.value });
 
   render() {
     return (
