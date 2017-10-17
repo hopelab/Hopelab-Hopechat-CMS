@@ -1,0 +1,120 @@
+.Form {
+    display: flex;
+    flex-direction: column;
+}
+
+.Form .Row {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #333;
+
+    padding: 30px 0;
+}
+
+.Form .EntityName {
+    display: flex;
+    line-height: 1;
+    margin: 0;
+    flex-basis: 50%;
+}
+
+.Form .EntityName input {
+    border: 1px solid #333;
+    width: 50%;
+    height: 30px;
+}
+
+.TagsContainer {
+    flex-basis: 50%;
+ }
+
+.Tags {
+    display: flex;
+}
+
+.Tags textarea {
+    height: 100px;
+    width: 100%;
+
+    border: 1px solid #333;
+    border-radius: 5px;
+}
+
+.LiveContainer {
+    display: flex;
+    align-items: flex-start;
+    line-height: 1;
+}
+
+.ChildrenContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+}
+
+.ChildrenContainer .ChildGrid {
+    width: 100%;
+    max-height: 300px;
+    overflow-y: scroll;
+    display: grid;
+    padding: 30px;
+    grid-template-columns: 30% 30% 30%;
+    grid-gap: 10px;
+    color: #444;
+}
+
+.AddButtonWrapper {
+    width: 25%;
+    height: 50px;
+    border: 1px solid #333;
+    border-radius: 5px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+
+    font-size: 15px;
+}
+
+.AddButtonWrapper .Add {
+    flex-basis: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.AddButtonWrapper .Add:hover {
+    cursor: pointer;
+}
+
+.AddButtonWrapper select {
+    border: 0;
+    height: inherit;
+    float: right;
+    width: 75%;
+    flex-basis: 75%;
+
+    background-position: right right;
+    background-repeat: no-repeat;
+    background: transparent;
+    border: 0;
+    border-radius: 2px;
+    font-size: inherit;
+    margin: 0;
+    overflow: hidden;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.AddButtonWrapper select:hover {
+    cursor: pointer;
+}
+
+label {
+    margin-right: 15px;
+}

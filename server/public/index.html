@@ -58,6 +58,12 @@
             headers: postHeaders,
             body: JSON.stringify({ type: 'block' })
         });
+
+        fetch('/blocks/update', {
+            method: 'POST',
+            headers: postHeaders,
+            body: JSON.stringify({ id: 'block-2', day: 'WED' })
+        });
     </script>
 </body>
 </html>

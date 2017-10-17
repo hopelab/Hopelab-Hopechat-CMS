@@ -1,9 +1,9 @@
 const {
-    getMessages,
-    getMessageById,
-    setMessage,
-    updateMessage,
-    deleteMessage
+  getMessages,
+  getMessageById,
+  setMessage,
+  updateMessage,
+  deleteMessage
 } = require('../db')(require('../utils/store'));
 
 /**
@@ -12,9 +12,7 @@ const {
  * @param {Object} message
  * @return {Promise}
 */
-exports.create = message => {
-    return setMessage(message);
-};
+exports.create = setMessage;
 
 /**
  * Update Message
@@ -22,9 +20,7 @@ exports.create = message => {
  * @param {Object} message
  * @return {Promise}
 */
-exports.update = message => {
-    return updateMessage(message);
-};
+exports.update = updateMessage;
 
 /**
  * Get a Message by ID
@@ -32,18 +28,14 @@ exports.update = message => {
  * @param {String} id
  * @return {Promise}
 */
-exports.get = id => {
-    return getMessageById(id);
-};
+exports.get = getMessageById;
 
 /**
  * Get all Messages
  *
  * @return {Promise}
 */
-exports.all = () => {
-    return getMessages();
-};
+exports.all = getMessages;
 
 /**
  * Delete Message
@@ -51,6 +43,4 @@ exports.all = () => {
  * @param {String} id
  * @return {Promise}
 */
-exports.delete = id => {
-    return deleteMessage(id);
-};
+exports.delete = deleteMessage;

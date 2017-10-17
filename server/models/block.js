@@ -1,9 +1,9 @@
 const {
-    getBlocks,
-    getBlockById,
-    setBlock,
-    updateBlock,
-    deleteBlock
+  getBlocks,
+  getBlockById,
+  setBlock,
+  updateBlock,
+  deleteBlock
 } = require('../db')(require('../utils/store'));
 
 /**
@@ -12,9 +12,7 @@ const {
  * @param {Object} block
  * @return {Promise}
 */
-exports.create = block => {
-    return setBlock(block);
-};
+exports.create = setBlock;
 
 /**
  * Update Block
@@ -22,9 +20,7 @@ exports.create = block => {
  * @param {Object} block
  * @return {Promise}
 */
-exports.update = block => {
-    return updateBlock(block);
-};
+exports.update = updateBlock;
 
 /**
  * Get a Block by ID
@@ -32,18 +28,14 @@ exports.update = block => {
  * @param {String} id
  * @return {Promise}
 */
-exports.get = id => {
-    return getBlockById(id);
-};
+exports.get = getBlockById;
 
 /**
  * Get all Blocks
  *
  * @return {Promise}
 */
-exports.all = () => {
-    return getBlocks();
-};
+exports.all = getBlocks;
 
 /**
  * Delete Block
@@ -51,6 +43,4 @@ exports.all = () => {
  * @param {String} id
  * @return {Promise}
 */
-exports.delete = id => {
-    return deleteBlock(id);
-};
+exports.delete = deleteBlock;

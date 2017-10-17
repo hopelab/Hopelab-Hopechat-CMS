@@ -1,0 +1,42 @@
+.Dashboard {
+    height: 100vh;
+    width: 70vw;
+    padding: 15px 15px;
+}
+
+.Dashboard .Inner {
+    height: 100%;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 20px 10px;
+}
+
+.FormContainer {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.FormContainer .CloseButton {
+    margin-left: auto;
+    font-size: 20px;
+    font-weight: 200;
+}
+
+.FormContainer .CloseButton:hover {
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+.FormContainer .FormActionsContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top: auto;
+    margin-left: auto;
+    width: 40%;
+}
+
+.FormContainer .FormActionsContainer .Button {
+    width: 40%;
+}

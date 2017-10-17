@@ -1,9 +1,9 @@
 const {
-    getConversations,
-    getConversationById,
-    setConversation,
-    updateConversation,
-    deleteConversation
+  getConversations,
+  getConversationById,
+  setConversation,
+  updateConversation,
+  deleteConversation
 } = require('../db')(require('../utils/store'));
 
 /**
@@ -12,9 +12,7 @@ const {
  * @param {Object} conversation
  * @return {Promise}
 */
-exports.create = conversation => {
-    return setConversation(conversation);
-};
+exports.create = setConversation;
 
 /**
  * Update Conversation
@@ -22,9 +20,7 @@ exports.create = conversation => {
  * @param {Object} conversation
  * @return {Promise}
 */
-exports.update = conversation => {
-    return updateConversation(conversation);
-};
+exports.update = updateConversation;
 
 /**
  * Get a Conversation by ID
@@ -32,18 +28,14 @@ exports.update = conversation => {
  * @param {String} id
  * @return {Promise}
 */
-exports.get = id => {
-    return getConversationById(id);
-};
+exports.get = getConversationById;
 
 /**
  * Get all Conversations
  *
  * @return {Promise}
 */
-exports.all = () => {
-    return getConversations();
-};
+exports.all = getConversations;
 
 /**
  * Delete Conversation
@@ -51,6 +43,4 @@ exports.all = () => {
  * @param {String} id
  * @return {Promise}
 */
-exports.delete = id => {
-    return deleteConversation(id);
-};
+exports.delete = deleteConversation;

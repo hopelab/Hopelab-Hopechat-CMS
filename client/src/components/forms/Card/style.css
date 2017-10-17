@@ -1,0 +1,32 @@
+.Card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 150px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    color: #333;
+    font-size: 20px;
+}
+
+.Card input {
+    width: 75%;
+}
+
+.Card .Actions {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    font-weight: 300;
+    font-size: 16px;
+}
+
+.Card .Actions span:hover {
+    cursor: pointer;
+}

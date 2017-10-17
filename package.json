@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint **/*.js",
     "mock-db": "node ./server/helpers/mockDatabaseSetup.js",
-    "start": "node cms.js",
+    "start": "node ./server/cms.js",
     "prettify": "prettier --write './server/**/*.js'",
     "test": "node_modules/.bin/mocha tests/**"
   },
@@ -15,6 +15,8 @@
     "alien-node-redis-utils": "^1.2.0",
     "body-parser": "^1.12.3",
     "express": "^4.12.3",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
     "redis": "^2.8.0",
     "shortid": "^2.2.8"
   },
@@ -25,7 +27,7 @@
   },
   "prettier": {
     "single-quote": true,
-    "tab-width": 4
+    "tab-width": 2
   },
   "eslintConfig": {
     "env": {
