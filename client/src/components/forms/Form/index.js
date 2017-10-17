@@ -10,7 +10,7 @@ import { createInitialFormState } from '../../../utils/data';
 const propTypes = {
   item: PropTypes.shape({
     name: PropTypes.string,
-    // tags     : PropTypes.array,
+    tags: PropTypes.array,
     isLive: PropTypes.bool,
     children: PropTypes.array
   }),
