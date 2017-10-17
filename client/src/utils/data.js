@@ -33,6 +33,18 @@ export function createInitialEntityState(data) {
 }
 
 /**
+ * Create Initial Form Data Structure
+ * 
+ * @param {Object} props
+ * @returns {Object}
+*/
+export function createInitialFormState(props) {
+  return {
+    selectInput: R.pathOr('', ['config', 'children'])(props)[0]
+  };
+}
+
+/**
  * Throw for empty data array
  * 
  * @param {Array} data

@@ -5,6 +5,8 @@ import './style.css';
 import Input from '../Input';
 import Card from '../Card';
 
+import { createInitialFormState } from '../../../utils/data';
+
 const propTypes = {
   item: PropTypes.shape({
     name: PropTypes.string,
@@ -32,9 +34,7 @@ class Form extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      selectInput: (props.config.children || [])[0] || ''
-    };
+    this.state = createInitialFormState(props);
   }
 
   handleChildEntityAddition = () => {
