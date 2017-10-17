@@ -10,6 +10,6 @@ app.use(bodyParser.json());
 app.use(errorHandler);
 app.use(require('./controllers'));
 
-app.listen(port, function() {
+app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });

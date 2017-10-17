@@ -37,7 +37,7 @@ module.exports = store => {
       store
         .getItem(DB_CONVERSATIONS)
         .then(JSON.parse)
-        .then(helpers.findConversationById(id))
+        .then(helpers.findEntityById(id))
         .then(resolve)
         .catch(console.error);
     });
@@ -53,7 +53,7 @@ module.exports = store => {
       store
         .getItem(DB_CONVERSATIONS)
         .then(JSON.parse)
-        .then(helpers.addNewConversationToList(conversation))
+        .then(helpers.createNewEntity('Conversation', conversation))
         .then(store.setItem(DB_CONVERSATIONS, ONE_DAY_IN_MILLISECONDS))
         .then(resolve)
         .catch(console.error);
@@ -70,7 +70,7 @@ module.exports = store => {
       store
         .getItem(DB_CONVERSATIONS)
         .then(JSON.parse)
-        .then(helpers.updateConversationInList(conversation))
+        .then(helpers.updateEntityInList(conversation))
         .then(store.setItem(DB_CONVERSATIONS, ONE_DAY_IN_MILLISECONDS))
         .then(resolve)
         .catch(console.error);
@@ -87,7 +87,7 @@ module.exports = store => {
       store
         .getItem(DB_CONVERSATIONS)
         .then(JSON.parse)
-        .then(helpers.deleteConversationFromList(id))
+        .then(helpers.deleteEntityFromList(id))
         .then(store.setItem(DB_CONVERSATIONS, ONE_DAY_IN_MILLISECONDS))
         .then(resolve)
         .catch(console.error);
@@ -118,7 +118,7 @@ module.exports = store => {
       store
         .getItem(DB_COLLECTIONS)
         .then(JSON.parse)
-        .then(helpers.findCollectionById(id))
+        .then(helpers.findEntityById(id))
         .then(resolve)
         .catch(console.error);
     });
@@ -134,7 +134,7 @@ module.exports = store => {
       store
         .getItem(DB_COLLECTIONS)
         .then(JSON.parse)
-        .then(helpers.addNewCollectionToList(collection))
+        .then(helpers.createNewEntity('Collection', collection))
         .then(store.setItem(DB_COLLECTIONS, ONE_DAY_IN_MILLISECONDS))
         .then(resolve)
         .catch(console.error);
@@ -151,7 +151,7 @@ module.exports = store => {
       store
         .getItem(DB_COLLECTIONS)
         .then(JSON.parse)
-        .then(helpers.updateCollectionInList(collection))
+        .then(helpers.updateEntityInList(collection))
         .then(store.setItem(DB_COLLECTIONS, ONE_DAY_IN_MILLISECONDS))
         .then(resolve)
         .catch(console.error);
@@ -168,7 +168,7 @@ module.exports = store => {
       store
         .getItem(DB_COLLECTIONS)
         .then(JSON.parse)
-        .then(helpers.deleteCollectionFromList(id))
+        .then(helpers.deleteEntityFromList(id))
         .then(store.setItem(DB_COLLECTIONS, ONE_DAY_IN_MILLISECONDS))
         .then(resolve)
         .catch(console.error);
@@ -199,7 +199,7 @@ module.exports = store => {
       store
         .getItem(DB_SERIES)
         .then(JSON.parse)
-        .then(helpers.findSeriesById(id))
+        .then(helpers.findEntityById(id))
         .then(resolve)
         .catch(console.error);
     });
@@ -215,7 +215,7 @@ module.exports = store => {
       store
         .getItem(DB_SERIES)
         .then(JSON.parse)
-        .then(helpers.addNewSeriesToList(series))
+        .then(helpers.createNewEntity('Series', series))
         .then(store.setItem(DB_SERIES, ONE_DAY_IN_MILLISECONDS))
         .then(resolve)
         .catch(console.error);
@@ -232,7 +232,7 @@ module.exports = store => {
       store
         .getItem(DB_SERIES)
         .then(JSON.parse)
-        .then(helpers.updateSeriesInList(series))
+        .then(helpers.updateEntityInList(series))
         .then(store.setItem(DB_SERIES, ONE_DAY_IN_MILLISECONDS))
         .then(resolve)
         .catch(console.error);
@@ -249,7 +249,7 @@ module.exports = store => {
       store
         .getItem(DB_SERIES)
         .then(JSON.parse)
-        .then(helpers.deleteSeriesFromList(id))
+        .then(helpers.deleteEntityFromList(id))
         .then(store.setItem(DB_SERIES, ONE_DAY_IN_MILLISECONDS))
         .then(resolve)
         .catch(console.error);
@@ -280,7 +280,7 @@ module.exports = store => {
       store
         .getItem(DB_MESSAGES)
         .then(JSON.parse)
-        .then(helpers.findMessageById(id))
+        .then(helpers.findEntityById(id))
         .then(resolve)
         .catch(console.error);
     });
@@ -296,7 +296,7 @@ module.exports = store => {
       store
         .getItem(DB_MESSAGES)
         .then(JSON.parse)
-        .then(helpers.addNewMessageToList(message))
+        .then(helpers.createNewEntity('Message', message))
         .then(store.setItem(DB_MESSAGES, ONE_DAY_IN_MILLISECONDS))
         .then(resolve)
         .catch(console.error);
@@ -313,7 +313,7 @@ module.exports = store => {
       store
         .getItem(DB_MESSAGES)
         .then(JSON.parse)
-        .then(helpers.updateMessageInList(message))
+        .then(helpers.updateEntityInList(message))
         .then(store.setItem(DB_MESSAGES, ONE_DAY_IN_MILLISECONDS))
         .then(resolve)
         .catch(console.error);
@@ -330,7 +330,7 @@ module.exports = store => {
       store
         .getItem(DB_MESSAGES)
         .then(JSON.parse)
-        .then(helpers.deleteMessageFromList(id))
+        .then(helpers.deleteEntityFromList(id))
         .then(store.setItem(DB_MESSAGES, ONE_DAY_IN_MILLISECONDS))
         .then(resolve)
         .catch(console.error);
@@ -361,7 +361,7 @@ module.exports = store => {
       store
         .getItem(DB_BLOCKS)
         .then(JSON.parse)
-        .then(helpers.findBlockById(id))
+        .then(helpers.findEntityById(id))
         .then(resolve)
         .catch(console.error);
     });
@@ -377,7 +377,7 @@ module.exports = store => {
       store
         .getItem(DB_BLOCKS)
         .then(JSON.parse)
-        .then(helpers.addNewBlockToList(block))
+        .then(helpers.createNewEntity('Block', block))
         .then(store.setItem(DB_BLOCKS, ONE_DAY_IN_MILLISECONDS))
         .then(resolve)
         .catch(console.error);
@@ -394,7 +394,7 @@ module.exports = store => {
       store
         .getItem(DB_BLOCKS)
         .then(JSON.parse)
-        .then(helpers.updateBlockInList(block))
+        .then(helpers.updateEntityInList(block))
         .then(store.setItem(DB_BLOCKS, ONE_DAY_IN_MILLISECONDS))
         .then(resolve)
         .catch(console.error);
@@ -411,7 +411,7 @@ module.exports = store => {
       store
         .getItem(DB_BLOCKS)
         .then(JSON.parse)
-        .then(helpers.deleteBlockFromList(id))
+        .then(helpers.deleteEntityFromList(id))
         .then(store.setItem(DB_BLOCKS, ONE_DAY_IN_MILLISECONDS))
         .then(resolve)
         .catch(console.error);
