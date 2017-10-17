@@ -16,11 +16,12 @@ class App extends Component {
   componentDidMount() {
     dataUtil
       .fetchAllDataForApp(config.routes)
+      .then(dataUtil.createInitialEntityState)
       .then(data => {
         this.setState({
-          ...dataUtil.createInitialEntityState(data),
+          ...data,
           treeData: dataUtil.createTreeView(
-            { ...dataUtil.createInitialEntityState(data) },
+            { ...data },
             config.entities
           )
         });
