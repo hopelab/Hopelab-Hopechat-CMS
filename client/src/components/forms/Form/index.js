@@ -113,8 +113,6 @@ class Form extends Component {
                 name="isLive"
                 type="checkbox"
                 checked={this.props.item.isLive}
-                defaultChecked={this.props.item.isLive}
-                value={this.props.item.isLive}
                 handleInput={this.props.onUpdate}
               />
             </p>

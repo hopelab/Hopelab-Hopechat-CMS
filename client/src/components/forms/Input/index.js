@@ -6,7 +6,8 @@ const propTypes = {
   handleInput: PropTypes.func.isRequired,
   type: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired
+  id: PropTypes.string.isRequired,
+  checked: PropTypes.bool
 };
 
 const Input = props => (
@@ -17,6 +18,7 @@ const Input = props => (
     value={props.value}
     id={props.id}
     onChange={props.handleInput}
+    checked={props.checked}
   />
 );
 
