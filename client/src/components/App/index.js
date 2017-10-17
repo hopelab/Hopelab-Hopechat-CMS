@@ -91,7 +91,7 @@ class App extends Component {
   };
 
   handleSaveItem = (item, reset) => {
-    const route = item.id ? 'update' : 'create';
+    const route = item.id ? config.operations.update : config.operations.create;
 
     dataUtil
       .post(config.routes[item.type][route], item)
@@ -110,7 +110,7 @@ class App extends Component {
   };
 
   handleDeleteItem = item => {
-    const route = 'delete';
+    const route = config.operations.delete;
     dataUtil
       .post(config.routes[item.type][route], item)
       .then(res => res.json())

@@ -10,6 +10,15 @@ const entities = {
 };
 
 /**
+ * Server Route Operations
+*/
+const operations = {
+  create: 'create',
+  update: 'update',
+  delete: 'delete'
+};
+
+/**
  * Config for each entity form
 */
 const forms = {
@@ -144,4 +153,4 @@ const http = {
   post: 'POST'
 };
 
-export { entities, forms, initialState, routes, http };
+export { entities, forms, initialState, routes, http, operations };
