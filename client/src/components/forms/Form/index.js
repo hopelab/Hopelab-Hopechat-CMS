@@ -39,7 +39,7 @@ class Form extends Component {
 
   handleChildEntityAddition = () => {
     this.props.onEntityAddition({
-      type: this.state.selectInput,
+      type: this.state.entityToAdd,
       parent: {
         type: this.props.item.type,
         id: this.props.item.id
@@ -85,6 +85,22 @@ class Form extends Component {
             </div>
           ) : null}
 
+          {formHasField('rules', this.props.config.fields) ? (
+            <div className="RulesContainer">
+              <label>{`${this.props.item.type} logic/rules`.toUpperCase()}</label>
+              <select
+                id="rule"
+                name="rule"
+                value={this.props.item.rule}
+                onChange={this.props.onUpdate}
+              >
+                {this.props.config.rules.map(c => (
+                  <option key={c}>{c}</option>
+                ))}
+              </select>
+            </div>
+          ) : null}
+
           {formHasField('live', this.props.config.fields) ? (
             <p className="LiveContainer">
               <label>Live?</label>
@@ -120,7 +136,7 @@ class Form extends Component {
               +
             </span>
             <select
-              value={this.state.selectInput}
+              value={this.state.entityToAdd}
               onChange={this.handleChildSelection}
             >
               {this.props.config.children.map(c => (
