@@ -41,7 +41,7 @@ export function createInitialEntityState(data) {
 export function createInitialFormState(props) {
   return {
     ruleSelection: props.item.rule,
-    entityToAdd: R.pathOr('', ['config', 'children'])(props)[0]
+    entityToAdd: R.pathOr('', ['config', 'children', 0])(props)
   };
 }
 
