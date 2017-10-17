@@ -1,3 +1,4 @@
+import * as R from 'ramda';
 import { entities, http, forms } from './config';
 
 /**
@@ -32,7 +33,7 @@ export function createInitialEntityState(data) {
 }
 
 /**
- * Fetch All Data For App
+ * Throw for empty data array
  * 
  * @param {Array} data
  * @throws data length error
@@ -90,7 +91,7 @@ export function getChildEntitiesFor(item, entities) {
 
   return forms[item.type].children.reduce((prev, curr) => {
     return prev.concat(
-      ...entities[curr].filter(e => e.parent && e.parent.id === item.id)
+      ...entities[curr].filter(R.pathEq(['parent', 'id'], item.id))
     );
   }, []);
 }
@@ -114,9 +115,9 @@ export function createTreeView(data, entities) {
     return {
       ...c,
       toggled: true,
-      children: data[entities.collection].filter(d => {
-        return d.parent && d.parent.id === c.id;
-      })
+      children: data[entities.collection].filter(
+        R.pathEq(['parent', 'id'], c.id)
+      )
     };
   });
 
@@ -127,9 +128,9 @@ export function createTreeView(data, entities) {
         return {
           ...d,
           toggled: true,
-          children: data[entities.series].filter(e => {
-            return e.parent && e.parent.id === d.id;
-          })
+          children: data[entities.series].filter(
+            R.pathEq(['parent', 'id'], d.id)
+          )
         };
       })
     };
@@ -145,9 +146,9 @@ export function createTreeView(data, entities) {
             return {
               ...f,
               toggled: true,
-              children: data[entities.block].filter(g => {
-                return g.parent && g.parent.id === f.id;
-              })
+              children: data[entities.block].filter(
+                R.pathEq(['parent', 'id'], f.id)
+              )
             };
           })
         };
