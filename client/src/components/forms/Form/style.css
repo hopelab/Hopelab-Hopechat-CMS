@@ -97,14 +97,6 @@
     width: 75%;
     flex-basis: 75%;
 
-    -webkit-appearance: button;
-    -moz-appearance: button;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -webkit-padding-end: 20px;
-    -moz-padding-end: 20px;
-    -webkit-padding-start: 2px;
-    -moz-padding-start: 2px;
     background-position: right right;
     background-repeat: no-repeat;
     background: transparent;

@@ -15,7 +15,7 @@ const propTypes = {
   handleUpdateChildEntityName: PropTypes.func.isRequired,
   handleEditingChildEntity: PropTypes.func.isRequired,
   itemEditing: PropTypes.object,
-  entitiesToAdd: PropTypes.array.isRequired
+  childEntities: PropTypes.array.isRequired
 };
 
 const Dashboard = props => (
@@ -34,7 +34,7 @@ const Dashboard = props => (
             onEntityAddition={props.handleNewChildEntity}
             onEntityNameUpdate={props.handleUpdateChildEntityName}
             onEditEntity={props.handleEditingChildEntity}
-            entitiesToAdd={props.entitiesToAdd}
+            childEntities={props.childEntities}
             handleSaveItem={props.handleSaveItem}
           />
 

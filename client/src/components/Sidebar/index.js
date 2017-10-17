@@ -8,7 +8,6 @@ import { entities } from '../../utils/config';
 
 const propTypes = {
   addConversation: PropTypes.func.isRequired,
-  handleItemClick: PropTypes.func.isRequired,
   [entities.conversation]: PropTypes.array,
   treeData: PropTypes.object.isRequired,
   handleTreeToggle: PropTypes.func.isRequired

@@ -1,4 +1,4 @@
-import { entities, http } from './config';
+import { entities, http, forms } from './config';
 
 /**
  * POST Fetch Method
@@ -59,6 +59,25 @@ export function getPostRoutesForChildEntities(entities, routes) {
 
     return post(routes[e.type][action], e).then(res => res.json());
   });
+}
+
+/**
+ * Construct Child Entities For Given Entity
+ * 
+ * @param {Object} item
+ * @param {Object} entities
+ * @returns {Array}
+*/
+export function getChildEntitiesFor(item, entities) {
+  if (!item) {
+    return [];
+  }
+
+  return forms[item.type].children.reduce((prev, curr) => {
+    return prev.concat(
+      ...entities[curr].filter(e => e.parent && e.parent.id === item.id)
+    );
+  }, []);
 }
 
 /**

@@ -17,10 +17,10 @@ const forms = {
     fields: ['name', 'tags', 'live', 'children'],
     children: [
       'message',
-      'question',
-      'quick_reply',
-      'video',
-      'image',
+      // 'question',
+      // 'quick_reply',
+      // 'video',
+      // 'image',
       'collection'
     ]
   },
@@ -36,7 +36,7 @@ const forms = {
   },
   block: {
     fields: ['name', 'tags', 'children'],
-    children: ['message', 'question', 'quick_reply', 'video', 'image']
+    children: ['message'] // 'question', 'quick_reply', 'video', 'image'
   },
   message: {
     fields: [],
@@ -95,7 +95,7 @@ const initialState = {
     block: [],
     message: [],
     itemEditing: null,
-    entitiesToAdd: [],
+    childEntities: [],
     treeData: {},
     cursor: {}
   },

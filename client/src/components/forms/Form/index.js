@@ -8,12 +8,12 @@ import Card from '../Card';
 const propTypes = {
   item: PropTypes.shape({
     name: PropTypes.string,
-    tags: PropTypes.array,
+    // tags     : PropTypes.array,
     isLive: PropTypes.bool,
     children: PropTypes.array
   }),
   config: PropTypes.object,
-  entitiesToAdd: PropTypes.array.isRequired,
+  childEntities: PropTypes.array.isRequired,
   onEntityAddition: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
   onEntityNameUpdate: PropTypes.func.isRequired,
@@ -38,15 +38,13 @@ class Form extends Component {
   }
 
   handleChildEntityAddition = () => {
-    if (this.props.entitiesToAdd.length === 0) {
-      this.props.onEntityAddition({
-        type: this.state.selectInput,
-        parent: {
-          type: this.props.item.type,
-          id: this.props.item.id
-        }
-      });
-    }
+    this.props.onEntityAddition({
+      type: this.state.selectInput,
+      parent: {
+        type: this.props.item.type,
+        id: this.props.item.id
+      }
+    });
   };
 
   handleChildSelection = e => this.setState({ selectInput: e.target.value });
@@ -80,7 +78,7 @@ class Form extends Component {
                   id="tags"
                   name="tags"
                   type="text"
-                  value={this.props.item.tags}
+                  value={this.props.item.tags || ''}
                   onChange={this.props.onUpdate}
                 />
               </p>
@@ -105,7 +103,7 @@ class Form extends Component {
 
         <div className="ChildrenContainer">
           <div className="ChildGrid">
-            {this.props.entitiesToAdd.map((e, i) => (
+            {this.props.childEntities.map((e, i) => (
               <Card
                 key={i}
                 item={e}

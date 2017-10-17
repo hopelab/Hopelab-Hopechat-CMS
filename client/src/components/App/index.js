@@ -45,14 +45,6 @@ class App extends Component {
     }
   };
 
-  handleSidebarItemClick = item => {
-    if (this.state.itemEditing === null) {
-      this.setState({
-        itemEditing: item
-      });
-    }
-  };
-
   handleUpdatingItem = e => {
     const target = e.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -71,24 +63,28 @@ class App extends Component {
       .then(res => res.json())
       .then(res => {
         this.setState({
-          entitiesToAdd: this.state.entitiesToAdd.concat(res[res.length - 1])
+          childEntities: this.state.childEntities.concat(res[res.length - 1])
         });
       })
       .catch(console.error);
   };
 
   handleUpdateChildEntityName = (index, name) => {
-    const newArray = Array.from(this.state.entitiesToAdd);
+    const newArray = Array.from(this.state.childEntities);
     newArray[index].name = name;
 
     this.setState({
-      entitiesToAdd: newArray
+      childEntities: newArray
     });
   };
 
-  updateTreeState = () => {
+  updateTreeStructure = () => {
     this.setState({
-      treeData: dataUtil.createTreeView({ ...this.state }, config.entities)
+      treeData: dataUtil.createTreeView({ ...this.state }, config.entities),
+      childEntities: dataUtil.getChildEntitiesFor(
+        this.state.itemEditing,
+        this.state
+      )
     });
   };
 
@@ -104,7 +100,7 @@ class App extends Component {
             itemEditing: reset ? null : this.state.itemEditing,
             [item.type]: res
           },
-          this.updateTreeState
+          this.updateTreeStructure
         );
       })
       .catch(console.error);
@@ -119,28 +115,47 @@ class App extends Component {
         this.setState(
           {
             itemEditing: null,
+            childEntities: [],
             [item.type]: res
           },
-          this.updateTreeState
+          () => {
+            this.setState({
+              treeData: dataUtil.createTreeView(
+                { ...this.state },
+                config.entities
+              )
+            });
+          }
         );
       })
       .catch(console.error);
   };
 
   handleEditingChildEntity = entity => {
-    this.setState({
-      itemEditing: entity,
-      entitiesToAdd: []
-    });
+    this.setState(
+      {
+        itemEditing: entity
+      },
+      () => {
+        this.setState({
+          childEntities: dataUtil.getChildEntitiesFor(
+            this.state.itemEditing,
+            this.state
+          )
+        });
+      }
+    );
   };
 
   handleDashboardClose = () => {
     this.setState({
-      itemEditing: null
+      itemEditing: null,
+      childEntities: []
     });
   };
 
   handleTreeToggle = (node, toggled) => {
+    /* eslint-disable react/no-direct-mutation-state */
     if (this.state.cursor) {
       this.state.cursor.active = false;
     }
@@ -149,11 +164,20 @@ class App extends Component {
       node.toggled = toggled;
     }
 
-    this.setState({
-      cursor: node,
-      itemEditing: node.type ? node : this.state.itemEditing,
-      entitiesToAdd: [] // TODO: child entities
-    });
+    this.setState(
+      {
+        cursor: node,
+        itemEditing: node.type ? node : this.state.itemEditing
+      },
+      () => {
+        this.setState({
+          childEntities: dataUtil.getChildEntitiesFor(
+            this.state.itemEditing,
+            this.state
+          )
+        });
+      }
+    );
   };
 
   render() {
@@ -162,7 +186,6 @@ class App extends Component {
         <Sidebar
           addConversation={this.addConversation}
           conversation={this.state.conversation}
-          handleItemClick={this.handleSidebarItemClick}
           treeData={this.state.treeData}
           handleTreeToggle={this.handleTreeToggle}
         />
@@ -177,7 +200,7 @@ class App extends Component {
           handleUpdateChildEntityName={this.handleUpdateChildEntityName}
           handleEditingChildEntity={this.handleEditingChildEntity}
           itemEditing={this.state.itemEditing}
-          entitiesToAdd={this.state.entitiesToAdd}
+          childEntities={this.state.childEntities}
         />
       </div>
     );

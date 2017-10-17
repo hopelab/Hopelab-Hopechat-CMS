@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './style.css';
 
+import Input from '../Input';
+
 const propTypes = {
   item: PropTypes.object.isRequired,
   index: PropTypes.number.isRequired,
@@ -24,10 +26,12 @@ const Card = props => (
   <div className="Card">
     <span>{props.item.type}</span>
 
-    <input
-      name="name"
+    <Input
+      type="text"
+      name="child-name"
+      id="child-name"
       value={props.item.name}
-      onChange={e => handleNameUpdate(e, props)}
+      handleInput={e => handleNameUpdate(e, props)}
     />
 
     <div className="Actions">
