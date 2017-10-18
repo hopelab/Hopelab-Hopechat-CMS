@@ -5,33 +5,22 @@
 
 .Form .Row {
     display: flex;
-    justify-content: space-between;
     border-bottom: 1px solid #333;
 
     padding: 30px 0;
 }
 
 .Form .EntityName {
-    display: flex;
-    line-height: 1;
     margin: 0;
-    flex-basis: 50%;
-}
-
-.Form .EntityName input {
-    border: 1px solid #333;
     width: 50%;
-    height: 30px;
 }
 
 .TagsContainer,
 .RulesContainer {
-    flex-basis: 50%;
+    width: 50%;
  }
 
  .RulesContainer {
-     display: flex;
-     flex-direction: column;
      padding: 0 30px;
  }
 
@@ -39,22 +28,15 @@
      width: 60%;
  }
 
-.Tags {
-    display: flex;
-}
-
 .Tags textarea {
     height: 100px;
     width: 100%;
 
-    border: 1px solid #333;
     border-radius: 5px;
 }
 
 .LiveContainer {
-    display: flex;
-    align-items: flex-start;
-    line-height: 1;
+    margin: 0 50px;
 }
 
 .ChildrenContainer {

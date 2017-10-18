@@ -37,6 +37,6 @@
     width: 40%;
 }
 
-.FormContainer .FormActionsContainer .Button {
-    width: 40%;
+.FormContainer .FormActionsContainer button {
+    width: 25%;
 }

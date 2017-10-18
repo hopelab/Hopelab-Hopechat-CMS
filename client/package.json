@@ -5,6 +5,7 @@
   "dependencies": {
     "ramda": "^0.25.0",
     "react": "^16.0.0",
+    "react-bootstrap": "^0.31.3",
     "react-dom": "^16.0.0",
     "react-scripts": "1.0.14",
     "react-treebeard": "^2.0.3"

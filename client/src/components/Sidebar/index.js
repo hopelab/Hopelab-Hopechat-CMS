@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import './style.css';
 
 import { Treebeard } from 'react-treebeard';
-import Button from '../forms/Button';
+import { Button } from 'react-bootstrap';
+
 import { entities } from '../../utils/config';
+import treeTheme from '../../utils/treeTheme';
 
 const propTypes = {
   addConversation: PropTypes.func.isRequired,
@@ -19,9 +21,15 @@ const propTypes = {
 const Sidebar = props => (
   <aside className="Sidebar">
     <div className="Inner">
-      <Button text="New Conversation" handleClick={props.addConversation} />
+      <Button bsStyle="default" onClick={props.addConversation}>
+        New Conversation
+      </Button>
 
-      <Treebeard data={props.treeData} onToggle={props.handleTreeToggle} />
+      <Treebeard
+        style={treeTheme}
+        data={props.treeData}
+        onToggle={props.handleTreeToggle}
+      />
     </div>
   </aside>
 );

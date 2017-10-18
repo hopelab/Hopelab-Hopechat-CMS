@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './style.css';
 
-import Input from '../Input';
+import { Button, FormControl } from 'react-bootstrap';
 
 const propTypes = {
   item: PropTypes.object.isRequired,
@@ -24,19 +24,23 @@ const saveItem = props => {
 
 const Card = props => (
   <div className="Card">
-    <span>{props.item.type}</span>
+    <span className="Title">{props.item.type}</span>
 
-    <Input
+    <FormControl
       type="text"
       name="child-name"
       id="child-name"
       value={props.item.name}
-      handleInput={e => handleNameUpdate(e, props)}
+      onChange={e => handleNameUpdate(e, props)}
     />
 
     <div className="Actions">
-      <span onClick={() => saveItem(props)}>Save</span>
-      <span onClick={() => props.onEditEntity(props.item)}>Edit</span>
+      <Button bsStyle="primary" onClick={() => props.onEditEntity(props.item)}>
+        Edit
+      </Button>
+      <Button bsStyle="success" onClick={() => saveItem(props)}>
+        Save
+      </Button>
     </div>
   </div>
 );

@@ -4,6 +4,8 @@ import './style.css';
 import Sidebar from '../Sidebar';
 import Dashboard from '../Dashboard';
 
+import { Modal } from 'react-bootstrap';
+
 import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
 
@@ -20,10 +22,7 @@ class App extends Component {
       .then(data => {
         this.setState({
           ...data,
-          treeData: dataUtil.createTreeView(
-            { ...data },
-            config.entities
-          )
+          treeData: dataUtil.createTreeView({ ...data }, config.entities)
         });
       })
       .catch(console.error);
@@ -65,14 +64,20 @@ class App extends Component {
       .then(res => res.json())
       .then(dataUtil.throwIfEmptyArray)
       .then(res => {
-        this.setState({
-          [entity.type]: res,
-          childEntities: this.state.childEntities.concat(res[res.length - 1])
-        }, () => {
-          this.setState({
-            treeData: dataUtil.createTreeView({ ...this.state }, config.entities),
-          })
-        });
+        this.setState(
+          {
+            [entity.type]: res,
+            childEntities: this.state.childEntities.concat(res[res.length - 1])
+          },
+          () => {
+            this.setState({
+              treeData: dataUtil.createTreeView(
+                { ...this.state },
+                config.entities
+              )
+            });
+          }
+        );
       })
       .catch(console.error);
   };
