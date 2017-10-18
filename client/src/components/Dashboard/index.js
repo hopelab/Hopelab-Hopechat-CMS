@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './style.css';
 
 import Form from '../forms/Form';
-import Button from '../forms/Button';
+import { Button } from 'react-bootstrap';
 
 const propTypes = {
   formConfig: PropTypes.object.isRequired,
@@ -23,10 +23,6 @@ const Dashboard = props => (
     <div className="Inner">
       {props.itemEditing !== null ? (
         <div className="FormContainer">
-          <span className="CloseButton" onClick={props.handleClose}>
-            X
-          </span>
-
           <Form
             item={props.itemEditing}
             config={props.formConfig[props.itemEditing.type]}
@@ -39,17 +35,23 @@ const Dashboard = props => (
           />
 
           <div className="FormActionsContainer">
-            <Button
-              className="Button"
-              handleClick={() => props.handleDeleteItem(props.itemEditing)}
-              text="Delete"
-            />
+            <Button bsStyle="default" onClick={props.handleClose}>
+              Close
+            </Button>
 
             <Button
-              className="Button"
-              handleClick={() => props.handleSaveItem(props.itemEditing)}
-              text="Save"
-            />
+              bsStyle="danger"
+              onClick={() => props.handleDeleteItem(props.itemEditing)}
+            >
+              Delete
+            </Button>
+
+            <Button
+              bsStyle="success"
+              onClick={() => props.handleSaveItem(props.itemEditing)}
+            >
+              Save
+            </Button>
           </div>
         </div>
       ) : null}

@@ -2,8 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './style.css';
 
-import Input from '../Input';
 import Card from '../Card';
+
+import {
+  FormGroup,
+  ControlLabel,
+  FormControl,
+  Checkbox
+} from 'react-bootstrap';
 
 import { createInitialFormState } from '../../../utils/data';
 
@@ -58,95 +64,100 @@ class Form extends Component {
       <div className="Form">
         <div className="Row">
           {formHasField('name', this.props.config.fields) ? (
-            <p className="EntityName">
-              <label htmlFor="name">
+            <FormGroup className="EntityName">
+              <ControlLabel>
                 {`${this.props.item.type} name`.toUpperCase()}
-              </label>
-              <Input
+              </ControlLabel>
+
+              <FormControl
                 type="text"
                 name="name"
                 id="name"
                 value={this.props.item.name}
-                handleInput={this.props.onUpdate}
+                onChange={this.props.onUpdate}
               />
-            </p>
+            </FormGroup>
           ) : null}
         </div>
 
         <div className="Row">
           {formHasField('tags', this.props.config.fields) ? (
             <div className="TagsContainer">
-              <p className="Tags">
-                <label htmlFor="tags">TAGS</label>
-                <textarea
+              <FormGroup className="Tags">
+                <ControlLabel>TAGS</ControlLabel>
+                <FormControl
+                  componentClass="textarea"
                   id="tags"
                   name="tags"
                   type="text"
                   value={this.props.item.tags || ''}
                   onChange={this.props.onUpdate}
                 />
-              </p>
+              </FormGroup>
             </div>
           ) : null}
 
           {formHasField('rules', this.props.config.fields) ? (
             <div className="RulesContainer">
-              <label>{`${this.props.item.type} logic/rules`.toUpperCase()}</label>
-              <select
+              <label>
+                {`${this.props.item.type} logic/rules`.toUpperCase()}
+              </label>
+              <FormControl
+                componentClass="select"
                 id="rule"
                 name="rule"
                 value={this.props.item.rule}
                 onChange={this.props.onUpdate}
               >
-                {this.props.config.rules.map(c => (
-                  <option key={c}>{c}</option>
-                ))}
-              </select>
+                {this.props.config.rules.map(c => <option key={c}>{c}</option>)}
+              </FormControl>
             </div>
           ) : null}
 
           {formHasField('live', this.props.config.fields) ? (
-            <p className="LiveContainer">
-              <label>Live?</label>
-              <Input
+            <FormGroup className="LiveContainer">
+              <ControlLabel>Live?</ControlLabel>
+              <Checkbox
                 id="isLive"
                 name="isLive"
                 type="checkbox"
                 checked={this.props.item.isLive}
-                handleInput={this.props.onUpdate}
+                onChange={this.props.onUpdate}
               />
-            </p>
+            </FormGroup>
           ) : null}
         </div>
 
-        <div className="ChildrenContainer">
-          <div className="ChildGrid">
-            {this.props.childEntities.map((e, i) => (
-              <Card
-                key={i}
-                item={e}
-                index={i}
-                onNameUpdate={this.props.onEntityNameUpdate}
-                onEditEntity={this.props.onEditEntity}
-                handleSaveItem={this.props.handleSaveItem}
-              />
-            ))}
-          </div>
-
-          <div className="AddButtonWrapper">
-            <span className="Add" onClick={this.handleChildEntityAddition}>
-              +
-            </span>
-            <select
-              value={this.state.entityToAdd}
-              onChange={this.handleChildSelection}
-            >
-              {this.props.config.children.map(c => (
-                <option key={c}>{c}</option>
+        {formHasField('children', this.props.config.fields) ? (
+          <div className="ChildrenContainer">
+            <div className="ChildGrid">
+              {this.props.childEntities.map((e, i) => (
+                <Card
+                  key={i}
+                  item={e}
+                  index={i}
+                  onNameUpdate={this.props.onEntityNameUpdate}
+                  onEditEntity={this.props.onEditEntity}
+                  handleSaveItem={this.props.handleSaveItem}
+                />
               ))}
-            </select>
+            </div>
+
+            <div className="AddButtonWrapper">
+              <span className="Add" onClick={this.handleChildEntityAddition}>
+                +
+              </span>
+              <select
+                value={this.state.entityToAdd}
+                onChange={this.handleChildSelection}
+              >
+                {this.props.config.children.map(c => (
+                  <option key={c}>{c}</option>
+                ))}
+              </select>
+            </div>
           </div>
-        </div>
+        ) : null}
       </div>
     );
   }
