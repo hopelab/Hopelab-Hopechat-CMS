@@ -4,8 +4,6 @@ import './style.css';
 import Sidebar from '../Sidebar';
 import Dashboard from '../Dashboard';
 
-import { Modal } from 'react-bootstrap';
-
 import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
 
@@ -54,6 +52,15 @@ class App extends Component {
       itemEditing: {
         ...this.state.itemEditing,
         [target.name]: value
+      }
+    });
+  };
+
+  handleUpdateMessageOptions = (field, content) => {
+    this.setState({
+      itemEditing: {
+        ...this.state.itemEditing,
+        [field]: content
       }
     });
   };
@@ -214,6 +221,7 @@ class App extends Component {
           handleNewChildEntity={this.handleNewChildEntity}
           handleUpdateChildEntityName={this.handleUpdateChildEntityName}
           handleEditingChildEntity={this.handleEditingChildEntity}
+          handleUpdateMessageOptions={this.handleUpdateMessageOptions}
           itemEditing={this.state.itemEditing}
           childEntities={this.state.childEntities}
         />

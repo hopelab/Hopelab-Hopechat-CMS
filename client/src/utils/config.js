@@ -48,7 +48,7 @@ const forms = {
     children: ['message'] // 'question', 'quick_reply', 'video', 'image'
   },
   message: {
-    fields: [],
+    fields: ['name'],
     children: []
   }
 };
@@ -142,7 +142,15 @@ const initialState = {
     name: '',
     blockId: '',
     tags: []
-  }
+  },
+
+  messageTypes: [
+    { id: 'text', display: 'Text' },
+    { id: 'question', display: 'Question' },
+    { id: 'questionWithReplies', display: 'Question with Replies' },
+    { id: 'image', display: 'Image' },
+    { id: 'video', display: 'Video' }
+  ]
 };
 
 const http = {

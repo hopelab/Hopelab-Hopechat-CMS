@@ -1,18 +1,15 @@
-'use strict';
-
 export default {
   tree: {
     base: {
       listStyle: 'none',
       backgroundColor: 'transparent',
       margin: 0,
-      padding: 0,
+      padding: 10,
       color: 'orange',
       fontFamily: 'lucida grande ,tahoma,verdana,arial,sans-serif',
       fontSize: '14px',
       border: '1px solid #333',
-      borderRadius: 5,
-      padding: 10
+      borderRadius: 5
     },
     node: {
       base: {

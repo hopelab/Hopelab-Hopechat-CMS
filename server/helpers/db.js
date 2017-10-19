@@ -14,6 +14,9 @@ const defaultData = {
   },
   [entityTypes.series]: {
     rule: 'sequential'
+  },
+  [entityTypes.message]: {
+    messageType: 'text'
   }
 };
 

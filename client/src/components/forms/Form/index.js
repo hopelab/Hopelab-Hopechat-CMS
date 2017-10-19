@@ -11,7 +11,10 @@ import {
   Checkbox
 } from 'react-bootstrap';
 
+import MessageOptions from '../MessageOptions';
+
 import { createInitialFormState } from '../../../utils/data';
+import { entities } from '../../../utils/config';
 
 const propTypes = {
   item: PropTypes.shape({
@@ -23,10 +26,11 @@ const propTypes = {
   config: PropTypes.object,
   childEntities: PropTypes.array.isRequired,
   onEntityAddition: PropTypes.func.isRequired,
-  onUpdate: PropTypes.func.isRequired,
+  handleUpdateItem: PropTypes.func.isRequired,
   onEntityNameUpdate: PropTypes.func.isRequired,
   onEditEntity: PropTypes.func.isRequired,
-  handleSaveItem: PropTypes.func.isRequired
+  handleSaveItem: PropTypes.func.isRequired,
+  handleUpdateMessageOptions: PropTypes.func.isRequired
 };
 
 /**
@@ -74,7 +78,7 @@ class Form extends Component {
                 name="name"
                 id="name"
                 value={this.props.item.name}
-                onChange={this.props.onUpdate}
+                onChange={this.props.handleUpdateItem}
               />
             </FormGroup>
           ) : null}
@@ -91,7 +95,7 @@ class Form extends Component {
                   name="tags"
                   type="text"
                   value={this.props.item.tags || ''}
-                  onChange={this.props.onUpdate}
+                  onChange={this.props.handleUpdateItem}
                 />
               </FormGroup>
             </div>
@@ -107,7 +111,7 @@ class Form extends Component {
                 id="rule"
                 name="rule"
                 value={this.props.item.rule}
-                onChange={this.props.onUpdate}
+                onChange={this.props.handleUpdateItem}
               >
                 {this.props.config.rules.map(c => <option key={c}>{c}</option>)}
               </FormControl>
@@ -122,9 +126,16 @@ class Form extends Component {
                 name="isLive"
                 type="checkbox"
                 checked={this.props.item.isLive}
-                onChange={this.props.onUpdate}
+                onChange={this.props.handleUpdateItem}
               />
             </FormGroup>
+          ) : null}
+
+          {this.props.item.type === entities.message ? (
+            <MessageOptions
+              item={this.props.item}
+              handleUpdateMessageOptions={this.props.handleUpdateMessageOptions}
+            />
           ) : null}
         </div>
 
