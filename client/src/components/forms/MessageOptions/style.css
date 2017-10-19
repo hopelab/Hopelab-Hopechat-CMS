@@ -1,0 +1,13 @@
+.MessageEdit {
+  display: flex;
+  flex-direction: row;
+}
+
+.MessageEdit div {
+  margin-right: 30px;
+}
+
+.MessageEdit textarea {
+  width: 300px;
+  height: 150px;
+}
