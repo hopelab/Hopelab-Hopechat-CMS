@@ -4,8 +4,6 @@ import './style.css';
 import Sidebar from '../Sidebar';
 import Dashboard from '../Dashboard';
 
-import { Modal } from 'react-bootstrap';
-
 import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
 
@@ -54,6 +52,26 @@ class App extends Component {
       itemEditing: {
         ...this.state.itemEditing,
         [target.name]: value
+      }
+    });
+  };
+
+  handleUpdateMessageOptions = (field, content) => {
+    let value;
+
+    if (field === 'messageType' || field === 'content') {
+      value = content.target.value;
+    }
+
+    if (field === 'questionWithReplies') {
+      value = content;
+      field = 'quick_replies';
+    }
+
+    this.setState({
+      itemEditing: {
+        ...this.state.itemEditing,
+        [field]: value
       }
     });
   };
@@ -214,6 +232,7 @@ class App extends Component {
           handleNewChildEntity={this.handleNewChildEntity}
           handleUpdateChildEntityName={this.handleUpdateChildEntityName}
           handleEditingChildEntity={this.handleEditingChildEntity}
+          handleUpdateMessageOptions={this.handleUpdateMessageOptions}
           itemEditing={this.state.itemEditing}
           childEntities={this.state.childEntities}
         />

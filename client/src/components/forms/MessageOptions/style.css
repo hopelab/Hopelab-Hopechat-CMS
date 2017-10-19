@@ -1,6 +1,6 @@
 .MessageEdit {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 .MessageEdit div {
@@ -10,4 +10,26 @@
 .MessageEdit textarea {
   width: 300px;
   height: 150px;
+}
+
+.MessageEdit .QuickReplies {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid #333;
+  border-radius: 5px;
+  padding: 15px;
+  margin: 15px 0;
+}
+
+.MessageEdit .QuickReplies li {
+  list-style: none;
+  border: 1px solid #333;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 0 15px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
 }
