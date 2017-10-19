@@ -57,18 +57,10 @@ class App extends Component {
   };
 
   handleUpdateMessageOptions = (field, content) => {
-    let contentToSet;
-
-    if (field === 'messageType' || field === 'content') {
-      contentToSet = content.target.value;
-    } else {
-      contentToSet = content;
-    }
-
     this.setState({
       itemEditing: {
         ...this.state.itemEditing,
-        [field]: contentToSet
+        [field]: content
       }
     });
   };

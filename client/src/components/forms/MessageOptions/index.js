@@ -76,7 +76,10 @@ class MessageOptions extends Component {
             placeholder="select"
             value={this.props.item.messageType}
             onChange={e =>
-              this.props.handleUpdateMessageOptions('messageType', e)}
+              this.props.handleUpdateMessageOptions(
+                'messageType',
+                e.target.value
+              )}
           >
             {initialState.messageTypes.map((mt, i) => (
               <option key={i} value={mt.id}>
@@ -96,7 +99,10 @@ class MessageOptions extends Component {
               type="text"
               value={this.props.item.content || ''}
               onChange={e =>
-                this.props.handleUpdateMessageOptions('content', e)}
+                this.props.handleUpdateMessageOptions(
+                  'content',
+                  e.target.value
+                )}
             />
           </FormGroup>
         ) : null}
