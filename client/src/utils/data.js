@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { entities, http, forms } from './config';
+import { entities, entitiesForCopy, http, forms } from './config';
 
 /**
  * POST Fetch Method
@@ -43,6 +43,36 @@ export function createInitialFormState(props) {
     ruleSelection: props.item.rule,
     entityToAdd: R.pathOr('', ['config', 'children', 0])(props)
   };
+}
+
+/**
+ * Determine if a given entity can be copied
+ * 
+ * @param {String} entity
+ * @returns {bool}
+*/
+export function entityCanBeCopied(entity) {
+  return entity === entities.series || entity === entities.block;
+}
+
+/**
+ * Get all entity id's that can be copied to
+ * 
+ * @param {String} entity
+ * @param {Object} appState
+ * @returns {bool}
+*/
+export function getEntitiesCanCopyTo(entity, appState) {
+  return entitiesForCopy[entity.type]
+    .reduce((prev, curr) => {
+      return prev.concat(
+        ...appState[curr].map(e => ({
+          name: e.name,
+          link: { type: e.type, id: e.id }
+        }))
+      );
+    }, [])
+    .filter(e => e.link.id !== entity.parent.id);
 }
 
 /**

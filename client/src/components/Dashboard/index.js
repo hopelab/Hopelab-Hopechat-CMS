@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import './style.css';
 
 import Form from '../forms/Form';
-import { Button } from 'react-bootstrap';
+import { Button, ButtonGroup, SplitButton, MenuItem } from 'react-bootstrap';
+
+import { entityCanBeCopied } from '../../utils/data';
 
 const propTypes = {
   formConfig: PropTypes.object.isRequired,
@@ -16,7 +18,9 @@ const propTypes = {
   handleEditingChildEntity: PropTypes.func.isRequired,
   handleUpdateMessageOptions: PropTypes.func.isRequired,
   itemEditing: PropTypes.object,
-  childEntities: PropTypes.array.isRequired
+  childEntities: PropTypes.array.isRequired,
+  entitiesCanCopyTo: PropTypes.array.isRequired,
+  handleCopyEntity: PropTypes.func.isRequired
 };
 
 const Dashboard = props => (
@@ -37,6 +41,23 @@ const Dashboard = props => (
           />
 
           <div className="FormActionsContainer">
+            {entityCanBeCopied(props.itemEditing.type) ? (
+              <ButtonGroup>
+                <SplitButton
+                  dropup
+                  bsStyle="primary"
+                  title="Copy To"
+                  id="bg-nested-dropdown"
+                  onSelect={props.handleCopyEntity}
+                >
+                  {props.entitiesCanCopyTo.map((e, i) => (
+                    <MenuItem key={i} eventKey={e}>
+                      {e.name}
+                    </MenuItem>
+                  ))}
+                </SplitButton>
+              </ButtonGroup>
+            ) : null}
             <Button bsStyle="default" onClick={props.handleClose}>
               Close
             </Button>
@@ -50,7 +71,7 @@ const Dashboard = props => (
 
             <Button
               bsStyle="success"
-              onClick={() => props.handleSaveItem(props.itemEditing)}
+              onClick={() => props.handleSaveItem({ item: props.itemEditing })}
             >
               Save
             </Button>

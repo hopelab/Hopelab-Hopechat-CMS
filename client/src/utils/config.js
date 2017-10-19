@@ -10,6 +10,17 @@ const entities = {
 };
 
 /**
+ * Entities Copying Map
+*/
+const entitiesForCopy = {
+  [entities.conversation]: [],
+  [entities.collection]: [],
+  [entities.series]: [entities.collection],
+  [entities.block]: [entities.series],
+  [entities.message]: []
+};
+
+/**
  * Server Route Operations
 */
 const operations = {
@@ -105,6 +116,7 @@ const initialState = {
     message: [],
     itemEditing: null,
     childEntities: [],
+    entitiesCanCopyTo: [],
     treeData: {},
     cursor: {}
   },
@@ -161,4 +173,12 @@ const http = {
   post: 'POST'
 };
 
-export { entities, forms, initialState, routes, http, operations };
+export {
+  entities,
+  entitiesForCopy,
+  forms,
+  initialState,
+  routes,
+  http,
+  operations
+};
