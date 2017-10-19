@@ -48,7 +48,7 @@ const forms = {
     children: ['message'] // 'question', 'quick_reply', 'video', 'image'
   },
   message: {
-    fields: [],
+    fields: ['name'],
     children: []
   }
 };

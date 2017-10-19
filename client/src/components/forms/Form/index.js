@@ -11,7 +11,10 @@ import {
   Checkbox
 } from 'react-bootstrap';
 
+import MessageOptions from '../MessageOptions';
+
 import { createInitialFormState } from '../../../utils/data';
+import { entities } from '../../../utils/config';
 
 const propTypes = {
   item: PropTypes.shape({
@@ -125,6 +128,13 @@ class Form extends Component {
                 onChange={this.props.onUpdate}
               />
             </FormGroup>
+          ) : null}
+
+          {this.props.item.type === entities.message ? (
+            <MessageOptions
+              item={this.props.item}
+              onUpdate={this.props.onUpdate}
+            />
           ) : null}
         </div>
 
