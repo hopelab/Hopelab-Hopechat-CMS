@@ -57,21 +57,18 @@ class App extends Component {
   };
 
   handleUpdateMessageOptions = (field, content) => {
-    let value;
+    let contentToSet;
 
     if (field === 'messageType' || field === 'content') {
-      value = content.target.value;
-    }
-
-    if (field === 'questionWithReplies') {
-      value = content;
-      field = 'quick_replies';
+      contentToSet = content.target.value;
+    } else {
+      contentToSet = content;
     }
 
     this.setState({
       itemEditing: {
         ...this.state.itemEditing,
-        [field]: value
+        [field]: contentToSet
       }
     });
   };

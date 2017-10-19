@@ -45,7 +45,7 @@ class MessageOptions extends Component {
       replies = replies.concat(newReply);
     }
 
-    this.props.handleUpdateMessageOptions('questionWithReplies', replies);
+    this.props.handleUpdateMessageOptions('quick_replies', replies);
   };
 
   handleUpdateQuickReplyText = (e, i) => {
@@ -55,12 +55,12 @@ class MessageOptions extends Component {
 
     replies[i].title = value;
 
-    this.props.handleUpdateMessageOptions('questionWithReplies', replies);
+    this.props.handleUpdateMessageOptions('quick_replies', replies);
   };
 
   deleteQuickReply = indexToRemove => {
     this.props.handleUpdateMessageOptions(
-      'questionWithReplies',
+      'quick_replies',
       this.props.item.quick_replies.filter((qr, i) => i !== indexToRemove)
     );
   };
