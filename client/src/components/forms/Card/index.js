@@ -19,7 +19,7 @@ const handleNameUpdate = (e, props) => {
 };
 
 const saveItem = props => {
-  props.handleSaveItem(props.item, false);
+  props.handleSaveItem({ item: props.item });
 };
 
 const Card = props => (

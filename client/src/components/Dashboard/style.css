@@ -17,17 +17,6 @@
     flex-direction: column;
 }
 
-.FormContainer .CloseButton {
-    margin-left: auto;
-    font-size: 20px;
-    font-weight: 200;
-}
-
-.FormContainer .CloseButton:hover {
-    cursor: pointer;
-    opacity: 0.6;
-}
-
 .FormContainer .FormActionsContainer {
     display: flex;
     flex-direction: row;
@@ -35,8 +24,4 @@
     margin-top: auto;
     margin-left: auto;
     width: 40%;
-}
-
-.FormContainer .FormActionsContainer button {
-    width: 25%;
 }

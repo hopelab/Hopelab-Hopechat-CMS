@@ -35,10 +35,20 @@ class App extends Component {
         .then(res => res.json())
         .then(dataUtil.throwIfEmptyArray)
         .then(res => {
-          this.setState({
-            itemEditing: res[res.length - 1],
-            [config.entities.conversation]: res
-          });
+          this.setState(
+            {
+              itemEditing: res[res.length - 1],
+              [config.entities.conversation]: res
+            },
+            () => {
+              this.setState({
+                entitiesCanCopyTo: dataUtil.getEntitiesCanCopyTo(
+                  this.state.itemEditing,
+                  this.state
+                )
+              });
+            }
+          );
         })
         .catch(console.error);
     }
@@ -81,6 +91,10 @@ class App extends Component {
               treeData: dataUtil.createTreeView(
                 { ...this.state },
                 config.entities
+              ),
+              entitiesCanCopyTo: dataUtil.getEntitiesCanCopyTo(
+                this.state.itemEditing,
+                this.state
               )
             });
           }
@@ -104,11 +118,15 @@ class App extends Component {
       childEntities: dataUtil.getChildEntitiesFor(
         this.state.itemEditing,
         this.state
+      ),
+      entitiesCanCopyTo: dataUtil.getEntitiesCanCopyTo(
+        this.state.itemEditing,
+        this.state
       )
     });
   };
 
-  handleSaveItem = (item, reset) => {
+  handleSaveItem = ({ item, reset, switchTo }) => {
     const route = item.id ? config.operations.update : config.operations.create;
 
     dataUtil
@@ -118,7 +136,9 @@ class App extends Component {
       .then(res => {
         this.setState(
           {
-            itemEditing: reset ? null : this.state.itemEditing,
+            itemEditing: reset
+              ? null
+              : switchTo ? res[res.length - 1] : this.state.itemEditing,
             [item.type]: res
           },
           this.updateTreeStructure
@@ -138,6 +158,7 @@ class App extends Component {
           {
             itemEditing: null,
             childEntities: [],
+            entitiesCanCopyTo: [],
             [item.type]: res
           },
           () => {
@@ -163,6 +184,10 @@ class App extends Component {
           childEntities: dataUtil.getChildEntitiesFor(
             this.state.itemEditing,
             this.state
+          ),
+          entitiesCanCopyTo: dataUtil.getEntitiesCanCopyTo(
+            this.state.itemEditing,
+            this.state
           )
         });
       }
@@ -170,10 +195,15 @@ class App extends Component {
   };
 
   handleDashboardClose = () => {
-    this.setState({
-      itemEditing: null,
-      childEntities: []
-    });
+    this.setState(
+      {
+        itemEditing: null,
+        childEntities: []
+      },
+      () => {
+        entitiesCanCopyTo: [];
+      }
+    );
   };
 
   handleTreeToggle = (node, toggled) => {
@@ -196,10 +226,27 @@ class App extends Component {
           childEntities: dataUtil.getChildEntitiesFor(
             this.state.itemEditing,
             this.state
+          ),
+          entitiesCanCopyTo: dataUtil.getEntitiesCanCopyTo(
+            this.state.itemEditing,
+            this.state
           )
         });
       }
     );
+  };
+
+  handleCopyEntity = entity => {
+    this.handleSaveItem({
+      item: {
+        ...this.state.itemEditing,
+        parent: {
+          ...entity.link
+        },
+        id: null
+      },
+      switchTo: true
+    });
   };
 
   render() {
@@ -224,6 +271,8 @@ class App extends Component {
           handleUpdateMessageOptions={this.handleUpdateMessageOptions}
           itemEditing={this.state.itemEditing}
           childEntities={this.state.childEntities}
+          entitiesCanCopyTo={this.state.entitiesCanCopyTo}
+          handleCopyEntity={this.handleCopyEntity}
         />
       </div>
     );
