@@ -130,7 +130,15 @@ class App extends Component {
     const route = item.id ? config.operations.update : config.operations.create;
 
     dataUtil
-      .post(config.routes[item.type][route], item)
+      .post(
+        config.routes[item.type][route],
+        dataUtil.makeCopyAndRemoveKeys(item, [
+          'active',
+          'children',
+          'expand',
+          'toggled'
+        ])
+      )
       .then(res => res.json())
       .then(dataUtil.throwIfEmptyArray)
       .then(res => {
@@ -177,6 +185,7 @@ class App extends Component {
   handleEditingChildEntity = entity => {
     this.setState(
       {
+        // cursor: entity,
         itemEditing: entity
       },
       () => {
@@ -188,6 +197,10 @@ class App extends Component {
           entitiesCanCopyTo: dataUtil.getEntitiesCanCopyTo(
             this.state.itemEditing,
             this.state
+          ),
+          treeData: dataUtil.createTreeView(
+            { ...this.state },
+            config.entities
           )
         });
       }
@@ -201,20 +214,36 @@ class App extends Component {
         childEntities: []
       },
       () => {
-        entitiesCanCopyTo: [];
+        this.setState({
+          entitiesCanCopyTo: [],
+          treeData: dataUtil.createTreeView(
+            { ...this.state },
+            config.entities
+          )
+        });
       }
     );
   };
 
-  handleTreeToggle = (node, toggled) => {
+  handleTreeToggle = ({ node, expand }) => {
     /* eslint-disable react/no-direct-mutation-state */
+
+    if (expand) {
+      if (node.children) {
+        node.toggled = !node.toggled;
+      }
+
+      this.setState({
+        cursor: node
+      });
+
+      return;
+    }
+
     if (this.state.cursor) {
       this.state.cursor.active = false;
     }
     node.active = true;
-    if (node.children) {
-      node.toggled = toggled;
-    }
 
     this.setState(
       {

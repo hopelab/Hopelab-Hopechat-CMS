@@ -2,29 +2,25 @@ export default {
   tree: {
     base: {
       listStyle: 'none',
-      backgroundColor: 'transparent',
+      backgroundColor: '#21252B',
       margin: 0,
-      padding: 10,
-      width: '100%',
+      padding: 0,
+      color: '#9DA5AB',
       fontFamily: 'lucida grande ,tahoma,verdana,arial,sans-serif',
-      fontSize: '14px',
-      border: '1px solid #333',
-      borderRadius: 5
+      fontSize: '14px'
     },
     node: {
       base: {
-        position: 'relative',
-        borderRadius: 5
+        position: 'relative'
       },
       link: {
         cursor: 'pointer',
         position: 'relative',
-        padding: '2px 5px',
-        display: 'block',
-        borderRadius: 1
+        padding: '0px 5px',
+        display: 'block'
       },
       activeLink: {
-        background: 'rgba(0, 0, 0, 0.05)'
+        background: '#31363F'
       },
       toggle: {
         base: {
@@ -45,7 +41,7 @@ export default {
         height: 14,
         width: 14,
         arrow: {
-          fill: '#333',
+          fill: '#9DA5AB',
           strokeWidth: 0
         }
       },
@@ -53,7 +49,7 @@ export default {
         base: {
           display: 'inline-block',
           verticalAlign: 'top',
-          color: '#333'
+          color: '#9DA5AB'
         },
         connector: {
           width: '2px',
