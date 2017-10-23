@@ -21,7 +21,8 @@
 .Sidebar .PoolContainer {
     display: flex;
     align-items: center;
-    height: 25px;
+    height: auto;
+    padding: 5px 0 5px 5px;
 }
 
 .Sidebar .PoolContainer:hover {
