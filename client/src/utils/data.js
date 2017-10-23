@@ -182,7 +182,7 @@ function getToggledAndActiveStatus(node, action) {
  * @returns {Object}
 */
 // TODO: use recursion
-export function createTreeView(data, entities) {
+export function createTreeView({ data, entities }) {
   let tree = {
     name: 'hopelab',
     toggled: true,

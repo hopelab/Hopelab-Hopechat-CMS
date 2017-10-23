@@ -20,7 +20,7 @@ class App extends Component {
       .then(data => {
         this.setState({
           ...data,
-          treeData: dataUtil.createTreeView({ ...data }, config.entities)
+          treeData: dataUtil.createTreeView({ data: { ...data }, entities: config.entities })
         });
       })
       .catch(console.error);
@@ -88,10 +88,10 @@ class App extends Component {
           },
           () => {
             this.setState({
-              treeData: dataUtil.createTreeView(
-                { ...this.state },
-                config.entities
-              ),
+              treeData: dataUtil.createTreeView({
+                data: { ...this.state },
+                entities: config.entities
+              }),
               entitiesCanCopyTo: dataUtil.getEntitiesCanCopyTo(
                 this.state.itemEditing,
                 this.state
@@ -114,7 +114,7 @@ class App extends Component {
 
   updateTreeStructure = () => {
     this.setState({
-      treeData: dataUtil.createTreeView({ ...this.state }, config.entities),
+      treeData: dataUtil.createTreeView({ data: { ...this.state }, entities: config.entities }),
       childEntities: dataUtil.getChildEntitiesFor(
         this.state.itemEditing,
         this.state
@@ -171,10 +171,10 @@ class App extends Component {
           },
           () => {
             this.setState({
-              treeData: dataUtil.createTreeView(
-                { ...this.state },
-                config.entities
-              )
+              treeData: dataUtil.createTreeView({
+                data: { ...this.state },
+                entities: config.entities
+              })
             });
           }
         );
@@ -198,10 +198,10 @@ class App extends Component {
             this.state.itemEditing,
             this.state
           ),
-          treeData: dataUtil.createTreeView(
-            { ...this.state },
-            config.entities
-          )
+          treeData: dataUtil.createTreeView({
+            data: { ...this.state },
+            entities: config.entities
+          })
         });
       }
     );
@@ -218,10 +218,10 @@ class App extends Component {
       () => {
         this.setState({
           entitiesCanCopyTo: [],
-          treeData: dataUtil.createTreeView(
-            { ...this.state },
-            config.entities
-          )
+          treeData: dataUtil.createTreeView({
+            data: { ...this.state },
+            entities: config.entities
+          })
         });
       }
     );
