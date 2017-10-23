@@ -5,14 +5,12 @@
 }
 
 .Dashboard .Inner {
-    height: 100%;
     border: 1px solid #333;
     border-radius: 10px;
     padding: 20px 10px;
 }
 
 .FormContainer {
-    height: 100%;
     display: flex;
     flex-direction: column;
 }
@@ -21,7 +19,6 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    margin-top: auto;
-    margin-left: auto;
+    margin: 15px 0 15px auto;
     width: 40%;
 }

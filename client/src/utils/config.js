@@ -115,6 +115,7 @@ const initialState = {
     block: [],
     message: [],
     itemEditing: null,
+    itemHasBeenEdited: false,
     childEntities: [],
     entitiesCanCopyTo: [],
     treeData: {},
