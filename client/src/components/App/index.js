@@ -208,6 +208,8 @@ class App extends Component {
   };
 
   handleDashboardClose = () => {
+    this.state.cursor.active = false;
+
     this.setState(
       {
         itemEditing: null,
