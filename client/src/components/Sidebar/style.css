@@ -33,3 +33,22 @@
 .Sidebar .PoolContainer .IconContainer {
     min-width: 25px;
 }
+
+.Sidebar .PoolContainer .Circle {
+    width: 11px;
+    height: 11px;
+    line-height: 11px;
+    border-radius: 50%; /* the magic */
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    text-align: center;
+    color: white;
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin: 0 10px 0 10px;
+}
+
+.Sidebar .PoolContainer .Circle.green {
+    background-color: #16a085;
+}

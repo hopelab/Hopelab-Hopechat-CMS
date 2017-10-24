@@ -20,7 +20,10 @@ class App extends Component {
       .then(data => {
         this.setState({
           ...data,
-          treeData: dataUtil.createTreeView({ data: { ...data }, entities: config.entities })
+          treeData: dataUtil.createTreeView({
+            data: { ...data },
+            entities: config.entities
+          })
         });
       })
       .catch(console.error);
@@ -114,7 +117,10 @@ class App extends Component {
 
   updateTreeStructure = () => {
     this.setState({
-      treeData: dataUtil.createTreeView({ data: { ...this.state }, entities: config.entities }),
+      treeData: dataUtil.createTreeView({
+        data: { ...this.state },
+        entities: config.entities
+      }),
       childEntities: dataUtil.getChildEntitiesFor(
         this.state.itemEditing,
         this.state
@@ -200,7 +206,8 @@ class App extends Component {
           ),
           treeData: dataUtil.createTreeView({
             data: { ...this.state },
-            entities: config.entities
+            entities: config.entities,
+            active: this.state.itemEditing.id
           })
         });
       }

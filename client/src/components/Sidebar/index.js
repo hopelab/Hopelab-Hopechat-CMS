@@ -53,6 +53,7 @@ const PoolContainer = ({ onClick, node }) => {
       >
         {node.name}
       </span>
+      {node.isLive ? <span className="Circle green" /> : null}
     </div>
   );
 };

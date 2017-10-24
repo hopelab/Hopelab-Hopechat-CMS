@@ -53,7 +53,7 @@ export function createInitialFormState(props) {
  * @returns {Object}
 */
 export function makeCopyAndRemoveKeys(item, keys) {
-  return R.omit(item, keys);
+  return R.omit(keys, item);
 }
 
 /**
@@ -153,36 +153,13 @@ export function getChildEntitiesFor(item, entities) {
 /**
  * Create Tree View Data Structure for UI
  * 
- * @param {Object} action
- * @param {String} entityId
- * @returns {bool}
-*/
-function getToggledAndActiveStatus(node, action) {
-  return {
-    toggled:
-      node.toggled !== undefined
-        ? action.action === 'toggle' && action.id === node.id
-          ? !node.toggled
-          : node.toggled
-        : true,
-    active:
-      node.active !== undefined
-        ? action.action === 'select' && action.id === node.id
-          ? !node.active
-          : node.active
-        : true
-  };
-}
-
-/**
- * Create Tree View Data Structure for UI
- * 
+ * @param {String} active
  * @param {Object} data
  * @param {Object} entities
  * @returns {Object}
 */
 // TODO: use recursion
-export function createTreeView({ data, entities }) {
+export function createTreeView({ active, data, entities }) {
   let tree = {
     name: 'hopelab',
     toggled: true,
@@ -193,6 +170,8 @@ export function createTreeView({ data, entities }) {
     return {
       ...c,
       toggled: true,
+      active: active === c.id,
+      isLive: c.isLive,
       children: data[entities.collection].filter(
         R.pathEq(['parent', 'id'], c.id)
       )
@@ -206,6 +185,7 @@ export function createTreeView({ data, entities }) {
         return {
           ...d,
           toggled: true,
+          active: active === d.id,
           children: data[entities.series].filter(
             R.pathEq(['parent', 'id'], d.id)
           )
@@ -224,9 +204,13 @@ export function createTreeView({ data, entities }) {
             return {
               ...f,
               toggled: true,
-              children: data[entities.block].filter(
-                R.pathEq(['parent', 'id'], f.id)
-              )
+              active: active === f.id,
+              children: data[entities.block]
+                .filter(R.pathEq(['parent', 'id'], f.id))
+                .map(g => ({
+                  ...g,
+                  active: active === g.id
+                }))
             };
           })
         };
