@@ -30,7 +30,7 @@ const Dashboard = props => (
       <div className="Inner">
         <div className="FormContainer">
           <div className="FormActionsContainer">
-            {entityCanBeCopied(props.itemEditing.type) ? (
+            {entityCanBeCopied(props.itemEditing.type) && (
               <ButtonGroup>
                 <SplitButton
                   bsStyle="primary"
@@ -45,7 +45,7 @@ const Dashboard = props => (
                   ))}
                 </SplitButton>
               </ButtonGroup>
-            ) : null}
+            )}
             <Button bsStyle="default" onClick={props.handleClose}>
               Close
             </Button>
