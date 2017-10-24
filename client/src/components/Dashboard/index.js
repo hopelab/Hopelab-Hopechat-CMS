@@ -26,7 +26,7 @@ const propTypes = {
 
 const Dashboard = props => (
   <div className="Dashboard">
-    {props.itemEditing !== null ? (
+    {props.itemEditing !== null && (
       <div className="Inner">
         <div className="FormContainer">
           <div className="FormActionsContainer">
@@ -78,7 +78,7 @@ const Dashboard = props => (
           />
         </div>
       </div>
-    ) : null}
+    )}
   </div>
 );
 
