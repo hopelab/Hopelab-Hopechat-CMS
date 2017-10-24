@@ -14,10 +14,11 @@ const propTypes = {
   handleSaveItem: PropTypes.func.isRequired,
   handleDeleteItem: PropTypes.func.isRequired,
   handleNewChildEntity: PropTypes.func.isRequired,
-  handleUpdateChildEntityName: PropTypes.func.isRequired,
+  handleUpdateChildEntity: PropTypes.func.isRequired,
   handleEditingChildEntity: PropTypes.func.isRequired,
   handleUpdateMessageOptions: PropTypes.func.isRequired,
   itemEditing: PropTypes.object,
+  itemHasBeenEdited: PropTypes.bool.isRequired,
   childEntities: PropTypes.array.isRequired,
   entitiesCanCopyTo: PropTypes.array.isRequired,
   handleCopyEntity: PropTypes.func.isRequired
@@ -25,26 +26,13 @@ const propTypes = {
 
 const Dashboard = props => (
   <div className="Dashboard">
-    <div className="Inner">
-      {props.itemEditing !== null ? (
+    {props.itemEditing !== null && (
+      <div className="Inner">
         <div className="FormContainer">
-          <Form
-            item={props.itemEditing}
-            config={props.formConfig[props.itemEditing.type]}
-            handleUpdateItem={props.handleUpdateItem}
-            handleUpdateMessageOptions={props.handleUpdateMessageOptions}
-            onEntityAddition={props.handleNewChildEntity}
-            onEntityNameUpdate={props.handleUpdateChildEntityName}
-            onEditEntity={props.handleEditingChildEntity}
-            childEntities={props.childEntities}
-            handleSaveItem={props.handleSaveItem}
-          />
-
           <div className="FormActionsContainer">
-            {entityCanBeCopied(props.itemEditing.type) ? (
+            {entityCanBeCopied(props.itemEditing.type) && (
               <ButtonGroup>
                 <SplitButton
-                  dropup
                   bsStyle="primary"
                   title="Copy To"
                   id="bg-nested-dropdown"
@@ -57,7 +45,7 @@ const Dashboard = props => (
                   ))}
                 </SplitButton>
               </ButtonGroup>
-            ) : null}
+            )}
             <Button bsStyle="default" onClick={props.handleClose}>
               Close
             </Button>
@@ -72,13 +60,25 @@ const Dashboard = props => (
             <Button
               bsStyle="success"
               onClick={() => props.handleSaveItem({ item: props.itemEditing })}
+              disabled={!props.itemHasBeenEdited}
             >
               Save
             </Button>
           </div>
+          <Form
+            item={props.itemEditing}
+            config={props.formConfig[props.itemEditing.type]}
+            handleUpdateItem={props.handleUpdateItem}
+            handleUpdateMessageOptions={props.handleUpdateMessageOptions}
+            onEntityAddition={props.handleNewChildEntity}
+            handleUpdateChildEntity={props.handleUpdateChildEntity}
+            onEditEntity={props.handleEditingChildEntity}
+            childEntities={props.childEntities}
+            handleSaveItem={props.handleSaveItem}
+          />
         </div>
-      ) : null}
-    </div>
+      </div>
+    )}
   </div>
 );
 

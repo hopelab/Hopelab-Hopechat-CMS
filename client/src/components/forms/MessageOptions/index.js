@@ -8,7 +8,9 @@ import { initialState } from '../../../utils/config';
 
 const propTypes = {
   item: PropTypes.object.isRequired,
-  handleUpdateMessageOptions: PropTypes.func.isRequired
+  onUpdate: PropTypes.func.isRequired,
+  editingAsChildEntity: PropTypes.bool,
+  index: PropTypes.number
 };
 
 /**
@@ -28,11 +30,12 @@ function messageTypeHasQuickReplies(type) {
 }
 
 class MessageOptions extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   addNewQuickReply = () => {
+    if ((this.props.item.quick_replies || []).length >= 11) {
+      return;
+    }
+
+    const { index } = this.props;
     let replies = [];
     const newReply = {
       type: 'text',
@@ -45,24 +48,34 @@ class MessageOptions extends Component {
       replies = replies.concat(newReply);
     }
 
-    this.props.handleUpdateMessageOptions('quick_replies', replies);
+    this.props.onUpdate({ index, field: 'quick_replies', value: replies });
   };
 
   handleUpdateQuickReplyText = (e, i) => {
+    const { index } = this.props;
+
     let value = e.target.value;
+
+    if (value.length > 20) {
+      return;
+    }
 
     let replies = [...this.props.item.quick_replies];
 
     replies[i].title = value;
 
-    this.props.handleUpdateMessageOptions('quick_replies', replies);
+    this.props.onUpdate({ index, field: 'quick_replies', value: replies });
   };
 
   deleteQuickReply = indexToRemove => {
-    this.props.handleUpdateMessageOptions(
-      'quick_replies',
-      this.props.item.quick_replies.filter((qr, i) => i !== indexToRemove)
-    );
+    const { index } = this.props;
+    this.props.onUpdate({
+      index,
+      field: 'quick_replies',
+      value: this.props.item.quick_replies.filter(
+        (qr, i) => i !== indexToRemove
+      )
+    });
   };
 
   render() {
@@ -76,10 +89,11 @@ class MessageOptions extends Component {
             placeholder="select"
             value={this.props.item.messageType}
             onChange={e =>
-              this.props.handleUpdateMessageOptions(
-                'messageType',
-                e.target.value
-              )}
+              this.props.onUpdate({
+                index: this.props.index,
+                field: e.target.name,
+                value: e.target.value
+              })}
           >
             {initialState.messageTypes.map((mt, i) => (
               <option key={i} value={mt.id}>
@@ -99,10 +113,12 @@ class MessageOptions extends Component {
               type="text"
               value={this.props.item.content || ''}
               onChange={e =>
-                this.props.handleUpdateMessageOptions(
-                  'content',
-                  e.target.value
-                )}
+                e.target.value.length < 640 &&
+                this.props.onUpdate({
+                  index: this.props.index,
+                  field: e.target.name,
+                  value: e.target.value
+                })}
             />
           </FormGroup>
         ) : null}
