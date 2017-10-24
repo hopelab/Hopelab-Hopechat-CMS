@@ -46,6 +46,17 @@ export function createInitialFormState(props) {
 }
 
 /**
+ * Make a copy of an item, removing certain keys
+ * 
+ * @param {Object} item
+ * @param {Array} keys
+ * @returns {Object}
+*/
+export function makeCopyAndRemoveKeys(item, keys) {
+  return R.omit(keys, item);
+}
+
+/**
  * Determine if a given entity can be copied
  * 
  * @param {String} entity
@@ -142,12 +153,13 @@ export function getChildEntitiesFor(item, entities) {
 /**
  * Create Tree View Data Structure for UI
  * 
+ * @param {String} active
  * @param {Object} data
  * @param {Object} entities
  * @returns {Object}
 */
 // TODO: use recursion
-export function createTreeView(data, entities) {
+export function createTreeView({ active, data, entities }) {
   let tree = {
     name: 'hopelab',
     toggled: true,
@@ -158,6 +170,8 @@ export function createTreeView(data, entities) {
     return {
       ...c,
       toggled: true,
+      active: active === c.id,
+      isLive: c.isLive,
       children: data[entities.collection].filter(
         R.pathEq(['parent', 'id'], c.id)
       )
@@ -171,6 +185,7 @@ export function createTreeView(data, entities) {
         return {
           ...d,
           toggled: true,
+          active: active === d.id,
           children: data[entities.series].filter(
             R.pathEq(['parent', 'id'], d.id)
           )
@@ -189,9 +204,13 @@ export function createTreeView(data, entities) {
             return {
               ...f,
               toggled: true,
-              children: data[entities.block].filter(
-                R.pathEq(['parent', 'id'], f.id)
-              )
+              active: active === f.id,
+              children: data[entities.block]
+                .filter(R.pathEq(['parent', 'id'], f.id))
+                .map(g => ({
+                  ...g,
+                  active: active === g.id
+                }))
             };
           })
         };

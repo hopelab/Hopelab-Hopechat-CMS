@@ -20,7 +20,10 @@ class App extends Component {
       .then(data => {
         this.setState({
           ...data,
-          treeData: dataUtil.createTreeView({ ...data }, config.entities)
+          treeData: dataUtil.createTreeView({
+            data: { ...data },
+            entities: config.entities
+          })
         });
       })
       .catch(console.error);
@@ -90,10 +93,10 @@ class App extends Component {
           },
           () => {
             this.setState({
-              treeData: dataUtil.createTreeView(
-                { ...this.state },
-                config.entities
-              ),
+              treeData: dataUtil.createTreeView({
+                data: { ...this.state },
+                entities: config.entities
+              }),
               entitiesCanCopyTo: dataUtil.getEntitiesCanCopyTo(
                 this.state.itemEditing,
                 this.state
@@ -116,7 +119,10 @@ class App extends Component {
 
   updateTreeStructure = () => {
     this.setState({
-      treeData: dataUtil.createTreeView({ ...this.state }, config.entities),
+      treeData: dataUtil.createTreeView({
+        data: { ...this.state },
+        entities: config.entities
+      }),
       childEntities: dataUtil.getChildEntitiesFor(
         this.state.itemEditing,
         this.state
@@ -132,7 +138,15 @@ class App extends Component {
     const route = item.id ? config.operations.update : config.operations.create;
 
     dataUtil
-      .post(config.routes[item.type][route], item)
+      .post(
+        config.routes[item.type][route],
+        dataUtil.makeCopyAndRemoveKeys(item, [
+          'active',
+          'children',
+          'expand',
+          'toggled'
+        ])
+      )
       .then(res => res.json())
       .then(dataUtil.throwIfEmptyArray)
       .then(res => {
@@ -165,10 +179,10 @@ class App extends Component {
           },
           () => {
             this.setState({
-              treeData: dataUtil.createTreeView(
-                { ...this.state },
-                config.entities
-              )
+              treeData: dataUtil.createTreeView({
+                data: { ...this.state },
+                entities: config.entities
+              })
             });
           }
         );
@@ -191,13 +205,20 @@ class App extends Component {
           entitiesCanCopyTo: dataUtil.getEntitiesCanCopyTo(
             this.state.itemEditing,
             this.state
-          )
+          ),
+          treeData: dataUtil.createTreeView({
+            data: { ...this.state },
+            entities: config.entities,
+            active: this.state.itemEditing.id
+          })
         });
       }
     );
   };
 
   handleDashboardClose = () => {
+    this.state.cursor.active = false;
+
     this.setState(
       {
         itemEditing: null,
@@ -206,21 +227,35 @@ class App extends Component {
       },
       () => {
         this.setState({
-          entitiesCanCopyTo: []
+          entitiesCanCopyTo: [],
+          treeData: dataUtil.createTreeView({
+            data: { ...this.state },
+            entities: config.entities
+          })
         });
       }
     );
   };
 
-  handleTreeToggle = (node, toggled) => {
+  handleTreeToggle = ({ node, expand }) => {
     /* eslint-disable react/no-direct-mutation-state */
+
+    if (expand) {
+      if (node.children) {
+        node.toggled = !node.toggled;
+      }
+
+      this.setState({
+        cursor: node
+      });
+
+      return;
+    }
+
     if (this.state.cursor) {
       this.state.cursor.active = false;
     }
     node.active = true;
-    if (node.children) {
-      node.toggled = toggled;
-    }
 
     this.setState(
       {
