@@ -62,16 +62,18 @@ class App extends Component {
       itemEditing: {
         ...this.state.itemEditing,
         [target.name]: value
-      }
+      },
+      itemHasBeenEdited: true
     });
   };
 
-  handleUpdateMessageOptions = (field, content) => {
+  handleUpdateMessageOptions = ({ field, value }) => {
     this.setState({
       itemEditing: {
         ...this.state.itemEditing,
-        [field]: content
-      }
+        [field]: value
+      },
+      itemHasBeenEdited: true
     });
   };
 
@@ -103,9 +105,9 @@ class App extends Component {
       .catch(console.error);
   };
 
-  handleUpdateChildEntityName = (index, name) => {
+  handleUpdateChildEntity = ({ index, field, value }) => {
     const newArray = Array.from(this.state.childEntities);
-    newArray[index].name = name;
+    newArray[index][field] = value;
 
     this.setState({
       childEntities: newArray
@@ -177,7 +179,8 @@ class App extends Component {
   handleEditingChildEntity = entity => {
     this.setState(
       {
-        itemEditing: entity
+        itemEditing: entity,
+        itemHasBeenEdited: false
       },
       () => {
         this.setState({
@@ -198,10 +201,13 @@ class App extends Component {
     this.setState(
       {
         itemEditing: null,
+        itemHasBeenEdited: false,
         childEntities: []
       },
       () => {
-        entitiesCanCopyTo: [];
+        this.setState({
+          entitiesCanCopyTo: []
+        });
       }
     );
   };
@@ -219,7 +225,8 @@ class App extends Component {
     this.setState(
       {
         cursor: node,
-        itemEditing: node.type ? node : this.state.itemEditing
+        itemEditing: node.type ? node : this.state.itemEditing,
+        itemHasBeenEdited: false
       },
       () => {
         this.setState({
@@ -266,10 +273,11 @@ class App extends Component {
           handleSaveItem={this.handleSaveItem}
           handleDeleteItem={this.handleDeleteItem}
           handleNewChildEntity={this.handleNewChildEntity}
-          handleUpdateChildEntityName={this.handleUpdateChildEntityName}
+          handleUpdateChildEntity={this.handleUpdateChildEntity}
           handleEditingChildEntity={this.handleEditingChildEntity}
           handleUpdateMessageOptions={this.handleUpdateMessageOptions}
           itemEditing={this.state.itemEditing}
+          itemHasBeenEdited={this.state.itemHasBeenEdited}
           childEntities={this.state.childEntities}
           entitiesCanCopyTo={this.state.entitiesCanCopyTo}
           handleCopyEntity={this.handleCopyEntity}

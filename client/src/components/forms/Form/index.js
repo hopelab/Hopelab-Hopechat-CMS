@@ -27,7 +27,7 @@ const propTypes = {
   childEntities: PropTypes.array.isRequired,
   onEntityAddition: PropTypes.func.isRequired,
   handleUpdateItem: PropTypes.func.isRequired,
-  onEntityNameUpdate: PropTypes.func.isRequired,
+  handleUpdateChildEntity: PropTypes.func.isRequired,
   onEditEntity: PropTypes.func.isRequired,
   handleSaveItem: PropTypes.func.isRequired,
   handleUpdateMessageOptions: PropTypes.func.isRequired
@@ -134,7 +134,7 @@ class Form extends Component {
           {this.props.item.type === entities.message ? (
             <MessageOptions
               item={this.props.item}
-              handleUpdateMessageOptions={this.props.handleUpdateMessageOptions}
+              onUpdate={this.props.handleUpdateMessageOptions}
             />
           ) : null}
         </div>
@@ -147,9 +147,12 @@ class Form extends Component {
                   key={i}
                   item={e}
                   index={i}
-                  onNameUpdate={this.props.onEntityNameUpdate}
+                  onUpdate={this.props.handleUpdateChildEntity}
                   onEditEntity={this.props.onEditEntity}
                   handleSaveItem={this.props.handleSaveItem}
+                  handleUpdateMessageOptions={
+                    this.props.handleUpdateMessageOptions
+                  }
                 />
               ))}
             </div>
