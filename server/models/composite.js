@@ -9,6 +9,7 @@ exports.createConversation = entity =>
       .create({
         type: 'collection',
         private: true,
+        name: 'default',
         parent: {
           type: 'conversation',
           id: conversations[conversations.length - 1].id
@@ -19,6 +20,7 @@ exports.createConversation = entity =>
           .create({
             type: 'series',
             private: true,
+            name: 'default',
             parent: {
               type: 'collection',
               id: collections[collections.length - 1].id
@@ -29,6 +31,7 @@ exports.createConversation = entity =>
               .create({
                 type: 'block',
                 private: true,
+                name: 'default',
                 parent: {
                   type: 'series',
                   id: allSeries[allSeries.length - 1].id
