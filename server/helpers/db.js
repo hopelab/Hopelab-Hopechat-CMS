@@ -1,4 +1,5 @@
 const shortid = require('shortid');
+const R = require('ramda');
 
 const entityTypes = {
   conversation: 'Conversation',
@@ -28,7 +29,7 @@ const createNewEntity = (type, entity) => entities =>
   entities.concat(
     Object.assign({}, getDefaultDataForEntityType(type), entity, {
       id: shortid.generate(),
-      name: entity.name || `${type} ${entities.length + 1}`,
+      name: entity.name || `${type} ${R.reject(R.pathEq(['private'], true), entities).length + 1}`,
       created: Date.now()
     })
   );
