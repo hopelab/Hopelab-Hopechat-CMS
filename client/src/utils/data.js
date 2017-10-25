@@ -173,7 +173,7 @@ export function createTreeView({ active, data, entities }) {
       active: active === c.id,
       isLive: c.isLive,
       children: R.reject(
-        R.pathEq(['private'], true),
+        R.prop('private'),
         data[entities.collection].filter(R.pathEq(['parent', 'id'], c.id))
       )
     };
@@ -188,7 +188,7 @@ export function createTreeView({ active, data, entities }) {
           toggled: true,
           active: active === d.id,
           children: R.reject(
-            R.pathEq(['private'], true),
+            R.prop('private'),
             data[entities.series].filter(R.pathEq(['parent', 'id'], d.id))
           )
         };
@@ -208,7 +208,7 @@ export function createTreeView({ active, data, entities }) {
               toggled: true,
               active: active === f.id,
               children: R.reject(
-                R.pathEq(['private'], true),
+                R.prop('private'),
                 data[entities.block]
                   .filter(R.pathEq(['parent', 'id'], f.id))
                   .map(g => ({
