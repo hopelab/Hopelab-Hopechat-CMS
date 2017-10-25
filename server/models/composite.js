@@ -1,3 +1,5 @@
+const R = require('ramda');
+
 const block = require('./block');
 const collection = require('./collection');
 const conversation = require('./conversation');
@@ -12,7 +14,7 @@ exports.createConversation = entity =>
         name: 'default',
         parent: {
           type: 'conversation',
-          id: conversations[conversations.length - 1].id
+          id: R.last(conversations).id
         }
       })
       .then(collections =>
@@ -23,7 +25,7 @@ exports.createConversation = entity =>
             name: 'default',
             parent: {
               type: 'collection',
-              id: collections[collections.length - 1].id
+              id: R.last(collections).id
             }
           })
           .then(allSeries =>
@@ -34,7 +36,7 @@ exports.createConversation = entity =>
                 name: 'default',
                 parent: {
                   type: 'series',
-                  id: allSeries[allSeries.length - 1].id
+                  id: R.last(allSeries).id
                 }
               })
               .then(blocks => ({
