@@ -26,16 +26,11 @@ function getDefaultDataForEntityType(type) {
 
 const createNewEntity = (type, entity) => entities =>
   entities.concat(
-    Object.assign(
-      {},
-      getDefaultDataForEntityType(type),
-      entity,
-      {
-        id: shortid.generate(),
-        name: `${type} ${entities.length + 1}`,
-        created: Date.now()
-      }
-    )
+    Object.assign({}, getDefaultDataForEntityType(type), entity, {
+      id: shortid.generate(),
+      name: `${type} ${entities.length + 1}`,
+      created: Date.now()
+    })
   );
 const updateEntityInList = entity => entities =>
   entities.map(e => (e.id === entity.id ? entity : e));
