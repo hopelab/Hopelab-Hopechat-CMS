@@ -145,7 +145,7 @@ export function getChildEntitiesFor(item, entities) {
 
   return forms[item.type].children.reduce((prev, curr) => {
     return prev.concat(
-      ...entities[curr].filter(R.pathEq(['parent', 'id'], item.id))
+      ...R.reject(R.pathEq(['private'], true), entities[curr].filter(R.pathEq(['parent', 'id'], item.id)))
     );
   }, []);
 }
