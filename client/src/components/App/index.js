@@ -304,6 +304,7 @@ class App extends Component {
           conversation={this.state.conversation}
           treeData={this.state.treeData}
           handleTreeToggle={this.handleTreeToggle}
+          itemEditing={this.state.itemEditing}
         />
 
         <Dashboard
