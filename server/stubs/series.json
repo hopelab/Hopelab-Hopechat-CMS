@@ -1,8 +1,12 @@
 [
     {
-        "id": "intro",
-        "blocks": [
-            "block-1"
-        ]
+        "type": "series",
+        "id": "intro-series",
+        "name": "default",
+        "private": true,
+        "parent": {
+            "type": "collection",
+            "id": "intro-collection"
+        }
     }
 ]
