@@ -1,4 +1,5 @@
 const shortid = require('shortid');
+const R = require('ramda');
 
 const entityTypes = {
   conversation: 'Conversation',
@@ -24,18 +25,19 @@ function getDefaultDataForEntityType(type) {
   return defaultData[type];
 }
 
+const getDefaultIndexForPublicEntity = R.compose(
+  R.inc,
+  R.length,
+  R.reject(R.prop('private'))
+);
+
 const createNewEntity = (type, entity) => entities =>
   entities.concat(
-    Object.assign(
-      {},
-      getDefaultDataForEntityType(type),
-      entity,
-      {
-        id: shortid.generate(),
-        name: `${type} ${entities.length + 1}`,
-        created: Date.now()
-      }
-    )
+    Object.assign({}, getDefaultDataForEntityType(type), entity, {
+      id: shortid.generate(),
+      name: entity.name || `${type} ${getDefaultIndexForPublicEntity(entities)}`,
+      created: Date.now()
+    })
   );
 const updateEntityInList = entity => entities =>
   entities.map(e => (e.id === entity.id ? entity : e));

@@ -36,19 +36,24 @@ class App extends Component {
           ...config.initialState[config.entities.conversation]
         })
         .then(res => res.json())
-        .then(dataUtil.throwIfEmptyArray)
         .then(res => {
+          const conversation = res[config.entities.conversation];
+
           this.setState(
             {
-              itemEditing: res[res.length - 1],
-              [config.entities.conversation]: res
+              itemEditing: conversation[conversation.length - 1],
+              ...res
             },
             () => {
               this.setState({
                 entitiesCanCopyTo: dataUtil.getEntitiesCanCopyTo(
                   this.state.itemEditing,
                   this.state
-                )
+                ),
+                treeData: dataUtil.createTreeView({
+                  data: { ...this.state },
+                  entities: config.entities
+                })
               });
             }
           );

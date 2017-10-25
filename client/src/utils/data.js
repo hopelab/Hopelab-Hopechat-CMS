@@ -145,7 +145,7 @@ export function getChildEntitiesFor(item, entities) {
 
   return forms[item.type].children.reduce((prev, curr) => {
     return prev.concat(
-      ...entities[curr].filter(R.pathEq(['parent', 'id'], item.id))
+      ...R.reject(R.prop('private'), entities[curr].filter(R.pathEq(['parent', 'id'], item.id)))
     );
   }, []);
 }
@@ -172,8 +172,9 @@ export function createTreeView({ active, data, entities }) {
       toggled: true,
       active: active === c.id,
       isLive: c.isLive,
-      children: data[entities.collection].filter(
-        R.pathEq(['parent', 'id'], c.id)
+      children: R.reject(
+        R.prop('private'),
+        data[entities.collection].filter(R.pathEq(['parent', 'id'], c.id))
       )
     };
   });
@@ -186,8 +187,9 @@ export function createTreeView({ active, data, entities }) {
           ...d,
           toggled: true,
           active: active === d.id,
-          children: data[entities.series].filter(
-            R.pathEq(['parent', 'id'], d.id)
+          children: R.reject(
+            R.prop('private'),
+            data[entities.series].filter(R.pathEq(['parent', 'id'], d.id))
           )
         };
       })
@@ -205,12 +207,15 @@ export function createTreeView({ active, data, entities }) {
               ...f,
               toggled: true,
               active: active === f.id,
-              children: data[entities.block]
-                .filter(R.pathEq(['parent', 'id'], f.id))
-                .map(g => ({
-                  ...g,
-                  active: active === g.id
-                }))
+              children: R.reject(
+                R.prop('private'),
+                data[entities.block]
+                  .filter(R.pathEq(['parent', 'id'], f.id))
+                  .map(g => ({
+                    ...g,
+                    active: active === g.id
+                  }))
+              )
             };
           })
         };

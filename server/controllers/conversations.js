@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Conversation = require('../models/conversation');
+const Composite = require('../models/composite');
 
 router.post('/create', (req, res) => {
-  Conversation.create(req.body).then(r => res.send(r));
+  Composite.createConversation(req.body).then(r => res.send(r));
 });
 
 router.post('/update', (req, res) => {
