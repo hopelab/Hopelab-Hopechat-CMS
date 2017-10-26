@@ -67,8 +67,8 @@ decorators.Container = PoolContainer;
 const Sidebar = props => (
   <aside className="Sidebar">
     <div className="Inner">
-      <Button 
-        bsStyle="primary" 
+      <Button
+        bsStyle="primary"
         onClick={props.addConversation}
         disabled={!!props.itemEditing}
       >
