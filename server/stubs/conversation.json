@@ -1,10 +1,7 @@
 [
     {
         "type": "conversation",
-        "id": "intro",
-        "name": "intro",
-        "collection": [
-            "intro"
-        ]
+        "id": "intro-conversation",
+        "name": "intro"
     }
 ]

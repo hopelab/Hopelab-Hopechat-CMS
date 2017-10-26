@@ -126,7 +126,8 @@ class App extends Component {
     this.setState({
       treeData: dataUtil.createTreeView({
         data: { ...this.state },
-        entities: config.entities
+        entities: config.entities,
+        active: (this.state.itemEditing || {}).id
       }),
       childEntities: dataUtil.getChildEntitiesFor(
         this.state.itemEditing,
@@ -304,6 +305,7 @@ class App extends Component {
           conversation={this.state.conversation}
           treeData={this.state.treeData}
           handleTreeToggle={this.handleTreeToggle}
+          itemEditing={this.state.itemEditing}
         />
 
         <Dashboard

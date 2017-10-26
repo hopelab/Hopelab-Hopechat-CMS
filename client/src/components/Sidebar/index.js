@@ -12,7 +12,8 @@ const propTypes = {
   addConversation: PropTypes.func.isRequired,
   [entities.conversation]: PropTypes.array,
   treeData: PropTypes.object.isRequired,
-  handleTreeToggle: PropTypes.func.isRequired
+  handleTreeToggle: PropTypes.func.isRequired,
+  itemEditing: PropTypes.object
 };
 
 function handleClick({ expand, onClick }) {
@@ -66,7 +67,11 @@ decorators.Container = PoolContainer;
 const Sidebar = props => (
   <aside className="Sidebar">
     <div className="Inner">
-      <Button bsStyle="primary" onClick={props.addConversation}>
+      <Button
+        bsStyle="primary"
+        onClick={props.addConversation}
+        disabled={!!props.itemEditing}
+      >
         New Conversation
       </Button>
 

@@ -53,6 +53,7 @@ const Dashboard = props => (
             <Button
               bsStyle="danger"
               onClick={() => props.handleDeleteItem(props.itemEditing)}
+              disabled={props.itemEditing.id === 'intro-conversation'}
             >
               Delete
             </Button>

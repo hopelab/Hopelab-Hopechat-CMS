@@ -1,8 +1,12 @@
 [
     {
-        "id": "intro",
-        "series": [
-            "intro"
-        ]
+        "type": "collection",
+        "id": "intro-collection",
+        "name": "default",
+        "private": true,
+        "parent": {
+            "type": "conversation",
+            "id": "intro-conversation"
+        }
     }
 ]

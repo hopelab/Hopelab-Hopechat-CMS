@@ -35,7 +35,8 @@ const createNewEntity = (type, entity) => entities =>
   entities.concat(
     Object.assign({}, getDefaultDataForEntityType(type), entity, {
       id: shortid.generate(),
-      name: entity.name || `${type} ${getDefaultIndexForPublicEntity(entities)}`,
+      name:
+        entity.name || `${type} ${getDefaultIndexForPublicEntity(entities)}`,
       created: Date.now()
     })
   );
