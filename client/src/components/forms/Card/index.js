@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './style.css';
 
-import { Button, FormControl } from 'react-bootstrap';
+import { Button, FormControl, DropdownButton, MenuItem } from 'react-bootstrap';
 import MessageOptions from '../MessageOptions';
 
 const propTypes = {
@@ -44,14 +44,34 @@ class Card extends React.Component {
     this.props.handleSaveItem({ item: this.props.item });
   };
 
-  onUpdate = update => {
-    this.props.onUpdate(update);
-
+  updateEditState = () => {
     if (this.state.hasEdited === false) {
       this.setState({
         hasEdited: true
       });
     }
+  };
+
+  onUpdate = update => {
+    this.props.onUpdate(update);
+
+    this.updateEditState();
+  };
+
+  handleNextMessageSelect = (field, item) => {
+    const { index } = this.props;
+    const { type, id } = item;
+
+    this.props.onUpdate({
+      index,
+      field,
+      value: {
+        type,
+        id
+      }
+    });
+
+    this.updateEditState();
   };
 
   render() {
@@ -75,6 +95,24 @@ class Card extends React.Component {
             onUpdate={this.onUpdate}
           />
         ) : null}
+
+        <DropdownButton
+          bsStyle="default"
+          title="Next Message"
+          key="next"
+          id="next"
+        >
+          {this.props.childEntities.map((c, i) => (
+            <MenuItem
+              key={i}
+              eventKey="next"
+              active={this.props.item.next && c.id === this.props.item.next.id}
+              onSelect={() => this.handleNextMessageSelect('next', c)}
+            >
+              {c.name}
+            </MenuItem>
+          ))}
+        </DropdownButton>
 
         <div className="Actions">
           <Button
