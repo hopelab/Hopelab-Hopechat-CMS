@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './style.css';
 
-import { Button, FormControl, DropdownButton, MenuItem } from 'react-bootstrap';
+import { Button, FormControl } from 'react-bootstrap';
 import MessageOptions from '../MessageOptions';
+import NextMessage from '../NextMessage';
 
 const propTypes = {
   item: PropTypes.object.isRequired,
@@ -74,21 +75,6 @@ class Card extends React.Component {
     this.updateEditState();
   };
 
-  getNextMessageOptionsForMessage = () => {
-    return this.props.childEntities
-      .filter(m => m.id !== this.props.item.id)
-      .map((c, i) => (
-        <MenuItem
-          key={i}
-          eventKey="next"
-          active={this.props.item.next && c.id === this.props.item.next.id}
-          onSelect={() => this.handleNextMessageSelect('next', c)}
-        >
-          {c.name}
-        </MenuItem>
-      ));
-  };
-
   render() {
     return (
       <div className="Card">
@@ -108,18 +94,19 @@ class Card extends React.Component {
             index={this.props.index}
             item={this.props.item}
             onUpdate={this.onUpdate}
+            childEntities={this.props.childEntities}
           />
         ) : null}
 
-        <DropdownButton
-          bsStyle="default"
-          title="Next Message"
-          key="next"
-          id="next"
-          className="NextMessageDropdown"
-        >
-          {this.getNextMessageOptionsForMessage()}
-        </DropdownButton>
+        {this.props.item.messageType !== 'questionWithReplies' && (
+          <NextMessage
+            childEntities={this.props.childEntities.filter(
+              m => m.id !== this.props.item.id
+            )}
+            nextId={this.props.item.next && this.props.item.next.id}
+            handleNextMessageSelect={this.handleNextMessageSelect}
+          />
+        )}
 
         <div className="Actions">
           <Button

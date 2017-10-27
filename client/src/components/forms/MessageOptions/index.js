@@ -4,9 +4,12 @@ import './style.css';
 
 import { Button, ControlLabel, FormGroup, FormControl } from 'react-bootstrap';
 
+import NextMessage from '../NextMessage';
+
 import { initialState } from '../../../utils/config';
 
 const propTypes = {
+  childEntities: PropTypes.array.isRequired,
   item: PropTypes.object.isRequired,
   onUpdate: PropTypes.func.isRequired,
   editingAsChildEntity: PropTypes.bool,
@@ -63,6 +66,16 @@ class MessageOptions extends Component {
     let replies = [...this.props.item.quick_replies];
 
     replies[i].title = value;
+
+    this.props.onUpdate({ index, field: 'quick_replies', value: replies });
+  };
+
+  handleUpdateQuickReplyNextPayload = (i, field, item) => {
+    const { index } = this.props;
+
+    let replies = [...this.props.item.quick_replies];
+
+    replies[i].payload = item.id;
 
     this.props.onUpdate({ index, field: 'quick_replies', value: replies });
   };
@@ -132,7 +145,7 @@ class MessageOptions extends Component {
 
             <ul className="QuickReplies">
               {(this.props.item.quick_replies || []).map((qr, i) => (
-                <li key={i}>
+                <li key={i} className="Reply">
                   <Button
                     bsStyle="danger"
                     onClick={_ => this.deleteQuickReply(i)}
@@ -145,6 +158,15 @@ class MessageOptions extends Component {
                     id={`quick-reply-${i}-title`}
                     value={qr.title}
                     onChange={e => this.handleUpdateQuickReplyText(e, i)}
+                  />
+
+                  <NextMessage
+                    nextId={qr.payload}
+                    childEntities={this.props.childEntities.filter(
+                      m => m.id !== this.props.item.id
+                    )}
+                    handleNextMessageSelect={(field, item) =>
+                      this.handleUpdateQuickReplyNextPayload(i, field, item)}
                   />
                 </li>
               ))}

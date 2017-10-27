@@ -135,6 +135,7 @@ class Form extends Component {
             <MessageOptions
               item={this.props.item}
               onUpdate={this.props.handleUpdateMessageOptions}
+              childEntities={this.props.childEntities}
             />
           ) : null}
         </div>
