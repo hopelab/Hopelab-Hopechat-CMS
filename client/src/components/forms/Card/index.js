@@ -11,7 +11,8 @@ const propTypes = {
   onUpdate: PropTypes.func.isRequired,
   onEditEntity: PropTypes.func.isRequired,
   handleSaveItem: PropTypes.func.isRequired,
-  handleUpdateMessageOptions: PropTypes.func.isRequired
+  handleUpdateMessageOptions: PropTypes.func.isRequired,
+  childEntities: PropTypes.array.isRequired
 };
 
 class Card extends React.Component {

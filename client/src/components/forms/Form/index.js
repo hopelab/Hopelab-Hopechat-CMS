@@ -161,6 +161,7 @@ class Form extends Component {
                   key={i}
                   item={e}
                   index={i}
+                  childEntities={this.props.childEntities}
                   onUpdate={this.props.handleUpdateChildEntity}
                   onEditEntity={this.props.onEditEntity}
                   handleSaveItem={this.props.handleSaveItem}
