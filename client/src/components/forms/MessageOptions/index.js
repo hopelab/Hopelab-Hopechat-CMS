@@ -104,7 +104,7 @@ class MessageOptions extends Component {
         </FormGroup>
 
         {messageTypeHasContent(this.props.item.messageType) ? (
-          <FormGroup className="Tags">
+          <FormGroup>
             <ControlLabel>Content</ControlLabel>
             <FormControl
               componentClass="textarea"

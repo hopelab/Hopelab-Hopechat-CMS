@@ -116,6 +116,7 @@ class Card extends React.Component {
           title="Next Message"
           key="next"
           id="next"
+          className="NextMessageDropdown"
         >
           {this.getNextMessageOptionsForMessage()}
         </DropdownButton>

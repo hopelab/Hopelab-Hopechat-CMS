@@ -3,6 +3,10 @@
   flex-direction: column;
 }
 
+.MessageEdit .form-group {
+  margin-bottom: 30px;
+}
+
 .MessageEdit div {
   margin-right: 30px;
 }
