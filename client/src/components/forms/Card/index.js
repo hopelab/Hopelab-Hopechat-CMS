@@ -75,17 +75,19 @@ class Card extends React.Component {
   };
 
   getNextMessageOptionsForMessage = () => {
-    return this.props.childEntities.map((c, i) => (
-      <MenuItem
-        key={i}
-        eventKey="next"
-        active={this.props.item.next && c.id === this.props.item.next.id}
-        onSelect={() => this.handleNextMessageSelect('next', c)}
-      >
-        {c.name}
-      </MenuItem>
-    ))
-  }
+    return this.props.childEntities
+      .filter(m => m.id !== this.props.item.id)
+      .map((c, i) => (
+        <MenuItem
+          key={i}
+          eventKey="next"
+          active={this.props.item.next && c.id === this.props.item.next.id}
+          onSelect={() => this.handleNextMessageSelect('next', c)}
+        >
+          {c.name}
+        </MenuItem>
+      ));
+  };
 
   render() {
     return (
