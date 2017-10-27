@@ -141,6 +141,20 @@ class Form extends Component {
 
         {formHasField('children', this.props.config.fields) ? (
           <div className="ChildrenContainer">
+            <div className="AddButtonWrapper">
+              <span className="Add" onClick={this.handleChildEntityAddition}>
+                +
+              </span>
+              <select
+                value={this.state.entityToAdd}
+                onChange={this.handleChildSelection}
+              >
+                {this.props.config.children.map(c => (
+                  <option key={c}>{c}</option>
+                ))}
+              </select>
+            </div>
+
             <div className="ChildGrid">
               {this.props.childEntities.map((e, i) => (
                 <Card
@@ -155,20 +169,6 @@ class Form extends Component {
                   }
                 />
               ))}
-            </div>
-
-            <div className="AddButtonWrapper">
-              <span className="Add" onClick={this.handleChildEntityAddition}>
-                +
-              </span>
-              <select
-                value={this.state.entityToAdd}
-                onChange={this.handleChildSelection}
-              >
-                {this.props.config.children.map(c => (
-                  <option key={c}>{c}</option>
-                ))}
-              </select>
             </div>
           </div>
         ) : null}
