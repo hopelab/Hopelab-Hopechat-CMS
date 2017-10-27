@@ -74,6 +74,19 @@ class Card extends React.Component {
     this.updateEditState();
   };
 
+  getNextMessageOptionsForMessage = () => {
+    return this.props.childEntities.map((c, i) => (
+      <MenuItem
+        key={i}
+        eventKey="next"
+        active={this.props.item.next && c.id === this.props.item.next.id}
+        onSelect={() => this.handleNextMessageSelect('next', c)}
+      >
+        {c.name}
+      </MenuItem>
+    ))
+  }
+
   render() {
     return (
       <div className="Card">
@@ -102,16 +115,7 @@ class Card extends React.Component {
           key="next"
           id="next"
         >
-          {this.props.childEntities.map((c, i) => (
-            <MenuItem
-              key={i}
-              eventKey="next"
-              active={this.props.item.next && c.id === this.props.item.next.id}
-              onSelect={() => this.handleNextMessageSelect('next', c)}
-            >
-              {c.name}
-            </MenuItem>
-          ))}
+          {this.getNextMessageOptionsForMessage()}
         </DropdownButton>
 
         <div className="Actions">
