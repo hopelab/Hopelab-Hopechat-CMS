@@ -118,13 +118,13 @@ class MessageOptions extends Component {
 
         {messageTypeHasContent(this.props.item.messageType) ? (
           <FormGroup>
-            <ControlLabel>Content</ControlLabel>
+            <ControlLabel>Text</ControlLabel>
             <FormControl
               componentClass="textarea"
-              id="content"
-              name="content"
+              id="text"
+              name="text"
               type="text"
-              value={this.props.item.content || ''}
+              value={this.props.item.text || ''}
               onChange={e =>
                 e.target.value.length < 640 &&
                 this.props.onUpdate({
