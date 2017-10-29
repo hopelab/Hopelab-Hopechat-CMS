@@ -85,7 +85,7 @@ class App extends Component {
     });
   };
 
-  markAsStartIfRequired = entity => {
+  markPosition = entity => {
     if (entity.parent.type !== config.entities.conversation && entity.parent.type !== config.entities.block) {
       return entity;
     }
@@ -102,7 +102,7 @@ class App extends Component {
 
   handleNewChildEntity = entity => {
     dataUtil
-      .post(config.routes[entity.type].create, this.markAsStartIfRequired(entity))
+      .post(config.routes[entity.type].create, this.markPosition(entity))
       .then(res => res.json())
       .then(dataUtil.throwIfEmptyArray)
       .then(res => {
