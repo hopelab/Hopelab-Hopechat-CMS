@@ -29,6 +29,7 @@ const NextMessage = props => (
     key="next"
     id="next"
     className="NextMessageDropdown"
+    disabled={!props.childEntities.length}
   >
     {getNextMessageOptionsForMessage(props)}
   </DropdownButton>
