@@ -1,8 +1,8 @@
 const REST_PORT = process.env.PORT || 5000;
 const FB_GRAPH_ROOT_URL = 'https://graph.facebook.com/v2.6/';
 
-const DB_CONVERSATIONS = 'conversation';
-const DB_COLLECTIONS = 'collection';
+const DB_CONVERSATIONS = 'conversations';
+const DB_COLLECTIONS = 'collections';
 const DB_SERIES = 'series';
 const DB_MESSAGES = 'messages';
 const DB_BLOCKS = 'blocks';
