@@ -41,7 +41,7 @@ class MessageOptions extends Component {
     const { index } = this.props;
     let replies = [];
     const newReply = {
-      type: 'text',
+      content_type: 'text',
       title: ''
     };
 
