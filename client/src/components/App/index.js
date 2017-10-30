@@ -86,7 +86,10 @@ class App extends Component {
   };
 
   markPosition = entity => {
-    if (entity.parent.type !== config.entities.conversation && entity.parent.type !== config.entities.block) {
+    if (
+      entity.parent.type !== config.entities.conversation &&
+      entity.parent.type !== config.entities.block
+    ) {
       return entity;
     }
 
@@ -98,7 +101,7 @@ class App extends Component {
     }
 
     return entity;
-  }
+  };
 
   handleNewChildEntity = entity => {
     dataUtil
