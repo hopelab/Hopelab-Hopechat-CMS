@@ -45,6 +45,7 @@
     align-items: center;
     justify-content: center;
     min-height: 100px;
+    padding: 30px 0;
 }
 
 .ChildrenContainer .ChildGrid {
@@ -58,10 +59,6 @@
 
 .ChildrenContainer .ChildGrid .Card {
     width: 60%;
-    margin: 15px 0;
-}
-
-.ChildrenContainer .ChildGrid .Card .MessageEdit {
     margin: 15px 0;
 }
 

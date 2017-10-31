@@ -85,9 +85,27 @@ class App extends Component {
     });
   };
 
+  markPosition = entity => {
+    if (
+      entity.parent.type !== config.entities.conversation &&
+      entity.parent.type !== config.entities.block
+    ) {
+      return entity;
+    }
+
+    if (!this.state.childEntities.length) {
+      return {
+        ...entity,
+        start: true
+      };
+    }
+
+    return entity;
+  };
+
   handleNewChildEntity = entity => {
     dataUtil
-      .post(config.routes[entity.type].create, entity)
+      .post(config.routes[entity.type].create, this.markPosition(entity))
       .then(res => res.json())
       .then(dataUtil.throwIfEmptyArray)
       .then(res => {

@@ -4,6 +4,7 @@ import './style.css';
 
 import { Button, FormControl } from 'react-bootstrap';
 import MessageOptions from '../MessageOptions';
+import NextMessage from '../NextMessage';
 
 const propTypes = {
   item: PropTypes.object.isRequired,
@@ -11,7 +12,8 @@ const propTypes = {
   onUpdate: PropTypes.func.isRequired,
   onEditEntity: PropTypes.func.isRequired,
   handleSaveItem: PropTypes.func.isRequired,
-  handleUpdateMessageOptions: PropTypes.func.isRequired
+  handleUpdateMessageOptions: PropTypes.func.isRequired,
+  childEntities: PropTypes.array.isRequired
 };
 
 class Card extends React.Component {
@@ -43,14 +45,34 @@ class Card extends React.Component {
     this.props.handleSaveItem({ item: this.props.item });
   };
 
-  onUpdate = update => {
-    this.props.onUpdate(update);
-
+  updateEditState = () => {
     if (this.state.hasEdited === false) {
       this.setState({
         hasEdited: true
       });
     }
+  };
+
+  onUpdate = update => {
+    this.props.onUpdate(update);
+
+    this.updateEditState();
+  };
+
+  handleNextMessageSelect = (field, item) => {
+    const { index } = this.props;
+    const { type, id } = item;
+
+    this.props.onUpdate({
+      index,
+      field,
+      value: {
+        type,
+        id
+      }
+    });
+
+    this.updateEditState();
   };
 
   render() {
@@ -72,8 +94,19 @@ class Card extends React.Component {
             index={this.props.index}
             item={this.props.item}
             onUpdate={this.onUpdate}
+            childEntities={this.props.childEntities}
           />
         ) : null}
+
+        {this.props.item.messageType !== 'questionWithReplies' && (
+          <NextMessage
+            childEntities={this.props.childEntities.filter(
+              m => m.id !== this.props.item.id
+            )}
+            nextId={this.props.item.next && this.props.item.next.id}
+            handleNextMessageSelect={this.handleNextMessageSelect}
+          />
+        )}
 
         <div className="Actions">
           <Button

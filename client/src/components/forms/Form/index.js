@@ -135,28 +135,13 @@ class Form extends Component {
             <MessageOptions
               item={this.props.item}
               onUpdate={this.props.handleUpdateMessageOptions}
+              childEntities={this.props.childEntities}
             />
           ) : null}
         </div>
 
         {formHasField('children', this.props.config.fields) ? (
           <div className="ChildrenContainer">
-            <div className="ChildGrid">
-              {this.props.childEntities.map((e, i) => (
-                <Card
-                  key={i}
-                  item={e}
-                  index={i}
-                  onUpdate={this.props.handleUpdateChildEntity}
-                  onEditEntity={this.props.onEditEntity}
-                  handleSaveItem={this.props.handleSaveItem}
-                  handleUpdateMessageOptions={
-                    this.props.handleUpdateMessageOptions
-                  }
-                />
-              ))}
-            </div>
-
             <div className="AddButtonWrapper">
               <span className="Add" onClick={this.handleChildEntityAddition}>
                 +
@@ -169,6 +154,23 @@ class Form extends Component {
                   <option key={c}>{c}</option>
                 ))}
               </select>
+            </div>
+
+            <div className="ChildGrid">
+              {this.props.childEntities.map((e, i) => (
+                <Card
+                  key={i}
+                  item={e}
+                  index={i}
+                  childEntities={this.props.childEntities}
+                  onUpdate={this.props.handleUpdateChildEntity}
+                  onEditEntity={this.props.onEditEntity}
+                  handleSaveItem={this.props.handleSaveItem}
+                  handleUpdateMessageOptions={
+                    this.props.handleUpdateMessageOptions
+                  }
+                />
+              ))}
             </div>
           </div>
         ) : null}
