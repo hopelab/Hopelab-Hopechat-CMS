@@ -31,6 +31,9 @@ const getDefaultIndexForPublicEntity = R.compose(
   R.reject(R.prop('private'))
 );
 
+const findNewEntity = newList => entity =>
+  R.or(R.find(R.propEq('id', entity))(newList), entity);
+
 const createNewEntity = (type, entity) => entities =>
   entities.concat(
     Object.assign({}, getDefaultDataForEntityType(type), entity, {
@@ -41,7 +44,9 @@ const createNewEntity = (type, entity) => entities =>
     })
   );
 const updateEntityInList = entity => entities =>
-  entities.map(e => (e.id === entity.id ? entity : e));
+  Array.isArray(entity)
+    ? entities.map(findNewEntity(entity))
+    : entities.map(e => (e.id === entity.id ? entity : e));
 const findEntityById = id => entities => entities.find(e => e.id === id);
 const deleteEntityFromList = id => entities =>
   entities.filter(e => e.id !== id);

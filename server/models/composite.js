@@ -6,7 +6,7 @@ const conversation = require('./conversation');
 const series = require('./series');
 const message = require('./message');
 
-const { promiseSerial } = '../utils/data';
+const { promiseSerial } = require('../utils/data');
 
 const modelMap = {
   conversation: conversation,
@@ -72,7 +72,9 @@ exports.copyEntityAndAllChildren = data => {
               parent: {
                 type: newParent.type,
                 id: newParent.id
-              }
+              },
+              id: null,
+              name: null
             })
           )
           .then(newChildList => {
@@ -85,19 +87,31 @@ exports.copyEntityAndAllChildren = data => {
           });
     });
 
-    promiseSerial(childPromises).then(final => {
-      const oldList = final.map(R.prop('oldChild'));
-      const newList = final.map(R.prop('newChild'));
+    promiseSerial(childPromises).then(newChildren => {
+      let listToSave = [];
+      const oldList = R.pluck('oldChild', newChildren);
+      const newList = R.pluck('newChild', newChildren);
 
       oldList.forEach((oldItem, i) => {
-        newList.forEach((newItem, j) => {
+        listToSave = newList.map((newItem, j) => {
           if (R.pathEq(['next', 'id'], oldItem.id, newItem)) {
-            newItem.next.id = newList[i].id;
+            return Object.assign({}, newItem, {
+              next: { id: newList[i].id, type: newList[i].type }
+            });
           }
+
+          return newItem;
         });
       });
 
       // TODO: Bulk Update
+      const updatePromises = listToSave.map((entityToUpdate, i) => () =>
+        modelMap[entityToUpdate.type].update(Object.assign({}, entityToUpdate))
+      );
+
+      promiseSerial(updatePromises).then(updatedChildren => { 
+        // TODO: Update UI Response 
+      });
     });
   });
 };

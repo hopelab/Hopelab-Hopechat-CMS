@@ -323,9 +323,7 @@ class App extends Component {
     const allEntitiesToCopy = dataUtil
       .getChildEntitiesFor(this.state.itemEditing, this.state)
       .map(child => ({
-        ...child,
-        name: null,
-        id: null
+        ...child
       }));
 
     // save new parent
