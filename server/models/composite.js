@@ -48,3 +48,5 @@ exports.createConversation = entity =>
       )
     )
   );
+
+exports.copyEntityAndAllChildren = data => {};

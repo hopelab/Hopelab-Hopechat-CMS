@@ -48,12 +48,12 @@ export function createInitialFormState(props) {
 /**
  * Make a copy of an item, removing certain keys
  * 
- * @param {Object} item
+ * @param {Object} data
  * @param {Array} keys
  * @returns {Object}
 */
-export function makeCopyAndRemoveKeys(item, keys) {
-  return R.omit(keys, item);
+export function makeCopyAndRemoveKeys(data, keys) {
+  return Array.isArray(data) ? data.map(d => R.omit(keys, data)) : R.omit(keys, data);
 }
 
 /**

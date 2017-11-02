@@ -26,7 +26,8 @@ const entitiesForCopy = {
 const operations = {
   create: 'create',
   update: 'update',
-  delete: 'delete'
+  delete: 'delete',
+  copy: 'copy'
 };
 
 /**
@@ -73,13 +74,15 @@ function getRoutes(route) {
   const all = '/all';
   const get = '/';
   const _delete = '/delete';
+  const copy = '/copy';
 
   return {
     create: `/${route}${create}`,
     update: `/${route}${update}`,
     all: `/${route}${all}`,
     get: `/${route}${get}`,
-    delete: `/${route}${_delete}`
+    delete: `/${route}${_delete}`,
+    copy: `/${route}${copy}`
   };
 }
 

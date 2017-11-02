@@ -158,8 +158,8 @@ class App extends Component {
     });
   };
 
-  handleSaveItem = ({ item, reset, switchTo }) => {
-    const route = item.id ? config.operations.update : config.operations.create;
+  handleSaveItem = ({ item, reset, switchTo, copy }) => {
+    const route = item.id ? config.operations.update : copy ? config.operations.copy : config.operations.create;
 
     dataUtil
       .post(
@@ -303,15 +303,28 @@ class App extends Component {
   };
 
   handleCopyEntity = entity => {
-    this.handleSaveItem({
-      item: {
-        ...this.state.itemEditing,
-        parent: {
-          ...entity.link
-        },
-        id: null
+    const item = {
+      ...this.state.itemEditing,
+      parent: {
+        ...entity.link
       },
-      switchTo: true
+      name: null,
+      id: null
+    };
+
+    const allEntitiesToCopy = dataUtil.getChildEntitiesFor(
+      this.state.itemEditing,
+      this.state
+    );
+
+    // save new parent
+    // save all children with updated parent
+    // and null names and id's!
+
+    this.handleSaveItem({
+      item,
+      switchTo: true,
+      copy: true
     });
   };
 

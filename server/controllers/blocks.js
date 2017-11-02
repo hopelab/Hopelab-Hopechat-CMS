@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Block = require('../models/block');
+const Composite = require('../models/composite');
 
 router.post('/create', (req, res) => {
   Block.create(req.body).then(r => res.send(r));
@@ -20,6 +21,10 @@ router.get('/:id', (req, res) => {
 
 router.post('/delete', (req, res) => {
   Block.delete(req.body.id).then(r => res.send(r));
+});
+
+router.post('/copy', (req, res) => {
+  Composite.copyEntityAndAllChildren(req.body);
 });
 
 module.exports = router;
