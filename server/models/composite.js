@@ -4,6 +4,17 @@ const block = require('./block');
 const collection = require('./collection');
 const conversation = require('./conversation');
 const series = require('./series');
+const message = require('./message');
+
+const { promiseSerial } = '../utils/data';
+
+const modelMap = {
+  conversation: conversation,
+  collection: collection,
+  series: series,
+  block: block,
+  message: message
+};
 
 const makeANewCollection = conversations => ({
   type: 'collection',
@@ -49,4 +60,44 @@ exports.createConversation = entity =>
     )
   );
 
-exports.copyEntityAndAllChildren = data => {};
+exports.copyEntityAndAllChildren = data => {
+  return modelMap[data.parent.type].create(data.parent).then(parentList => {
+    const newParent = R.last(parentList);
+
+    const childPromises = data.children.map((oldChild, i) => {
+      return () =>
+        modelMap[oldChild.type]
+          .create(
+            Object.assign({}, oldChild, {
+              parent: {
+                type: newParent.type,
+                id: newParent.id
+              }
+            })
+          )
+          .then(newChildList => {
+            const newChild = R.last(newChildList);
+
+            return {
+              oldChild,
+              newChild
+            };
+          });
+    });
+
+    promiseSerial(childPromises).then(final => {
+      const oldList = final.map(R.prop('oldChild'));
+      const newList = final.map(R.prop('newChild'));
+
+      oldList.forEach((oldItem, i) => {
+        newList.forEach((newItem, j) => {
+          if (R.pathEq(['next', 'id'], oldItem.id, newItem)) {
+            newItem.next.id = newList[i].id;
+          }
+        });
+      });
+
+      // TODO: Bulk Update
+    });
+  });
+};

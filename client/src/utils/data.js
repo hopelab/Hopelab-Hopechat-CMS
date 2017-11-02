@@ -53,7 +53,9 @@ export function createInitialFormState(props) {
  * @returns {Object}
 */
 export function makeCopyAndRemoveKeys(data, keys) {
-  return Array.isArray(data) ? data.map(d => R.omit(keys, data)) : R.omit(keys, data);
+  return Array.isArray(data)
+    ? data.map(d => R.omit(keys, d))
+    : R.omit(keys, data);
 }
 
 /**
@@ -78,11 +80,11 @@ export function getEntitiesCanCopyTo(entity, appState) {
     .reduce((prev, curr) => {
       return prev.concat(
         ...appState[curr]
-        .filter(R.compose(R.not, R.prop('private')))
-        .map(e => ({
-          name: e.name,
-          link: { type: e.type, id: e.id }
-        }))
+          .filter(R.compose(R.not, R.prop('private')))
+          .map(e => ({
+            name: e.name,
+            link: { type: e.type, id: e.id }
+          }))
       );
     }, [])
     .filter(e => e.link.id !== entity.parent.id);

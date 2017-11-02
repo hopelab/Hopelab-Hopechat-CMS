@@ -21,6 +21,11 @@ const entitiesForCopy = {
 };
 
 /**
+ * UI keys to strip on save/copy
+*/
+const keysToRemove = ['active', 'children', 'expand', 'toggled'];
+
+/**
  * Server Route Operations
 */
 const operations = {
@@ -184,5 +189,6 @@ export {
   initialState,
   routes,
   http,
-  operations
+  operations,
+  keysToRemove
 };

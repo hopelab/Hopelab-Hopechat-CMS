@@ -158,18 +158,13 @@ class App extends Component {
     });
   };
 
-  handleSaveItem = ({ item, reset, switchTo, copy }) => {
-    const route = item.id ? config.operations.update : copy ? config.operations.copy : config.operations.create;
+  handleSaveItem = ({ item, reset, switchTo }) => {
+    const route = item.id ? config.operations.update : config.operations.create;
 
     dataUtil
       .post(
         config.routes[item.type][route],
-        dataUtil.makeCopyAndRemoveKeys(item, [
-          'active',
-          'children',
-          'expand',
-          'toggled'
-        ])
+        dataUtil.makeCopyAndRemoveKeys(item, config.keysToRemove)
       )
       .then(res => res.json())
       .then(dataUtil.throwIfEmptyArray)
@@ -184,6 +179,19 @@ class App extends Component {
           this.updateTreeStructure
         );
       })
+      .catch(console.error);
+  };
+
+  handleCopyItem = ({ parent, children, reset, switchTo }) => {
+    const route = config.operations.copy;
+
+    dataUtil
+      .post(config.routes[parent.type][route], {
+        parent: dataUtil.makeCopyAndRemoveKeys(parent, config.keysToRemove),
+        children: dataUtil.makeCopyAndRemoveKeys(children, config.keysToRemove)
+      })
+      .then(res => res.json())
+      .then(res => {})
       .catch(console.error);
   };
 
@@ -312,17 +320,21 @@ class App extends Component {
       id: null
     };
 
-    const allEntitiesToCopy = dataUtil.getChildEntitiesFor(
-      this.state.itemEditing,
-      this.state
-    );
+    const allEntitiesToCopy = dataUtil
+      .getChildEntitiesFor(this.state.itemEditing, this.state)
+      .map(child => ({
+        ...child,
+        name: null,
+        id: null
+      }));
 
     // save new parent
     // save all children with updated parent
     // and null names and id's!
 
-    this.handleSaveItem({
-      item,
+    this.handleCopyItem({
+      parent: item,
+      children: allEntitiesToCopy,
       switchTo: true,
       copy: true
     });
