@@ -77,7 +77,9 @@ export function getEntitiesCanCopyTo(entity, appState) {
   return entitiesForCopy[entity.type]
     .reduce((prev, curr) => {
       return prev.concat(
-        ...appState[curr].map(e => ({
+        ...appState[curr]
+        .filter(R.compose(R.not, R.prop('private')))
+        .map(e => ({
           name: e.name,
           link: { type: e.type, id: e.id }
         }))
