@@ -8,13 +8,7 @@ const message = require('./message');
 
 const { promiseSerial } = require('../utils/data');
 
-const modelMap = {
-  conversation: conversation,
-  collection: collection,
-  series: series,
-  block: block,
-  message: message
-};
+const modelMap = { conversation, collection, series, block, message };
 
 const makeANewCollection = conversations => ({
   type: 'collection',
@@ -64,27 +58,26 @@ exports.copyEntityAndAllChildren = data => {
   return modelMap[data.parent.type].create(data.parent).then(parentList => {
     const newParent = R.last(parentList);
 
-    const childPromises = data.children.map((oldChild, i) => {
-      return () =>
-        modelMap[oldChild.type]
-          .create(
-            Object.assign({}, oldChild, {
-              parent: {
-                type: newParent.type,
-                id: newParent.id
-              },
-              id: null,
-              name: null
-            })
-          )
-          .then(newChildList => {
-            const newChild = R.last(newChildList);
+    const childPromises = data.children.map((oldChild, i) => () => {
+      modelMap[oldChild.type]
+        .create(
+          R.merge(oldChild, {
+            parent: {
+              type: newParent.type,
+              id: newParent.id
+            },
+            id: null,
+            name: null
+          })
+        )
+        .then(newChildList => {
+          const newChild = R.last(newChildList);
 
-            return {
-              oldChild,
-              newChild
-            };
-          });
+          return {
+            oldChild,
+            newChild
+          };
+        });
     });
 
     promiseSerial(childPromises).then(newChildren => {
@@ -95,7 +88,7 @@ exports.copyEntityAndAllChildren = data => {
       oldList.forEach((oldItem, i) => {
         listToSave = newList.map((newItem, j) => {
           if (R.pathEq(['next', 'id'], oldItem.id, newItem)) {
-            return Object.assign({}, newItem, {
+            return R.merge(newItem, {
               next: { id: newList[i].id, type: newList[i].type }
             });
           }
@@ -106,11 +99,11 @@ exports.copyEntityAndAllChildren = data => {
 
       // TODO: Bulk Update
       const updatePromises = listToSave.map((entityToUpdate, i) => () =>
-        modelMap[entityToUpdate.type].update(Object.assign({}, entityToUpdate))
+        modelMap[entityToUpdate.type].update(R.clone(entityToUpdate))
       );
 
-      promiseSerial(updatePromises).then(updatedChildren => { 
-        // TODO: Update UI Response 
+      promiseSerial(updatePromises).then(updatedChildren => {
+        // TODO: Update UI Response
       });
     });
   });
