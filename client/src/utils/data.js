@@ -80,10 +80,7 @@ export function getEntitiesCanCopyTo(entity, appState) {
       return prev.concat(
         ...appState[curr]
           .filter(R.compose(R.not, R.prop('private')))
-          .map(e => ({
-            name: e.name,
-            link: { type: e.type, id: e.id }
-          }))
+          .map(({ id, name, type }) => ({ name, link: { type, id } }))
       );
     }, [])
     .filter(e => e.link.id !== entity.parent.id);
