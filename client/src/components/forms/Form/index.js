@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import './style.css';
 
 import Card from '../Card';
+import TagsInput from 'react-tagsinput'
+import 'react-tagsinput/react-tagsinput.css'
 
 import {
   FormGroup,
@@ -61,6 +63,15 @@ class Form extends Component {
     });
   };
 
+  handleTagsInput = (e) => {
+    this.props.handleUpdateItem({
+      target: {
+        name: 'tags',
+        value: e
+      }
+    })
+  }
+
   handleChildSelection = e => this.setState({ entityToAdd: e.target.value });
 
   render() {
@@ -89,14 +100,7 @@ class Form extends Component {
             <div className="TagsContainer">
               <FormGroup className="Tags">
                 <ControlLabel>TAGS</ControlLabel>
-                <FormControl
-                  componentClass="textarea"
-                  id="tags"
-                  name="tags"
-                  type="text"
-                  value={this.props.item.tags || ''}
-                  onChange={this.props.handleUpdateItem}
-                />
+                <TagsInput id="tags" name="tags" value={this.props.item.tags || []} onChange={this.handleTagsInput} />
               </FormGroup>
             </div>
           ) : null}
