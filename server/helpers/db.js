@@ -46,10 +46,10 @@ const createNewEntity = (type, entity) => entities =>
       created: Date.now()
     })
   );
-const updateEntityInList = entity => entities =>
-  Array.isArray(entity)
-    ? entities.map(findNewEntity(entity))
-    : entities.map(e => (e.id === entity.id ? entity : e));
+
+const maybeReplaceWithEntity = newEntity => old => old.id === newEntity.id ? newEntity : old;
+const updateEntityInList = entity => entities => entities.map(maybeReplaceWithEntity);
+
 const findEntityById = id => entities => entities.find(e => e.id === id);
 const deleteEntityFromList = id => entities =>
   entities.filter(e => e.id !== id);
