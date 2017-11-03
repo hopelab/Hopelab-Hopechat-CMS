@@ -53,9 +53,8 @@ export function createInitialFormState(props) {
  * @returns {Object}
 */
 export function makeCopyAndRemoveKeys(data, keys) {
-  return Array.isArray(data)
-    ? data.map(d => R.omit(keys, d))
-    : R.omit(keys, data);
+  const omitKeys = R.omit(keys);
+  return R.ifElse(R.is(Array), R.map(omitKeys), omitKeys)(data);
 }
 
 /**
