@@ -54,6 +54,32 @@ exports.createConversation = entity =>
     )
   );
 
+/**
+   * Update all Message Pointers Between Two Lists (Old, New)
+   * 
+   * @param {Object} entityOldNew
+   * @return {Array}
+  */
+function getNewListForSave(entityOldNew) {
+  let listToSave = [];
+  const oldList = R.pluck('oldChild', entityOldNew);
+  const newList = R.pluck('newChild', entityOldNew);
+
+  oldList.forEach((oldItem, i) => {
+    listToSave = newList.map((newItem, j) => {
+      if (R.pathEq(['next', 'id'], oldItem.id, newItem)) {
+        return R.merge(newItem, {
+          next: { id: newList[i].id, type: newList[i].type }
+        });
+      }
+
+      return newItem;
+    });
+  });
+
+  return listToSave;
+}
+
 exports.copyEntityAndAllChildren = data => {
   return modelMap[data.parent.type].create(data.parent).then(parentList => {
     const newParent = R.last(parentList);
@@ -81,29 +107,16 @@ exports.copyEntityAndAllChildren = data => {
     });
 
     promiseSerial(childPromises).then(newChildren => {
-      let listToSave = [];
-      const oldList = R.pluck('oldChild', newChildren);
-      const newList = R.pluck('newChild', newChildren);
-
-      oldList.forEach((oldItem, i) => {
-        listToSave = newList.map((newItem, j) => {
-          if (R.pathEq(['next', 'id'], oldItem.id, newItem)) {
-            return R.merge(newItem, {
-              next: { id: newList[i].id, type: newList[i].type }
-            });
-          }
-
-          return newItem;
-        });
-      });
+      const listForSave = getNewListForSave(newChildren);
 
       // TODO: Bulk Update
-      const updatePromises = listToSave.map((entityToUpdate, i) => () =>
+      const updatePromises = listForSave.map((entityToUpdate, i) => () =>
         modelMap[entityToUpdate.type].update(R.clone(entityToUpdate))
       );
 
       promiseSerial(updatePromises).then(updatedChildren => {
         // TODO: Update UI Response
+        console.log('Is it done!?', updatedChildren);
       });
     });
   });
