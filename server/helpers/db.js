@@ -31,8 +31,11 @@ const getDefaultIndexForPublicEntity = R.compose(
   R.reject(R.prop('private'))
 );
 
-const findNewEntity = newList => entity =>
-  R.or(R.find(R.propEq('id', entity))(newList), entity);
+const findNewEntity = newList => entity => R.compose(
+    R.defaultTo(entity),
+    R.find(R.__, newList),
+    R.propEq('id')
+  )(entity);
 
 const createNewEntity = (type, entity) => entities =>
   entities.concat(
