@@ -322,6 +322,7 @@ module.exports = store => {
         .then(JSON.parse)
         .then(helpers.updateEntityInList(message))
         .then(store.setItem(DB_MESSAGES, ONE_DAY_IN_MILLISECONDS))
+        .then(() => getMessageById(message.id))
         .then(resolve)
         .catch(console.error);
     });

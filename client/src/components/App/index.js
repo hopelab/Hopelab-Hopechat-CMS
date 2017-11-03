@@ -7,6 +7,8 @@ import Dashboard from '../Dashboard';
 import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
 
+import { concat, mergeWith } from 'ramda';
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -191,7 +193,17 @@ class App extends Component {
         children: dataUtil.makeCopyAndRemoveKeys(children, config.keysToRemove)
       })
       .then(res => res.json())
-      .then(res => {})
+      .then(copiedResults => {
+        this.setState(mergeWith(concat, this.state, copiedResults), () => {
+          this.setState({
+            treeData: dataUtil.createTreeView({
+              data: { ...this.state },
+              entities: config.entities,
+              active: (this.state.itemEditing || {}).id
+            })
+          });
+        });
+      })
       .catch(console.error);
   };
 

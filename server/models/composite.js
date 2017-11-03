@@ -40,6 +40,12 @@ const makeANewBlock = allSeries => ({
   }
 });
 
+/**
+ * Create a new Conversation and default private descendants
+ * 
+ * @param {Object} entity
+ * @return {Promise}
+*/
 exports.createConversation = entity =>
   conversation.create(entity).then(conversations =>
     collection.create(makeANewCollection(conversations)).then(collections =>
@@ -61,15 +67,15 @@ exports.createConversation = entity =>
    * @return {Array}
   */
 function getNewListForSave(entityOldNew) {
-  let listToSave = [];
   const oldList = R.pluck('oldChild', entityOldNew);
   const newList = R.pluck('newChild', entityOldNew);
+  let listToSave = newList;
 
   oldList.forEach((oldItem, i) => {
-    listToSave = newList.map((newItem, j) => {
+    listToSave = listToSave.map((newItem, j) => {
       if (R.pathEq(['next', 'id'], oldItem.id, newItem)) {
         return R.merge(newItem, {
-          next: { id: newList[i].id, type: newList[i].type }
+          next: { id: listToSave[i].id, type: listToSave[i].type }
         });
       }
 
@@ -80,44 +86,95 @@ function getNewListForSave(entityOldNew) {
   return listToSave;
 }
 
-exports.copyEntityAndAllChildren = data => {
-  return modelMap[data.parent.type].create(data.parent).then(parentList => {
-    const newParent = R.last(parentList);
+/**
+ * Copy a Block
+ * 
+ * @param {Object} parent
+ * @param {Array} children
+ * @return {Promise}
+*/
+function copyBlock(parent, children) {
+  const childPromises = children.map((oldChild, i) => () => {
+    return modelMap[oldChild.type]
+      .create(
+        R.merge(oldChild, {
+          parent: {
+            type: parent.type,
+            id: parent.id
+          },
+          id: null,
+          name: null
+        })
+      )
+      .then(newChildList => {
+        const newChild = R.last(newChildList);
 
-    const childPromises = data.children.map((oldChild, i) => () => {
-      modelMap[oldChild.type]
-        .create(
-          R.merge(oldChild, {
-            parent: {
-              type: newParent.type,
-              id: newParent.id
-            },
-            id: null,
-            name: null
-          })
-        )
-        .then(newChildList => {
-          const newChild = R.last(newChildList);
+        return {
+          oldChild,
+          newChild
+        };
+      })
+      .catch(console.error);
+  });
 
-          return {
-            oldChild,
-            newChild
-          };
-        });
-    });
-
-    promiseSerial(childPromises).then(newChildren => {
+  return promiseSerial(childPromises)
+    .then(R.uniq)
+    .then(newChildren => {
       const listForSave = getNewListForSave(newChildren);
-
-      // TODO: Bulk Update
       const updatePromises = listForSave.map((entityToUpdate, i) => () =>
         modelMap[entityToUpdate.type].update(R.clone(entityToUpdate))
       );
 
-      promiseSerial(updatePromises).then(updatedChildren => {
-        // TODO: Update UI Response
-        console.log('Is it done!?', updatedChildren);
-      });
+      return promiseSerial(updatePromises)
+        .then(R.uniq)
+        .then(updatedChildren =>
+          updatedChildren.filter((child, i) =>
+            R.find(R.propEq('id', child.id))(listForSave)
+          )
+        )
+        .catch(console.error);
     });
-  });
+}
+
+/**
+ * Copy the Parent Entity
+ * 
+ * @param {Object} parent
+ * @return {Promise}
+*/
+function copyParent(parent) {
+  return modelMap[parent.type].create(parent);
+}
+
+/**
+ * Construct Return Value By Entity Key
+ * 
+ * @param {Object}
+ * @return {Function}
+*/
+const constructReturnCopiedValues = parent => children =>
+  children.concat(parent).reduce(
+    (prev, curr) =>
+      R.merge(prev, {
+        [curr.type]: prev[curr.type] ? prev[curr.type].concat(curr) : [curr]
+      }),
+    {}
+  );
+
+/**
+   * Copy an Entity and all it's descendants
+   * 
+   * @param {Object} data
+   * @return {Promise}
+  */
+exports.copyEntityAndAllChildren = data => {
+  return copyParent(data.parent)
+    .then(parentList => {
+      const newParent = R.last(parentList);
+
+      return copyBlock(newParent, data.children)
+        .then(constructReturnCopiedValues(newParent))
+        .catch(console.error);
+    })
+    .catch(console.error);
 };
