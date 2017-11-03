@@ -48,12 +48,13 @@ export function createInitialFormState(props) {
 /**
  * Make a copy of an item, removing certain keys
  * 
- * @param {Object} item
+ * @param {Object} data
  * @param {Array} keys
  * @returns {Object}
 */
-export function makeCopyAndRemoveKeys(item, keys) {
-  return R.omit(keys, item);
+export function makeCopyAndRemoveKeys(data, keys) {
+  const omitKeys = R.omit(keys);
+  return R.ifElse(R.is(Array), R.map(omitKeys), omitKeys)(data);
 }
 
 /**
@@ -77,10 +78,9 @@ export function getEntitiesCanCopyTo(entity, appState) {
   return entitiesForCopy[entity.type]
     .reduce((prev, curr) => {
       return prev.concat(
-        ...appState[curr].map(e => ({
-          name: e.name,
-          link: { type: e.type, id: e.id }
-        }))
+        ...appState[curr]
+          .filter(R.compose(R.not, R.prop('private')))
+          .map(({ id, name, type }) => ({ name, link: { type, id } }))
       );
     }, [])
     .filter(e => e.link.id !== entity.parent.id);

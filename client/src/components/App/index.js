@@ -7,6 +7,8 @@ import Dashboard from '../Dashboard';
 import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
 
+import { concat, mergeWith } from 'ramda';
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -164,12 +166,7 @@ class App extends Component {
     dataUtil
       .post(
         config.routes[item.type][route],
-        dataUtil.makeCopyAndRemoveKeys(item, [
-          'active',
-          'children',
-          'expand',
-          'toggled'
-        ])
+        dataUtil.makeCopyAndRemoveKeys(item, config.keysToRemove)
       )
       .then(res => res.json())
       .then(dataUtil.throwIfEmptyArray)
@@ -183,6 +180,29 @@ class App extends Component {
           },
           this.updateTreeStructure
         );
+      })
+      .catch(console.error);
+  };
+
+  handleCopyItem = ({ parent, children, reset, switchTo }) => {
+    const route = config.operations.copy;
+
+    dataUtil
+      .post(config.routes[parent.type][route], {
+        parent: dataUtil.makeCopyAndRemoveKeys(parent, config.keysToRemove),
+        children: dataUtil.makeCopyAndRemoveKeys(children, config.keysToRemove)
+      })
+      .then(res => res.json())
+      .then(copiedResults => {
+        this.setState(mergeWith(concat, this.state, copiedResults), () => {
+          this.setState({
+            treeData: dataUtil.createTreeView({
+              data: { ...this.state },
+              entities: config.entities,
+              active: (this.state.itemEditing || {}).id
+            })
+          });
+        });
       })
       .catch(console.error);
   };
@@ -303,15 +323,30 @@ class App extends Component {
   };
 
   handleCopyEntity = entity => {
-    this.handleSaveItem({
-      item: {
-        ...this.state.itemEditing,
-        parent: {
-          ...entity.link
-        },
-        id: null
+    const item = {
+      ...this.state.itemEditing,
+      parent: {
+        ...entity.link
       },
-      switchTo: true
+      name: null,
+      id: null
+    };
+
+    const allEntitiesToCopy = dataUtil
+      .getChildEntitiesFor(this.state.itemEditing, this.state)
+      .map(child => ({
+        ...child
+      }));
+
+    // save new parent
+    // save all children with updated parent
+    // and null names and id's!
+
+    this.handleCopyItem({
+      parent: item,
+      children: allEntitiesToCopy,
+      switchTo: true,
+      copy: true
     });
   };
 
