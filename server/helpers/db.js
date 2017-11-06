@@ -44,8 +44,10 @@ const createNewEntity = (type, entity) => entities =>
     })
   );
 
-const maybeReplaceWithEntity = newEntity => old => old.id === newEntity.id ? newEntity : old;
-const updateEntityInList = entity => entities => entities.map(maybeReplaceWithEntity(entity));
+const maybeReplaceWithEntity = newEntity => old =>
+  old.id === newEntity.id ? newEntity : old;
+const updateEntityInList = entity => entities =>
+  entities.map(maybeReplaceWithEntity(entity));
 
 const findEntityById = id => entities => entities.find(e => e.id === id);
 const deleteEntityFromList = id => entities =>

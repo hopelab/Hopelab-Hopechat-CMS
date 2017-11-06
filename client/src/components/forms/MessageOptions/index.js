@@ -6,7 +6,12 @@ import { Button, ControlLabel, FormGroup, FormControl } from 'react-bootstrap';
 
 import NextMessage from '../NextMessage';
 
-import { initialState } from '../../../utils/config';
+import {
+  initialState,
+  TYPE_TEXT,
+  TYPE_QUESTION,
+  TYPE_QUESTION_WITH_REPLIES
+} from '../../../utils/config';
 
 const propTypes = {
   childEntities: PropTypes.array.isRequired,
@@ -21,7 +26,9 @@ const propTypes = {
 */
 function messageTypeHasContent(type) {
   return (
-    type === 'text' || type === 'question' || type === 'questionWithReplies'
+    type === TYPE_TEXT ||
+    type === TYPE_QUESTION ||
+    type === TYPE_QUESTION_WITH_REPLIES
   );
 }
 
@@ -29,7 +36,7 @@ function messageTypeHasContent(type) {
  * Check Message Type is Question with Replies
 */
 function messageTypeHasQuickReplies(type) {
-  return type === 'questionWithReplies';
+  return type === TYPE_QUESTION_WITH_REPLIES;
 }
 
 class MessageOptions extends Component {
@@ -41,7 +48,7 @@ class MessageOptions extends Component {
     const { index } = this.props;
     let replies = [];
     const newReply = {
-      content_type: 'text',
+      content_type: TYPE_TEXT,
       title: ''
     };
 

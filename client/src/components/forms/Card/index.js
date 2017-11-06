@@ -5,6 +5,10 @@ import './style.css';
 import { Button, FormControl } from 'react-bootstrap';
 import MessageOptions from '../MessageOptions';
 import NextMessage from '../NextMessage';
+import {
+  TYPE_MESSAGE,
+  TYPE_QUESTION_WITH_REPLIES
+} from '../../../utils/config';
 
 const propTypes = {
   item: PropTypes.object.isRequired,
@@ -88,7 +92,7 @@ class Card extends React.Component {
           onChange={this.handleNameUpdate}
         />
 
-        {this.props.item.type === 'message' ? (
+        {this.props.item.type === TYPE_MESSAGE ? (
           <MessageOptions
             editingAsChildEntity
             index={this.props.index}
@@ -98,7 +102,7 @@ class Card extends React.Component {
           />
         ) : null}
 
-        {this.props.item.messageType !== 'questionWithReplies' && (
+        {this.props.item.messageType !== TYPE_QUESTION_WITH_REPLIES && (
           <NextMessage
             childEntities={this.props.childEntities.filter(
               m => m.id !== this.props.item.id
