@@ -53,10 +53,30 @@ const findEntityById = id => entities => entities.find(e => e.id === id);
 const deleteEntityFromList = id => entities =>
   entities.filter(e => e.id !== id);
 
+const maybeRemoveQuickReply = id => entity =>
+  R.compose(
+    R.ifElse(
+      R.length,
+      R.assoc('quick_replies', R.__, entity),
+      R.always(entity)
+    ),
+    R.map(R.over(R.lensProp('payload'), JSON.stringify)),
+    R.reject(R.pathEq(['payload', 'id'], id)),
+    R.map(R.over(R.lensProp('payload'), JSON.parse)),
+    R.propOr([], 'quick_replies')
+  )(entity);
+
+const maybeRemoveNext = id =>
+  R.ifElse(R.pathEq(['next', 'id'], id), R.omit(['next']), R.identity);
+
+const deleteAnyLinkToEntity = id =>
+  R.compose(R.map(maybeRemoveQuickReply(id)), R.map(maybeRemoveNext(id)));
+
 module.exports = {
   createNewEntity,
   updateEntityInList,
   findEntityById,
   deleteEntityFromList,
+  deleteAnyLinkToEntity,
   entityTypes
 };

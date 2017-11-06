@@ -339,6 +339,7 @@ module.exports = store => {
         .getItem(DB_MESSAGES)
         .then(JSON.parse)
         .then(helpers.deleteEntityFromList(id))
+        .then(helpers.deleteAnyLinkToEntity(id))
         .then(store.setItem(DB_MESSAGES, ONE_DAY_IN_MILLISECONDS))
         .then(resolve)
         .catch(console.error);
