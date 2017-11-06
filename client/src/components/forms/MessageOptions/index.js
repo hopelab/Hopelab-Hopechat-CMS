@@ -72,10 +72,11 @@ class MessageOptions extends Component {
 
   handleUpdateQuickReplyNextPayload = (i, field, item) => {
     const { index } = this.props;
+    const { id, type } = item;
 
     let replies = [...this.props.item.quick_replies];
 
-    replies[i].payload = item.id;
+    replies[i].payload = JSON.stringify({ id, type });
 
     this.props.onUpdate({ index, field: 'quick_replies', value: replies });
   };
@@ -161,7 +162,7 @@ class MessageOptions extends Component {
                   />
 
                   <NextMessage
-                    nextId={qr.payload}
+                    nextId={JSON.parse(qr.payload || '{}').id}
                     childEntities={this.props.childEntities.filter(
                       m => m.id !== this.props.item.id
                     )}
