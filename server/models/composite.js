@@ -8,34 +8,43 @@ const message = require('./message');
 
 const { promiseSerial } = require('../utils/data');
 
+const {
+  TYPE_CONVERSATION,
+  TYPE_COLLECTION,
+  TYPE_SERIES,
+  TYPE_BLOCK,
+  TYPE_QUESTION_WITH_REPLIES,
+  DEFAULT_NAME
+} = require('../constants');
+
 const modelMap = { conversation, collection, series, block, message };
 
 const makeANewCollection = conversations => ({
-  type: 'collection',
+  type: TYPE_COLLECTION,
   private: true,
-  name: 'default',
+  name: DEFAULT_NAME,
   parent: {
-    type: 'conversation',
+    type: TYPE_CONVERSATION,
     id: R.last(conversations).id
   }
 });
 
 const makeANewSeries = collections => ({
-  type: 'series',
+  type: TYPE_SERIES,
   private: true,
-  name: 'default',
+  name: DEFAULT_NAME,
   parent: {
-    type: 'collection',
+    type: TYPE_COLLECTION,
     id: R.last(collections).id
   }
 });
 
 const makeANewBlock = allSeries => ({
-  type: 'block',
+  type: TYPE_BLOCK,
   private: true,
-  name: 'default',
+  name: DEFAULT_NAME,
   parent: {
-    type: 'series',
+    type: TYPE_SERIES,
     id: R.last(allSeries).id
   }
 });
@@ -77,6 +86,25 @@ function getNewListForSave(entityOldNew) {
         return R.merge(newItem, {
           next: { id: listToSave[i].id, type: listToSave[i].type }
         });
+      }
+
+      if (newItem.messageType === TYPE_QUESTION_WITH_REPLIES) {
+        if (
+          newItem.quick_replies.find(
+            qr => JSON.parse(qr.payload).id === oldItem.id
+          )
+        ) {
+          const index = newItem.quick_replies.findIndex(
+            qr => JSON.parse(qr.payload).id === oldItem.id
+          );
+          const quick_replies = [...newItem.quick_replies];
+          quick_replies[index].payload = JSON.stringify({
+            id: listToSave[i].id,
+            type: listToSave[i].type
+          });
+
+          return R.merge(newItem, { quick_replies });
+        }
       }
 
       return newItem;

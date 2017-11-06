@@ -14,9 +14,12 @@ const TYPE_SERIES = 'series';
 const TYPE_BLOCK = 'block';
 const TYPE_MESSAGE = 'message';
 const TYPE_QUESTION = 'question';
+const TYPE_QUESTION_WITH_REPLIES = 'questionWithReplies';
 const TYPE_ANSWER = 'answer';
 const TYPE_IMAGE = 'image';
 const TYPE_VIDEO = 'video';
+
+const DEFAULT_NAME = 'default';
 
 const ONE_DAY_IN_MILLISECONDS = 1000 * 60 * 60 * 24;
 const ONE_WEEK_IN_MILLISECONDS = 1000 * 60 * 60 * 24 * 7 * 4;
@@ -35,10 +38,12 @@ module.exports = {
   TYPE_SERIES,
   TYPE_MESSAGE,
   TYPE_QUESTION,
+  TYPE_QUESTION_WITH_REPLIES,
   TYPE_ANSWER,
   TYPE_BLOCK,
   TYPE_IMAGE,
   TYPE_VIDEO,
+  DEFAULT_NAME,
   ONE_DAY_IN_MILLISECONDS,
   ONE_WEEK_IN_MILLISECONDS
 };

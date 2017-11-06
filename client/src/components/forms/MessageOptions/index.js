@@ -6,7 +6,12 @@ import { Button, ControlLabel, FormGroup, FormControl } from 'react-bootstrap';
 
 import NextMessage from '../NextMessage';
 
-import { initialState } from '../../../utils/config';
+import {
+  initialState,
+  TYPE_TEXT,
+  TYPE_QUESTION,
+  TYPE_QUESTION_WITH_REPLIES
+} from '../../../utils/config';
 
 const propTypes = {
   childEntities: PropTypes.array.isRequired,
@@ -21,7 +26,9 @@ const propTypes = {
 */
 function messageTypeHasContent(type) {
   return (
-    type === 'text' || type === 'question' || type === 'questionWithReplies'
+    type === TYPE_TEXT ||
+    type === TYPE_QUESTION ||
+    type === TYPE_QUESTION_WITH_REPLIES
   );
 }
 
@@ -29,7 +36,7 @@ function messageTypeHasContent(type) {
  * Check Message Type is Question with Replies
 */
 function messageTypeHasQuickReplies(type) {
-  return type === 'questionWithReplies';
+  return type === TYPE_QUESTION_WITH_REPLIES;
 }
 
 class MessageOptions extends Component {
@@ -41,7 +48,7 @@ class MessageOptions extends Component {
     const { index } = this.props;
     let replies = [];
     const newReply = {
-      content_type: 'text',
+      content_type: TYPE_TEXT,
       title: ''
     };
 
@@ -72,10 +79,11 @@ class MessageOptions extends Component {
 
   handleUpdateQuickReplyNextPayload = (i, field, item) => {
     const { index } = this.props;
+    const { id, type } = item;
 
     let replies = [...this.props.item.quick_replies];
 
-    replies[i].payload = item.id;
+    replies[i].payload = JSON.stringify({ id, type });
 
     this.props.onUpdate({ index, field: 'quick_replies', value: replies });
   };
@@ -161,7 +169,7 @@ class MessageOptions extends Component {
                   />
 
                   <NextMessage
-                    nextId={qr.payload}
+                    nextId={JSON.parse(qr.payload || '{}').id}
                     childEntities={this.props.childEntities.filter(
                       m => m.id !== this.props.item.id
                     )}
