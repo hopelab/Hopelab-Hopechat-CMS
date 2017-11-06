@@ -44,17 +44,27 @@ const createNewEntity = (type, entity) => entities =>
     })
   );
 
-const maybeReplaceWithEntity = newEntity => old => old.id === newEntity.id ? newEntity : old;
-const updateEntityInList = entity => entities => entities.map(maybeReplaceWithEntity(entity));
+const maybeReplaceWithEntity = newEntity => old =>
+  old.id === newEntity.id ? newEntity : old;
+const updateEntityInList = entity => entities =>
+  entities.map(maybeReplaceWithEntity(entity));
 
 const findEntityById = id => entities => entities.find(e => e.id === id);
 const deleteEntityFromList = id => entities =>
   entities.filter(e => e.id !== id);
+
+const removeLinkIfPresent = id => entity =>
+  R.pathEq(['next', 'id'], id)(entity)
+    ? R.merge(entity, { next: null })
+    : entity;
+const deleteAnyLinkToEntity = id => entities =>
+  entities.map(removeLinkIfPresent(id));
 
 module.exports = {
   createNewEntity,
   updateEntityInList,
   findEntityById,
   deleteEntityFromList,
+  deleteAnyLinkToEntity,
   entityTypes
 };
