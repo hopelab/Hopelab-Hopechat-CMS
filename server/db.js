@@ -10,6 +10,7 @@ const {
 } = require('./constants');
 
 const helpers = require('./helpers/db');
+const R = require('ramda');
 
 module.exports = store => {
   /**
@@ -177,6 +178,15 @@ module.exports = store => {
         .then(JSON.parse)
         .then(helpers.deleteEntityFromList(id))
         .then(store.setItem(DB_COLLECTIONS, ONE_DAY_IN_MILLISECONDS))
+        .then(
+          helpers.deleteLinksFromDifferentEntitySets(
+            id,
+            store,
+            DB_MESSAGES,
+            'collection',
+            'message'
+          )
+        )
         .then(resolve)
         .catch(console.error);
     });
@@ -339,7 +349,7 @@ module.exports = store => {
         .getItem(DB_MESSAGES)
         .then(JSON.parse)
         .then(helpers.deleteEntityFromList(id))
-        .then(helpers.deleteAnyLinkToEntity(id))
+        .then(helpers.deleteLinksFromSameEntitySet(id))
         .then(store.setItem(DB_MESSAGES, ONE_DAY_IN_MILLISECONDS))
         .then(resolve)
         .catch(console.error);
