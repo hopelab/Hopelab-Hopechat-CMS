@@ -6,6 +6,8 @@ const {
   DB_BLOCKS,
   DB_MEDIA,
   DB_USER_HISTORY,
+  TYPE_COLLECTION,
+  TYPE_MESSAGE,
   ONE_DAY_IN_MILLISECONDS
 } = require('./constants');
 
@@ -183,8 +185,8 @@ module.exports = store => {
             id,
             store,
             DB_MESSAGES,
-            'collection',
-            'message'
+            TYPE_COLLECTION,
+            TYPE_MESSAGE
           )
         )
         .then(resolve)
