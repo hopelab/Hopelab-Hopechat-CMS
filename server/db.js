@@ -5,7 +5,6 @@ const {
   DB_MESSAGES,
   DB_BLOCKS,
   DB_MEDIA,
-  DB_USER_HISTORY,
   ONE_DAY_IN_MILLISECONDS
 } = require('./constants');
 
