@@ -135,6 +135,7 @@ const initialState = {
     block: [],
     message: [],
     itemEditing: null,
+    addingImages: false,
     itemHasBeenEdited: false,
     childEntities: [],
     entitiesCanCopyTo: [],

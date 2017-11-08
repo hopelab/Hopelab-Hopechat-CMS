@@ -64,6 +64,16 @@ class App extends Component {
     }
   };
 
+  addImage = (acceptedFiles, rejectedFiles) => {
+    const data = new FormData();
+    data.append('file', acceptedFiles[0]); // should allow multiple files?
+
+    fetch('/images/upload', {
+      method: 'POST',
+      body: data
+    });
+  }
+
   handleUpdatingItem = e => {
     const target = e.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -354,6 +364,7 @@ class App extends Component {
     return (
       <div className="App">
         <Sidebar
+          addImage={this.addImage}
           addConversation={this.addConversation}
           conversation={this.state.conversation}
           treeData={this.state.treeData}

@@ -2,13 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './style.css';
 
+import Dropzone from 'react-dropzone'
 import { Treebeard, decorators } from '../TreeBeard';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Button, ControlLabel, Glyphicon } from 'react-bootstrap';
 
 import { entities } from '../../utils/config';
 import treeTheme from '../../utils/treeTheme';
 
 const propTypes = {
+  addImage: PropTypes.func.isRequired,
   addConversation: PropTypes.func.isRequired,
   [entities.conversation]: PropTypes.array,
   treeData: PropTypes.object.isRequired,
@@ -67,6 +69,15 @@ decorators.Container = PoolContainer;
 const Sidebar = props => (
   <aside className="Sidebar">
     <div className="Inner">
+
+      <div className="ImageUpload">
+        <ControlLabel>Upload Image</ControlLabel>
+        <Dropzone
+          accept="image/jpeg, image/png"
+          onDrop={props.addImage} 
+        />
+      </div>
+
       <Button
         bsStyle="primary"
         onClick={props.addConversation}

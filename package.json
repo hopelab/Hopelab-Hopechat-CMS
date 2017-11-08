@@ -13,13 +13,19 @@
   "author": "Presence PG",
   "dependencies": {
     "alien-node-redis-utils": "^1.2.0",
+    "alien-node-winston-utils": "^0.0.4",
+    "aws-sdk": "^2.146.0",
     "body-parser": "^1.12.3",
+    "config": "^1.28.0",
+    "connect-multiparty": "^2.1.0",
     "express": "^4.12.3",
+    "q": "^1.5.1",
     "ramda": "^0.25.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "redis": "^2.8.0",
-    "shortid": "^2.2.8"
+    "shortid": "^2.2.8",
+    "winston": "^2.4.0"
   },
   "devDependencies": {
     "eslint": "^4.8.0",

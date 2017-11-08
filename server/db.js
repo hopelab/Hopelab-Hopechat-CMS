@@ -440,6 +440,35 @@ module.exports = store => {
         .catch(console.error);
     });
 
+
+    /**
+     * Upload Image
+     * 
+     * @return {Promise<Object>}
+    */
+    const uploadImage = data =>
+    new Promise(resolve => {
+      const file = data.file;
+      const fileUtils = require('./utils/file');
+      const StaticAssetsSvc = require('./services/staticAssets/StaticAssets')('s3');
+
+      if (!fileUtils.isSupportedFileType('image', file)) {
+        throw {
+          code    : 500,
+          message : 'Unsupported image type: ' + file.type
+        };
+      }
+    
+      if (fileUtils.fileSizeExceeds(file, 5000000000)) {
+        throw {
+          code    : 500,
+          message : 'Image is too large. Please use an image under 5Mb.'
+        };
+      }
+    
+      return StaticAssetsSvc.saveFile(file.name, file);
+    });
+
   return {
     getConversations,
     getCollections,
@@ -470,6 +499,8 @@ module.exports = store => {
     deleteCollection,
     deleteSeries,
     deleteBlock,
-    deleteMessage
+    deleteMessage,
+
+    uploadImage
   };
 };
