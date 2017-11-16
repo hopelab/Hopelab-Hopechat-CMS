@@ -66,13 +66,19 @@ class App extends Component {
 
   addImage = (acceptedFiles, rejectedFiles) => {
     const data = new FormData();
-    data.append('file', acceptedFiles[0]); // should allow multiple files?
+    data.append('file', acceptedFiles[0]);
 
     fetch('/images/upload', {
       method: 'POST',
       body: data
-    });
-  }
+    })
+      .then(res => res.json())
+      .then(res => {
+        this.setState({
+          image: this.state.image.concat(res)
+        });
+      });
+  };
 
   handleUpdatingItem = e => {
     const target = e.target;
@@ -387,6 +393,7 @@ class App extends Component {
           childEntities={this.state.childEntities}
           entitiesCanCopyTo={this.state.entitiesCanCopyTo}
           handleCopyEntity={this.handleCopyEntity}
+          images={this.state.image}
         />
       </div>
     );

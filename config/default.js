@@ -10,11 +10,11 @@ const FALLBACK_DEFAULT_VALUES = {
   host          : 'localhost',
   sessionSecret : 'secret',
   aws           : {
-    bucket : 'hopelab-test',
-    acl    : 'public-read',
+    bucket : 'hopelab-media',
+    acl    : 'public-read-write',
     config : {
-      accessKeyId     : 'AKIAISSVJKZQYK5OOKFA',
-      secretAccessKey : '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',
+      accessKeyId     : '',
+      secretAccessKey : '',
       region          : 'us-west-2'
     }
   }
@@ -28,6 +28,14 @@ const config = {
       R.path(['aws', 'bucket'], FALLBACK_DEFAULT_VALUES),
       R.path(['env', 'AWS_BUCKET'], process)
     ),
+    listObjectParams : () => {
+      return {
+        Bucket       : R.defaultTo(
+          R.path(['aws', 'bucket'], FALLBACK_DEFAULT_VALUES),
+          R.path(['env', 'AWS_BUCKET'], process)
+        )
+      }
+    },
     setObjectParams : (key, val, ContentType) => {
       return {
         Bucket       : R.defaultTo(

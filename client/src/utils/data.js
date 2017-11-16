@@ -28,7 +28,8 @@ export function createInitialEntityState(data) {
     [entities.collection]: data[1],
     [entities.series]: data[2],
     [entities.block]: data[3],
-    [entities.message]: data[4]
+    [entities.message]: data[4],
+    [entities.image]: data[5]
   };
 }
 
@@ -113,7 +114,8 @@ export function fetchAllDataForApp(routes) {
     fetch(routes.collection.all).then(res => res.json()),
     fetch(routes.series.all).then(res => res.json()),
     fetch(routes.block.all).then(res => res.json()),
-    fetch(routes.message.all).then(res => res.json())
+    fetch(routes.message.all).then(res => res.json()),
+    fetch('/images/all').then(res => res.json())
   ]).then(throwIfEmptyArray);
 }
 

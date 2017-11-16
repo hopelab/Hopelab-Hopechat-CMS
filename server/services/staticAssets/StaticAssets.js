@@ -1,3 +1,4 @@
 'use strict';
 
-module.exports = strategyName => require('./strategies/' + strategyName + '/strategy');
+module.exports = strategyName =>
+  require('./strategies/' + strategyName + '/strategy');

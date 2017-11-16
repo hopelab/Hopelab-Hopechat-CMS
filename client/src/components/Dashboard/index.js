@@ -21,7 +21,8 @@ const propTypes = {
   itemHasBeenEdited: PropTypes.bool.isRequired,
   childEntities: PropTypes.array.isRequired,
   entitiesCanCopyTo: PropTypes.array.isRequired,
-  handleCopyEntity: PropTypes.func.isRequired
+  handleCopyEntity: PropTypes.func.isRequired,
+  images: PropTypes.array.isRequired
 };
 
 const Dashboard = props => (
@@ -76,6 +77,7 @@ const Dashboard = props => (
             onEditEntity={props.handleEditingChildEntity}
             childEntities={props.childEntities}
             handleSaveItem={props.handleSaveItem}
+            images={props.images}
           />
         </div>
       </div>

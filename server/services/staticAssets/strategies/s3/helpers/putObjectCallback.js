@@ -1,6 +1,6 @@
 'use strict';
 
-var R  = require('ramda');
+var R = require('ramda');
 
 var putObjectCallback = function(deferred, fs, unlinkCallback, fileName, file) {
   return function(err) {

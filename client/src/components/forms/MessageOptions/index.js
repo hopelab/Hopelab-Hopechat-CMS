@@ -18,7 +18,8 @@ const propTypes = {
   item: PropTypes.object.isRequired,
   onUpdate: PropTypes.func.isRequired,
   editingAsChildEntity: PropTypes.bool,
-  index: PropTypes.number
+  index: PropTypes.number,
+  images: PropTypes.array.isRequired
 };
 
 /**
@@ -123,6 +124,49 @@ class MessageOptions extends Component {
             ))}
           </FormControl>
         </FormGroup>
+
+        {this.props.item.messageType === 'image' ? (
+          <FormGroup controlId="formControlsSelect">
+            <ControlLabel>Image</ControlLabel>
+            <FormControl
+              name="url"
+              componentClass="select"
+              placeholder="select"
+              value={this.props.item.url}
+              onChange={e =>
+                this.props.onUpdate({
+                  index: this.props.index,
+                  field: e.target.name,
+                  value: e.target.value
+                })}
+            >
+              {this.props.images.map((img, i) => (
+                <option key={i} value={img.url}>
+                  {img.key}
+                </option>
+              ))}
+            </FormControl>
+          </FormGroup>
+        ) : null}
+
+        {this.props.item.messageType === 'video' ? (
+          <FormGroup>
+            <ControlLabel>Video Link</ControlLabel>
+            <FormControl
+              componentClass="textarea"
+              id="url"
+              name="url"
+              type="text"
+              value={this.props.item.url || ''}
+              onChange={e =>
+                this.props.onUpdate({
+                  index: this.props.index,
+                  field: e.target.name,
+                  value: e.target.value
+                })}
+            />
+          </FormGroup>
+        ) : null}
 
         {messageTypeHasContent(this.props.item.messageType) ? (
           <FormGroup>
