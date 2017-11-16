@@ -10,4 +10,5 @@ jobs:
       #- run: yarn install
       #- run: yarn run build
       #- run: if [ "${CIRCLE_BRANCH}" == "circleci" ] || [ "${CIRCLE_BRANCH}" == "master" ]; then rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./build/ ubuntu@news.dev.presencepg.com:/var/www/html/; fi
+      - run: ssh -o StrictHostKeyChecking=no ubuntu@35.162.65.198 'ls -l'
       - run: echo "hello world"
