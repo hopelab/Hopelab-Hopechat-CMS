@@ -6,9 +6,6 @@ jobs:
     steps:
       - checkout
       - run: sudo apt install -y rsync
-      #- run: rm yarn.lock
-      #- run: yarn install
-      #- run: yarn run build
-      - run: if [ "${CIRCLE_BRANCH}" == "circleci" ] || [ "${CIRCLE_BRANCH}" == "master" ]; then rsync -avz -e "ssh -o StrictHostKeyChecking=no" --exclude '.git*' ./ ubuntu@35.162.65.198:~/cmsdeploy/; fi
-      - run: ssh -o StrictHostKeyChecking=no ubuntu@35.162.65.198 'cd ~/cmsdeploy/ && yarn install && cd client && yarn install && yarn build client && pm2 restart all'
+      - run: if [ "${CIRCLE_BRANCH}" == "circleci" ] || [ "${CIRCLE_BRANCH}" == "master" ]; then rsync -avz -e "ssh -o StrictHostKeyChecking=no" --exclude '.git*' ./ ubuntu@35.162.65.198:/var/www/cms/hopelab_ayachatbot_cms/; fi
+      - run: ssh -o StrictHostKeyChecking=no ubuntu@35.162.65.198 'cd /var/www/cms/hopelab_ayachatbot_cms && yarn install && cd client && yarn install && yarn build client && pm2 restart all'
       - run: echo "done!"
