@@ -1,7 +1,6 @@
 'use strict';
 
 const fs = require('fs'),
-  Q = require('q'),
   R = require('ramda'),
   config = require('config');
 
