@@ -32,7 +32,8 @@ const propTypes = {
   handleUpdateChildEntity: PropTypes.func.isRequired,
   onEditEntity: PropTypes.func.isRequired,
   handleSaveItem: PropTypes.func.isRequired,
-  handleUpdateMessageOptions: PropTypes.func.isRequired
+  handleUpdateMessageOptions: PropTypes.func.isRequired,
+  images: PropTypes.array.isRequired
 };
 
 /**
@@ -145,6 +146,7 @@ class Form extends Component {
               item={this.props.item}
               onUpdate={this.props.handleUpdateMessageOptions}
               childEntities={this.props.childEntities}
+              images={this.props.images}
             />
           ) : null}
         </div>
@@ -178,6 +180,7 @@ class Form extends Component {
                   handleUpdateMessageOptions={
                     this.props.handleUpdateMessageOptions
                   }
+                  images={this.props.images}
                 />
               ))}
             </div>

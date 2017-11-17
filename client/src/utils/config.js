@@ -6,7 +6,8 @@ const entities = {
   collection: 'collection',
   series: 'series',
   block: 'block',
-  message: 'message'
+  message: 'message',
+  image: 'image'
 };
 
 /**
@@ -134,12 +135,16 @@ const initialState = {
     series: [],
     block: [],
     message: [],
+    image: [],
     itemEditing: null,
+    addingImages: false,
     itemHasBeenEdited: false,
     childEntities: [],
     entitiesCanCopyTo: [],
     treeData: {},
-    cursor: {}
+    cursor: {},
+    showImageModal: false,
+    imageUploadStatus: ''
   },
 
   conversation: {

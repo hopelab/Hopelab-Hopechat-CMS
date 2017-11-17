@@ -3,16 +3,18 @@ import PropTypes from 'prop-types';
 import './style.css';
 
 import { Treebeard, decorators } from '../TreeBeard';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Button, ControlLabel, Glyphicon } from 'react-bootstrap';
 
 import { entities } from '../../utils/config';
 import treeTheme from '../../utils/treeTheme';
 
 const propTypes = {
+  addImage: PropTypes.func.isRequired,
   addConversation: PropTypes.func.isRequired,
   [entities.conversation]: PropTypes.array,
   treeData: PropTypes.object.isRequired,
   handleTreeToggle: PropTypes.func.isRequired,
+  toggleImageModal: PropTypes.func.isRequired,
   itemEditing: PropTypes.object
 };
 
@@ -67,6 +69,10 @@ decorators.Container = PoolContainer;
 const Sidebar = props => (
   <aside className="Sidebar">
     <div className="Inner">
+      <Button bsStyle="primary" onClick={props.toggleImageModal}>
+        Upload Image
+      </Button>
+
       <Button
         bsStyle="primary"
         onClick={props.addConversation}

@@ -4,6 +4,9 @@ import './style.css';
 import Sidebar from '../Sidebar';
 import Dashboard from '../Dashboard';
 
+import Dropzone from 'react-dropzone';
+import { ControlLabel, Modal } from 'react-bootstrap';
+
 import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
 
@@ -30,6 +33,12 @@ class App extends Component {
       })
       .catch(console.error);
   }
+
+  toggleImageModal = () => {
+    this.setState({
+      showImageModal: !this.state.showImageModal
+    });
+  };
 
   addConversation = () => {
     if (this.state.itemEditing === null) {
@@ -62,6 +71,38 @@ class App extends Component {
         })
         .catch(console.error);
     }
+  };
+
+  resetActionMessage = (stateKey, time) => {
+    setTimeout(() => this.setState({ [stateKey]: '' }), time);
+  };
+
+  addImage = (acceptedFiles, rejectedFiles) => {
+    const data = new FormData();
+    data.append('file', acceptedFiles[0]);
+
+    fetch('/images/upload', {
+      method: 'POST',
+      body: data
+    })
+      .then(res => res.json())
+      .then(res => {
+        this.setState({
+          image: this.state.image.concat(res),
+          imageUploadStatus: 'success'
+        });
+
+        this.resetActionMessage('imageUploadStatus', 4000);
+      })
+      .catch(e => {
+        console.error(e);
+
+        this.setState({
+          imageUploadStatus: 'fail'
+        });
+
+        this.resetActionMessage('imageUploadStatus', 4000);
+      });
   };
 
   handleUpdatingItem = e => {
@@ -338,10 +379,6 @@ class App extends Component {
         ...child
       }));
 
-    // save new parent
-    // save all children with updated parent
-    // and null names and id's!
-
     this.handleCopyItem({
       parent: item,
       children: allEntitiesToCopy,
@@ -353,12 +390,31 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <Modal
+          show={this.state.showImageModal}
+          onHide={this.toggleImageModal}
+          dialogClassName="custom-modal"
+        >
+          <span className={`alert ${this.state.imageUploadStatus}`}>
+            {`image upload ${this.state.imageUploadStatus}`.toUpperCase()}
+          </span>
+
+          <ControlLabel>Drag and Drop Image Below To Upload</ControlLabel>
+          <Dropzone
+            accept="image/jpeg, image/png"
+            onDrop={this.addImage}
+            className={`custom-dropzone ${this.state.imageUploadStatus}`}
+          />
+        </Modal>
+
         <Sidebar
+          addImage={this.addImage}
           addConversation={this.addConversation}
           conversation={this.state.conversation}
           treeData={this.state.treeData}
           handleTreeToggle={this.handleTreeToggle}
           itemEditing={this.state.itemEditing}
+          toggleImageModal={this.toggleImageModal}
         />
 
         <Dashboard
@@ -376,6 +432,7 @@ class App extends Component {
           childEntities={this.state.childEntities}
           entitiesCanCopyTo={this.state.entitiesCanCopyTo}
           handleCopyEntity={this.handleCopyEntity}
+          images={this.state.image}
         />
       </div>
     );
