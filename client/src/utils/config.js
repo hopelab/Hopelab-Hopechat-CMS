@@ -142,7 +142,8 @@ const initialState = {
     childEntities: [],
     entitiesCanCopyTo: [],
     treeData: {},
-    cursor: {}
+    cursor: {},
+    showImageModal: false
   },
 
   conversation: {
