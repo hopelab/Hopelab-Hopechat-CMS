@@ -140,6 +140,7 @@ class MessageOptions extends Component {
                   value: e.target.value
                 })}
             >
+              <option value="select">Select Image</option>
               {this.props.images.map((img, i) => (
                 <option key={i} value={img.url}>
                   {img.key}
