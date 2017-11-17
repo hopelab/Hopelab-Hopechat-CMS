@@ -73,6 +73,10 @@ class App extends Component {
     }
   };
 
+  resetActionMessage = (stateKey, time) => {
+    setTimeout(() => this.setState({ [stateKey]: '' }), time);
+  };
+
   addImage = (acceptedFiles, rejectedFiles) => {
     const data = new FormData();
     data.append('file', acceptedFiles[0]);
@@ -85,19 +89,19 @@ class App extends Component {
       .then(res => {
         this.setState({
           image: this.state.image.concat(res),
-          imageUploadSuccess: true
+          imageUploadStatus: 'success'
         });
 
-        setTimeout(() => this.setState({ imageUploadSuccess: false }), 4000);
+        this.resetActionMessage('imageUploadStatus', 4000);
       })
       .catch(e => {
         console.error(e);
 
         this.setState({
-          imageUploadFailure: true
+          imageUploadStatus: 'fail'
         });
 
-        setTimeout(() => this.setState({ imageUploadFailure: false }), 4000);
+        this.resetActionMessage('imageUploadStatus', 4000);
       });
   };
 
@@ -384,11 +388,6 @@ class App extends Component {
   };
 
   render() {
-    const alert = this.state.imageUploadSuccess ? (
-      <span className="alert success">SUCCESSFULLY UPLOADED IMAGE</span>
-    ) : this.state.imageUploadFailure ? (
-      <span className="alert failure">FAILED TO UPLOAD IMAGE</span>
-    ) : null;
     return (
       <div className="App">
         <Modal
@@ -396,14 +395,15 @@ class App extends Component {
           onHide={this.toggleImageModal}
           dialogClassName="custom-modal"
         >
-          {alert}
+          <span className={`alert ${this.state.imageUploadStatus}`}>
+            {`image upload ${this.state.imageUploadStatus}`.toUpperCase()}
+          </span>
+
           <ControlLabel>Drag and Drop Image Below To Upload</ControlLabel>
           <Dropzone
             accept="image/jpeg, image/png"
             onDrop={this.addImage}
-            className={`custom-dropzone ${this.state.imageUploadSuccess
-              ? 'success'
-              : this.state.imageUploadFailure ? 'failure' : ''}`}
+            className={`custom-dropzone ${this.state.imageUploadStatus}`}
           />
         </Modal>
 

@@ -143,7 +143,8 @@ const initialState = {
     entitiesCanCopyTo: [],
     treeData: {},
     cursor: {},
-    showImageModal: false
+    showImageModal: false,
+    imageUploadStatus: ''
   },
 
   conversation: {
