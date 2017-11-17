@@ -103,6 +103,15 @@ export function throwIfEmptyArray(data) {
 }
 
 /**
+ * Construct the next UI state for Entity Data
+ * 
+ * @param {String} type
+ * @returns {Object}
+*/
+export const constructEntityState = type => nextState =>
+  Array.isArray(nextState) ? { type: nextState } : nextState;
+
+/**
  * Fetch All Data For App
  * 
  * @param {Object} route

@@ -1,6 +1,8 @@
 const shortid = require('shortid');
 const R = require('ramda');
 
+const { ONE_DAY_IN_MILLISECONDS } = require('../constants');
+
 const entityTypes = {
   conversation: 'Conversation',
   collection: 'Collection',
@@ -69,14 +71,32 @@ const maybeRemoveQuickReply = id => entity =>
 const maybeRemoveNext = id =>
   R.ifElse(R.pathEq(['next', 'id'], id), R.omit(['next']), R.identity);
 
-const deleteAnyLinkToEntity = id =>
+const deleteLinksFromSameEntitySet = id =>
   R.compose(R.map(maybeRemoveQuickReply(id)), R.map(maybeRemoveNext(id)));
+
+const deleteLinksFromDifferentEntitySets = (
+  id,
+  store,
+  DB_KEY,
+  entitySetOneKey,
+  entitySetTwoKey
+) => entitySetOne =>
+  store
+    .getItem(DB_KEY)
+    .then(JSON.parse)
+    .then(deleteLinksFromSameEntitySet(id))
+    .then(store.setItem(DB_KEY, ONE_DAY_IN_MILLISECONDS))
+    .then(entitySetTwo => ({
+      [entitySetOneKey]: entitySetOne,
+      [entitySetTwoKey]: entitySetTwo
+    }));
 
 module.exports = {
   createNewEntity,
   updateEntityInList,
   findEntityById,
   deleteEntityFromList,
-  deleteAnyLinkToEntity,
-  entityTypes
+  entityTypes,
+  deleteLinksFromSameEntitySet,
+  deleteLinksFromDifferentEntitySets
 };

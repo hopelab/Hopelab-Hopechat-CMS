@@ -249,14 +249,14 @@ class App extends Component {
     dataUtil
       .post(config.routes[item.type][route], item)
       .then(res => res.json())
-      .then(dataUtil.throwIfEmptyArray)
-      .then(res => {
+      .then(dataUtil.constructEntityState(item.type))
+      .then(nextEntityState => {
         this.setState(
           {
             itemEditing: null,
             childEntities: [],
             entitiesCanCopyTo: [],
-            [item.type]: res
+            ...nextEntityState
           },
           () => {
             this.setState({
