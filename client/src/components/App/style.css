@@ -26,6 +26,11 @@
     color: green;
 }
 
+.custom-modal .alert.failure {
+    color: maroon;
+}
+
+
 .custom-modal .modal-content {
     height: 80%;
     width: 100%;
@@ -47,4 +52,8 @@
 
 .custom-dropzone.success {
     border-color: green;
+}
+
+.custom-dropzone.failure {
+    border-color: maroon;
 }

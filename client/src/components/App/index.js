@@ -85,10 +85,19 @@ class App extends Component {
       .then(res => {
         this.setState({
           image: this.state.image.concat(res),
-          imageUploaded: true
+          imageUploadSuccess: true
         });
 
-        setTimeout(() => this.setState({ imageUploaded: false }), 4000);
+        setTimeout(() => this.setState({ imageUploadSuccess: false }), 4000);
+      })
+      .catch(e => {
+        console.error(e);
+
+        this.setState({
+          imageUploadFailure: true
+        });
+
+        setTimeout(() => this.setState({ imageUploadFailure: false }), 4000);
       });
   };
 
@@ -375,6 +384,11 @@ class App extends Component {
   };
 
   render() {
+    const alert = this.state.imageUploadSuccess ? (
+      <span className="alert success">SUCCESSFULLY UPLOADED IMAGE</span>
+    ) : this.state.imageUploadFailure ? (
+      <span className="alert failure">FAILED TO UPLOAD IMAGE</span>
+    ) : null;
     return (
       <div className="App">
         <Modal
@@ -382,16 +396,14 @@ class App extends Component {
           onHide={this.toggleImageModal}
           dialogClassName="custom-modal"
         >
-          {this.state.imageUploaded ? (
-            <span className="alert success">IMAGE UPLOADED SUCCESSFULLY</span>
-          ) : null}
+          {alert}
           <ControlLabel>Drag and Drop Image Below To Upload</ControlLabel>
           <Dropzone
             accept="image/jpeg, image/png"
             onDrop={this.addImage}
-            className={`custom-dropzone ${this.state.imageUploaded
+            className={`custom-dropzone ${this.state.imageUploadSuccess
               ? 'success'
-              : ''}`}
+              : this.state.imageUploadFailure ? 'failure' : ''}`}
           />
         </Modal>
 
