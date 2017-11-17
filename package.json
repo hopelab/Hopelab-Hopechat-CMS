@@ -7,8 +7,7 @@
     "lint": "eslint **/*.js",
     "mock-db": "node ./server/helpers/mockDatabaseSetup.js",
     "start": "node ./server/cms.js",
-    "prettify": "prettier --write './server/**/*.js'",
-    "test": "node_modules/.bin/mocha tests/**"
+    "prettify": "prettier --write './server/**/*.js'"
   },
   "author": "Presence PG",
   "dependencies": {
