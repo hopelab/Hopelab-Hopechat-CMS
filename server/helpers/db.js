@@ -8,7 +8,8 @@ const entityTypes = {
   collection: 'Collection',
   series: 'Series',
   block: 'Block',
-  message: 'Message'
+  message: 'Message',
+  tag: 'tag'
 };
 
 const defaultData = {
