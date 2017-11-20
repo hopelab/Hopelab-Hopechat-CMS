@@ -5,6 +5,7 @@ const {
   DB_MESSAGES,
   DB_BLOCKS,
   DB_MEDIA,
+  DB_TAG,
   TYPE_COLLECTION,
   TYPE_MESSAGE,
   ONE_DAY_IN_MILLISECONDS
@@ -495,6 +496,39 @@ module.exports = store => {
       return StaticAssetsSvc.saveFile(file.name, file).then(resolve);
     });
 
+      /**
+     * Get Tags
+     * 
+     * @return {Promise<Object>}
+    */
+  const getTags = id =>
+  new Promise(resolve => {
+    store
+      .getItem(DB_TAG)
+      .then(JSON.parse)
+      .then(resolve)
+      .catch(console.error);
+  });
+
+/**
+   * Set Tag
+   * 
+   * @param {Object} tag
+   * @return {Promise<bool>}
+  */
+const setTag = tag =>
+  new Promise(resolve => {
+    store
+      .getItem(DB_TAG)
+      .then(JSON.parse)
+      .then(
+        helpers.createNewEntity(helpers.entityTypes.tag, tag)
+      )
+      .then(store.setItem(DB_TAG, ONE_DAY_IN_MILLISECONDS))
+      .then(resolve)
+      .catch(console.error);
+  });
+
   return {
     getConversations,
     getCollections,
@@ -528,6 +562,9 @@ module.exports = store => {
     deleteMessage,
 
     getImages,
-    uploadImage
+    uploadImage,
+
+    getTags,
+    setTag
   };
 };
