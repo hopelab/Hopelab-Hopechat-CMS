@@ -6,6 +6,10 @@ import Card from '../Card';
 import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css';
 
+import { autocompleteRenderInput } from '../../AutoSuggest';
+
+import { last } from 'ramda';
+
 import {
   FormGroup,
   ControlLabel,
@@ -32,8 +36,10 @@ const propTypes = {
   handleUpdateChildEntity: PropTypes.func.isRequired,
   onEditEntity: PropTypes.func.isRequired,
   handleSaveItem: PropTypes.func.isRequired,
+  handleAddTag: PropTypes.func.isRequired,
   handleUpdateMessageOptions: PropTypes.func.isRequired,
-  images: PropTypes.array.isRequired
+  images: PropTypes.array.isRequired,
+  tags: PropTypes.array.isRequired,
 };
 
 /**
@@ -71,6 +77,8 @@ class Form extends Component {
         value: e
       }
     });
+
+    this.props.handleAddTag({ name: last(e) });
   };
 
   handleChildSelection = e => this.setState({ entityToAdd: e.target.value });
@@ -104,8 +112,10 @@ class Form extends Component {
                 <TagsInput
                   id="tags"
                   name="tags"
+                  renderInput={autocompleteRenderInput}
                   value={this.props.item.tags || []}
                   onChange={this.handleTagsInput}
+                  inputProps={{ tags: this.props.tags, handleAddTag: this.props.handleAddTag }}
                 />
               </FormGroup>
             </div>

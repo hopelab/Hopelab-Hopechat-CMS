@@ -17,12 +17,14 @@ const propTypes = {
   handleUpdateChildEntity: PropTypes.func.isRequired,
   handleEditingChildEntity: PropTypes.func.isRequired,
   handleUpdateMessageOptions: PropTypes.func.isRequired,
+  handleAddTag: PropTypes.func.isRequired,
   itemEditing: PropTypes.object,
   itemHasBeenEdited: PropTypes.bool.isRequired,
   childEntities: PropTypes.array.isRequired,
   entitiesCanCopyTo: PropTypes.array.isRequired,
   handleCopyEntity: PropTypes.func.isRequired,
-  images: PropTypes.array.isRequired
+  images: PropTypes.array.isRequired,
+  tags: PropTypes.array.isRequired,
 };
 
 const Dashboard = props => (
@@ -77,7 +79,9 @@ const Dashboard = props => (
             onEditEntity={props.handleEditingChildEntity}
             childEntities={props.childEntities}
             handleSaveItem={props.handleSaveItem}
+            handleAddTag={props.handleAddTag}
             images={props.images}
+            tags={props.tags}
           />
         </div>
       </div>
