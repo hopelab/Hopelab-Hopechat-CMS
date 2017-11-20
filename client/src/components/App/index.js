@@ -226,6 +226,10 @@ class App extends Component {
   };
 
   handleAddTag = (tag) => {
+    if(dataUtil.tagExists(tag, this.state.tag)) {
+      return;
+    }
+    
     dataUtil
       .post(config.routes[config.TYPE_TAG][config.operations.create], tag)
       .then(res => res.json())

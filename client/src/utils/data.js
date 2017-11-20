@@ -167,6 +167,17 @@ export function getChildEntitiesFor(item, entities) {
 }
 
 /**
+ * Construct Child Entities For Given Entity
+ * 
+ * @param {Object} tag
+ * @param {Array} tags
+ * @returns {Boolean}
+*/
+export function tagExists(tag, tags) {
+  return R.findIndex(R.propEq('name', tag.name))(tags) > -1;
+}
+
+/**
  * Create Tree View Data Structure for UI
  * 
  * @param {String} active

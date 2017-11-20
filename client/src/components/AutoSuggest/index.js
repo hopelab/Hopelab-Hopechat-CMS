@@ -48,7 +48,6 @@ export function autocompleteRenderInput({ addTag, ...props }) {
       inputProps={{ ...props, onChange: handleOnChange, tags: props.tags }}
       onSuggestionSelected={(e, { suggestion }) => {
         addTag(suggestion.name);
-        props.handleAddTag({ name: suggestion.name })
       }}
       onSuggestionsClearRequested={() => {}}
       onSuggestionsFetchRequested={() => {}}
