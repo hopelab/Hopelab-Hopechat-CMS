@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "autosuggest-highlight": "^3.1.1",
     "ramda": "^0.25.0",
     "react": "^16.0.0",
+    "react-autosuggest": "^9.3.2",
     "react-bootstrap": "^0.31.3",
     "react-dom": "^16.0.0",
     "react-dropzone": "^4.2.1",
