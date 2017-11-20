@@ -15,6 +15,7 @@ const {
   DB_MESSAGES,
   DB_BLOCKS,
   DB_MEDIA,
+  DB_TAG,
   ONE_WEEK_IN_MILLISECONDS
 } = require('../constants');
 
@@ -51,5 +52,11 @@ cacheUtils.deleteItem(DB_BLOCKS).then(() => {
 cacheUtils.deleteItem(DB_MEDIA).then(() => {
   cacheUtils
     .setItem(DB_MEDIA, ONE_WEEK_IN_MILLISECONDS, media)
+    .then(process.exit);
+});
+
+cacheUtils.deleteItem(DB_TAG).then(() => {
+  cacheUtils
+    .setItem(DB_TAG, ONE_WEEK_IN_MILLISECONDS, [])
     .then(process.exit);
 });
