@@ -6,7 +6,7 @@ router.get('/all', (req, res) => {
   Image.getImages().then(r => res.send(r));
 });
 
-router.post('/upload', (req, res) => {
+router.post('/create', (req, res) => {
   Image.upload(req.files)
     .then(r => res.send(r))
     .catch(console.error);
