@@ -75,7 +75,7 @@ exports.createConversation = entity =>
    * @param {Object} entityOldNew
    * @return {Array}
   */
-function getNewListForSave(entityOldNew) {
+function createChainedItemsList(entityOldNew) {
   const oldList = R.pluck('oldChild', entityOldNew);
   const newList = R.pluck('newChild', entityOldNew);
   let listToSave = newList;
@@ -115,13 +115,13 @@ function getNewListForSave(entityOldNew) {
 }
 
 /**
- * Copy a Block
+ * Copy children
  * 
  * @param {Object} parent
  * @param {Array} children
  * @return {Promise}
 */
-function copyBlock(parent, children) {
+function copyChildren(parent, children) {
   const childPromises = children.map((oldChild, i) => () => {
     return modelMap[oldChild.type]
       .create(
@@ -148,8 +148,8 @@ function copyBlock(parent, children) {
   return promiseSerial(childPromises)
     .then(R.uniq)
     .then(newChildren => {
-      const listForSave = getNewListForSave(newChildren);
-      const updatePromises = listForSave.map((entityToUpdate, i) => () =>
+      const chainedList = createChainedItemsList(newChildren);
+      const updatePromises = chainedList.map((entityToUpdate, i) => () =>
         modelMap[entityToUpdate.type].update(R.clone(entityToUpdate))
       );
 
@@ -157,7 +157,7 @@ function copyBlock(parent, children) {
         .then(R.uniq)
         .then(updatedChildren =>
           updatedChildren.filter((child, i) =>
-            R.find(R.propEq('id', child.id))(listForSave)
+            R.find(R.propEq('id', child.id))(chainedList)
           )
         )
         .catch(console.error);
@@ -200,7 +200,7 @@ exports.copyEntityAndAllChildren = data => {
     .then(parentList => {
       const newParent = R.last(parentList);
 
-      return copyBlock(newParent, data.children)
+      return copyChildren(newParent, data.children)
         .then(constructReturnCopiedValues(newParent))
         .catch(console.error);
     })
