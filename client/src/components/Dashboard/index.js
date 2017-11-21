@@ -22,6 +22,7 @@ const propTypes = {
   childEntities: PropTypes.array.isRequired,
   entitiesCanCopyTo: PropTypes.array.isRequired,
   handleCopyEntity: PropTypes.func.isRequired,
+  handleCopyToEntity: PropTypes.func.isRequired,
   images: PropTypes.array.isRequired
 };
 
@@ -31,13 +32,19 @@ const Dashboard = props => (
       <div className="Inner">
         <div className="FormContainer">
           <div className="FormActionsContainer">
+            {props.itemEditing.type === 'conversation' ? (
+              <Button bsStyle="primary" onClick={props.handleCopyEntity}>
+                Copy
+              </Button>
+            ) : null}
+
             {entityCanBeCopied(props.itemEditing.type) && (
               <ButtonGroup>
                 <SplitButton
                   bsStyle="primary"
                   title="Copy To"
                   id="bg-nested-dropdown"
-                  onSelect={props.handleCopyEntity}
+                  onSelect={props.handleCopyToEntity}
                 >
                   {props.entitiesCanCopyTo.map((e, i) => (
                     <MenuItem key={i} eventKey={e}>

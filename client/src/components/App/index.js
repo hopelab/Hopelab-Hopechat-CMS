@@ -225,7 +225,7 @@ class App extends Component {
       .catch(console.error);
   };
 
-  handleCopyItem = ({ parent, children, reset, switchTo }) => {
+  handleCopyItem = ({ parent, children }) => {
     const route = config.operations.copy;
 
     dataUtil
@@ -363,7 +363,20 @@ class App extends Component {
     );
   };
 
-  handleCopyEntity = entity => {
+  handleCopyEntity = () => {
+    const parent = {
+      ...this.state.itemEditing,
+      name: null,
+      id: null
+    };
+
+    this.handleCopyItem({
+      parent,
+      children: dataUtil.getChildEntitiesFor(this.state.itemEditing, this.state)
+    });
+  };
+
+  handleCopyToEntity = entity => {
     const item = {
       ...this.state.itemEditing,
       parent: {
@@ -381,9 +394,7 @@ class App extends Component {
 
     this.handleCopyItem({
       parent: item,
-      children: allEntitiesToCopy,
-      switchTo: true,
-      copy: true
+      children: allEntitiesToCopy
     });
   };
 
@@ -432,6 +443,7 @@ class App extends Component {
           childEntities={this.state.childEntities}
           entitiesCanCopyTo={this.state.entitiesCanCopyTo}
           handleCopyEntity={this.handleCopyEntity}
+          handleCopyToEntity={this.handleCopyToEntity}
           images={this.state.image}
         />
       </div>
