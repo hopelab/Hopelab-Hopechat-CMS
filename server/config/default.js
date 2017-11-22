@@ -1,70 +1,90 @@
 'use strict';
 
-const R          = require('ramda'),
-      winston    = require('winston'),
-      logUtils   = require('alien-node-winston-utils')
+const R = require('ramda'),
+  winston = require('winston'),
+  logUtils = require('alien-node-winston-utils');
 
 // These values can be overridden by either environment vars or by a NODE_ENV named config
 // which declares the desired object of the same name.
 const FALLBACK_DEFAULT_VALUES = {
-  host          : 'localhost',
-  sessionSecret : 'secret',
-  aws           : {
-    bucket : 'hopelab-media',
-    acl    : 'public-read-write',
-    config : {
-      accessKeyId     : '',
-      secretAccessKey : '',
-      region          : 'us-west-2'
+  host: 'localhost',
+  sessionSecret: 'secret',
+  aws: {
+    bucket: 'hopelab-media',
+    acl: 'public-read-write',
+    config: {
+      accessKeyId: '',
+      secretAccessKey: '',
+      region: 'us-west-2'
     }
   }
-
 };
 
 const config = {
-  aws : {
-    client          : 'aws-sdk',
-    bucket          : R.defaultTo(
+  aws: {
+    client: 'aws-sdk',
+    bucket: R.defaultTo(
       R.path(['aws', 'bucket'], FALLBACK_DEFAULT_VALUES),
       R.path(['env', 'AWS_BUCKET'], process)
     ),
-    listObjectParams : () => {
+    listObjectParams: () => {
       return {
-        Bucket       : R.defaultTo(
+        Bucket: R.defaultTo(
           R.path(['aws', 'bucket'], FALLBACK_DEFAULT_VALUES),
           R.path(['env', 'AWS_BUCKET'], process)
         )
-      }
+      };
     },
-    setObjectParams : (key, val, ContentType) => {
+    setObjectParams: (key, val, ContentType) => {
       return {
-        Bucket       : R.defaultTo(
+        Bucket: R.defaultTo(
           R.path(['aws', 'bucket'], FALLBACK_DEFAULT_VALUES),
           R.path(['env', 'AWS_BUCKET'], process)
         ),
-        ACL          : R.defaultTo(
+        ACL: R.defaultTo(
           R.path(['aws', 'acl'], FALLBACK_DEFAULT_VALUES),
           R.path(['env', 'AWS_ACL'], process)
         ),
-        Key          : key,
-        Body         : val,
-        ContentType  : ContentType,
-        CacheControl : 'max-age=864000'
+        Key: key,
+        Body: val,
+        ContentType: ContentType,
+        CacheControl: 'max-age=864000'
       };
     },
-    config          : {
-      accessKeyId     : R.defaultTo(
+    config: {
+      accessKeyId: R.defaultTo(
         R.path(['aws', 'config', 'accessKeyId'], FALLBACK_DEFAULT_VALUES),
         R.path(['env', 'AWS_ACCESS_KEY_ID'], process)
       ),
-      secretAccessKey : R.defaultTo(
+      secretAccessKey: R.defaultTo(
         R.path(['aws', 'config', 'secretAccessKey'], FALLBACK_DEFAULT_VALUES),
         R.path(['env', 'AWS_SECRET_ACCESS_KEY'], process)
       ),
-      region          : R.defaultTo(
+      region: R.defaultTo(
         R.path(['aws', 'config', 'region'], FALLBACK_DEFAULT_VALUES),
         R.path(['env', 'AWS_REGION'], process)
       )
+    }
+  },
+  entities: {
+    conversation: {
+      childrenConnected: true,
+      children: ['message', 'collection']
+    },
+    collection: {
+      childrenConnected: false,
+      children: ['series']
+    },
+    series: {
+      childrenConnected: false,
+      children: ['block']
+    },
+    block: {
+      childrenConnected: true,
+      children: ['message']
+    },
+    message: {
+      children: []
     }
   }
 };
