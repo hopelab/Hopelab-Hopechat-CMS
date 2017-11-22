@@ -234,7 +234,7 @@ class App extends Component {
       })
       .then(res => res.json())
       .then(copiedResults => {
-        this.setState(mergeWith(concat, this.state, copiedResults), () => {
+        this.setState(copiedResults, () => {
           this.setState({
             treeData: dataUtil.createTreeView({
               data: { ...this.state },
