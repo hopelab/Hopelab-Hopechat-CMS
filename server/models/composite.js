@@ -148,35 +148,7 @@ function copyChildren(parent) {
         .catch(console.error);
     });
 
-    return (
-      promiseSerial(childPromises)
-        // for old children we need to copy their children too!!!!
-
-        // this is split point
-        // recurse and go deeper?
-        // or tie children together
-
-        // tie children? OR go deeper?
-
-        // isParentConversationOrBlock()
-
-        .then(R.uniq)
-        .then(newChildren => {
-          const chainedList = createChainedItemsList(newChildren);
-          const updatePromises = chainedList.map((entityToUpdate, i) => () =>
-            modelMap[entityToUpdate.type].update(R.clone(entityToUpdate))
-          );
-
-          return promiseSerial(updatePromises)
-            .then(R.uniq)
-            .then(updatedChildren =>
-              updatedChildren.filter((child, i) =>
-                R.find(R.propEq('id', child.id))(chainedList)
-              )
-            )
-            .catch(console.error);
-        })
-    );
+    return promiseSerial(childPromises).then(R.uniq);
   };
 }
 
@@ -253,6 +225,77 @@ function getAllChildren(parent) {
 }
 
 /**
+ * Connect the children via next pointers
+ * 
+ * @param {String} type
+ * @return {Promise}
+*/
+function connectChildrenForParentType(type) {
+  return function(children) {
+    if (!config.entities[type].childrenConnected) {
+      return children;
+    }
+
+    const chainedList = createChainedItemsList(children);
+    const updatePromises = chainedList.map((entityToUpdate, i) => () =>
+      modelMap[entityToUpdate.type].update(R.clone(entityToUpdate))
+    );
+
+    return promiseSerial(updatePromises)
+      .then(R.uniq)
+      .then(updatedChildren =>
+        updatedChildren.filter((child, i) =>
+          R.find(R.propEq('id', child.id))(chainedList)
+        )
+      )
+      .catch(console.error);
+  };
+}
+
+/**
+ * Check and Perform Recursion if necessary
+ * 
+ * @param {Array} children
+ * @return {Promise}
+*/
+function isRecursionNeeded(children) {
+  return new Promise((resolve, reject) => {
+    children.forEach(c => {
+      if (config.entities[c.oldChild.type].children.length) {
+        getAllChildrenAndCopy(c.oldChild, c.newChild);
+      }
+    });
+
+    resolve(children);
+  });
+}
+
+/**
+ * Recursively Copy From Parent
+ * 
+ * @param {Object} parent
+ * @return {Function}
+*/
+function recursivelyCopy(parent) {
+  return function(allChildren) {
+    return copyChildren(parent)(allChildren)
+      .then(isRecursionNeeded)
+      .then(connectChildrenForParentType(parent.type));
+  };
+}
+
+/**
+ * Get All Children for Old Parent and Make New Copies
+ * 
+ * @param {Object} oldParent
+ * @param {Object} newParent
+ * @return {Function}
+*/
+function getAllChildrenAndCopy(oldParent, newParent) {
+  return getAllChildren(oldParent).then(recursivelyCopy(newParent));
+}
+
+/**
  * Copy an Entity and all it's descendants
  * 
  * @param {Object} data
@@ -263,8 +306,7 @@ exports.copyEntityAndAllChildren = data => {
     .then(parentList => {
       const newParent = R.last(parentList);
 
-      return getAllChildren(data.parent)
-        .then(copyChildren(newParent))
+      return getAllChildrenAndCopy(data.parent, newParent)
         .then(constructReturnCopiedValues(newParent))
         .catch(console.error);
     })
