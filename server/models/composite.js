@@ -8,6 +8,8 @@ const message = require('./message');
 
 const { promiseSerial } = require('../utils/data');
 
+const config = require('config');
+
 const {
   TYPE_CONVERSATION,
   TYPE_COLLECTION,
@@ -121,47 +123,61 @@ function createChainedItemsList(entityOldNew) {
  * @param {Array} children
  * @return {Promise}
 */
-function copyChildren(parent, children) {
-  const childPromises = children.map((oldChild, i) => () => {
-    return modelMap[oldChild.type]
-      .create(
-        R.merge(oldChild, {
-          parent: {
-            type: parent.type,
-            id: parent.id
-          },
-          id: null,
-          name: null
-        })
-      )
-      .then(newChildList => {
-        const newChild = R.last(newChildList);
-
-        return {
-          oldChild,
-          newChild
-        };
-      })
-      .catch(console.error);
-  });
-
-  return promiseSerial(childPromises)
-    .then(R.uniq)
-    .then(newChildren => {
-      const chainedList = createChainedItemsList(newChildren);
-      const updatePromises = chainedList.map((entityToUpdate, i) => () =>
-        modelMap[entityToUpdate.type].update(R.clone(entityToUpdate))
-      );
-
-      return promiseSerial(updatePromises)
-        .then(R.uniq)
-        .then(updatedChildren =>
-          updatedChildren.filter((child, i) =>
-            R.find(R.propEq('id', child.id))(chainedList)
-          )
+function copyChildren(parent) {
+  return function(children) {
+    const childPromises = children.map((oldChild, i) => () => {
+      return modelMap[oldChild.type]
+        .create(
+          R.merge(oldChild, {
+            parent: {
+              type: parent.type,
+              id: parent.id
+            },
+            id: null,
+            name: null
+          })
         )
+        .then(newChildList => {
+          const newChild = R.last(newChildList);
+
+          return {
+            oldChild,
+            newChild
+          };
+        })
         .catch(console.error);
     });
+
+    return (
+      promiseSerial(childPromises)
+        // for old children we need to copy their children too!!!!
+
+        // this is split point
+        // recurse and go deeper?
+        // or tie children together
+
+        // tie children? OR go deeper?
+
+        // isParentConversationOrBlock()
+
+        .then(R.uniq)
+        .then(newChildren => {
+          const chainedList = createChainedItemsList(newChildren);
+          const updatePromises = chainedList.map((entityToUpdate, i) => () =>
+            modelMap[entityToUpdate.type].update(R.clone(entityToUpdate))
+          );
+
+          return promiseSerial(updatePromises)
+            .then(R.uniq)
+            .then(updatedChildren =>
+              updatedChildren.filter((child, i) =>
+                R.find(R.propEq('id', child.id))(chainedList)
+              )
+            )
+            .catch(console.error);
+        })
+    );
+  };
 }
 
 /**
@@ -171,7 +187,9 @@ function copyChildren(parent, children) {
  * @return {Promise}
 */
 function copyParent(parent) {
-  return modelMap[parent.type].create(parent);
+  return modelMap[parent.type].create(
+    R.merge(parent, { id: null, name: null })
+  );
 }
 
 /**
@@ -190,17 +208,63 @@ const constructReturnCopiedValues = parent => children =>
   );
 
 /**
-   * Copy an Entity and all it's descendants
-   * 
-   * @param {Object} data
-   * @return {Promise}
-  */
+ * Fetch all for given entity
+ * 
+ * @param {String} entity
+ * @return {Promise}
+*/
+function fetchAllForEntity(entity) {
+  return modelMap[entity].all();
+}
+
+/**
+ * Get Children for Parent
+ * 
+ * @param {Object} parent
+ * @return {Function}
+*/
+function getChildrenForParent(parent) {
+  return function(children) {
+    return children.reduce((prev, curr) => {
+      return prev.concat(
+        ...R.reject(
+          R.prop('private'),
+          curr.filter(R.pathEq(['parent', 'id'], parent.id))
+        )
+      );
+    }, []);
+  };
+}
+
+/**
+ * Get All Children for an Entity
+ * 
+ * @param {Object} parent
+ * @return {Promise}
+*/
+function getAllChildren(parent) {
+  return new Promise((resolve, reject) => {
+    return Promise.all(
+      config.entities[parent.type].children.map(fetchAllForEntity)
+    )
+      .then(getChildrenForParent(parent))
+      .then(resolve);
+  });
+}
+
+/**
+ * Copy an Entity and all it's descendants
+ * 
+ * @param {Object} data
+ * @return {Promise}
+*/
 exports.copyEntityAndAllChildren = data => {
   return copyParent(data.parent)
     .then(parentList => {
       const newParent = R.last(parentList);
 
-      return copyChildren(newParent, data.children)
+      return getAllChildren(data.parent)
+        .then(copyChildren(newParent))
         .then(constructReturnCopiedValues(newParent))
         .catch(console.error);
     })
