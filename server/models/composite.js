@@ -170,14 +170,16 @@ function copyParent(parent) {
  * @param {Object}
  * @return {Function}
 */
-const constructReturnCopiedValues = parent => children =>
-  children.concat(parent).reduce(
+const constructReturnCopiedValues = parent => children => {
+
+  return children.concat(parent).reduce(
     (prev, curr) =>
       R.merge(prev, {
         [curr.type]: prev[curr.type] ? prev[curr.type].concat(curr) : [curr]
       }),
     {}
   );
+}
 
 /**
  * Fetch all for given entity
@@ -304,6 +306,32 @@ function getAllChildrenAndCopy(oldParent, newParent) {
 }
 
 /**
+ * Get Fresh Batch of all Data for UI
+ *
+ * @return {Promise}
+*/
+function freshDataForUI() {
+  return new Promise((resolve, reject) => {
+    Promise.all([
+      conversation.all(),
+      collection.all(),
+      series.all(),
+      block.all(),
+      message.all()
+    ])
+    .then((data) => {
+      resolve({
+        conversation: data[0],
+        collection: data[1],
+        series: data[2],
+        block: data[3],
+        message: data[4]
+      });
+    });
+  })
+}
+
+/**
  * Copy an Entity and all it's descendants
  * 
  * @param {Object} data
@@ -316,6 +344,7 @@ exports.copyEntityAndAllChildren = data => {
 
       return getAllChildrenAndCopy(data.parent, newParent)
         .then(constructReturnCopiedValues(newParent))
+        .then(freshDataForUI)
         .catch(console.error);
     })
     .catch(console.error);
