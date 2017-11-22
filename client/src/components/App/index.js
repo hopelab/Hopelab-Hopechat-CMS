@@ -225,13 +225,12 @@ class App extends Component {
       .catch(console.error);
   };
 
-  handleCopyItem = ({ parent, children }) => {
+  handleCopyItem = ({ parent }) => {
     const route = config.operations.copy;
 
     dataUtil
       .post(config.routes[parent.type][route], {
-        parent: dataUtil.makeCopyAndRemoveKeys(parent, config.keysToRemove),
-        children: dataUtil.makeCopyAndRemoveKeys(children, config.keysToRemove)
+        parent: dataUtil.makeCopyAndRemoveKeys(parent, config.keysToRemove)
       })
       .then(res => res.json())
       .then(copiedResults => {
@@ -365,36 +364,24 @@ class App extends Component {
 
   handleCopyEntity = () => {
     const parent = {
-      ...this.state.itemEditing,
-      name: null,
-      id: null
+      ...this.state.itemEditing
     };
 
     this.handleCopyItem({
-      parent,
-      children: dataUtil.getChildEntitiesFor(this.state.itemEditing, this.state)
+      parent
     });
   };
 
   handleCopyToEntity = entity => {
-    const item = {
+    const parent = {
       ...this.state.itemEditing,
       parent: {
         ...entity.link
-      },
-      name: null,
-      id: null
+      }
     };
 
-    const allEntitiesToCopy = dataUtil
-      .getChildEntitiesFor(this.state.itemEditing, this.state)
-      .map(child => ({
-        ...child
-      }));
-
     this.handleCopyItem({
-      parent: item,
-      children: allEntitiesToCopy
+      parent
     });
   };
 
