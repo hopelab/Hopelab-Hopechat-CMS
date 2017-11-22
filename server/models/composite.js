@@ -237,17 +237,21 @@ function connectChildrenForParentType(type) {
     }
 
     const chainedList = createChainedItemsList(children);
+    
     const updatePromises = chainedList.map((entityToUpdate, i) => () =>
       modelMap[entityToUpdate.type].update(R.clone(entityToUpdate))
     );
 
     return promiseSerial(updatePromises)
+      .then(function(output) {
+        return output;
+      })
       .then(R.uniq)
-      .then(updatedChildren =>
-        updatedChildren.filter((child, i) =>
+      .then(updatedChildren => {
+        return updatedChildren.filter((child, i) =>
           R.find(R.propEq('id', child.id))(chainedList)
-        )
-      )
+        );
+      })
       .catch(console.error);
   };
 }
@@ -260,13 +264,17 @@ function connectChildrenForParentType(type) {
 */
 function isRecursionNeeded(children) {
   return new Promise((resolve, reject) => {
-    children.forEach(c => {
+    let promises = [];
+
+    promises = children.map(c => {
       if (config.entities[c.oldChild.type].children.length) {
-        getAllChildrenAndCopy(c.oldChild, c.newChild);
+        return () => getAllChildrenAndCopy(c.oldChild, c.newChild);
+      } else {
+        return () => Promise.resolve(c);
       }
     });
 
-    resolve(children);
+    promiseSerial(promises).then(() => resolve(children));
   });
 }
 
