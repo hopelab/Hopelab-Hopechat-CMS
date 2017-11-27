@@ -81,7 +81,7 @@ class App extends Component {
     const data = new FormData();
     data.append('file', acceptedFiles[0]);
 
-    fetch('/images/upload', {
+    fetch('/images/create', {
       method: 'POST',
       body: data
     })
