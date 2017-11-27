@@ -89,7 +89,8 @@ class App extends Component {
       .then(res => {
         this.setState({
           image: this.state.image.concat(res),
-          imageUploadStatus: 'success'
+          imageUploadStatus: 'success',
+          showImageModal: false
         });
 
         this.resetActionMessage('imageUploadStatus', 4000);
