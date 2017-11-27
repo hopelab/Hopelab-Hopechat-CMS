@@ -9,6 +9,10 @@ const R = require('ramda'),
 const FALLBACK_DEFAULT_VALUES = {
   host: 'localhost',
   sessionSecret: 'secret',
+  redis: {
+    host: '127.0.0.1',
+    port: 6379
+  },
   aws: {
     bucket: 'hopelab-media',
     acl: 'public-read-write',
@@ -21,6 +25,16 @@ const FALLBACK_DEFAULT_VALUES = {
 };
 
 const config = {
+  redis: {
+    host: R.defaultTo(
+      R.path(['redis', 'host'], FALLBACK_DEFAULT_VALUES),
+      R.path(['env', 'REDIS_HOST'], process)
+    ),
+    port: R.defaultTo(
+      R.path(['redis', 'port'], FALLBACK_DEFAULT_VALUES),
+      R.path(['env', 'REDIS_PORT'], process)
+    )
+  },
   aws: {
     client: 'aws-sdk',
     bucket: R.defaultTo(
