@@ -110,7 +110,7 @@ export function throwIfEmptyArray(data) {
  * @returns {Object}
 */
 export const constructEntityState = type => nextState =>
-  Array.isArray(nextState) ? { type: nextState } : nextState;
+  Array.isArray(nextState) ? { [type]: nextState } : nextState;
 
 /**
  * Fetch All Data For App
