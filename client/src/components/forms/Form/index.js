@@ -39,7 +39,7 @@ const propTypes = {
   handleAddTag: PropTypes.func.isRequired,
   handleUpdateMessageOptions: PropTypes.func.isRequired,
   images: PropTypes.array.isRequired,
-  tags: PropTypes.array.isRequired,
+  tags: PropTypes.array.isRequired
 };
 
 /**
@@ -115,7 +115,10 @@ class Form extends Component {
                   renderInput={autocompleteRenderInput}
                   value={this.props.item.tags || []}
                   onChange={this.handleTagsInput}
-                  inputProps={{ tags: this.props.tags, handleAddTag: this.props.handleAddTag }}
+                  inputProps={{
+                    tags: this.props.tags,
+                    handleAddTag: this.props.handleAddTag
+                  }}
                 />
               </FormGroup>
             </div>

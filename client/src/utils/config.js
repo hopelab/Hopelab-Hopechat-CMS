@@ -43,14 +43,7 @@ const operations = {
 const forms = {
   conversation: {
     fields: ['name', 'tags', 'live', 'children'],
-    children: [
-      'message',
-      // 'question',
-      // 'quick_reply',
-      // 'video',
-      // 'image',
-      'collection'
-    ]
+    children: ['message', 'collection']
   },
   collection: {
     fields: ['name', 'tags', 'rules', 'children'],
@@ -64,7 +57,7 @@ const forms = {
   },
   block: {
     fields: ['name', 'tags', 'children'],
-    children: ['message'] // 'question', 'quick_reply', 'video', 'image'
+    children: ['message']
   },
   message: {
     fields: ['name'],

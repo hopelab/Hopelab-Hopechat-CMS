@@ -11,7 +11,9 @@ function renderSuggestion(suggestion, { query }) {
   return (
     <span>
       {parts.map((part, index) => {
-        const className = part.highlight ? 'react-autosuggest__suggestion-match' : null;
+        const className = part.highlight
+          ? 'react-autosuggest__suggestion-match'
+          : null;
 
         return (
           <span className={className} key={index}>

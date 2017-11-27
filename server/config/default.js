@@ -79,6 +79,27 @@ const config = {
         R.path(['env', 'AWS_REGION'], process)
       )
     }
+  },
+  entities: {
+    conversation: {
+      childrenConnected: true,
+      children: ['message', 'collection']
+    },
+    collection: {
+      childrenConnected: false,
+      children: ['series']
+    },
+    series: {
+      childrenConnected: false,
+      children: ['block']
+    },
+    block: {
+      childrenConnected: true,
+      children: ['message']
+    },
+    message: {
+      children: []
+    }
   }
 };
 

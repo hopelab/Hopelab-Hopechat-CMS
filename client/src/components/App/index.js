@@ -226,29 +226,30 @@ class App extends Component {
       .catch(console.error);
   };
 
-  handleAddTag = (tag) => {
-    if(dataUtil.tagExists(tag, this.state.tag)) {
+  handleAddTag = tag => {
+    if (dataUtil.tagExists(tag, this.state.tag)) {
       return;
     }
-    
+
     dataUtil
       .post(config.routes[config.TYPE_TAG][config.operations.create], tag)
       .then(res => res.json())
-      .then(res => { this.setState({ [config.TYPE_TAG]: res })})
+      .then(res => {
+        this.setState({ [config.TYPE_TAG]: res });
+      })
       .catch(console.error);
-  }
+  };
 
-  handleCopyItem = ({ parent, children, reset, switchTo }) => {
+  handleCopyItem = ({ parent }) => {
     const route = config.operations.copy;
 
     dataUtil
       .post(config.routes[parent.type][route], {
-        parent: dataUtil.makeCopyAndRemoveKeys(parent, config.keysToRemove),
-        children: dataUtil.makeCopyAndRemoveKeys(children, config.keysToRemove)
+        parent: dataUtil.makeCopyAndRemoveKeys(parent, config.keysToRemove)
       })
       .then(res => res.json())
       .then(copiedResults => {
-        this.setState(mergeWith(concat, this.state, copiedResults), () => {
+        this.setState(copiedResults, () => {
           this.setState({
             treeData: dataUtil.createTreeView({
               data: { ...this.state },
@@ -376,27 +377,26 @@ class App extends Component {
     );
   };
 
-  handleCopyEntity = entity => {
-    const item = {
+  handleCopyEntity = () => {
+    const parent = {
+      ...this.state.itemEditing
+    };
+
+    this.handleCopyItem({
+      parent
+    });
+  };
+
+  handleCopyToEntity = entity => {
+    const parent = {
       ...this.state.itemEditing,
       parent: {
         ...entity.link
-      },
-      name: null,
-      id: null
+      }
     };
 
-    const allEntitiesToCopy = dataUtil
-      .getChildEntitiesFor(this.state.itemEditing, this.state)
-      .map(child => ({
-        ...child
-      }));
-
     this.handleCopyItem({
-      parent: item,
-      children: allEntitiesToCopy,
-      switchTo: true,
-      copy: true
+      parent
     });
   };
 
@@ -446,6 +446,7 @@ class App extends Component {
           childEntities={this.state.childEntities}
           entitiesCanCopyTo={this.state.entitiesCanCopyTo}
           handleCopyEntity={this.handleCopyEntity}
+          handleCopyToEntity={this.handleCopyToEntity}
           images={this.state.image}
           tags={this.state.tag}
         />
