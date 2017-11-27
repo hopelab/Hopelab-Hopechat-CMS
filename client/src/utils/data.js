@@ -84,8 +84,7 @@ export function getEntitiesCanCopyTo(entity, appState) {
           .filter(R.compose(R.not, R.prop('private')))
           .map(({ id, name, type }) => ({ name, link: { type, id } }))
       );
-    }, [])
-    .filter(e => e.link.id !== entity.parent.id);
+    }, []);
 }
 
 /**
