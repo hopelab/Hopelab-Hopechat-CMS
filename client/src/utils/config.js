@@ -7,7 +7,8 @@ const entities = {
   series: 'series',
   block: 'block',
   message: 'message',
-  image: 'image'
+  image: 'image',
+  tag: 'tag'
 };
 
 /**
@@ -103,6 +104,12 @@ const routes = {
   },
   message: {
     ...getRoutes('messages')
+  },
+  image: {
+    ...getRoutes('images')
+  },
+  tag: {
+    ...getRoutes('tags')
   }
 };
 
@@ -117,6 +124,7 @@ const TYPE_TEXT = 'text';
 const TYPE_ANSWER = 'answer';
 const TYPE_IMAGE = 'image';
 const TYPE_VIDEO = 'video';
+const TYPE_TAG = 'tag';
 
 /**
  * Initial State for pieces of UI state
@@ -211,5 +219,6 @@ export {
   TYPE_TEXT,
   TYPE_ANSWER,
   TYPE_IMAGE,
-  TYPE_VIDEO
+  TYPE_VIDEO,
+  TYPE_TAG
 };

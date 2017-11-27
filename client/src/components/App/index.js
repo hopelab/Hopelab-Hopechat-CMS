@@ -225,6 +225,20 @@ class App extends Component {
       .catch(console.error);
   };
 
+  handleAddTag = tag => {
+    if (dataUtil.tagExists(tag, this.state.tag)) {
+      return;
+    }
+
+    dataUtil
+      .post(config.routes[config.TYPE_TAG][config.operations.create], tag)
+      .then(res => res.json())
+      .then(res => {
+        this.setState({ [config.TYPE_TAG]: res });
+      })
+      .catch(console.error);
+  };
+
   handleCopyItem = ({ parent }) => {
     const route = config.operations.copy;
 
@@ -425,6 +439,7 @@ class App extends Component {
           handleUpdateChildEntity={this.handleUpdateChildEntity}
           handleEditingChildEntity={this.handleEditingChildEntity}
           handleUpdateMessageOptions={this.handleUpdateMessageOptions}
+          handleAddTag={this.handleAddTag}
           itemEditing={this.state.itemEditing}
           itemHasBeenEdited={this.state.itemHasBeenEdited}
           childEntities={this.state.childEntities}
@@ -432,6 +447,7 @@ class App extends Component {
           handleCopyEntity={this.handleCopyEntity}
           handleCopyToEntity={this.handleCopyToEntity}
           images={this.state.image}
+          tags={this.state.tag}
         />
       </div>
     );
