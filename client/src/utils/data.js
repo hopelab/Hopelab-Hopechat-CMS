@@ -29,7 +29,8 @@ export function createInitialEntityState(data) {
     [entities.series]: data[2],
     [entities.block]: data[3],
     [entities.message]: data[4],
-    [entities.image]: data[5]
+    [entities.image]: data[5],
+    [entities.tag]: data[6]
   };
 }
 
@@ -124,7 +125,8 @@ export function fetchAllDataForApp(routes) {
     fetch(routes.series.all).then(res => res.json()),
     fetch(routes.block.all).then(res => res.json()),
     fetch(routes.message.all).then(res => res.json()),
-    fetch('/images/all').then(res => res.json())
+    fetch(routes.image.all).then(res => res.json()),
+    fetch(routes.tag.all).then(res => res.json())
   ]).then(throwIfEmptyArray);
 }
 
@@ -162,6 +164,17 @@ export function getChildEntitiesFor(item, entities) {
       )
     );
   }, []);
+}
+
+/**
+ * Construct Child Entities For Given Entity
+ * 
+ * @param {Object} tag
+ * @param {Array} tags
+ * @returns {Boolean}
+*/
+export function tagExists(tag, tags) {
+  return R.findIndex(R.propEq('name', tag.name))(tags) > -1;
 }
 
 /**

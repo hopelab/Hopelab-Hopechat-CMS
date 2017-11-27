@@ -119,3 +119,15 @@
 label {
     margin-right: 15px;
 }
+
+.react-tagsinput {
+    border-radius: 4px;
+    overflow: visible !important;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.react-tagsinput--focused {
+    border-color: #66afe9 !important;
+    outline: 0;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+}

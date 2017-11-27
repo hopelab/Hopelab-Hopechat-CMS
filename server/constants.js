@@ -7,6 +7,7 @@ const DB_SERIES = 'series';
 const DB_MESSAGES = 'messages';
 const DB_BLOCKS = 'blocks';
 const DB_MEDIA = 'media';
+const DB_TAG = 'tag';
 
 const TYPE_CONVERSATION = 'conversation';
 const TYPE_COLLECTION = 'collection';
@@ -18,6 +19,7 @@ const TYPE_QUESTION_WITH_REPLIES = 'questionWithReplies';
 const TYPE_ANSWER = 'answer';
 const TYPE_IMAGE = 'image';
 const TYPE_VIDEO = 'video';
+const TYPE_TAG = 'tag';
 
 const DEFAULT_NAME = 'default';
 
@@ -33,6 +35,7 @@ module.exports = {
   DB_MESSAGES,
   DB_BLOCKS,
   DB_MEDIA,
+  DB_TAG,
   TYPE_CONVERSATION,
   TYPE_COLLECTION,
   TYPE_SERIES,
@@ -43,6 +46,7 @@ module.exports = {
   TYPE_BLOCK,
   TYPE_IMAGE,
   TYPE_VIDEO,
+  TYPE_TAG,
   DEFAULT_NAME,
   ONE_DAY_IN_MILLISECONDS,
   ONE_WEEK_IN_MILLISECONDS

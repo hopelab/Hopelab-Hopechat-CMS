@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const Image = require('../models/image');
+const Tag = require('../models/tag');
 
 router.get('/all', (req, res) => {
-  Image.getImages().then(r => res.send(r));
+  Tag.all().then(r => res.send(r));
 });
 
 router.post('/create', (req, res) => {
-  Image.upload(req.files)
+  Tag.add(req.body)
     .then(r => res.send(r))
     .catch(console.error);
 });
