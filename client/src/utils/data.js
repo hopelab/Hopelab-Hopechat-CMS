@@ -1,4 +1,4 @@
-import * as R from 'ramda';
+import R from 'ramda';
 import { entities, entitiesForCopy, http, forms } from './config';
 
 /**
@@ -9,7 +9,7 @@ import { entities, entitiesForCopy, http, forms } from './config';
 export function bootstrap() {
   window.sessionStorage.setItem(
     'basicAuthString',
-    `${process.env.REACT_APP_DEV_BASIC_AUTH_STRING}`
+    process.env.REACT_APP_DEV_BASIC_AUTH_STRING
   );
 }
 
