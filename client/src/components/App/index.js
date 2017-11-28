@@ -81,10 +81,13 @@ class App extends Component {
     const data = new FormData();
     data.append('file', acceptedFiles[0]);
 
-    fetch('/images/create', {
-      method: 'POST',
-      body: data
-    })
+    fetch(
+      '/images/create',
+      config.http.makeCommonFetchOptions({
+        method: 'POST',
+        body: data
+      })
+    )
       .then(res => res.json())
       .then(res => {
         this.setState({

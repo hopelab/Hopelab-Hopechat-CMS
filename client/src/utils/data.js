@@ -2,6 +2,18 @@ import * as R from 'ramda';
 import { entities, entitiesForCopy, http, forms } from './config';
 
 /**
+ * Bootstrap
+ * 
+ * Perform any necessary bootstrapping before initial render
+*/
+export function bootstrap() {
+  window.sessionStorage.setItem(
+    'basicAuthString',
+    `${process.env.REACT_APP_DEV_BASIC_AUTH_STRING}`
+  );
+}
+
+/**
  * POST Fetch Method
  * 
  * @param {String} route
@@ -9,11 +21,14 @@ import { entities, entitiesForCopy, http, forms } from './config';
  * @returns {Promise}
 */
 export function post(route, data) {
-  return fetch(route, {
-    method: http.post,
-    headers: http.getPostHeaders(),
-    body: JSON.stringify(data)
-  });
+  return fetch(
+    route,
+    http.makeCommonFetchOptions({
+      method: http.post,
+      headers: http.getPostHeaders(),
+      body: JSON.stringify(data)
+    })
+  );
 }
 
 /**
@@ -77,14 +92,13 @@ export function entityCanBeCopied(entity) {
  * @returns {bool}
 */
 export function getEntitiesCanCopyTo(entity, appState) {
-  return entitiesForCopy[entity.type]
-    .reduce((prev, curr) => {
-      return prev.concat(
-        ...appState[curr]
-          .filter(R.compose(R.not, R.prop('private')))
-          .map(({ id, name, type }) => ({ name, link: { type, id } }))
-      );
-    }, []);
+  return entitiesForCopy[entity.type].reduce((prev, curr) => {
+    return prev.concat(
+      ...appState[curr]
+        .filter(R.compose(R.not, R.prop('private')))
+        .map(({ id, name, type }) => ({ name, link: { type, id } }))
+    );
+  }, []);
 }
 
 /**
@@ -119,13 +133,25 @@ export const constructEntityState = type => nextState =>
 */
 export function fetchAllDataForApp(routes) {
   return Promise.all([
-    fetch(routes.conversation.all).then(res => res.json()),
-    fetch(routes.collection.all).then(res => res.json()),
-    fetch(routes.series.all).then(res => res.json()),
-    fetch(routes.block.all).then(res => res.json()),
-    fetch(routes.message.all).then(res => res.json()),
-    fetch(routes.image.all).then(res => res.json()),
-    fetch(routes.tag.all).then(res => res.json())
+    fetch(routes.conversation.all, http.makeCommonFetchOptions()).then(res =>
+      res.json()
+    ),
+    fetch(routes.collection.all, http.makeCommonFetchOptions()).then(res =>
+      res.json()
+    ),
+    fetch(routes.series.all, http.makeCommonFetchOptions()).then(res =>
+      res.json()
+    ),
+    fetch(routes.block.all, http.makeCommonFetchOptions()).then(res =>
+      res.json()
+    ),
+    fetch(routes.message.all, http.makeCommonFetchOptions()).then(res =>
+      res.json()
+    ),
+    fetch(routes.image.all, http.makeCommonFetchOptions()).then(res =>
+      res.json()
+    ),
+    fetch(routes.tag.all, http.makeCommonFetchOptions()).then(res => res.json())
   ]).then(throwIfEmptyArray);
 }
 

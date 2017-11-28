@@ -1,3 +1,5 @@
+import * as R from 'ramda';
+
 /**
  * CMS Entities
 */
@@ -197,6 +199,14 @@ const http = {
     Accept: 'application/json, text/plain, */*',
     'Content-Type': 'application/json'
   }),
+  makeCommonFetchOptions: options =>
+    R.merge(options, {
+      headers: {
+        Authorization: `Basic ${window.sessionStorage.getItem(
+          'basicAuthString'
+        )}`
+      }
+    }),
   post: 'POST'
 };
 
