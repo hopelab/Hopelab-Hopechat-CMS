@@ -62,7 +62,11 @@ const Dashboard = props => (
 
             <Button
               bsStyle="danger"
-              onClick={() => props.handleDeleteItem(props.itemEditing)}
+              onClick={() =>
+                props.handleDeleteItem({
+                  type: props.itemEditing.type,
+                  id: props.itemEditing.id
+                })}
               disabled={props.itemEditing.id === 'intro-conversation'}
             >
               Delete

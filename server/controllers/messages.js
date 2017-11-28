@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Message = require('../models/message');
+const Composite = require('../models/composite');
 
 router.post('/create', (req, res) => {
   Message.create(req.body).then(r => res.send(r));
@@ -19,7 +20,7 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/delete', (req, res) => {
-  Message.delete(req.body.id).then(r => res.send(r));
+  Composite.deleteEntity(req.body).then(r => res.send(r));
 });
 
 module.exports = router;

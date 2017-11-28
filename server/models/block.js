@@ -36,11 +36,3 @@ exports.get = getBlockById;
  * @return {Promise}
 */
 exports.all = getBlocks;
-
-/**
- * Delete Block
- * 
- * @param {String} id
- * @return {Promise}
-*/
-exports.delete = deleteBlock;

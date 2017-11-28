@@ -6,13 +6,10 @@ const {
   DB_BLOCKS,
   DB_MEDIA,
   DB_TAG,
-  TYPE_COLLECTION,
-  TYPE_MESSAGE,
   ONE_DAY_IN_MILLISECONDS
 } = require('./constants');
 
 const helpers = require('./helpers/db');
-const R = require('ramda');
 
 module.exports = store => {
   /**
@@ -85,23 +82,6 @@ module.exports = store => {
     });
 
   /**
-     * Delete Conversation
-     * 
-     * @param {String} id
-     * @return {Promise<bool>}
-    */
-  const deleteConversation = id =>
-    new Promise(resolve => {
-      store
-        .getItem(DB_CONVERSATIONS)
-        .then(JSON.parse)
-        .then(helpers.deleteEntityFromList(id))
-        .then(store.setItem(DB_CONVERSATIONS, ONE_DAY_IN_MILLISECONDS))
-        .then(resolve)
-        .catch(console.error);
-    });
-
-  /**
      * Get Collection
      * 
      * @return {Promise<Array>}
@@ -168,32 +148,6 @@ module.exports = store => {
     });
 
   /**
-     * Delete Collection
-     * 
-     * @param {String} id
-     * @return {Promise<bool>}
-    */
-  const deleteCollection = id =>
-    new Promise(resolve => {
-      store
-        .getItem(DB_COLLECTIONS)
-        .then(JSON.parse)
-        .then(helpers.deleteEntityFromList(id))
-        .then(store.setItem(DB_COLLECTIONS, ONE_DAY_IN_MILLISECONDS))
-        .then(
-          helpers.deleteLinksFromDifferentEntitySets(
-            id,
-            store,
-            DB_MESSAGES,
-            TYPE_COLLECTION,
-            TYPE_MESSAGE
-          )
-        )
-        .then(resolve)
-        .catch(console.error);
-    });
-
-  /**
      * Get Series
      * 
      * @return {Promise<Array>}
@@ -252,23 +206,6 @@ module.exports = store => {
         .getItem(DB_SERIES)
         .then(JSON.parse)
         .then(helpers.updateEntityInList(series))
-        .then(store.setItem(DB_SERIES, ONE_DAY_IN_MILLISECONDS))
-        .then(resolve)
-        .catch(console.error);
-    });
-
-  /**
-     * Delete Series
-     * 
-     * @param {String} id
-     * @return {Promise<bool>}
-    */
-  const deleteSeries = id =>
-    new Promise(resolve => {
-      store
-        .getItem(DB_SERIES)
-        .then(JSON.parse)
-        .then(helpers.deleteEntityFromList(id))
         .then(store.setItem(DB_SERIES, ONE_DAY_IN_MILLISECONDS))
         .then(resolve)
         .catch(console.error);
@@ -340,24 +277,6 @@ module.exports = store => {
     });
 
   /**
-     * Delete Message
-     * 
-     * @param {String} id
-     * @return {Promise<bool>}
-    */
-  const deleteMessage = id =>
-    new Promise(resolve => {
-      store
-        .getItem(DB_MESSAGES)
-        .then(JSON.parse)
-        .then(helpers.deleteEntityFromList(id))
-        .then(helpers.deleteLinksFromSameEntitySet(id))
-        .then(store.setItem(DB_MESSAGES, ONE_DAY_IN_MILLISECONDS))
-        .then(resolve)
-        .catch(console.error);
-    });
-
-  /**
      * Get Blocks
      * 
      * @return {Promise<Array>}
@@ -422,23 +341,6 @@ module.exports = store => {
     });
 
   /**
-     * Delete Block
-     * 
-     * @param {String} id
-     * @return {Promise<bool>}
-    */
-  const deleteBlock = id =>
-    new Promise(resolve => {
-      store
-        .getItem(DB_BLOCKS)
-        .then(JSON.parse)
-        .then(helpers.deleteEntityFromList(id))
-        .then(store.setItem(DB_BLOCKS, ONE_DAY_IN_MILLISECONDS))
-        .then(resolve)
-        .catch(console.error);
-    });
-
-  /**
      * Get Media
      * 
      * @return {Promise<Object>}
@@ -457,7 +359,7 @@ module.exports = store => {
      * 
      * @return {Promise<Object>}
     */
-  const getImages = data =>
+  const getImages = () =>
     new Promise(resolve => {
       const StaticAssetsSvc = require('./services/staticAssets/StaticAssets')(
         's3'
@@ -496,38 +398,36 @@ module.exports = store => {
       return StaticAssetsSvc.saveFile(file.name, file).then(resolve);
     });
 
-      /**
+  /**
      * Get Tags
      * 
      * @return {Promise<Object>}
     */
-  const getTags = id =>
-  new Promise(resolve => {
-    store
-      .getItem(DB_TAG)
-      .then(JSON.parse)
-      .then(resolve)
-      .catch(console.error);
-  });
+  const getTags = () =>
+    new Promise(resolve => {
+      store
+        .getItem(DB_TAG)
+        .then(JSON.parse)
+        .then(resolve)
+        .catch(console.error);
+    });
 
-/**
+  /**
    * Set Tag
    * 
    * @param {Object} tag
    * @return {Promise<bool>}
   */
-const setTag = tag =>
-  new Promise(resolve => {
-    store
-      .getItem(DB_TAG)
-      .then(JSON.parse)
-      .then(
-        helpers.createNewEntity(helpers.entityTypes.tag, tag)
-      )
-      .then(store.setItem(DB_TAG, ONE_DAY_IN_MILLISECONDS))
-      .then(resolve)
-      .catch(console.error);
-  });
+  const setTag = tag =>
+    new Promise(resolve => {
+      store
+        .getItem(DB_TAG)
+        .then(JSON.parse)
+        .then(helpers.createNewEntity(helpers.entityTypes.tag, tag))
+        .then(store.setItem(DB_TAG, ONE_DAY_IN_MILLISECONDS))
+        .then(resolve)
+        .catch(console.error);
+    });
 
   return {
     getConversations,
@@ -554,12 +454,6 @@ const setTag = tag =>
     updateSeries,
     updateBlock,
     updateMessage,
-
-    deleteConversation,
-    deleteCollection,
-    deleteSeries,
-    deleteBlock,
-    deleteMessage,
 
     getImages,
     uploadImage,

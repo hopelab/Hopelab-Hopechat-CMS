@@ -36,11 +36,3 @@ exports.get = getConversationById;
  * @return {Promise}
 */
 exports.all = getConversations;
-
-/**
- * Delete Conversation
- * 
- * @param {String} id
- * @return {Promise}
-*/
-exports.delete = deleteConversation;

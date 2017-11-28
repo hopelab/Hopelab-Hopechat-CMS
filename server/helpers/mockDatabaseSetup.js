@@ -56,7 +56,5 @@ cacheUtils.deleteItem(DB_MEDIA).then(() => {
 });
 
 cacheUtils.deleteItem(DB_TAG).then(() => {
-  cacheUtils
-    .setItem(DB_TAG, ONE_WEEK_IN_MILLISECONDS, [])
-    .then(process.exit);
+  cacheUtils.setItem(DB_TAG, ONE_WEEK_IN_MILLISECONDS, []).then(process.exit);
 });

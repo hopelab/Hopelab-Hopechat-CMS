@@ -20,7 +20,7 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/delete', (req, res) => {
-  Series.delete(req.body.id).then(r => res.send(r));
+  Composite.deleteEntity(req.body).then(r => res.send(r));
 });
 
 router.post('/copy', (req, res) => {
