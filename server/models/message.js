@@ -36,11 +36,3 @@ exports.get = getMessageById;
  * @return {Promise}
 */
 exports.all = getMessages;
-
-/**
- * Delete Message
- * 
- * @param {String} id
- * @return {Promise}
-*/
-exports.delete = deleteMessage;

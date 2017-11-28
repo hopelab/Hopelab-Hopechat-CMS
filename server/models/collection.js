@@ -36,11 +36,3 @@ exports.get = getCollectionById;
  * @return {Promise}
 */
 exports.all = getCollections;
-
-/**
- * Delete Collection
- * 
- * @param {String} id
- * @return {Promise}
-*/
-exports.delete = deleteCollection;

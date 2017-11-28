@@ -36,11 +36,3 @@ exports.get = getSeriesById;
  * @return {Promise}
 */
 exports.all = getSeries;
-
-/**
- * Delete Series
- * 
- * @param {String} id
- * @return {Promise}
-*/
-exports.delete = deleteSeries;

@@ -6,9 +6,13 @@ const conversation = require('./conversation');
 const series = require('./series');
 const message = require('./message');
 
+const helpers = require('../helpers/db');
+const Constants = require('../constants');
+
 const { promiseSerial } = require('../utils/data');
 
 const config = require('config');
+const store = require('../utils/store');
 
 const {
   TYPE_CONVERSATION,
@@ -171,7 +175,6 @@ function copyParent(parent) {
  * @return {Function}
 */
 const constructReturnCopiedValues = parent => children => {
-
   return children.concat(parent).reduce(
     (prev, curr) =>
       R.merge(prev, {
@@ -179,7 +182,7 @@ const constructReturnCopiedValues = parent => children => {
       }),
     {}
   );
-}
+};
 
 /**
  * Fetch all for given entity
@@ -239,7 +242,7 @@ function connectChildrenForParentType(type) {
     }
 
     const chainedList = createChainedItemsList(children);
-    
+
     const updatePromises = chainedList.map((entityToUpdate, i) => () =>
       modelMap[entityToUpdate.type].update(R.clone(entityToUpdate))
     );
@@ -310,7 +313,7 @@ function getAllChildrenAndCopy(oldParent, newParent) {
  *
  * @return {Promise}
 */
-function freshDataForUI() {
+const freshDataForUI = () => {
   return new Promise((resolve, reject) => {
     Promise.all([
       conversation.all(),
@@ -318,8 +321,7 @@ function freshDataForUI() {
       series.all(),
       block.all(),
       message.all()
-    ])
-    .then((data) => {
+    ]).then(data => {
       resolve({
         conversation: data[0],
         collection: data[1],
@@ -328,8 +330,8 @@ function freshDataForUI() {
         message: data[4]
       });
     });
-  })
-}
+  });
+};
 
 /**
  * Copy an Entity and all it's descendants
@@ -349,3 +351,58 @@ exports.copyEntityAndAllChildren = data => {
     })
     .catch(console.error);
 };
+
+const parentMatchesId = id => child => child.parent && child.parent.id === id;
+const getAllChildrenForParent = id => children =>
+  children.filter(parentMatchesId(id));
+
+const deleteAllRemainingChildren = store => children =>
+  promiseSerial(
+    children.map(c => () => deleteEntity({ type: c.type, id: c.id }))
+  );
+
+const tryToParseList = list => {
+  let parsedList;
+
+  try {
+    parsedList = JSON.parse(list);
+  } catch (e) {
+    parsedList = [];
+  }
+
+  return parsedList;
+};
+
+const deleteEntity = item => {
+  const { id, type } = item;
+
+  const typeChildren = config.entities[type].children;
+  
+  let children = [];
+
+  if (typeChildren.length) {
+    children = typeChildren.map(childType => () =>
+      store
+        .getItem(helpers.getDBKeyForEntityType(childType))
+        .then(tryToParseList)
+        .then(getAllChildrenForParent(id))
+        .then(deleteAllRemainingChildren(store))
+        .catch(console.error)
+    );
+  }
+
+  return promiseSerial(children)
+    .then(() => store.getItem(helpers.getDBKeyForEntityType(type)))
+    .then(tryToParseList)
+    .then(helpers.deleteEntityFromList(id))
+    .then(
+      store.setItem(
+        helpers.getDBKeyForEntityType(type),
+        Constants.ONE_DAY_IN_MILLISECONDS
+      )
+    )
+    .then(helpers.maybeDeleteLinksForEntity(type, id))
+    .then(freshDataForUI)
+    .catch(console.error);
+};
+exports.deleteEntity = deleteEntity;
