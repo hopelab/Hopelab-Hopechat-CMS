@@ -24,7 +24,7 @@ router.post('/delete', (req, res) => {
 });
 
 router.post('/copy', (req, res) => {
-  Composite.copyEntityAndAllChildren(req.body);
+  Composite.copyEntityAndAllChildren(req.body).then(r => res.send(r));
 });
 
 module.exports = router;
