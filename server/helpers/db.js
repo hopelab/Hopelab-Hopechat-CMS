@@ -1,7 +1,10 @@
 const shortid = require('shortid');
 const R = require('ramda');
 
-const { ONE_DAY_IN_MILLISECONDS } = require('../constants');
+const Constants = require('../constants');
+
+const { promiseSerial } = require('../utils/data');
+const store = require('../utils/store');
 
 const entityTypes = {
   conversation: 'Conversation',
@@ -33,6 +36,29 @@ const getDefaultIndexForPublicEntity = R.compose(
   R.length,
   R.reject(R.prop('private'))
 );
+
+const getDBKeyForEntityType = type => {
+  let key;
+  switch (type) {
+    case Constants.TYPE_CONVERSATION:
+      key = Constants.DB_CONVERSATIONS;
+      break;
+    case Constants.TYPE_COLLECTION:
+      key = Constants.DB_COLLECTIONS;
+      break;
+    case Constants.TYPE_SERIES:
+      key = Constants.DB_SERIES;
+      break;
+    case Constants.TYPE_BLOCK:
+      key = Constants.DB_BLOCKS;
+      break;
+    default:
+      key = Constants.DB_MESSAGES;
+      break;
+  }
+
+  return key;
+};
 
 const findNewEntity = newList => entity =>
   R.compose(R.defaultTo(entity), R.find(R.__, newList), R.propEq('id'))(entity);
@@ -72,6 +98,24 @@ const maybeRemoveQuickReply = id => entity =>
 const maybeRemoveNext = id =>
   R.ifElse(R.pathEq(['next', 'id'], id), R.omit(['next']), R.identity);
 
+const maybeDeleteLinksForEntity = (type, id) => {
+  if (type === Constants.TYPE_COLLECTION) {
+    return deleteLinksFromDifferentEntitySets(
+      id,
+      store,
+      Constants.DB_MESSAGES,
+      Constants.TYPE_COLLECTION,
+      Constants.TYPE_MESSAGE
+    )
+  }
+
+  if (type === Constants.TYPE_MESSAGE) {
+    return deleteLinksFromSameEntitySet(id);
+  }
+
+  return (entities) => entities;
+}
+
 const deleteLinksFromSameEntitySet = id =>
   R.compose(R.map(maybeRemoveQuickReply(id)), R.map(maybeRemoveNext(id)));
 
@@ -86,7 +130,7 @@ const deleteLinksFromDifferentEntitySets = (
     .getItem(DB_KEY)
     .then(JSON.parse)
     .then(deleteLinksFromSameEntitySet(id))
-    .then(store.setItem(DB_KEY, ONE_DAY_IN_MILLISECONDS))
+    .then(store.setItem(DB_KEY, Constants.ONE_DAY_IN_MILLISECONDS))
     .then(entitySetTwo => ({
       [entitySetOneKey]: entitySetOne,
       [entitySetTwoKey]: entitySetTwo
@@ -98,6 +142,8 @@ module.exports = {
   findEntityById,
   deleteEntityFromList,
   entityTypes,
+  maybeDeleteLinksForEntity,
   deleteLinksFromSameEntitySet,
-  deleteLinksFromDifferentEntitySets
+  deleteLinksFromDifferentEntitySets,
+  getDBKeyForEntityType
 };
