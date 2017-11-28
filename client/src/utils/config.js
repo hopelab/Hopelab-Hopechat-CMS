@@ -202,9 +202,7 @@ const http = {
   makeCommonFetchOptions: options =>
     R.merge(options, {
       headers: {
-        Authorization: `Basic ${window.sessionStorage.getItem(
-          'basicAuthString'
-        )}`
+        Authorization: `Basic ${window.sessionStorage.getItem('basicAuthString')}`
       }
     }),
   post: 'POST'
