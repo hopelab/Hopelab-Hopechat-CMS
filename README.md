@@ -28,15 +28,15 @@ The `client` is a `create-react-app` scaffold with some additional packages for 
 
 In production, the server will server the generated `client` build from `client/build`. In `DEV`, calls from the client are proxied to the `server` with hot reloading. In `DEV`, there will be two processes running for the CMS, one for the `server` and one for the `client`. In prod, it should just need to run the server.
 
-To install dependencies:
+### Run App:
+
+Dependencies are installed from two `package.json` files, one is in the root and the second is in `/client`:
 
 ```bash
 yarn
 ```
 
-### Run App:
-
-Run the CMS client locally from `/src/client`:
+Run the CMS client locally from `/client`:
 ```bash
 yarn start
 ```
