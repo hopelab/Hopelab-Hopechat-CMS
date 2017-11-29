@@ -36,32 +36,39 @@ yarn
 
 ### Run App:
 
+Run the CMS client locally from `/src/client`:
 ```bash
-yarn run start
+yarn start
 ```
+
+Run the CMS server from root:
+```bash
+yarn start
+```
+
 
 ### Run Tests:
 
 ```bash
-yarn run test
+yarn test
 ```
 
 ### Run Coverage:
 
 ```bash
-yarn run coverage
+yarn coverage
 ```
 
 ### Run Prettier:
 
 ```bash
-yarn run prettify
+yarn prettify
 ```
 
 ### Run Linting:
 
 ```bash
-yarn run lint
+yarn lint
 ```
 
 ### Setup a Mock DB with some fake data:
