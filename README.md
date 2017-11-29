@@ -26,6 +26,8 @@ The CMS is split into two pieces, the `client` and `server`. The server is using
 
 The `client` is a `create-react-app` scaffold with some additional packages for UI components.
 
+In production, the server will server the generated `client` build from `client/build`. In `DEV`, calls from the client are proxied to the `server` with hot reloading. In `DEV`, there will be two processes running for the CMS, one for the `server` and one for the `client`. In prod, it should just need to run the server.
+
 To install dependencies:
 
 ```bash
