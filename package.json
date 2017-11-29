@@ -6,6 +6,7 @@
   "scripts": {
     "lint": "eslint **/*.js",
     "mock-db": "node ./server/helpers/mockDatabaseSetup.js",
+    "debug": "node --inspect ./server/cms.js",
     "start": "node ./server/cms.js",
     "prettify": "prettier --write './server/**/*.js'"
   },

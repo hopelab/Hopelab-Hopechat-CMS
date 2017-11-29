@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './style.css';
+//import './style.css';
 
 import { Treebeard, decorators } from '../TreeBeard';
 import { Button, ControlLabel, Glyphicon } from 'react-bootstrap';
@@ -67,26 +67,32 @@ decorators.Container = PoolContainer;
  * Sidebar Component
 */
 const Sidebar = props => (
-  <aside className="Sidebar">
-    <div className="Inner">
-      <Button bsStyle="primary" onClick={props.toggleImageModal}>
-        Upload Image
-      </Button>
-
-      <Button
-        bsStyle="primary"
-        onClick={props.addConversation}
-        disabled={!!props.itemEditing}
-      >
-        New Conversation
-      </Button>
-
-      <Treebeard
-        style={treeTheme}
-        data={props.treeData}
-        onToggle={props.handleTreeToggle}
-        decorators={decorators}
-      />
+  <aside className="Sidebar col-md-4 m-3">
+    <div className="card" style={{borderColor: 'white'}}>
+      <div className="card-header d-flex flex-row justify-content-between">
+        <span style={{fontSize: '1.1em'}}>Conversations</span>
+        <div>
+          <Button bsStyle="primary" onClick={props.toggleImageModal}>
+            Image
+          </Button>
+          <Button
+            bsStyle="primary"
+            className="ml-2"
+            onClick={props.addConversation}
+            disabled={!!props.itemEditing}
+          >
+            New
+          </Button>
+        </div>
+      </div>
+      <div className="Inner">
+        <Treebeard
+          style={treeTheme}
+          data={props.treeData}
+          onToggle={props.handleTreeToggle}
+          decorators={decorators}
+        />
+      </div>
     </div>
   </aside>
 );

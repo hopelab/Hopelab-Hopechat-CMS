@@ -15,16 +15,17 @@ const getFiles = R.curry((s3, test) => {
   return new Promise((resolve, reject) => {
     s3.listObjects(config.aws.listObjectParams(), (err, data) => {
       if (err) {
+        console.warn(err);
         reject();
+      } else {
+        resolve(
+          buildPublicLinkList(
+            data.Contents,
+            config.aws.config.region,
+            config.aws.bucket
+          )
+        );
       }
-
-      resolve(
-        buildPublicLinkList(
-          data.Contents,
-          config.aws.config.region,
-          config.aws.bucket
-        )
-      );
     });
   });
 });

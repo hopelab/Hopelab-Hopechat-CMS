@@ -1,6 +1,4 @@
-const redis = require('redis');
-const redisClient = redis.createClient();
-const cacheUtils = require('alien-node-redis-utils')(redisClient);
+const cacheUtils = require('../utils/store');
 
 const conversation = require('../stubs/conversation.json');
 const collection = require('../stubs/collection.json');

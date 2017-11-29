@@ -402,10 +402,9 @@ class App extends Component {
       parent
     });
   };
-
   render() {
     return (
-      <div className="App">
+      <div className="App row">
         <Modal
           show={this.state.showImageModal}
           onHide={this.toggleImageModal}
