@@ -20,7 +20,7 @@ AWS_REGION
 
 This repo is using [config](https://www.npmjs.com/package/config) to manage environment variables and fallback to defaults in case of something missing.
 
-### Structure
+### Code Structure
 
 The CMS is split into two pieces, the `client` and `server`. The server is using the same `Redis` db that the Bot reads the message content from. There are a series of endpoints and controllers that manage all `CRUD` operations for a given entity.
 
@@ -66,14 +66,8 @@ yarn run lint
 
 ### Setup a Mock DB with some fake data:
 
+This doesn't actually load mock data, but will reset the database to defaults.
+
 ```bash
 yarn run mock-db
 ```
-
-## Code Structure
-
-TODO: add details about code structure
-
-## Application Architecture
-
-TODO: add details about application architecture
