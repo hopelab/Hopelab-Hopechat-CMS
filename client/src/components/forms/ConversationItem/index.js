@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import EditableText from '../EditableText';
 import './style.css';
 
 class ConversationItem extends Component {
@@ -16,14 +17,14 @@ class ConversationItem extends Component {
           className="card-header d-flex flex-row justify-content-between"
           style={{flexWrap: "wrap"}}
         >
-          {this.props.name}
+          <EditableText text={this.props.name} />
           <select>
             <option value="Message">Message</option>
           </select>
         </div>
         <div className="card-block">
           <p className="card-text">
-            {this.props.text}
+            <EditableText text={this.props.text} isTextArea={true} />
           </p>
         </div>
         {this.props.nextItemName !== undefined ? (
