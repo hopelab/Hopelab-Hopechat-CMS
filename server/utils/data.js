@@ -17,6 +17,9 @@ const promiseSerial = funcs =>
     Promise.resolve([])
   );
 
+const apiErrorResponse = res => err => { console.error(err); res.status(500).json(err); };
+
 module.exports = {
-  promiseSerial
+  promiseSerial,
+  apiErrorResponse
 };

@@ -374,7 +374,7 @@ module.exports = store => {
      * @return {Promise<Object>}
     */
   const uploadImage = data =>
-    new Promise(resolve => {
+    new Promise((resolve, reject) => {
       const file = data.file;
       const fileUtils = require('./utils/file');
       const StaticAssetsSvc = require('./services/staticAssets/StaticAssets')(
@@ -382,17 +382,17 @@ module.exports = store => {
       );
 
       if (!fileUtils.isSupportedFileType('image', file)) {
-        throw {
+        reject({
           code: 500,
           message: 'Unsupported image type: ' + file.type
-        };
+        });
       }
 
       if (fileUtils.fileSizeExceeds(file, 5000000000)) {
-        throw {
+        reject({
           code: 500,
           message: 'Image is too large. Please use an image under 5Mb.'
-        };
+        });
       }
 
       return StaticAssetsSvc.saveFile(file.name, file).then(resolve);
