@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 import Form from '../forms/Form';
 import DropDownWithPlus from '../forms/DropDownWithPlus';
+import ConversationItem from '../forms/ConversationItem';
 import { Button, ButtonGroup, SplitButton, MenuItem } from 'react-bootstrap';
 
 import { entityCanBeCopied } from '../../utils/data';
@@ -46,14 +47,14 @@ class DashboardHeader extends Component {
           style={{flex: "1 1", whiteSpace: 'nowrap'}}
         >
           {this.props.itemName}
-          <input type="text" />
+          <input type="text" placeholder="tags" />
           <DropDownWithPlus options={this.props.addItemOptions} />
         </div>
         <form
           className="d-flex justify-content-end"
           style={{flex: "1 0",  whiteSpace: 'nowrap'}}>
           <label>
-            <input type="checkbox" />Live
+            <input className="mr-1" type="checkbox" />Live
           </label>
         </form>
       </div>
@@ -72,6 +73,11 @@ const Dashboard = props => (
           itemName={props.itemEditing.name}
         />
         <div className="FormContainer">
+          <ConversationItem
+            name={'hello'}
+            text="Hi! I'm Azar, your friendly neighborhood robot.  Let's talk!"
+            nextItemName="First Question"
+          />
           <div className="FormActionsContainer">
             {props.itemEditing.type === 'conversation' ? (
               <Button bsStyle="primary" onClick={props.handleCopyEntity}>
