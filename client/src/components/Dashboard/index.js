@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import './style.css';
+//import './style.css';
+
 
 import Form from '../forms/Form';
+import DropDownWithPlus from '../forms/DropDownWithPlus';
 import { Button, ButtonGroup, SplitButton, MenuItem } from 'react-bootstrap';
 
 import { entityCanBeCopied } from '../../utils/data';
@@ -28,10 +30,47 @@ const propTypes = {
   tags: PropTypes.array.isRequired
 };
 
+class DashboardHeader extends Component {
+  static propTypes = {
+    addItemOptions: PropTypes.arrayOf(PropTypes.string).isRequired,
+    itemName: PropTypes.string.isRequired,
+  }
+
+  render() {
+    return (
+      <div
+        className="card-header d-flex flex-row justify-content-between"
+        style={{flexWrap: "wrap"}}>
+        <div
+          className="d-flex flex-row justify-content-between"
+          style={{flex: "1 1", whiteSpace: 'nowrap'}}
+        >
+          {this.props.itemName}
+          <input type="text" />
+          <DropDownWithPlus options={this.props.addItemOptions} />
+        </div>
+        <form
+          className="d-flex justify-content-end"
+          style={{flex: "1 0",  whiteSpace: 'nowrap'}}>
+          <label>
+            <input type="checkbox" />Live
+          </label>
+        </form>
+      </div>
+    );
+  }
+}
+
+
+
 const Dashboard = props => (
-  <div className="Dashboard">
+  <div className="Dashboard col-md-8 mt-1">
     {props.itemEditing !== null && (
-      <div className="Inner">
+      <div className="Inner card">
+        <DashboardHeader
+          addItemOptions={props.formConfig[props.itemEditing.type].children}
+          itemName={props.itemEditing.name}
+        />
         <div className="FormContainer">
           <div className="FormActionsContainer">
             {props.itemEditing.type === 'conversation' ? (

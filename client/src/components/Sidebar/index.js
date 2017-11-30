@@ -67,7 +67,7 @@ decorators.Container = PoolContainer;
  * Sidebar Component
 */
 const Sidebar = props => (
-  <aside className="Sidebar col-md-4 m-3">
+  <aside className="Sidebar col-md-4 pl-3 pt-1">
     <div className="card" style={{borderColor: 'white'}}>
       <div className="card-header d-flex flex-row justify-content-between">
         <span style={{fontSize: '1.1em'}}>Conversations</span>

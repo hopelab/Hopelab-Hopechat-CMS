@@ -66,56 +66,6 @@
     font-size: 14px;
 }
 
-.AddButtonWrapper {
-    width: 25%;
-    height: 50px;
-    border: 1px solid #333;
-    border-radius: 5px;
-
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-evenly;
-
-    font-size: 15px;
-}
-
-.AddButtonWrapper .Add {
-    flex-basis: 25%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.AddButtonWrapper .Add:hover {
-    cursor: pointer;
-}
-
-.AddButtonWrapper select {
-    border: 0;
-    height: inherit;
-    float: right;
-    width: 75%;
-    flex-basis: 75%;
-
-    background-position: right right;
-    background-repeat: no-repeat;
-    background: transparent;
-    border: 0;
-    border-radius: 2px;
-    font-size: inherit;
-    margin: 0;
-    overflow: hidden;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.AddButtonWrapper select:hover {
-    cursor: pointer;
-}
-
 label {
     margin-right: 15px;
 }

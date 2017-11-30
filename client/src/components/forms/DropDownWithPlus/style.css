@@ -1,0 +1,56 @@
+.AddButtonWrapper {
+    height: 35px;
+    border: 1px solid #c6c6c6;
+    border-radius: 5px;
+    background-color: #e2e2e2;
+    padding: 10px;
+    width:140px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.AddButtonWrapper .Add {
+    flex-basis: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.AddButtonWrapper .Add:hover {
+    cursor: pointer;
+}
+
+.AddButtonWrapper span {
+  font-size: 1em;
+  padding-right: 10px;
+}
+
+.AddButtonWrapper select {
+  outline: 0px;
+  border: none;
+  border-left: 1px solid #c6c6c6;
+  appearance: none;
+  border-radius: 0px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 1em;
+  float: right;
+  flex-basis: 75%;
+
+  background-position: right right;
+  background-repeat: no-repeat;
+  background: transparent;
+  margin: 0;
+  overflow: hidden;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.AddButtonWrapper select:hover {
+    cursor: pointer;
+}
