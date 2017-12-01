@@ -83,7 +83,7 @@ class App extends Component {
 
     fetch(
       '/images/create',
-      config.http.makeCommonFetchOptions({
+      config.http.makeUploadFetchOptions({
         method: 'POST',
         body: data
       })
