@@ -27,7 +27,7 @@ class EditableText extends Component {
   }
 
   handleClickOutside(e) {
-    if (this.state.editing) {
+    if (this.state.editing && e.target !== this.input) {
       this.setState(
         {editing: false},
         this.props.onEditFinished
@@ -42,12 +42,14 @@ class EditableText extends Component {
         value={this.props.text}
         style={{width: "100%"}}
         onChange={this.props.onChange}
+        ref={(i) => this.input = i}
       />
     ) : (
       <input
         type="text"
         value={this.props.text}
         onChange={this.props.onChange}
+        ref={(i) => this.input = i}
       />
     );
 
