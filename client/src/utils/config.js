@@ -197,7 +197,7 @@ const initialState = {
 // prettier-ignore
 const http = {
   getPostHeaders: () => ({
-    Accept: 'application/json, text/plain, */*',
+    Accept: 'application/json',
     'Content-Type': 'application/json'
   }),
   makeCommonFetchOptions: options =>
