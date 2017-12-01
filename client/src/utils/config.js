@@ -194,6 +194,7 @@ const initialState = {
   ]
 };
 
+// prettier-ignore
 const http = {
   getPostHeaders: () => ({
     Accept: 'application/json, text/plain, */*',
@@ -203,6 +204,12 @@ const http = {
     R.merge(options, {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Basic ${window.sessionStorage.getItem('basicAuthString')}`
+      }
+    }),
+  makeUploadFetchOptions: (options, contentType) =>
+    R.merge(options, {
+      headers: {
         Authorization: `Basic ${window.sessionStorage.getItem('basicAuthString')}`
       }
     }),
