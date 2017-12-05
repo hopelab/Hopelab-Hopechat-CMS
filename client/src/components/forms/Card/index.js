@@ -7,11 +7,17 @@ import MessageOptions from '../MessageOptions';
 import NextMessage from '../NextMessage';
 import {
   TYPE_MESSAGE,
-  TYPE_QUESTION_WITH_REPLIES
+  MESSAGE_TYPE_QUESTION_WITH_REPLIES
 } from '../../../utils/config';
 
 const propTypes = {
-  item: PropTypes.object.isRequired,
+  item: PropTypes.shape({
+    messageType: PropTypes.string,
+    type: PropTypes.string,
+    name: PropTypes.stirng,
+    id: PropTypes.string,
+    next: PropTypes.object,
+  }).isRequired,
   index: PropTypes.number.isRequired,
   onUpdate: PropTypes.func.isRequired,
   onEditEntity: PropTypes.func.isRequired,
@@ -104,7 +110,7 @@ class Card extends React.Component {
           />
         ) : null}
 
-        {this.props.item.messageType !== TYPE_QUESTION_WITH_REPLIES && (
+        {this.props.item.messageType !== MESSAGE_TYPE_QUESTION_WITH_REPLIES && (
           <NextMessage
             childEntities={this.props.childEntities.filter(
               m => m.id !== this.props.item.id

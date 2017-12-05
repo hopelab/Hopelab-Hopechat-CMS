@@ -8,9 +8,9 @@ import NextMessage from '../NextMessage';
 
 import {
   initialState,
-  TYPE_TEXT,
-  TYPE_QUESTION,
-  TYPE_QUESTION_WITH_REPLIES
+  MESSAGE_TYPE_TEXT,
+  MESSAGE_TYPE_QUESTION,
+  MESSAGE_TYPE_QUESTION_WITH_REPLIES
 } from '../../../utils/config';
 
 const propTypes = {
@@ -27,9 +27,9 @@ const propTypes = {
 */
 function messageTypeHasContent(type) {
   return (
-    type === TYPE_TEXT ||
-    type === TYPE_QUESTION ||
-    type === TYPE_QUESTION_WITH_REPLIES
+    type === MESSAGE_TYPE_TEXT ||
+    type === MESSAGE_TYPE_QUESTION ||
+    type === MESSAGE_TYPE_QUESTION_WITH_REPLIES
   );
 }
 
@@ -37,7 +37,7 @@ function messageTypeHasContent(type) {
  * Check Message Type is Question with Replies
 */
 function messageTypeHasQuickReplies(type) {
-  return type === TYPE_QUESTION_WITH_REPLIES;
+  return type === MESSAGE_TYPE_QUESTION_WITH_REPLIES;
 }
 
 class MessageOptions extends Component {
@@ -49,7 +49,7 @@ class MessageOptions extends Component {
     const { index } = this.props;
     let replies = [];
     const newReply = {
-      content_type: TYPE_TEXT,
+      content_type: MESSAGE_TYPE_TEXT,
       title: ''
     };
 
