@@ -10,8 +10,6 @@ import { ControlLabel, Modal } from 'react-bootstrap';
 import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
 
-import { concat, mergeWith } from 'ramda';
-
 class App extends Component {
   constructor(props) {
     super(props);

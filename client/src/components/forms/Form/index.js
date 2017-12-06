@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import './style.css';
 
 import Card from '../Card';
+import ConversationItem from '../ConversationItem';
 import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css';
 
@@ -182,8 +183,9 @@ class Form extends Component {
 
             <div className="ChildGrid">
               {this.props.childEntities.map((e, i) => (
+                <div key={e.id}>
                 <Card
-                  key={i}
+
                   item={e}
                   index={i}
                   childEntities={this.props.childEntities}
@@ -195,6 +197,19 @@ class Form extends Component {
                   }
                   images={this.props.images}
                 />
+                <ConversationItem
+
+                  item={e}
+                  index={i}
+                  childEntities={this.props.childEntities}
+                  onUpdate={this.props.handleUpdateChildEntity}
+                  onEditEntity={this.props.onEditEntity}
+                  handleSaveItem={this.props.handleSaveItem}
+                  handleUpdateMessageOptions={
+                    this.props.handleUpdateMessageOptions
+                  }
+                  images={this.props.images}
+                /></div>
               ))}
             </div>
           </div>

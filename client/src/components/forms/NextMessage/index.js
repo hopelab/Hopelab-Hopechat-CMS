@@ -1,7 +1,12 @@
-import React from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import { DropdownButton, MenuItem } from 'react-bootstrap';
+import {
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
+  DropdownToggle
+} from 'reactstrap';
 
 const propTypes = {
   childEntities: PropTypes.array.isRequired,
@@ -11,29 +16,59 @@ const propTypes = {
 
 const getNextMessageOptionsForMessage = props => {
   return props.childEntities.map((c, i) => (
-    <MenuItem
-      key={i}
+    <DropdownItem
+      key={c.id}
       eventKey="next"
       active={c.id === props.nextId}
-      onSelect={() => props.handleNextMessageSelect('next', c)}
+      onClick={() => props.handleNextMessageSelect('next', c)}
     >
       {c.name}
-    </MenuItem>
+    </DropdownItem>
   ));
 };
 
-const NextMessage = props => (
-  <DropdownButton
-    bsStyle="default"
-    title="Next Message"
-    key="next"
-    id="next"
-    className="NextMessageDropdown"
-    disabled={!props.childEntities.length}
-  >
-    {getNextMessageOptionsForMessage(props)}
-  </DropdownButton>
-);
+class NextMessage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      dropdownOpen: false
+    };
+    this.toggle = this.toggle.bind(this);
+  }
+
+  toggle() {
+    this.setState({dropdownOpen: !this.state.dropdownOpen});
+  }
+
+  render() {
+    const { childEntities, nextId } = this.props;
+    let foundItem = childEntities.find(item => item.id === nextId);
+    if (foundItem) {
+      foundItem = foundItem.name;
+    } else {
+      foundItem = 'blah';
+    }
+    return (
+      <Dropdown
+        style={{cursor: 'pointer'}}
+        isOpen={this.state.dropdownOpen}
+        toggle={this.toggle}
+      >
+        <DropdownToggle
+          tag="div"
+          onClick={this.toggle}
+          data-toggle="dropdown"
+          aria-expanded={this.state.dropdownOpen}
+        >
+          {foundItem}
+        </DropdownToggle>
+        <DropdownMenu>
+          {getNextMessageOptionsForMessage(this.props)}
+        </DropdownMenu>
+      </Dropdown>
+    );
+  }
+}
 
 NextMessage.propTypes = propTypes;
 

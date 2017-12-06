@@ -73,11 +73,6 @@ const Dashboard = props => (
           itemName={props.itemEditing.name}
         />
         <div className="FormContainer">
-          <ConversationItem
-            name={'hello'}
-            text="Hi! I'm Azar, your friendly neighborhood robot.  Let's talk!"
-            nextItemName="First Question"
-          />
           <div className="FormActionsContainer">
             {props.itemEditing.type === 'conversation' ? (
               <Button bsStyle="primary" onClick={props.handleCopyEntity}>

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 //import './style.css';
 
 import { Treebeard, decorators } from '../TreeBeard';
-import { Button, ControlLabel, Glyphicon } from 'react-bootstrap';
+import { Button, Glyphicon } from 'react-bootstrap';
 
 import { entities } from '../../utils/config';
 import treeTheme from '../../utils/treeTheme';
