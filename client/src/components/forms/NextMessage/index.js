@@ -62,7 +62,7 @@ class NextMessage extends Component {
         >
           {foundItem}
         </DropdownToggle>
-        <DropdownMenu>
+        <DropdownMenu flip={false}>
           {getNextMessageOptionsForMessage(this.props)}
         </DropdownMenu>
       </Dropdown>

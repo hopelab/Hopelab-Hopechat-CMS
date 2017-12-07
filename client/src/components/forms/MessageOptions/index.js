@@ -8,6 +8,7 @@ import NextMessage from '../NextMessage';
 
 import {
   initialState,
+  messageTypes,
   MESSAGE_TYPE_TEXT,
   MESSAGE_TYPE_QUESTION,
   MESSAGE_TYPE_QUESTION_WITH_REPLIES
@@ -117,7 +118,7 @@ class MessageOptions extends Component {
                 value: e.target.value
               })}
           >
-            {initialState.messageTypes.map((mt, i) => (
+            {messageTypes.map((mt, i) => (
               <option key={i} value={mt.id}>
                 {mt.display}
               </option>

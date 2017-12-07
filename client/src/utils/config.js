@@ -128,6 +128,14 @@ const MESSAGE_TYPE_IMAGE = 'image';
 const MESSAGE_TYPE_VIDEO = 'video';
 const TYPE_TAG = 'tag';
 
+const messageTypes = [
+  { id: MESSAGE_TYPE_TEXT, display: 'Text' },
+  { id: MESSAGE_TYPE_QUESTION, display: 'Question' },
+  { id: MESSAGE_TYPE_QUESTION_WITH_REPLIES, display: 'Question+Replies' },
+  { id: MESSAGE_TYPE_IMAGE, display: 'Image' },
+  { id: MESSAGE_TYPE_VIDEO, display: 'Video' }
+];
+
 /**
  * Initial State for pieces of UI state
 */
@@ -183,15 +191,7 @@ const initialState = {
     name: '',
     blockId: '',
     tags: []
-  },
-
-  messageTypes: [
-    { id: MESSAGE_TYPE_TEXT, display: 'Text' },
-    { id: MESSAGE_TYPE_QUESTION, display: 'Question' },
-    { id: MESSAGE_TYPE_QUESTION_WITH_REPLIES, display: 'Question with Replies' },
-    { id: MESSAGE_TYPE_IMAGE, display: 'Image' },
-    { id: MESSAGE_TYPE_VIDEO, display: 'Video' }
-  ]
+  }
 };
 
 // prettier-ignore
@@ -225,6 +225,7 @@ export {
   http,
   operations,
   keysToRemove,
+  messageTypes,
   TYPE_CONVERSATION,
   TYPE_COLLECTION,
   TYPE_SERIES,

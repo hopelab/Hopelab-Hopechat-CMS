@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import EditableText from '../EditableText';
 import NextMessage from '../NextMessage';
+import {messageTypes} from '../../../utils/config';
 import './style.css';
 
 class ConversationItem extends Component {
@@ -30,9 +31,19 @@ class ConversationItem extends Component {
           style={{flexWrap: "wrap"}}
         >
           <EditableText text={this.props.item.name} />
-          <select>
-            <option value="Message">{this.props.item.type}</option>
-          </select>
+          {this.props.item.messageType && (
+            <select>
+              {messageTypes.map(mt => (
+                <option
+                  key={mt.id}
+                  value={mt.id}
+                  selected={this.props.item.messageType === mt.id}
+                >
+                  {mt.display}
+                </option>
+              ))}}
+            </select>
+          )}
         </div>
         <div className="card-block">
           <p className="card-text">
