@@ -20,10 +20,20 @@ class EditableText extends Component {
       editing: false
     }
     this.handleClickOutside = this.handleClickOutside.bind(this);
+    this.handleEnterKey = this.handleEnterKey.bind(this);
   }
 
   handleClickOutside(e) {
     if (this.state.editing && e.target !== this.input) {
+      this.props.onEditWillFinish(this.input.value);
+      this.setState({editing: false});
+    }
+  }
+
+  handleEnterKey(e) {
+    if (e.keyCode === 13 &&
+        this.state.editing &&
+        this.input === document.activeElement) {
       this.props.onEditWillFinish(this.input.value);
       this.setState({editing: false});
     }
@@ -35,12 +45,14 @@ class EditableText extends Component {
         type="text"
         defaultValue={this.props.text}
         style={{width: "100%"}}
+        onKeyUp={this.handleEnterKey}
         ref={(i) => this.input = i}
       />
     ) : (
       <input
         type="text"
         defaultValue={this.props.text}
+        onKeyUp={this.handleEnterKey}
         ref={(i) => this.input = i}
       />
     );

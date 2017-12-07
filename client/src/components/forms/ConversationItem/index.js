@@ -79,11 +79,11 @@ class ConversationItem extends Component {
         >
           <EditableText
             text={this.props.item.name}
-            onEditWillFinish={value => {
-              if (this.props.item.name !== value) {
+            onEditWillFinish={name => {
+              if (this.props.item.name !== name) {
                 this.props.handleSaveItem({
                   ...this.props.item,
-                  name: value
+                  name
                 });
               }
             }}
@@ -105,7 +105,18 @@ class ConversationItem extends Component {
         { this.messageTypeHasContent(this.props.item.messageType) && (
           <div className="card-block">
             <p className="card-text">
-              <EditableText text={this.props.item.text || ''} isTextArea={true} />
+              <EditableText
+                text={this.props.item.text || ''}
+                isTextArea={true}
+                onEditWillFinish={text => {
+                  if (this.props.item.text !== text) {
+                    this.props.handleSaveItem({
+                      ...this.props.item,
+                      text
+                    });
+                  }
+                }}
+              />
             </p>
           </div>
         )}
