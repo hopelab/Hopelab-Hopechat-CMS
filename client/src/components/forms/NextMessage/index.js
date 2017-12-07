@@ -18,7 +18,6 @@ const getNextMessageOptionsForMessage = props => {
   return props.childEntities.map((c, i) => (
     <DropdownItem
       key={c.id}
-      eventKey="next"
       active={c.id === props.nextId}
       onClick={() => props.handleNextMessageSelect('next', c)}
     >
@@ -46,7 +45,7 @@ class NextMessage extends Component {
     if (foundItem) {
       foundItem = foundItem.name;
     } else {
-      foundItem = 'blah';
+      foundItem = 'choose next';
     }
     return (
       <Dropdown

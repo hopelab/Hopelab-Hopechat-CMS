@@ -5,16 +5,12 @@ import onClickOutside from "react-onclickoutside";
 class EditableText extends Component {
   static propTypes = {
     text: PropTypes.string.isRequired,
-    onEditStart: PropTypes.func,
-    onChange: PropTypes.func,
-    onEditFinished: PropTypes.func,
+    onEditWillFinished: PropTypes.func,
     isTextArea: PropTypes.bool,
   }
 
   static defaultProps = {
-    onEditStart() {},
-    onChange() {},
-    onEditFinished() {},
+    onEditWillFinish() {},
     isTextArea: false,
   }
 
@@ -28,10 +24,8 @@ class EditableText extends Component {
 
   handleClickOutside(e) {
     if (this.state.editing && e.target !== this.input) {
-      this.setState(
-        {editing: false},
-        this.props.onEditFinished
-      );
+      this.props.onEditWillFinish(this.input.value);
+      this.setState({editing: false});
     }
   }
 
@@ -39,16 +33,14 @@ class EditableText extends Component {
     const input = this.props.isTextArea ? (
       <textarea
         type="text"
-        value={this.props.text}
+        defaultValue={this.props.text}
         style={{width: "100%"}}
-        onChange={this.props.onChange}
         ref={(i) => this.input = i}
       />
     ) : (
       <input
         type="text"
-        value={this.props.text}
-        onChange={this.props.onChange}
+        defaultValue={this.props.text}
         ref={(i) => this.input = i}
       />
     );
@@ -57,13 +49,10 @@ class EditableText extends Component {
       input
     ) : (
       <span onClick={() => {
-        this.setState(
-          prevState => ({editing:!prevState.editing}),
-          () => {
-            if (this.state.editing) { this.props.onEditStart(); }
-            else { this.props.onEditFinished(); }
-          }
-        )
+        if (this.state.editing && this.input) {
+          this.props.onEditWillFinish(this.input.value);
+        }
+        this.setState(prevState => ({editing:!prevState.editing}))
       }}>{this.props.text}</span>
     );
   }

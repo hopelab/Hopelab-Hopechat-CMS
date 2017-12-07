@@ -15,6 +15,7 @@ const propTypes = {
   handleClose: PropTypes.func.isRequired,
   handleUpdateItem: PropTypes.func.isRequired,
   handleSaveItem: PropTypes.func.isRequired,
+  handleSaveItem2: PropTypes.func,
   handleDeleteItem: PropTypes.func.isRequired,
   handleNewChildEntity: PropTypes.func.isRequired,
   handleUpdateChildEntity: PropTypes.func.isRequired,
@@ -124,6 +125,7 @@ const Dashboard = props => (
             item={props.itemEditing}
             config={props.formConfig[props.itemEditing.type]}
             handleUpdateItem={props.handleUpdateItem}
+            handleSaveItem2={props.handleSaveItem2}
             handleUpdateMessageOptions={props.handleUpdateMessageOptions}
             onEntityAddition={props.handleNewChildEntity}
             handleUpdateChildEntity={props.handleUpdateChildEntity}

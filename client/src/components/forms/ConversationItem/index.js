@@ -2,8 +2,40 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import EditableText from '../EditableText';
 import NextMessage from '../NextMessage';
-import {messageTypes} from '../../../utils/config';
+import {
+  messageTypes,
+  TYPE_CONVERSATION,
+  TYPE_COLLECTION,
+  TYPE_SERIES,
+  TYPE_BLOCK,
+  TYPE_MESSAGE,
+  MESSAGE_TYPE_QUESTION,
+  MESSAGE_TYPE_QUESTION_WITH_REPLIES,
+  MESSAGE_TYPE_TEXT,
+  MESSAGE_TYPE_ANSWER,
+  MESSAGE_TYPE_IMAGE,
+  MESSAGE_TYPE_VIDEO
+} from '../../../utils/config';
 import './style.css';
+
+const conversationItemStyles = {
+  [TYPE_CONVERSATION]: {
+
+  },
+  [TYPE_COLLECTION]: {
+    backgroundColor: 'rgb(82, 175, 82)'
+  },
+  [TYPE_SERIES]: {
+
+  },
+  [TYPE_BLOCK]: {
+
+  },
+  [TYPE_MESSAGE]: {
+
+  }
+
+}
 
 class ConversationItem extends Component {
   static propTypes = {
@@ -23,14 +55,39 @@ class ConversationItem extends Component {
     images: PropTypes.array.isRequired
   }
 
+  messageTypeHasContent(type) {
+    return (
+      type === MESSAGE_TYPE_TEXT ||
+      type === MESSAGE_TYPE_QUESTION ||
+      type === MESSAGE_TYPE_QUESTION_WITH_REPLIES
+    );
+  }
+
+  messageTypeHasQuickReplies(type) {
+    return type === MESSAGE_TYPE_QUESTION_WITH_REPLIES;
+  }
+
   render() {
     return (
-      <div className="card ConversationItem" style={{width: '340px'}}>
+      <div className="card ConversationItem" style={{width: '360px'}}>
         <div
           className="card-header d-flex flex-row justify-content-between"
-          style={{flexWrap: "wrap"}}
+          style={{
+            flexWrap: "wrap",
+            ...conversationItemStyles[this.props.item.type]
+          }}
         >
-          <EditableText text={this.props.item.name} />
+          <EditableText
+            text={this.props.item.name}
+            onEditWillFinish={value => {
+              if (this.props.item.name !== value) {
+                this.props.handleSaveItem({
+                  ...this.props.item,
+                  name: value
+                });
+              }
+            }}
+          />
           {this.props.item.messageType && (
             <select>
               {messageTypes.map(mt => (
@@ -45,21 +102,20 @@ class ConversationItem extends Component {
             </select>
           )}
         </div>
-        <div className="card-block">
-          <p className="card-text">
-            <EditableText text={this.props.item.text || ''} isTextArea={true} />
-          </p>
+        { this.messageTypeHasContent(this.props.item.messageType) && (
+          <div className="card-block">
+            <p className="card-text">
+              <EditableText text={this.props.item.text || ''} isTextArea={true} />
+            </p>
+          </div>
+        )}
+        <div className="card-footer">
+          <NextMessage
+            childEntities={this.props.childEntities}
+            nextId={this.props.item.next ? this.props.item.next.id : undefined}
+            handleNextMessageSelect={()=>null}
+          />
         </div>
-        {this.props.item.next ? (
-            <div className="card-footer">
-              <NextMessage
-                childEntities={this.props.childEntities}
-                nextId={this.props.item.next.id}
-                handleNextMessageSelect={()=>null}
-              />
-            </div>
-          ) : undefined }
-
       </div>
     );
   }

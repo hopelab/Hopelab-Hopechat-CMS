@@ -18,7 +18,6 @@ const propTypes = {
   childEntities: PropTypes.array.isRequired,
   item: PropTypes.object.isRequired,
   onUpdate: PropTypes.func.isRequired,
-  editingAsChildEntity: PropTypes.bool,
   index: PropTypes.number,
   images: PropTypes.array.isRequired
 };

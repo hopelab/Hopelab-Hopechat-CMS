@@ -101,7 +101,6 @@ class Card extends React.Component {
 
         {this.props.item.type === TYPE_MESSAGE ? (
           <MessageOptions
-            editingAsChildEntity
             index={this.props.index}
             item={this.props.item}
             onUpdate={this.onUpdate}

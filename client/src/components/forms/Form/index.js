@@ -34,6 +34,7 @@ const propTypes = {
   childEntities: PropTypes.array.isRequired,
   onEntityAddition: PropTypes.func.isRequired,
   handleUpdateItem: PropTypes.func.isRequired,
+  handleUpdateItem2: PropTypes.func.isRequired,
   handleUpdateChildEntity: PropTypes.func.isRequired,
   onEditEntity: PropTypes.func.isRequired,
   handleSaveItem: PropTypes.func.isRequired,
@@ -204,7 +205,7 @@ class Form extends Component {
                   childEntities={this.props.childEntities}
                   onUpdate={this.props.handleUpdateChildEntity}
                   onEditEntity={this.props.onEditEntity}
-                  handleSaveItem={this.props.handleSaveItem}
+                  handleSaveItem={this.props.handleSaveItem2}
                   handleUpdateMessageOptions={
                     this.props.handleUpdateMessageOptions
                   }

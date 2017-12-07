@@ -14,6 +14,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = config.initialState.App;
+    this.handleSaveItem2 = this.handleSaveItem2.bind(this);
   }
 
   componentDidMount() {
@@ -27,7 +28,7 @@ class App extends Component {
             data: { ...data },
             entities: config.entities
           })
-        });
+        }, () => console.log(this.state));
       })
       .catch(console.error);
   }
@@ -202,6 +203,30 @@ class App extends Component {
       )
     });
   };
+
+  handleSaveItem2(item) {
+    const route = item.id ? config.operations.update : config.operations.create;
+    dataUtil
+      .post(
+        config.routes[item.type][route],
+        dataUtil.makeCopyAndRemoveKeys(item, config.keysToRemove)
+      )
+      .then(res => res.json())
+      .then(res => {
+        console.log(res, item, this.state);
+        let itemMap = this.state[res.type].map(i => ( i.id === res.id ?
+          {
+            ...i,
+            ...res
+          } : i
+        ));
+        this.setState(
+          {[res.type]: itemMap},
+          this.updateTreeStructure
+        )
+      })
+      .catch(console.error);
+  }
 
   handleSaveItem = ({ item, reset, switchTo }) => {
     const route = item.id ? config.operations.update : config.operations.create;
@@ -435,6 +460,7 @@ class App extends Component {
           handleClose={this.handleDashboardClose}
           handleUpdateItem={this.handleUpdatingItem}
           handleSaveItem={this.handleSaveItem}
+          handleSaveItem2={this.handleSaveItem2}
           handleDeleteItem={this.handleDeleteItem}
           handleNewChildEntity={this.handleNewChildEntity}
           handleUpdateChildEntity={this.handleUpdateChildEntity}
