@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 import Form from '../forms/Form';
 import DropDownWithPlus from '../forms/DropDownWithPlus';
+import EditableText from '../forms/EditableText';
 import { Button, ButtonGroup, SplitButton, MenuItem } from 'react-bootstrap';
 
 import { entityCanBeCopied } from '../../utils/data';
@@ -46,13 +47,14 @@ class DashboardHeader extends Component {
           className="d-flex flex-row justify-content-between"
           style={{flex: "1 1", whiteSpace: 'nowrap'}}
         >
-          {this.props.itemName}
+          <EditableText text={this.props.itemName} />
           <input type="text" placeholder="tags" />
           <DropDownWithPlus options={this.props.addItemOptions} />
         </div>
         <form
           className="d-flex justify-content-end"
-          style={{flex: "1 0",  whiteSpace: 'nowrap'}}>
+          style={{flex: "1 0",  whiteSpace: 'nowrap'}}
+        >
           <label>
             <input className="mr-1" type="checkbox" />Live
           </label>
