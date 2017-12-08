@@ -205,6 +205,51 @@ class App extends Component {
     });
   };
 
+  handleUploadMessage(res, uploadItem) {
+    let items;
+    let newRes;
+    if (!uploadItem.id) {
+      throw new Error('Handle the create new case!');
+    } else {
+      items = this.state[res.type].map(i => {
+        if (i.id === res.id) {
+          newRes = {
+            ...i,
+            ...res
+          };
+          if (i.next && !uploadItem.next) { delete newRes.next; }
+          return newRes;
+        } else {
+          return i;
+        }
+      });
+    }
+    let childEntities =  this.state.childEntities.map(c => (
+      c.id === newRes.id ? newRes : c
+    ));
+    this.setState(
+      {
+        [res.type]: items,
+        childEntities
+      },
+      () => this.updateTreeStructure2(newRes)
+    )
+  }
+
+  handleUploadNonMessage(res, uploadItem) {
+    let childEntities =  this.state.childEntities.map(c => {
+      let found = res.find(r => c.id === r.id);
+      return found ? found : c;
+    });
+    this.setState(
+      {
+        [uploadItem.type]: res,
+        childEntities
+      },
+      () => this.updateTreeStructure2(uploadItem)
+    );
+  }
+
   handleSaveItem2(item) {
     const route = item.id ? config.operations.update : config.operations.create;
     dataUtil
@@ -214,34 +259,11 @@ class App extends Component {
       )
       .then(res => res.json())
       .then(res => {
-        let items;
-        let newRes;
-        if (!item.id) {
-          throw new Error('Handle the create new case!');
+        if (Array.isArray(res)) {
+          this.handleUploadNonMessage(res, item);
         } else {
-          items = this.state[res.type].map(i => {
-            if (i.id === res.id) {
-              newRes = {
-                ...i,
-                ...res
-              };
-              if (i.next && !item.next) { delete newRes.next; }
-              return newRes;
-            } else {
-              return i;
-            }
-          });
+          this.handleUploadMessage(res, item);
         }
-        let childEntities =  this.state.childEntities.map(c => (
-          c.id === newRes.id ? newRes : c
-        ));
-        this.setState(
-          {
-            [res.type]: items,
-            childEntities
-          },
-          () => this.updateTreeStructure2(newRes)
-        )
       })
       .catch(console.error);
   }

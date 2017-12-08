@@ -17,16 +17,24 @@ class EditableText extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      editing: false
+      editing: this.emptyText(props.text),
+      text: props.text
     }
     this.handleClickOutside = this.handleClickOutside.bind(this);
     this.handleEnterKey = this.handleEnterKey.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  emptyText(text) {
+    return (!text || /^\s*$/.test(text));
   }
 
   handleClickOutside(e) {
     if (this.state.editing && e.target !== this.input) {
-      this.props.onEditWillFinish(this.input.value);
-      this.setState({editing: false});
+      this.props.onEditWillFinish(this.state.text);
+      if (!this.emptyText(this.state.text)) {
+        this.setState({editing: false});
+      }
     }
   }
 
@@ -34,30 +42,38 @@ class EditableText extends Component {
     if (e.keyCode === 13 &&
         this.state.editing &&
         this.input === document.activeElement) {
-      this.props.onEditWillFinish(this.input.value);
-      this.setState({editing: false});
+      this.props.onEditWillFinish(this.state.text);
+      if (!this.emptyText(this.state.text)) {
+        this.setState({editing: false});
+      }
     }
+  }
+
+  handleChange(e) {
+    this.setState({text: e.target.value});
   }
 
   render() {
     const input = this.props.isTextArea ? (
       <textarea
         type="text"
-        defaultValue={this.props.text}
+        value={this.state.text}
         style={{width: "100%"}}
         onKeyUp={this.handleEnterKey}
+        onChange={this.handleChange}
         ref={(i) => this.input = i}
       />
     ) : (
       <input
         type="text"
-        defaultValue={this.props.text}
+        value={this.state.text}
         onKeyUp={this.handleEnterKey}
+        onChange={this.handleChange}
         ref={(i) => this.input = i}
       />
     );
 
-    return this.state.editing ? (
+    return (this.state.editing || this.emptyText(this.state.text)) ? (
       input
     ) : (
       <span onClick={() => {
@@ -65,7 +81,7 @@ class EditableText extends Component {
           this.props.onEditWillFinish(this.input.value);
         }
         this.setState(prevState => ({editing:!prevState.editing}))
-      }}>{this.props.text}</span>
+      }}>{this.state.text}</span>
     );
   }
 }
