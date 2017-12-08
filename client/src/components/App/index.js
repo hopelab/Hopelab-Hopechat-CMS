@@ -15,6 +15,7 @@ class App extends Component {
     super(props);
     this.state = config.initialState.App;
     this.handleSaveItem2 = this.handleSaveItem2.bind(this);
+    this.updateTreeStructure2 = this.updateTreeStructure2.bind(this);
   }
 
   componentDidMount() {
@@ -28,7 +29,7 @@ class App extends Component {
             data: { ...data },
             entities: config.entities
           })
-        }, () => console.log(this.state));
+        });
       })
       .catch(console.error);
   }
@@ -213,19 +214,54 @@ class App extends Component {
       )
       .then(res => res.json())
       .then(res => {
-        console.log(res, item, this.state);
-        let itemMap = this.state[res.type].map(i => ( i.id === res.id ?
-          {
-            ...i,
-            ...res
-          } : i
+        let items;
+        let newRes;
+        if (!item.id) {
+          throw new Error('Handle the create new case!');
+        } else {
+          items = this.state[res.type].map(i => {
+            if (i.id === res.id) {
+              newRes = {
+                ...i,
+                ...res
+              };
+              if (i.next && !item.next) { delete newRes.next; }
+              return newRes;
+            } else {
+              return i;
+            }
+          });
+        }
+        let childEntities =  this.state.childEntities.map(c => (
+          c.id === newRes.id ? newRes : c
         ));
         this.setState(
-          {[res.type]: itemMap},
-          this.updateTreeStructure
+          {
+            [res.type]: items,
+            childEntities
+          },
+          () => this.updateTreeStructure2(newRes)
         )
       })
       .catch(console.error);
+  }
+
+  updateTreeStructure2(item) {
+    this.setState({
+      treeData: dataUtil.createTreeView({
+        data: { ...this.state },
+        entities: config.entities,
+        active: (item || {}).id
+      })/*,
+      childEntities: dataUtil.getChildEntitiesFor(
+        item,
+        this.state
+      ),/*
+      entitiesCanCopyTo: dataUtil.getEntitiesCanCopyTo(
+        item,
+        this.state
+      )*/
+    });
   }
 
   handleSaveItem = ({ item, reset, switchTo }) => {

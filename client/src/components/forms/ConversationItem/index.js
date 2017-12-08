@@ -12,9 +12,9 @@ import {
   MESSAGE_TYPE_QUESTION,
   MESSAGE_TYPE_QUESTION_WITH_REPLIES,
   MESSAGE_TYPE_TEXT,
-  MESSAGE_TYPE_ANSWER,
+/*  MESSAGE_TYPE_ANSWER,
   MESSAGE_TYPE_IMAGE,
-  MESSAGE_TYPE_VIDEO
+  MESSAGE_TYPE_VIDEO*/
 } from '../../../utils/config';
 import './style.css';
 
@@ -67,6 +67,12 @@ class ConversationItem extends Component {
     return type === MESSAGE_TYPE_QUESTION_WITH_REPLIES;
   }
 
+  nextHasChanged(item, id, type) {
+    if (id === undefined && !item.next) { return false; }
+    if (!item.next) { return true; }
+    return item.next.id !== id || item.next.type !== type;
+  }
+
   render() {
     return (
       <div className="card ConversationItem" style={{width: '360px'}}>
@@ -89,12 +95,11 @@ class ConversationItem extends Component {
             }}
           />
           {this.props.item.messageType && (
-            <select>
+            <select defaultValue={this.props.item.messageType}>
               {messageTypes.map(mt => (
                 <option
                   key={mt.id}
                   value={mt.id}
-                  selected={this.props.item.messageType === mt.id}
                 >
                   {mt.display}
                 </option>
@@ -124,7 +129,20 @@ class ConversationItem extends Component {
           <NextMessage
             childEntities={this.props.childEntities}
             nextId={this.props.item.next ? this.props.item.next.id : undefined}
-            handleNextMessageSelect={()=>null}
+            handleNextMessageSelect={(id, type)=> {
+              if (this.nextHasChanged(this.props.item, id, type)) {
+                if (!id) {
+                  let item = Object.assign({}, this.props.item);
+                  delete item.next;
+                  this.props.handleSaveItem(item)
+                }
+                this.props.handleSaveItem({
+                  ...this.props.item,
+                  next: {id, type}
+                })
+              }
+
+            }}
           />
         </div>
       </div>

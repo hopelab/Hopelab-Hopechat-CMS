@@ -7,7 +7,6 @@ import { Button, ControlLabel, FormGroup, FormControl } from 'react-bootstrap';
 import NextMessage from '../NextMessage';
 
 import {
-  initialState,
   messageTypes,
   MESSAGE_TYPE_TEXT,
   MESSAGE_TYPE_QUESTION,

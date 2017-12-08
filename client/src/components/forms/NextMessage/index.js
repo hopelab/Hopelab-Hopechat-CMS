@@ -19,7 +19,7 @@ const getNextMessageOptionsForMessage = props => {
     <DropdownItem
       key={c.id}
       active={c.id === props.nextId}
-      onClick={() => props.handleNextMessageSelect('next', c)}
+      onClick={() => props.handleNextMessageSelect(c.id, c.type)}
     >
       {c.name}
     </DropdownItem>

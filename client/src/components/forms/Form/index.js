@@ -34,7 +34,7 @@ const propTypes = {
   childEntities: PropTypes.array.isRequired,
   onEntityAddition: PropTypes.func.isRequired,
   handleUpdateItem: PropTypes.func.isRequired,
-  handleUpdateItem2: PropTypes.func.isRequired,
+  handleSaveItem2: PropTypes.func.isRequired,
   handleUpdateChildEntity: PropTypes.func.isRequired,
   onEditEntity: PropTypes.func.isRequired,
   handleSaveItem: PropTypes.func.isRequired,
@@ -105,7 +105,10 @@ class Form extends Component {
             </FormGroup>
           ) : null}
         </div>
-
+        {/*inputProps=
+          tags: this.props.tags,
+          handleAddTag: this.props.handleAddTag
+        */}
         <div className="Row">
           {formHasField('tags', this.props.config.fields) ? (
             <div className="TagsContainer">
@@ -117,10 +120,7 @@ class Form extends Component {
                   renderInput={autocompleteRenderInput}
                   value={this.props.item.tags || []}
                   onChange={this.handleTagsInput}
-                  inputProps={{
-                    tags: this.props.tags,
-                    handleAddTag: this.props.handleAddTag
-                  }}
+
                 />
               </FormGroup>
             </div>

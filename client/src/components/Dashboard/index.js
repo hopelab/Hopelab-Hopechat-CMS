@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 
 import Form from '../forms/Form';
 import DropDownWithPlus from '../forms/DropDownWithPlus';
-import ConversationItem from '../forms/ConversationItem';
 import { Button, ButtonGroup, SplitButton, MenuItem } from 'react-bootstrap';
 
 import { entityCanBeCopied } from '../../utils/data';
@@ -29,7 +28,7 @@ const propTypes = {
   handleCopyEntity: PropTypes.func.isRequired,
   handleCopyToEntity: PropTypes.func.isRequired,
   images: PropTypes.array.isRequired,
-  tags: PropTypes.array.isRequired
+  tags: PropTypes.array
 };
 
 class DashboardHeader extends Component {
