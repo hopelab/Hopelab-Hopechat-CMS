@@ -25,6 +25,12 @@ class EditableText extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.text !== this.state.text) {
+      this.setState({text: nextProps.text});
+    }
+  }
+
   emptyText(text) {
     return (!text || /^\s*$/.test(text));
   }
