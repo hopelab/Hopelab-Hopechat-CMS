@@ -34,7 +34,6 @@ const conversationItemStyles = {
   [TYPE_MESSAGE]: {
 
   }
-
 }
 
 class ConversationItem extends Component {
@@ -52,7 +51,7 @@ class ConversationItem extends Component {
     handleSaveItem: PropTypes.func.isRequired,
     handleUpdateMessageOptions: PropTypes.func.isRequired,
     childEntities: PropTypes.array.isRequired,
-    images: PropTypes.array.isRequired
+    images: PropTypes.array.isRequired,
   }
 
   messageTypeHasContent(type) {

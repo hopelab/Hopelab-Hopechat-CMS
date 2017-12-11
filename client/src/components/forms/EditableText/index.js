@@ -36,8 +36,11 @@ class EditableText extends Component {
   }
 
   handleClickOutside(e) {
-    if (this.state.editing && e.target !== this.input) {
-      this.props.onEditWillFinish(this.state.text);
+    if (this.state.editing &&
+        e.target !== this.input) {
+      if (this.state.text !== this.props.text) {
+        this.props.onEditWillFinish(this.state.text);
+      }
       if (!this.emptyText(this.state.text)) {
         this.setState({editing: false});
       }

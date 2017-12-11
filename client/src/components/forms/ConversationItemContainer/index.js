@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ConversationItem from '../ConversationItem';
+import QuickReply from '../QuickReply';
 import {MESSAGE_TYPE_QUESTION_WITH_REPLIES} from '../../../utils/config';
 
 class ConversationItemContainer extends Component {
@@ -21,8 +22,50 @@ class ConversationItemContainer extends Component {
     images: PropTypes.array.isRequired
   }
 
+  constructor(props) {
+    super(props);
+    this.quickReplyHandleNextItemSelect =
+      this.quickReplyHandleNextItemSelect.bind(this);
+    this.quickReplyHandleChangeText =
+      this.quickReplyHandleChangeText.bind(this);
+  }
+
   messageTypeHasQuickReplies(type) {
     return type === MESSAGE_TYPE_QUESTION_WITH_REPLIES;
+  }
+
+
+
+  quickReplyHandleNextItemSelect(index, id, type) {
+    if (this.props.item.quick_replies) {
+      let quick_replies = this.props.item.quick_replies.map((qr, i) => {
+        return i === index ?
+          {
+            ...qr,
+            payload: JSON.stringify({id, type})
+          } : qr;
+      });
+      this.props.handleSaveItem({
+        ...this.props.item,
+        quick_replies
+      })
+    }
+  }
+
+  quickReplyHandleChangeText(index, title) {
+    if (this.props.item.quick_replies) {
+      let quick_replies = this.props.item.quick_replies.map((qr, i) => {
+        return i === index ?
+          {
+            ...qr,
+            title
+          } : qr;
+      });
+      this.props.handleSaveItem({
+        ...this.props.item,
+        quick_replies
+      });
+    }
   }
 
   render() {
@@ -32,7 +75,21 @@ class ConversationItemContainer extends Component {
           <ConversationItem
             {...this.props}
           />
-          {JSON.stringify(this.props.item.quick_replies)}
+          <div className="d-flex flex-row">
+            { this.props.item.quick_replies.map((qr, i) => (
+              <QuickReply
+                key={i}
+                index={i}
+                childEntities={this.props.childEntities}
+                text={qr.title}
+                nextId={JSON.parse(qr.payload || '{}').id}
+                onUpdateText={(...params) => (
+                  this.quickReplyHandleChangeText(i, ...params)
+                )}
+                onNextItemSelect={this.quickReplyHandleNextItemSelect}
+              />
+            ))}
+          </div>
         </div>
       )
     }
