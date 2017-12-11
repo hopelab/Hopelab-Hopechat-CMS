@@ -5,7 +5,7 @@ import onClickOutside from "react-onclickoutside";
 class EditableText extends Component {
   static propTypes = {
     text: PropTypes.string.isRequired,
-    onEditWillFinished: PropTypes.func,
+    onEditWillFinish: PropTypes.func,
     isTextArea: PropTypes.bool,
   }
 

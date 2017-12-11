@@ -37,6 +37,7 @@ class DashboardHeader extends Component {
     itemName: PropTypes.string.isRequired,
     itemType: PropTypes.string.isRequired,
     onNewChildEntity: PropTypes.func.isRequired,
+    onNameChanged: PropTypes.func.isRequired,
   }
 
   render() {
@@ -48,7 +49,10 @@ class DashboardHeader extends Component {
           className="d-flex flex-row justify-content-between"
           style={{flex: "1 1", whiteSpace: 'nowrap'}}
         >
-          <EditableText text={this.props.itemName} />
+          <EditableText
+            text={this.props.itemName}
+            onEditWillFinish={this.props.onNameChanged}
+          />
           <input type="text" placeholder="tags" />
           <DropDownWithPlus
             itemType={this.props.itemType}
@@ -73,6 +77,7 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.handleChildEntityAddition = this.handleChildEntityAddition.bind(this);
+    this.handleItemNameChange = this.handleItemNameChange.bind(this);
   }
 
   handleChildEntityAddition(selectedOption) {
@@ -85,6 +90,13 @@ class Dashboard extends Component {
     });
   }
 
+  handleItemNameChange(name) {
+    this.props.handleSaveItem2({
+      ...this.props.itemEditing,
+      name
+    })
+  }
+
   render() {
     const {props} = this;
     return (
@@ -95,6 +107,7 @@ class Dashboard extends Component {
               itemName={props.itemEditing.name}
               itemType={props.itemEditing.type}
               onNewChildEntity={this.handleChildEntityAddition}
+              onNameChanged={this.handleItemNameChange}
             />
             <div className="FormContainer">
               <div className="FormActionsContainer">
