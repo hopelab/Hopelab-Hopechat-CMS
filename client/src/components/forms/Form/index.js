@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './style.css';
 
 import Card from '../Card';
-import ConversationItem from '../ConversationItem';
+import ConversationItemContainer from '../ConversationItemContainer';
 import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css';
 
@@ -32,7 +32,6 @@ const propTypes = {
   }),
   config: PropTypes.object,
   childEntities: PropTypes.array.isRequired,
-  onEntityAddition: PropTypes.func.isRequired,
   handleUpdateItem: PropTypes.func.isRequired,
   handleSaveItem2: PropTypes.func.isRequired,
   handleUpdateChildEntity: PropTypes.func.isRequired,
@@ -61,16 +60,6 @@ class Form extends Component {
   componentWillReceiveProps(nextProps) {
     this.setState(createInitialFormState(nextProps));
   }
-
-  handleChildEntityAddition = () => {
-    this.props.onEntityAddition({
-      type: this.state.entityToAdd,
-      parent: {
-        type: this.props.item.type,
-        id: this.props.item.id
-      }
-    });
-  };
 
   handleTagsInput = e => {
     this.props.handleUpdateItem({
@@ -155,33 +144,10 @@ class Form extends Component {
               />
             </FormGroup>
           ) : null}
-
-          {this.props.item.type === entities.message ? (
-            <MessageOptions
-              item={this.props.item}
-              onUpdate={this.props.handleUpdateMessageOptions}
-              childEntities={this.props.childEntities}
-              images={this.props.images}
-            />
-          ) : null}
         </div>
 
         {formHasField('children', this.props.config.fields) ? (
           <div className="ChildrenContainer">
-            <div className="AddButtonWrapper">
-              <span className="Add" onClick={this.handleChildEntityAddition}>
-                +
-              </span>
-              <select
-                value={this.state.entityToAdd}
-                onChange={this.handleChildSelection}
-              >
-                {this.props.config.children.map(c => (
-                  <option key={c}>{c}</option>
-                ))}
-              </select>
-            </div>
-
             <div className="ChildGrid">
               {this.props.childEntities.map((e, i) => (
                 <div key={e.id}>
@@ -198,7 +164,7 @@ class Form extends Component {
                   }
                   images={this.props.images}
                 />
-                <ConversationItem
+                <ConversationItemContainer
 
                   item={e}
                   index={i}
