@@ -77,23 +77,6 @@ class Form extends Component {
   render() {
     return (
       <div className="Form">
-        <div className="Row">
-          {formHasField('name', this.props.config.fields) ? (
-            <FormGroup className="EntityName">
-              <ControlLabel>
-                {`${this.props.item.type} name`.toUpperCase()}
-              </ControlLabel>
-
-              <FormControl
-                type="text"
-                name="name"
-                id="name"
-                value={this.props.item.name}
-                onChange={this.props.handleUpdateItem}
-              />
-            </FormGroup>
-          ) : null}
-        </div>
         {/*inputProps=
           tags: this.props.tags,
           handleAddTag: this.props.handleAddTag
