@@ -120,8 +120,6 @@ class ConversationItem extends Component {
     }
 
     if (this.messageTypeIsImage(messageType)) {
-      console.log(item);
-      debugger;
       return (
         <div className="card-block">
           <ImageDropdown
