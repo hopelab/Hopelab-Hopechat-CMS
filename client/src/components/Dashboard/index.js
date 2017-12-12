@@ -36,14 +36,26 @@ const propTypes = {
 class DashboardHeader extends Component {
   static propTypes = {
     itemName: PropTypes.string.isRequired,
+    itemId: PropTypes.string.isRequired,
     itemType: PropTypes.string.isRequired,
     isLive: PropTypes.bool,
     onToggleLive: PropTypes.func,
     onNewChildEntity: PropTypes.func.isRequired,
     onNameChanged: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
   }
 
   render() {
+    const {
+      itemName,
+      itemId,
+      itemType,
+      onNameChanged,
+      onNewChildEntity,
+      onDelete,
+      onToggleLive,
+      isLive
+    } = this.props;
     return (
       <div
         className="card-header d-flex flex-row justify-content-between"
@@ -53,26 +65,31 @@ class DashboardHeader extends Component {
           style={{flex: "1 1", whiteSpace: 'nowrap'}}
         >
           <EditableText
-            text={this.props.itemName}
-            onEditWillFinish={this.props.onNameChanged}
+            text={itemName}
+            onEditWillFinish={onNameChanged}
           />
           <input type="text" placeholder="tags" />
           <DropDownWithPlus
-            itemType={this.props.itemType}
-            onClickPlus={this.props.onNewChildEntity}
+            itemType={itemType}
+            onClickPlus={onNewChildEntity}
           />
         </div>
         <ReactStrapForm
           className="d-flex justify-content-end"
           style={{flex: "1 0",  whiteSpace: 'nowrap'}}
+          onSubmit={e => {
+            e.preventDefault();
+            onDelete({id: itemId, type: itemType})
+          }}
         >
+          <Button className="mr-3" bsStyle="danger" type='submit'>X</Button>
           <FormGroup check>
             <Label check>
               <Input
-                onChange={this.props.onToggleLive}
+                onChange={onToggleLive}
                 className="mr-1"
                 type="checkbox"
-                defaultChecked={!!(this.props.isLive)}/>Live
+                defaultChecked={!!(isLive)}/>Live
             </Label>
           </FormGroup>
         </ReactStrapForm>
@@ -123,10 +140,12 @@ class Dashboard extends Component {
             <DashboardHeader
               itemName={props.itemEditing.name}
               itemType={props.itemEditing.type}
+              itemId={props.itemEditing.id}
               isLive={props.itemEditing.isLive}
               onToggleLive={this.handleToggleLiveConversation}
               onNewChildEntity={this.handleChildEntityAddition}
               onNameChanged={this.handleItemNameChange}
+              onDelete={props.handleDeleteItem}
             />
             <div className="FormContainer">
               <div className="FormActionsContainer">

@@ -27,7 +27,7 @@ const conversationItemStyles = {
     backgroundColor: 'rgb(82, 175, 82)'
   },
   [TYPE_SERIES]: {
-
+    backgroundColor: 'rgb(82, 175, 82)'
   },
   [TYPE_BLOCK]: {
 
