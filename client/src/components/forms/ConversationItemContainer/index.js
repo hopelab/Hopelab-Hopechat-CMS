@@ -107,7 +107,7 @@ class ConversationItemContainer extends Component {
   render() {
     if (this.messageTypeHasQuickReplies(this.props.item.messageType)) {
       return (
-        <div>
+        <div className="p-2">
           <div className="d-flex flex-row justify-content-start">
             <ConversationItem
               {...this.props}
@@ -140,6 +140,7 @@ class ConversationItemContainer extends Component {
     return (
 
       <ConversationItem
+        className="m-2"
         {...this.props}
       />
     );

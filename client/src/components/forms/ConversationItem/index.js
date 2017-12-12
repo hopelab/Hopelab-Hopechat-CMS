@@ -141,7 +141,10 @@ class ConversationItem extends Component {
 
   render() {
     return (
-      <div className="card ConversationItem" style={{width: '360px'}}>
+      <div
+        className={`card ConversationItem ${this.props.className}`}
+        style={{width: '360px'}}
+      >
         <div
           className="card-header d-flex flex-row justify-content-between"
           style={{

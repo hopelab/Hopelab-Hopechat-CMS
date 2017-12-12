@@ -6,10 +6,12 @@ import PropTypes from 'prop-types';
 import Form from '../forms/Form';
 import DropDownWithPlus from '../forms/DropDownWithPlus';
 import EditableText from '../forms/EditableText';
+import RulesDropdown from '../forms/RulesDropdown';
 import { Button, ButtonGroup, SplitButton, MenuItem } from 'react-bootstrap';
 import {Form as ReactStrapForm, FormGroup, Label, Input } from 'reactstrap';
 
 import { entityCanBeCopied } from '../../utils/data';
+import {forms, rules} from '../../utils/config';
 
 const propTypes = {
   formConfig: PropTypes.object.isRequired,
@@ -43,6 +45,18 @@ class DashboardHeader extends Component {
     onNewChildEntity: PropTypes.func.isRequired,
     onNameChanged: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
+  }
+
+  hasLive(type) {
+    return forms[type].fields.includes('live')
+  }
+
+  hasRules(type) {
+    return forms[type].fields.includes('rules');
+  }
+
+  getRules(type) {
+    return forms[type].rules;
   }
 
   render() {
@@ -83,15 +97,26 @@ class DashboardHeader extends Component {
           }}
         >
           <Button className="mr-3" bsStyle="danger" type='submit'>X</Button>
-          <FormGroup check>
-            <Label check>
-              <Input
-                onChange={onToggleLive}
-                className="mr-1"
-                type="checkbox"
-                defaultChecked={!!(isLive)}/>Live
-            </Label>
-          </FormGroup>
+          {this.hasLive(itemType) && (
+            <FormGroup check>
+              <Label check>
+                <Input
+                  onChange={onToggleLive}
+                  className="mr-1"
+                  type="checkbox"
+                  defaultChecked={!!(isLive)}/>Live
+              </Label>
+            </FormGroup>
+          )}
+          {this.hasRules(itemType) && (
+
+            <div>
+              <RulesDropdown
+                rules={this.getRules(itemType)}
+                onSelection={() => null}
+              />
+            </div>
+          )}
         </ReactStrapForm>
       </div>
     );

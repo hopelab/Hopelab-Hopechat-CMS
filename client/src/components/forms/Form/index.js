@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import './style.css';
 
 import Card from '../Card';
 import ConversationItemContainer from '../ConversationItemContainer';
@@ -73,7 +72,7 @@ class Form extends Component {
 
   render() {
     return (
-      <div className="Form">
+      <div className="d-flex flex-column align-items-start">
         {/*inputProps=
           tags: this.props.tags,
           handleAddTag: this.props.handleAddTag
@@ -111,55 +110,24 @@ class Form extends Component {
               </FormControl>
             </div>
           ) : null}
-
-          {formHasField('live', this.props.config.fields) ? (
-            <FormGroup className="LiveContainer">
-              <ControlLabel>Live?</ControlLabel>
-              <Checkbox
-                id="isLive"
-                name="isLive"
-                type="checkbox"
-                checked={this.props.item.isLive}
-                onChange={this.props.handleUpdateItem}
-              />
-            </FormGroup>
-          ) : null}
         </div>
 
         {formHasField('children', this.props.config.fields) ? (
-          <div className="ChildrenContainer">
-            <div className="ChildGrid">
-              {this.props.childEntities.map((e, i) => (
-                <div key={e.id}>
-                <Card
-
-                  item={e}
-                  index={i}
-                  childEntities={this.props.childEntities}
-                  onUpdate={this.props.handleUpdateChildEntity}
-                  onEditEntity={this.props.onEditEntity}
-                  handleSaveItem={this.props.handleSaveItem}
-                  handleUpdateMessageOptions={
-                    this.props.handleUpdateMessageOptions
-                  }
-                  images={this.props.images}
-                />
-                <ConversationItemContainer
-
-                  item={e}
-                  index={i}
-                  childEntities={this.props.childEntities}
-                  onUpdate={this.props.handleUpdateChildEntity}
-                  onEditEntity={this.props.onEditEntity}
-                  handleSaveItem={this.props.handleSaveItem2}
-                  handleUpdateMessageOptions={
-                    this.props.handleUpdateMessageOptions
-                  }
-                  images={this.props.images}
-                /></div>
-              ))}
-            </div>
-          </div>
+            this.props.childEntities.map((e, i) => (
+              <ConversationItemContainer
+                key={e.id}
+                item={e}
+                index={i}
+                childEntities={this.props.childEntities}
+                onUpdate={this.props.handleUpdateChildEntity}
+                onEditEntity={this.props.onEditEntity}
+                handleSaveItem={this.props.handleSaveItem2}
+                handleUpdateMessageOptions={
+                  this.props.handleUpdateMessageOptions
+                }
+                images={this.props.images}
+              />
+            ))
         ) : null}
       </div>
     );
