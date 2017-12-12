@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import EditableText from '../EditableText';
 import NextMessage from '../NextMessage';
+import ImageDropdown from '../ImageDropdown';
 import {
   messageTypes,
   TYPE_CONVERSATION,
@@ -12,9 +13,9 @@ import {
   MESSAGE_TYPE_QUESTION,
   MESSAGE_TYPE_QUESTION_WITH_REPLIES,
   MESSAGE_TYPE_TEXT,
-/*  MESSAGE_TYPE_ANSWER,
+  //MESSAGE_TYPE_ANSWER,
   MESSAGE_TYPE_IMAGE,
-  MESSAGE_TYPE_VIDEO*/
+  MESSAGE_TYPE_VIDEO
 } from '../../../utils/config';
 import './style.css';
 
@@ -58,7 +59,15 @@ class ConversationItem extends Component {
     return (
       type === MESSAGE_TYPE_TEXT ||
       type === MESSAGE_TYPE_QUESTION ||
-      type === MESSAGE_TYPE_QUESTION_WITH_REPLIES
+      type === MESSAGE_TYPE_QUESTION_WITH_REPLIES ||
+      type === MESSAGE_TYPE_VIDEO
+    );
+  }
+
+  messageTypeHasUrl(type) {
+    return (
+      type === MESSAGE_TYPE_VIDEO ||
+      type === MESSAGE_TYPE_IMAGE
     );
   }
 
@@ -66,10 +75,68 @@ class ConversationItem extends Component {
     return type === MESSAGE_TYPE_QUESTION_WITH_REPLIES;
   }
 
+  messageTypeIsImage(type) {
+    return type === MESSAGE_TYPE_IMAGE;
+  }
+
   nextHasChanged(item, id, type) {
     if (id === undefined && !item.next) { return false; }
     if (!item.next) { return true; }
     return item.next.id !== id || item.next.type !== type;
+  }
+
+
+
+  renderItemContent(item) {
+    if (this.messageTypeHasContent(this.props.item.messageType)) {
+      let {messageType, url} = this.props.item;
+      let editableText = this.messageTypeHasUrl(messageType) ?
+        url : this.props.item.text;
+
+      return (
+        <div className="card-block">
+          <p className="card-text">
+            <EditableText
+              text={editableText || ''}
+              isTextArea={true}
+              onEditWillFinish={text => {
+                let item = this.messageTypeHasUrl(this.props.item.messageType) ? {
+                  ...this.props.item,
+                  url: text
+                } : {
+                  ...this.props.item,
+                  text
+                }
+                if (this.props.item.text !== text) {
+                  this.props.handleSaveItem(item);
+                }
+              }}
+            />
+          </p>
+        </div>
+      );
+    }
+
+    if (this.messageTypeIsImage(this.props.item.messageType)) {
+      return (
+        <div className="card-block">
+          <ImageDropdown
+            selectedUrl={this.props.item.url}
+            images={this.props.images}
+            onSelection={url => {
+              let item = {
+                ...this.props.item,
+                url
+              };
+              if (!url) {
+                delete item.url;
+              }
+              this.props.handleSaveItem(item);
+            }}
+          />
+        </div>
+      );
+    }
   }
 
   render() {
@@ -106,44 +173,29 @@ class ConversationItem extends Component {
             </select>
           )}
         </div>
-        { this.messageTypeHasContent(this.props.item.messageType) && (
-          <div className="card-block">
-            <p className="card-text">
-              <EditableText
-                text={this.props.item.text || ''}
-                isTextArea={true}
-                onEditWillFinish={text => {
-                  if (this.props.item.text !== text) {
-                    this.props.handleSaveItem({
-                      ...this.props.item,
-                      text
-                    });
+        {this.renderItemContent(this.props.item)}
+        {(!this.messageTypeHasQuickReplies(this.props.item.messageType)) && (
+          <div className="card-footer">
+            <NextMessage
+              childEntities={this.props.childEntities}
+              nextId={this.props.item.next ? this.props.item.next.id : undefined}
+              handleNextMessageSelect={(id, type)=> {
+                if (this.nextHasChanged(this.props.item, id, type)) {
+                  if (!id) {
+                    let item = Object.assign({}, this.props.item);
+                    delete item.next;
+                    this.props.handleSaveItem(item)
                   }
-                }}
-              />
-            </p>
+                  this.props.handleSaveItem({
+                    ...this.props.item,
+                    next: {id, type}
+                  })
+                }
+
+              }}
+            />
           </div>
         )}
-        <div className="card-footer">
-          <NextMessage
-            childEntities={this.props.childEntities}
-            nextId={this.props.item.next ? this.props.item.next.id : undefined}
-            handleNextMessageSelect={(id, type)=> {
-              if (this.nextHasChanged(this.props.item, id, type)) {
-                if (!id) {
-                  let item = Object.assign({}, this.props.item);
-                  delete item.next;
-                  this.props.handleSaveItem(item)
-                }
-                this.props.handleSaveItem({
-                  ...this.props.item,
-                  next: {id, type}
-                })
-              }
-
-            }}
-          />
-        </div>
       </div>
     );
   }

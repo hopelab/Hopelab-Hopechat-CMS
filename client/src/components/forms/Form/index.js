@@ -18,10 +18,7 @@ import {
   Checkbox
 } from 'react-bootstrap';
 
-import MessageOptions from '../MessageOptions';
-
 import { createInitialFormState } from '../../../utils/data';
-import { entities } from '../../../utils/config';
 
 const propTypes = {
   item: PropTypes.shape({
