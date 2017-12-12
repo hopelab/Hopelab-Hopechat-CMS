@@ -41,9 +41,11 @@ class DashboardHeader extends Component {
     itemId: PropTypes.string.isRequired,
     itemType: PropTypes.string.isRequired,
     isLive: PropTypes.bool,
+    rule: PropTypes.string,
     onToggleLive: PropTypes.func,
     onNewChildEntity: PropTypes.func.isRequired,
     onNameChanged: PropTypes.func.isRequired,
+    onRuleChanged: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
   }
 
@@ -65,10 +67,12 @@ class DashboardHeader extends Component {
       itemId,
       itemType,
       onNameChanged,
+      onRuleChanged,
       onNewChildEntity,
       onDelete,
       onToggleLive,
-      isLive
+      isLive,
+      rule
     } = this.props;
     return (
       <div
@@ -109,11 +113,11 @@ class DashboardHeader extends Component {
             </FormGroup>
           )}
           {this.hasRules(itemType) && (
-
             <div>
               <RulesDropdown
                 rules={this.getRules(itemType)}
-                onSelection={() => null}
+                selected={rule}
+                onSelection={onRuleChanged}
               />
             </div>
           )}
@@ -129,7 +133,9 @@ class Dashboard extends Component {
     super(props);
     this.handleChildEntityAddition = this.handleChildEntityAddition.bind(this);
     this.handleItemNameChange = this.handleItemNameChange.bind(this);
-    this.handleToggleLiveConversation = this.handleToggleLiveConversation.bind(this);
+    this.handleToggleLiveConversation =
+      this.handleToggleLiveConversation.bind(this);
+    this.handleRuleChanged = this.handleRuleChanged.bind(this);
   }
 
   handleChildEntityAddition(selectedOption) {
@@ -156,6 +162,13 @@ class Dashboard extends Component {
     })
   }
 
+  handleRuleChanged(rule) {
+    this.props.handleSaveItem2({
+      ...this.props.itemEditing,
+      rule
+    })
+  }
+
   render() {
     const {props} = this;
     return (
@@ -167,9 +180,11 @@ class Dashboard extends Component {
               itemType={props.itemEditing.type}
               itemId={props.itemEditing.id}
               isLive={props.itemEditing.isLive}
+              rule={props.itemEditing.rule}
               onToggleLive={this.handleToggleLiveConversation}
               onNewChildEntity={this.handleChildEntityAddition}
               onNameChanged={this.handleItemNameChange}
+              onRuleChanged={this.handleRuleChanged}
               onDelete={props.handleDeleteItem}
             />
             <div className="FormContainer">

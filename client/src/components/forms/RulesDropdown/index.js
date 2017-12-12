@@ -34,7 +34,7 @@ class RulesDropdown extends Component {
         <DropdownItem
           key={r}
           active={selected === r}
-          onClick={() => {onSelection(r)}}
+          onClick={() => onSelection(r)}
         >
           {r}
         </DropdownItem>
