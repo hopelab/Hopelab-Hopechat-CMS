@@ -7,6 +7,7 @@ import Form from '../forms/Form';
 import DropDownWithPlus from '../forms/DropDownWithPlus';
 import EditableText from '../forms/EditableText';
 import { Button, ButtonGroup, SplitButton, MenuItem } from 'react-bootstrap';
+import {Form as ReactStrapForm, FormGroup, Label, Input } from 'reactstrap';
 
 import { entityCanBeCopied } from '../../utils/data';
 
@@ -36,6 +37,8 @@ class DashboardHeader extends Component {
   static propTypes = {
     itemName: PropTypes.string.isRequired,
     itemType: PropTypes.string.isRequired,
+    isLive: PropTypes.bool,
+    onToggleLive: PropTypes.func,
     onNewChildEntity: PropTypes.func.isRequired,
     onNameChanged: PropTypes.func.isRequired,
   }
@@ -59,14 +62,20 @@ class DashboardHeader extends Component {
             onClickPlus={this.props.onNewChildEntity}
           />
         </div>
-        <form
+        <ReactStrapForm
           className="d-flex justify-content-end"
           style={{flex: "1 0",  whiteSpace: 'nowrap'}}
         >
-          <label>
-            <input className="mr-1" type="checkbox" />Live
-          </label>
-        </form>
+          <FormGroup check>
+            <Label check>
+              <Input
+                onChange={this.props.onToggleLive}
+                className="mr-1"
+                type="checkbox"
+                defaultChecked={!!(this.props.isLive)}/>Live
+            </Label>
+          </FormGroup>
+        </ReactStrapForm>
       </div>
     );
   }
@@ -78,6 +87,7 @@ class Dashboard extends Component {
     super(props);
     this.handleChildEntityAddition = this.handleChildEntityAddition.bind(this);
     this.handleItemNameChange = this.handleItemNameChange.bind(this);
+    this.handleToggleLiveConversation = this.handleToggleLiveConversation.bind(this);
   }
 
   handleChildEntityAddition(selectedOption) {
@@ -97,6 +107,13 @@ class Dashboard extends Component {
     })
   }
 
+  handleToggleLiveConversation() {
+    this.props.handleSaveItem2({
+      ...this.props.itemEditing,
+      isLive: !this.props.itemEditing.isLive
+    })
+  }
+
   render() {
     const {props} = this;
     return (
@@ -106,6 +123,8 @@ class Dashboard extends Component {
             <DashboardHeader
               itemName={props.itemEditing.name}
               itemType={props.itemEditing.type}
+              isLive={props.itemEditing.isLive}
+              onToggleLive={this.handleToggleLiveConversation}
               onNewChildEntity={this.handleChildEntityAddition}
               onNameChanged={this.handleItemNameChange}
             />
