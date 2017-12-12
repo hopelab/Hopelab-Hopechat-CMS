@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import EditableText from '../EditableText';
 import NextMessage from '../NextMessage';
 import ImageDropdown from '../ImageDropdown';
+import MediaPreview, {isEmbedable} from '../MediaPreview';
 import {
   messageTypes,
   TYPE_CONVERSATION,
@@ -85,11 +86,9 @@ class ConversationItem extends Component {
     return item.next.id !== id || item.next.type !== type;
   }
 
-
-
   renderItemContent(item) {
-    if (this.messageTypeHasContent(this.props.item.messageType)) {
-      let {messageType, url} = this.props.item;
+    let {messageType, url} = item;
+    if (this.messageTypeHasContent(messageType)) {
       let editableText = this.messageTypeHasUrl(messageType) ?
         url : this.props.item.text;
 
@@ -100,40 +99,48 @@ class ConversationItem extends Component {
               text={editableText || ''}
               isTextArea={true}
               onEditWillFinish={text => {
-                let item = this.messageTypeHasUrl(this.props.item.messageType) ? {
-                  ...this.props.item,
+                let newItem = this.messageTypeHasUrl(messageType) ? {
+                  ...item,
                   url: text
                 } : {
-                  ...this.props.item,
+                  ...item,
                   text
                 }
-                if (this.props.item.text !== text) {
-                  this.props.handleSaveItem(item);
+                if (item.text !== text) {
+                  this.props.handleSaveItem(newItem);
                 }
               }}
             />
+            {this.messageTypeHasUrl(messageType) && isEmbedable(url) && (
+              <MediaPreview url={url} />
+            )}
           </p>
         </div>
       );
     }
 
-    if (this.messageTypeIsImage(this.props.item.messageType)) {
+    if (this.messageTypeIsImage(messageType)) {
+      console.log(item);
+      debugger;
       return (
         <div className="card-block">
           <ImageDropdown
-            selectedUrl={this.props.item.url}
+            selectedUrl={url}
             images={this.props.images}
             onSelection={url => {
-              let item = {
-                ...this.props.item,
+              let newItem = {
+                ...item,
                 url
               };
               if (!url) {
-                delete item.url;
+                delete newItem.url;
               }
-              this.props.handleSaveItem(item);
+              this.props.handleSaveItem(newItem);
             }}
           />
+          {this.messageTypeHasUrl(messageType) && url && (
+            <MediaPreview url={url} />
+          )}
         </div>
       );
     }
