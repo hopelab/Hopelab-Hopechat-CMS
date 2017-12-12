@@ -10,6 +10,7 @@ class QuickReply extends Component {
     text: PropTypes.string.isRequired,
     onNextItemSelect: PropTypes.func.isRequired,
     onUpdateText: PropTypes.func.isRequired,
+    onDeleteReply: PropTypes.func.isRequired,
     childEntities: PropTypes.array.isRequired,
   }
 
@@ -28,6 +29,10 @@ class QuickReply extends Component {
             text={this.props.text}
             onEditWillFinish={this.props.onUpdateText}
           />
+          <button
+            style={{border: 'none', background: 'none', cursor: 'pointer'}}
+            onClick={this.props.onDeleteReply}
+          >X</button>
         </div>
         <div className="card-footer">
           <NextMessage

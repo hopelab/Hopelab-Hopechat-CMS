@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ConversationItem from '../ConversationItem';
 import QuickReply from '../QuickReply';
-import {MESSAGE_TYPE_QUESTION_WITH_REPLIES} from '../../../utils/config';
+import {
+  MESSAGE_TYPE_QUESTION_WITH_REPLIES,
+  MESSAGE_TYPE_TEXT,
+} from '../../../utils/config';
 
 class ConversationItemContainer extends Component {
   static propTypes = {
@@ -28,6 +31,7 @@ class ConversationItemContainer extends Component {
       this.quickReplyHandleNextItemSelect.bind(this);
     this.quickReplyHandleChangeText =
       this.quickReplyHandleChangeText.bind(this);
+    this.quickReplyHandleAdd = this.quickReplyHandleAdd.bind(this);
   }
 
   messageTypeHasQuickReplies(type) {
@@ -68,13 +72,51 @@ class ConversationItemContainer extends Component {
     }
   }
 
+  quickReplyHandleDelete(index) {
+    if (this.props.item.quick_replies) {
+      let quick_replies = this.props.item.quick_replies.filter((qr, i) => (
+        i !== index
+      ));
+
+      this.props.handleSaveItem({
+        ...this.props.item,
+        quick_replies
+      });
+    }
+  }
+
+  quickReplyHandleAdd() {
+    let quick_replies = [];
+    const newReply = {
+      content_type: MESSAGE_TYPE_TEXT,
+      title: ''
+    };
+
+    if (this.props.item.quick_replies) {
+      quick_replies = [...this.props.item.quick_replies, newReply];
+    } else {
+      quick_replies = [newReply];
+    }
+
+    this.props.handleSaveItem({
+      ...this.props.item,
+      quick_replies
+    });
+  };
+
   render() {
     if (this.messageTypeHasQuickReplies(this.props.item.messageType)) {
       return (
         <div>
-          <ConversationItem
-            {...this.props}
-          />
+          <div className="d-flex flex-row justify-content-start">
+            <ConversationItem
+              {...this.props}
+            />
+            <button
+              onClick={this.quickReplyHandleAdd}
+              style={{fontSize: '1.5em'}}
+            >+</button>
+          </div>
           <div className="d-flex flex-row">
             { this.props.item.quick_replies.map((qr, i) => (
               <QuickReply
@@ -86,6 +128,7 @@ class ConversationItemContainer extends Component {
                 onUpdateText={(...params) => (
                   this.quickReplyHandleChangeText(i, ...params)
                 )}
+                onDeleteReply={() => this.quickReplyHandleDelete(i)}
                 onNextItemSelect={this.quickReplyHandleNextItemSelect}
               />
             ))}
