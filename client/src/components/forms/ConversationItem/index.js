@@ -161,7 +161,17 @@ class ConversationItem extends Component {
             }}
           />
           {this.props.item.messageType && (
-            <select defaultValue={this.props.item.messageType}>
+            <select
+              defaultValue={this.props.item.messageType}
+              onChange={e => {
+                if (e.target.value !== this.props.item.messageType) {
+                  this.props.handleSaveItem({
+                    ...this.props.item,
+                    messageType: e.target.value
+                  })
+                }
+              }}
+            >
               {messageTypes.map(mt => (
                 <option
                   key={mt.id}

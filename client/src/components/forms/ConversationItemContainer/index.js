@@ -118,7 +118,8 @@ class ConversationItemContainer extends Component {
             >+</button>
           </div>
           <div className="d-flex flex-row">
-            { this.props.item.quick_replies.map((qr, i) => (
+            { this.props.item.quick_replies &&
+              this.props.item.quick_replies.map((qr, i) => (
               <QuickReply
                 key={i}
                 index={i}
