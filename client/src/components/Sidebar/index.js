@@ -9,7 +9,6 @@ import { entities } from '../../utils/config';
 import treeTheme from '../../utils/treeTheme';
 
 const propTypes = {
-  addImage: PropTypes.func.isRequired,
   addConversation: PropTypes.func.isRequired,
   [entities.conversation]: PropTypes.array,
   treeData: PropTypes.object.isRequired,

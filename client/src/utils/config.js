@@ -154,6 +154,7 @@ const initialState = {
     entitiesCanCopyTo: [],
     treeData: {},
     cursor: {},
+    mediaUpload: {showModal: false, status: ''},
     showImageModal: false,
     imageUploadStatus: ''
   },

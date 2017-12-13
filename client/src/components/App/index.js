@@ -3,9 +3,6 @@ import './style.css';
 
 import Sidebar from '../Sidebar';
 import Dashboard from '../Dashboard';
-
-import Dropzone from 'react-dropzone';
-import { ControlLabel, Modal } from 'react-bootstrap';
 import UploadModal from '../UploadModal';
 
 import * as dataUtil from '../../utils/data';
@@ -94,7 +91,10 @@ class App extends Component {
         this.setState({
           image: this.state.image.concat(res),
           imageUploadStatus: 'success',
-          showImageModal: false
+          mediaUpload: {
+            ...this.state.mediaUpload,
+            showModal: false
+          }
         });
 
         this.resetActionMessage('imageUploadStatus', 4000);
@@ -488,35 +488,30 @@ class App extends Component {
     return (
       <div className="App row">
         <UploadModal
-          isOpen={false}
-          onHide={() => null}
-          onUpload={() => null}
+          isOpen={this.state.mediaUpload.showModal}
+          onHide={() => this.setState({
+            mediaUpload: {
+              ...this.state.mediaUpload,
+              showModal: false,
+            }
+          })}
+          onUpload={this.addImage}
         />
-        <Modal
-          show={this.state.showImageModal}
-          onHide={this.toggleImageModal}
-          dialogClassName="custom-modal"
-        >
-          <span className={`alert ${this.state.imageUploadStatus}`}>
-            {`image upload ${this.state.imageUploadStatus}`.toUpperCase()}
-          </span>
-
-          <ControlLabel>Drag and Drop Image Below To Upload</ControlLabel>
-          <Dropzone
-            accept="image/jpeg, image/png"
-            onDrop={this.addImage}
-            className={`custom-dropzone ${this.state.imageUploadStatus}`}
-          />
-        </Modal>
 
         <Sidebar
-          addImage={this.addImage}
           addConversation={this.addConversation}
           conversation={this.state.conversation}
           treeData={this.state.treeData}
           handleTreeToggle={this.handleTreeToggle}
           itemEditing={this.state.itemEditing}
-          toggleImageModal={this.toggleImageModal}
+          toggleImageModal={() => {
+            this.setState({
+              mediaUpload: {
+                ...this.state.mediaUpload,
+                showModal: !this.state.mediaUpload.showModal
+              }
+            })
+          }}
         />
 
         <Dashboard
