@@ -3,7 +3,7 @@ import { entities, entitiesForCopy, http, forms } from './config';
 
 /**
  * Bootstrap
- * 
+ *
  * Perform any necessary bootstrapping before initial render
 */
 export function bootstrap() {
@@ -15,7 +15,7 @@ export function bootstrap() {
 
 /**
  * POST Fetch Method
- * 
+ *
  * @param {String} route
  * @param {Object} data
  * @returns {Promise}
@@ -33,7 +33,7 @@ export function post(route, data) {
 
 /**
  * Create Initial Entities State Data Structure
- * 
+ *
  * @param {Array} data
  * @returns {Object}
 */
@@ -51,7 +51,7 @@ export function createInitialEntityState(data) {
 
 /**
  * Create Initial Form Data Structure
- * 
+ *
  * @param {Object} props
  * @returns {Object}
 */
@@ -64,7 +64,7 @@ export function createInitialFormState(props) {
 
 /**
  * Make a copy of an item, removing certain keys
- * 
+ *
  * @param {Object} data
  * @param {Array} keys
  * @returns {Object}
@@ -76,7 +76,7 @@ export function makeCopyAndRemoveKeys(data, keys) {
 
 /**
  * Determine if a given entity can be copied
- * 
+ *
  * @param {String} entity
  * @returns {bool}
 */
@@ -86,7 +86,7 @@ export function entityCanBeCopied(entity) {
 
 /**
  * Get all entity id's that can be copied to
- * 
+ *
  * @param {String} entity
  * @param {Object} appState
  * @returns {bool}
@@ -103,7 +103,7 @@ export function getEntitiesCanCopyTo(entity, appState) {
 
 /**
  * Throw for empty data array
- * 
+ *
  * @param {Array} data
  * @throws data length error
  * @returns {Array}
@@ -118,7 +118,7 @@ export function throwIfEmptyArray(data) {
 
 /**
  * Construct the next UI state for Entity Data
- * 
+ *
  * @param {String} type
  * @returns {Object}
 */
@@ -127,7 +127,7 @@ export const constructEntityState = type => nextState =>
 
 /**
  * Fetch All Data For App
- * 
+ *
  * @param {Object} route
  * @returns {Promise}
 */
@@ -157,7 +157,7 @@ export function fetchAllDataForApp(routes) {
 
 /**
  * Construct POST calls to save child entities
- * 
+ *
  * @param {Object} route
  * @returns {Promise}
 */
@@ -171,7 +171,7 @@ export function getPostRoutesForChildEntities(entities, routes) {
 
 /**
  * Construct Child Entities For Given Entity
- * 
+ *
  * @param {Object} item
  * @param {Object} entities
  * @returns {Array}
@@ -193,7 +193,7 @@ export function getChildEntitiesFor(item, entities) {
 
 /**
  * Construct Child Entities For Given Entity
- * 
+ *
  * @param {Object} tag
  * @param {Array} tags
  * @returns {Boolean}
@@ -204,7 +204,7 @@ export function tagExists(tag, tags) {
 
 /**
  * Create Tree View Data Structure for UI
- * 
+ *
  * @param {String} active
  * @param {Object} data
  * @param {Object} entities

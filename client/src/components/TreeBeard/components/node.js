@@ -5,8 +5,8 @@ import { VelocityTransitionGroup } from 'velocity-react';
 import NodeHeader from './header';
 
 class TreeNode extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.onClick = this.onClick.bind(this);
   }

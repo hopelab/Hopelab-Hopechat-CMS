@@ -8,8 +8,6 @@ export default {
       width: '100%',
       fontFamily: 'lucida grande ,tahoma,verdana,arial,sans-serif',
       fontSize: '14px',
-      border: '1px solid #333',
-      borderRadius: 5
     },
     node: {
       base: {

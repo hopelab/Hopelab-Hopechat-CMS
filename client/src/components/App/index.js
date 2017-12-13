@@ -3,19 +3,17 @@ import './style.css';
 
 import Sidebar from '../Sidebar';
 import Dashboard from '../Dashboard';
-
-import Dropzone from 'react-dropzone';
-import { ControlLabel, Modal } from 'react-bootstrap';
+import UploadModal from '../UploadModal';
 
 import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
-
-import { concat, mergeWith } from 'ramda';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = config.initialState.App;
+    this.handleSaveItem2 = this.handleSaveItem2.bind(this);
+    this.updateTreeStructure2 = this.updateTreeStructure2.bind(this);
   }
 
   componentDidMount() {
@@ -93,7 +91,10 @@ class App extends Component {
         this.setState({
           image: this.state.image.concat(res),
           imageUploadStatus: 'success',
-          showImageModal: false
+          mediaUpload: {
+            ...this.state.mediaUpload,
+            showModal: false
+          }
         });
 
         this.resetActionMessage('imageUploadStatus', 4000);
@@ -150,7 +151,7 @@ class App extends Component {
     return entity;
   };
 
-  handleNewChildEntity = entity => {
+  handleNewChildEntity = (entity, callback) => {
     dataUtil
       .post(config.routes[entity.type].create, this.markPosition(entity))
       .then(res => res.json())
@@ -171,7 +172,7 @@ class App extends Component {
                 this.state.itemEditing,
                 this.state
               )
-            });
+            }, () => !!(callback) && callback(res[res.length - 1]));
           }
         );
       })
@@ -204,6 +205,87 @@ class App extends Component {
       )
     });
   };
+
+  handleUploadMessage(res, uploadItem, callback) {
+    let items;
+    let newRes;
+    if (!uploadItem.id) {
+      throw new Error('Handle the create new case!');
+    } else {
+      items = this.state[res.type].map(i => {
+        if (i.id === res.id) {
+          newRes = {
+            ...i,
+            ...res
+          };
+          if (i.next && !uploadItem.next) { delete newRes.next; }
+          return newRes;
+        } else {
+          return i;
+        }
+      });
+    }
+    let childEntities =  this.state.childEntities.map(c => (
+      c.id === newRes.id ? newRes : c
+    ));
+    this.setState(
+      {
+        [res.type]: items,
+        childEntities
+      },
+      () => this.updateTreeStructure2(newRes, callback)
+    )
+  }
+
+  handleUploadNonMessage(res, uploadItem, callback) {
+    let childEntities =  this.state.childEntities.map(c => {
+      let found = res.find(r => c.id === r.id);
+      return found ? found : c;
+    });
+    this.setState(
+      {
+        [uploadItem.type]: res,
+        childEntities
+      },
+      () => this.updateTreeStructure2(uploadItem, callback)
+    );
+  }
+
+  handleSaveItem2(item, callback) {
+    const route = item.id ? config.operations.update : config.operations.create;
+    dataUtil
+      .post(
+        config.routes[item.type][route],
+        dataUtil.makeCopyAndRemoveKeys(item, config.keysToRemove)
+      )
+      .then(res => res.json())
+      .then(res => {
+        if (Array.isArray(res)) {
+          this.handleUploadNonMessage(res, item, callback);
+        } else {
+          this.handleUploadMessage(res, item, callback);
+        }
+      })
+      .catch(console.error);
+  }
+
+  updateTreeStructure2(item, callback) {
+    this.setState({
+      treeData: dataUtil.createTreeView({
+        data: { ...this.state },
+        entities: config.entities,
+        active: (item || {}).id
+      })/*,
+      childEntities: dataUtil.getChildEntitiesFor(
+        item,
+        this.state
+      ),/*
+      entitiesCanCopyTo: dataUtil.getEntitiesCanCopyTo(
+        item,
+        this.state
+      )*/
+    }, () => !!(callback) && callback(item));
+  }
 
   handleSaveItem = ({ item, reset, switchTo }) => {
     const route = item.id ? config.operations.update : config.operations.create;
@@ -402,35 +484,34 @@ class App extends Component {
       parent
     });
   };
-
   render() {
     return (
-      <div className="App">
-        <Modal
-          show={this.state.showImageModal}
-          onHide={this.toggleImageModal}
-          dialogClassName="custom-modal"
-        >
-          <span className={`alert ${this.state.imageUploadStatus}`}>
-            {`image upload ${this.state.imageUploadStatus}`.toUpperCase()}
-          </span>
-
-          <ControlLabel>Drag and Drop Image Below To Upload</ControlLabel>
-          <Dropzone
-            accept="image/jpeg, image/png"
-            onDrop={this.addImage}
-            className={`custom-dropzone ${this.state.imageUploadStatus}`}
-          />
-        </Modal>
+      <div className="App row">
+        <UploadModal
+          isOpen={this.state.mediaUpload.showModal}
+          onHide={() => this.setState({
+            mediaUpload: {
+              ...this.state.mediaUpload,
+              showModal: false,
+            }
+          })}
+          onUpload={this.addImage}
+        />
 
         <Sidebar
-          addImage={this.addImage}
           addConversation={this.addConversation}
           conversation={this.state.conversation}
           treeData={this.state.treeData}
           handleTreeToggle={this.handleTreeToggle}
           itemEditing={this.state.itemEditing}
-          toggleImageModal={this.toggleImageModal}
+          toggleImageModal={() => {
+            this.setState({
+              mediaUpload: {
+                ...this.state.mediaUpload,
+                showModal: !this.state.mediaUpload.showModal
+              }
+            })
+          }}
         />
 
         <Dashboard
@@ -438,6 +519,7 @@ class App extends Component {
           handleClose={this.handleDashboardClose}
           handleUpdateItem={this.handleUpdatingItem}
           handleSaveItem={this.handleSaveItem}
+          handleSaveItem2={this.handleSaveItem2}
           handleDeleteItem={this.handleDeleteItem}
           handleNewChildEntity={this.handleNewChildEntity}
           handleUpdateChildEntity={this.handleUpdateChildEntity}

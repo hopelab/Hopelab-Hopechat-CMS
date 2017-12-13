@@ -19,7 +19,11 @@ class TreeBeard extends React.Component {
 
     // Support Multiple Root Nodes. Its not formally a tree, but its a use-case.
     if (!Array.isArray(data)) {
-      data = [data];
+      if (data.name === 'hopelab') {
+        data = data.children
+      } else {
+        data = [data];
+      }
     }
     return (
       <ul style={style.tree.base} ref={ref => (this.treeBaseRef = ref)}>

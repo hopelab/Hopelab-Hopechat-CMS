@@ -19,7 +19,7 @@ const {
   TYPE_COLLECTION,
   TYPE_SERIES,
   TYPE_BLOCK,
-  TYPE_QUESTION_WITH_REPLIES,
+  MESSAGE_TYPE_QUESTION_WITH_REPLIES,
   DEFAULT_NAME
 } = require('../constants');
 
@@ -94,7 +94,7 @@ function createChainedItemsList(entityOldNew) {
         });
       }
 
-      if (newItem.messageType === TYPE_QUESTION_WITH_REPLIES) {
+      if (newItem.messageType === MESSAGE_TYPE_QUESTION_WITH_REPLIES) {
         if (
           newItem.quick_replies.find(
             qr => JSON.parse(qr.payload).id === oldItem.id

@@ -1,17 +1,24 @@
-import React from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import './style.css';
+//import './style.css';
+
 
 import Form from '../forms/Form';
+import DropDownWithPlus from '../forms/DropDownWithPlus';
+import EditableText from '../forms/EditableText';
+import RulesDropdown from '../forms/RulesDropdown';
 import { Button, ButtonGroup, SplitButton, MenuItem } from 'react-bootstrap';
+import {Form as ReactStrapForm, FormGroup, Label, Input } from 'reactstrap';
 
 import { entityCanBeCopied } from '../../utils/data';
+import {forms} from '../../utils/config';
 
 const propTypes = {
   formConfig: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
   handleUpdateItem: PropTypes.func.isRequired,
   handleSaveItem: PropTypes.func.isRequired,
+  handleSaveItem2: PropTypes.func,
   handleDeleteItem: PropTypes.func.isRequired,
   handleNewChildEntity: PropTypes.func.isRequired,
   handleUpdateChildEntity: PropTypes.func.isRequired,
@@ -25,80 +32,231 @@ const propTypes = {
   handleCopyEntity: PropTypes.func.isRequired,
   handleCopyToEntity: PropTypes.func.isRequired,
   images: PropTypes.array.isRequired,
-  tags: PropTypes.array.isRequired
+  tags: PropTypes.array
 };
 
-const Dashboard = props => (
-  <div className="Dashboard">
-    {props.itemEditing !== null && (
-      <div className="Inner">
-        <div className="FormContainer">
-          <div className="FormActionsContainer">
-            {props.itemEditing.type === 'conversation' ? (
-              <Button bsStyle="primary" onClick={props.handleCopyEntity}>
-                Copy
-              </Button>
-            ) : null}
+class DashboardHeader extends Component {
+  static propTypes = {
+    itemName: PropTypes.string.isRequired,
+    itemId: PropTypes.string.isRequired,
+    itemType: PropTypes.string.isRequired,
+    isLive: PropTypes.bool,
+    rule: PropTypes.string,
+    onToggleLive: PropTypes.func,
+    onNewChildEntity: PropTypes.func.isRequired,
+    onNameChanged: PropTypes.func.isRequired,
+    onRuleChanged: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
+  }
 
-            {entityCanBeCopied(props.itemEditing.type) && (
-              <ButtonGroup>
-                <SplitButton
-                  bsStyle="primary"
-                  title="Copy To"
-                  id="bg-nested-dropdown"
-                  onSelect={props.handleCopyToEntity}
-                >
-                  {props.entitiesCanCopyTo.map((e, i) => (
-                    <MenuItem key={i} eventKey={e}>
-                      {e.name}
-                    </MenuItem>
-                  ))}
-                </SplitButton>
-              </ButtonGroup>
-            )}
-            <Button bsStyle="default" onClick={props.handleClose}>
-              Close
-            </Button>
+  hasLive(type) {
+    return forms[type].fields.includes('live')
+  }
 
-            <Button
-              bsStyle="danger"
-              onClick={() =>
-                props.handleDeleteItem({
-                  type: props.itemEditing.type,
-                  id: props.itemEditing.id
-                })}
-              disabled={props.itemEditing.id === 'intro-conversation'}
-            >
-              Delete
-            </Button>
+  hasRules(type) {
+    return forms[type].fields.includes('rules');
+  }
 
-            <Button
-              bsStyle="success"
-              onClick={() => props.handleSaveItem({ item: props.itemEditing })}
-              disabled={!props.itemHasBeenEdited}
-            >
-              Save
-            </Button>
-          </div>
-          <Form
-            item={props.itemEditing}
-            config={props.formConfig[props.itemEditing.type]}
-            handleUpdateItem={props.handleUpdateItem}
-            handleUpdateMessageOptions={props.handleUpdateMessageOptions}
-            onEntityAddition={props.handleNewChildEntity}
-            handleUpdateChildEntity={props.handleUpdateChildEntity}
-            onEditEntity={props.handleEditingChildEntity}
-            childEntities={props.childEntities}
-            handleSaveItem={props.handleSaveItem}
-            handleAddTag={props.handleAddTag}
-            images={props.images}
-            tags={props.tags}
+  getRules(type) {
+    return forms[type].rules;
+  }
+
+  render() {
+    const {
+      itemName,
+      itemId,
+      itemType,
+      onNameChanged,
+      onRuleChanged,
+      onNewChildEntity,
+      onDelete,
+      onToggleLive,
+      isLive,
+      rule
+    } = this.props;
+    return (
+      <div
+        className="card-header d-flex flex-row justify-content-between"
+        style={{flexWrap: "wrap"}}>
+        <div
+          className="d-flex flex-row justify-content-between"
+          style={{flex: "1 1", whiteSpace: 'nowrap'}}
+        >
+          <EditableText
+            text={itemName}
+            onEditWillFinish={onNameChanged}
+          />
+          <input type="text" placeholder="tags" />
+          <DropDownWithPlus
+            itemType={itemType}
+            onClickPlus={onNewChildEntity}
           />
         </div>
+        <ReactStrapForm
+          className="d-flex justify-content-end"
+          style={{flex: "1 0",  whiteSpace: 'nowrap'}}
+          onSubmit={e => {
+            e.preventDefault();
+            onDelete({id: itemId, type: itemType})
+          }}
+        >
+          <Button className="mr-3" bsStyle="danger" type='submit'>X</Button>
+          {this.hasLive(itemType) && (
+            <FormGroup check>
+              <Label check>
+                <Input
+                  onChange={onToggleLive}
+                  className="mr-1"
+                  type="checkbox"
+                  defaultChecked={!!(isLive)}/>Live
+              </Label>
+            </FormGroup>
+          )}
+          {this.hasRules(itemType) && (
+            <div>
+              <RulesDropdown
+                rules={this.getRules(itemType)}
+                selected={rule}
+                onSelection={onRuleChanged}
+              />
+            </div>
+          )}
+        </ReactStrapForm>
       </div>
-    )}
-  </div>
-);
+    );
+  }
+}
+
+
+class Dashboard extends Component {
+  constructor(props) {
+    super(props);
+    this.handleChildEntityAddition = this.handleChildEntityAddition.bind(this);
+    this.handleItemNameChange = this.handleItemNameChange.bind(this);
+    this.handleToggleLiveConversation =
+      this.handleToggleLiveConversation.bind(this);
+    this.handleRuleChanged = this.handleRuleChanged.bind(this);
+  }
+
+  handleChildEntityAddition(selectedOption, callback) {
+    this.props.handleNewChildEntity({
+      type: selectedOption,
+      parent: {
+        type: this.props.itemEditing.type,
+        id: this.props.itemEditing.id
+      }
+    }, callback);
+  }
+
+  handleItemNameChange(name) {
+    this.props.handleSaveItem2({
+      ...this.props.itemEditing,
+      name
+    })
+  }
+
+  handleToggleLiveConversation() {
+    this.props.handleSaveItem2({
+      ...this.props.itemEditing,
+      isLive: !this.props.itemEditing.isLive
+    })
+  }
+
+  handleRuleChanged(rule) {
+    this.props.handleSaveItem2({
+      ...this.props.itemEditing,
+      rule
+    })
+  }
+
+  render() {
+    const {props} = this;
+    return (
+      <div className="Dashboard col-md-8 mt-1">
+        {props.itemEditing !== null && (
+          <div className="Inner card" style={{borderColor: 'white'}}>
+            <DashboardHeader
+              itemName={props.itemEditing.name}
+              itemType={props.itemEditing.type}
+              itemId={props.itemEditing.id}
+              isLive={props.itemEditing.isLive}
+              rule={props.itemEditing.rule}
+              onToggleLive={this.handleToggleLiveConversation}
+              onNewChildEntity={this.handleChildEntityAddition}
+              onNameChanged={this.handleItemNameChange}
+              onRuleChanged={this.handleRuleChanged}
+              onDelete={props.handleDeleteItem}
+            />
+            <div className="FormContainer">
+              <div className="FormActionsContainer">
+                {props.itemEditing.type === 'conversation' ? (
+                  <Button bsStyle="primary" onClick={props.handleCopyEntity}>
+                    Copy
+                  </Button>
+                ) : null}
+
+                {entityCanBeCopied(props.itemEditing.type) && (
+                  <ButtonGroup>
+                    <SplitButton
+                      bsStyle="primary"
+                      title="Copy To"
+                      id="bg-nested-dropdown"
+                      onSelect={props.handleCopyToEntity}
+                    >
+                      {props.entitiesCanCopyTo.map((e, i) => (
+                        <MenuItem key={i} eventKey={e}>
+                          {e.name}
+                        </MenuItem>
+                      ))}
+                    </SplitButton>
+                  </ButtonGroup>
+                )}
+                <Button bsStyle="default" onClick={props.handleClose}>
+                  Close
+                </Button>
+
+                <Button
+                  bsStyle="danger"
+                  onClick={() =>
+                    props.handleDeleteItem({
+                      type: props.itemEditing.type,
+                      id: props.itemEditing.id
+                    })}
+                  disabled={props.itemEditing.id === 'intro-conversation'}
+                >
+                  Delete
+                </Button>
+
+                <Button
+                  bsStyle="success"
+                  onClick={() => props.handleSaveItem({ item: props.itemEditing })}
+                  disabled={!props.itemHasBeenEdited}
+                >
+                  Save
+                </Button>
+              </div>
+              <Form
+                item={props.itemEditing}
+                config={props.formConfig[props.itemEditing.type]}
+                handleUpdateItem={props.handleUpdateItem}
+                handleSaveItem2={props.handleSaveItem2}
+                handleChildEntityAddition={this.handleChildEntityAddition}
+                handleUpdateMessageOptions={props.handleUpdateMessageOptions}
+                handleUpdateChildEntity={props.handleUpdateChildEntity}
+                onEditEntity={props.handleEditingChildEntity}
+                childEntities={props.childEntities}
+                handleSaveItem={props.handleSaveItem}
+                handleAddTag={props.handleAddTag}
+                images={props.images}
+                tags={props.tags}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+}
 
 Dashboard.propTypes = propTypes;
 

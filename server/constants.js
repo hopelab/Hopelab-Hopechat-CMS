@@ -14,11 +14,11 @@ const TYPE_COLLECTION = 'collection';
 const TYPE_SERIES = 'series';
 const TYPE_BLOCK = 'block';
 const TYPE_MESSAGE = 'message';
-const TYPE_QUESTION = 'question';
-const TYPE_QUESTION_WITH_REPLIES = 'questionWithReplies';
-const TYPE_ANSWER = 'answer';
-const TYPE_IMAGE = 'image';
-const TYPE_VIDEO = 'video';
+const MESSAGE_TYPE_QUESTION = 'question';
+const MESSAGE_TYPE_QUESTION_WITH_REPLIES = 'questionWithReplies';
+const MESSAGE_TYPE_ANSWER = 'answer';
+const MESSAGE_TYPE_IMAGE = 'image';
+const MESSAGE_TYPE_VIDEO = 'video';
 const TYPE_TAG = 'tag';
 
 const DEFAULT_NAME = 'default';
@@ -40,12 +40,12 @@ module.exports = {
   TYPE_COLLECTION,
   TYPE_SERIES,
   TYPE_MESSAGE,
-  TYPE_QUESTION,
-  TYPE_QUESTION_WITH_REPLIES,
-  TYPE_ANSWER,
+  MESSAGE_TYPE_QUESTION,
+  MESSAGE_TYPE_QUESTION_WITH_REPLIES,
+  MESSAGE_TYPE_ANSWER,
   TYPE_BLOCK,
-  TYPE_IMAGE,
-  TYPE_VIDEO,
+  MESSAGE_TYPE_IMAGE,
+  MESSAGE_TYPE_VIDEO,
   TYPE_TAG,
   DEFAULT_NAME,
   ONE_DAY_IN_MILLISECONDS,

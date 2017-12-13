@@ -120,13 +120,21 @@ const TYPE_COLLECTION = 'collection';
 const TYPE_SERIES = 'series';
 const TYPE_BLOCK = 'block';
 const TYPE_MESSAGE = 'message';
-const TYPE_QUESTION = 'question';
-const TYPE_QUESTION_WITH_REPLIES = 'questionWithReplies';
-const TYPE_TEXT = 'text';
-const TYPE_ANSWER = 'answer';
-const TYPE_IMAGE = 'image';
-const TYPE_VIDEO = 'video';
+const MESSAGE_TYPE_QUESTION = 'question';
+const MESSAGE_TYPE_QUESTION_WITH_REPLIES = 'questionWithReplies';
+const MESSAGE_TYPE_TEXT = 'text';
+const MESSAGE_TYPE_ANSWER = 'answer';
+const MESSAGE_TYPE_IMAGE = 'image';
+const MESSAGE_TYPE_VIDEO = 'video';
 const TYPE_TAG = 'tag';
+
+const messageTypes = [
+  { id: MESSAGE_TYPE_TEXT, display: 'Text' },
+  { id: MESSAGE_TYPE_QUESTION, display: 'Question' },
+  { id: MESSAGE_TYPE_QUESTION_WITH_REPLIES, display: 'Question+Replies' },
+  { id: MESSAGE_TYPE_IMAGE, display: 'Image' },
+  { id: MESSAGE_TYPE_VIDEO, display: 'Video' }
+];
 
 /**
  * Initial State for pieces of UI state
@@ -146,6 +154,7 @@ const initialState = {
     entitiesCanCopyTo: [],
     treeData: {},
     cursor: {},
+    mediaUpload: {showModal: false, status: ''},
     showImageModal: false,
     imageUploadStatus: ''
   },
@@ -183,15 +192,7 @@ const initialState = {
     name: '',
     blockId: '',
     tags: []
-  },
-
-  messageTypes: [
-    { id: TYPE_TEXT, display: 'Text' },
-    { id: TYPE_QUESTION, display: 'Question' },
-    { id: TYPE_QUESTION_WITH_REPLIES, display: 'Question with Replies' },
-    { id: TYPE_IMAGE, display: 'Image' },
-    { id: TYPE_VIDEO, display: 'Video' }
-  ]
+  }
 };
 
 // prettier-ignore
@@ -225,16 +226,17 @@ export {
   http,
   operations,
   keysToRemove,
+  messageTypes,
   TYPE_CONVERSATION,
   TYPE_COLLECTION,
   TYPE_SERIES,
   TYPE_BLOCK,
   TYPE_MESSAGE,
-  TYPE_QUESTION,
-  TYPE_QUESTION_WITH_REPLIES,
-  TYPE_TEXT,
-  TYPE_ANSWER,
-  TYPE_IMAGE,
-  TYPE_VIDEO,
+  MESSAGE_TYPE_QUESTION,
+  MESSAGE_TYPE_QUESTION_WITH_REPLIES,
+  MESSAGE_TYPE_TEXT,
+  MESSAGE_TYPE_ANSWER,
+  MESSAGE_TYPE_IMAGE,
+  MESSAGE_TYPE_VIDEO,
   TYPE_TAG
 };
