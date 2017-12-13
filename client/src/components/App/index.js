@@ -6,6 +6,7 @@ import Dashboard from '../Dashboard';
 
 import Dropzone from 'react-dropzone';
 import { ControlLabel, Modal } from 'react-bootstrap';
+import UploadModal from '../UploadModal';
 
 import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
@@ -486,6 +487,11 @@ class App extends Component {
   render() {
     return (
       <div className="App row">
+        <UploadModal
+          isOpen={false}
+          onHide={() => null}
+          onUpload={() => null}
+        />
         <Modal
           show={this.state.showImageModal}
           onHide={this.toggleImageModal}
