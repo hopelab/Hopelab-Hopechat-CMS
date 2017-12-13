@@ -39,8 +39,6 @@ class ConversationItemContainer extends Component {
     return type === MESSAGE_TYPE_QUESTION_WITH_REPLIES;
   }
 
-
-
   quickReplyHandleNextItemSelect(index, id, type) {
     if (this.props.item.quick_replies) {
       let quick_replies = this.props.item.quick_replies.map((qr, i) => {
@@ -132,6 +130,11 @@ class ConversationItemContainer extends Component {
                 )}
                 onDeleteReply={() => this.quickReplyHandleDelete(i)}
                 onNextItemSelect={this.quickReplyHandleNextItemSelect}
+                onNewItem={() => {
+                  this.props.handleChildEntityAddition(this.props.item.type, newItem => {
+                    this.quickReplyHandleNextItemSelect(i, newItem.id, newItem.type)
+                  });
+                }}
               />
             ))}
           </div>

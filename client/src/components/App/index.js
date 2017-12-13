@@ -205,7 +205,7 @@ class App extends Component {
     });
   };
 
-  handleUploadMessage(res, uploadItem) {
+  handleUploadMessage(res, uploadItem, callback) {
     let items;
     let newRes;
     if (!uploadItem.id) {
@@ -232,11 +232,11 @@ class App extends Component {
         [res.type]: items,
         childEntities
       },
-      () => this.updateTreeStructure2(newRes)
+      () => this.updateTreeStructure2(newRes, callback)
     )
   }
 
-  handleUploadNonMessage(res, uploadItem) {
+  handleUploadNonMessage(res, uploadItem, callback) {
     let childEntities =  this.state.childEntities.map(c => {
       let found = res.find(r => c.id === r.id);
       return found ? found : c;
@@ -246,11 +246,11 @@ class App extends Component {
         [uploadItem.type]: res,
         childEntities
       },
-      () => this.updateTreeStructure2(uploadItem)
+      () => this.updateTreeStructure2(uploadItem, callback)
     );
   }
 
-  handleSaveItem2(item) {
+  handleSaveItem2(item, callback) {
     const route = item.id ? config.operations.update : config.operations.create;
     dataUtil
       .post(
@@ -260,15 +260,15 @@ class App extends Component {
       .then(res => res.json())
       .then(res => {
         if (Array.isArray(res)) {
-          this.handleUploadNonMessage(res, item);
+          this.handleUploadNonMessage(res, item, callback);
         } else {
-          this.handleUploadMessage(res, item);
+          this.handleUploadMessage(res, item, callback);
         }
       })
       .catch(console.error);
   }
 
-  updateTreeStructure2(item) {
+  updateTreeStructure2(item, callback) {
     this.setState({
       treeData: dataUtil.createTreeView({
         data: { ...this.state },
@@ -283,7 +283,7 @@ class App extends Component {
         item,
         this.state
       )*/
-    });
+    }, () => !!(callback) && callback(item));
   }
 
   handleSaveItem = ({ item, reset, switchTo }) => {

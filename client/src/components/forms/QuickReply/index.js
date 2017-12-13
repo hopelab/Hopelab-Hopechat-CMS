@@ -9,6 +9,7 @@ class QuickReply extends Component {
     index: PropTypes.number,
     text: PropTypes.string.isRequired,
     onNextItemSelect: PropTypes.func.isRequired,
+    onNewItem: PropTypes.func,
     onUpdateText: PropTypes.func.isRequired,
     onDeleteReply: PropTypes.func.isRequired,
     childEntities: PropTypes.array.isRequired,
@@ -41,7 +42,7 @@ class QuickReply extends Component {
             handleNextMessageSelect={
               (...params) => this.props.onNextItemSelect(this.props.index, ...params)
             }
-            onNewItem={() => null}
+            onNewItem={this.props.onNewItem}
           />
         </div>
       </div>
