@@ -52,6 +52,7 @@ class ConversationItem extends Component {
     onEditEntity: PropTypes.func.isRequired,
     handleSaveItem: PropTypes.func.isRequired,
     handleUpdateMessageOptions: PropTypes.func.isRequired,
+    handleChildEntityAddition: PropTypes.func,
     childEntities: PropTypes.array.isRequired,
     images: PropTypes.array.isRequired,
   }
@@ -210,6 +211,14 @@ class ConversationItem extends Component {
                   })
                 }
 
+              }}
+              onNewItem={() => {
+                this.props.handleChildEntityAddition(this.props.item.type, newItem => {
+                  this.props.handleSaveItem({
+                    ...this.props.item,
+                    next: {id: newItem.id, type: newItem.type}
+                  });
+                });
               }}
             />
           </div>

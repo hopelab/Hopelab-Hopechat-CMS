@@ -21,7 +21,12 @@ class MediaPreview extends Component {
     if (isEmbedable(url)) {
       let src = url.replace(/www.youtube.com\/watch/i, 'www.youtube.com/embed')
       return (
-        <iframe src={src} frameborder="0" allowfullscreen></iframe>
+        <iframe
+          title="Intentionally blank"
+          aria-hidden="true"
+          src={src}
+          frameBorder="0"
+          allowFullScreen></iframe>
       );
     }
     return (

@@ -21,6 +21,7 @@ class ConversationItemContainer extends Component {
     onEditEntity: PropTypes.func.isRequired,
     handleSaveItem: PropTypes.func.isRequired,
     handleUpdateMessageOptions: PropTypes.func.isRequired,
+    handleChildEntityAddition: PropTypes.func,
     childEntities: PropTypes.array.isRequired,
     images: PropTypes.array.isRequired
   }

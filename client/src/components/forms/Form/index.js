@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import Card from '../Card';
 import ConversationItemContainer from '../ConversationItemContainer';
 import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css';
@@ -14,7 +13,6 @@ import {
   FormGroup,
   ControlLabel,
   FormControl,
-  Checkbox
 } from 'react-bootstrap';
 
 import { createInitialFormState } from '../../../utils/data';
@@ -122,6 +120,7 @@ class Form extends Component {
                 onUpdate={this.props.handleUpdateChildEntity}
                 onEditEntity={this.props.onEditEntity}
                 handleSaveItem={this.props.handleSaveItem2}
+                handleChildEntityAddition={this.props.handleChildEntityAddition}
                 handleUpdateMessageOptions={
                   this.props.handleUpdateMessageOptions
                 }

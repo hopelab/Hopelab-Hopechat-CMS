@@ -150,7 +150,7 @@ class App extends Component {
     return entity;
   };
 
-  handleNewChildEntity = entity => {
+  handleNewChildEntity = (entity, callback) => {
     dataUtil
       .post(config.routes[entity.type].create, this.markPosition(entity))
       .then(res => res.json())
@@ -171,7 +171,7 @@ class App extends Component {
                 this.state.itemEditing,
                 this.state
               )
-            });
+            }, () => !!(callback) && callback(res[res.length - 1]));
           }
         );
       })

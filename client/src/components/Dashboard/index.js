@@ -11,7 +11,7 @@ import { Button, ButtonGroup, SplitButton, MenuItem } from 'react-bootstrap';
 import {Form as ReactStrapForm, FormGroup, Label, Input } from 'reactstrap';
 
 import { entityCanBeCopied } from '../../utils/data';
-import {forms, rules} from '../../utils/config';
+import {forms} from '../../utils/config';
 
 const propTypes = {
   formConfig: PropTypes.object.isRequired,
@@ -138,14 +138,14 @@ class Dashboard extends Component {
     this.handleRuleChanged = this.handleRuleChanged.bind(this);
   }
 
-  handleChildEntityAddition(selectedOption) {
+  handleChildEntityAddition(selectedOption, callback) {
     this.props.handleNewChildEntity({
       type: selectedOption,
       parent: {
         type: this.props.itemEditing.type,
         id: this.props.itemEditing.id
       }
-    });
+    }, callback);
   }
 
   handleItemNameChange(name) {
@@ -174,7 +174,7 @@ class Dashboard extends Component {
     return (
       <div className="Dashboard col-md-8 mt-1">
         {props.itemEditing !== null && (
-          <div className="Inner card">
+          <div className="Inner card" style={{borderColor: 'white'}}>
             <DashboardHeader
               itemName={props.itemEditing.name}
               itemType={props.itemEditing.type}
@@ -240,6 +240,7 @@ class Dashboard extends Component {
                 config={props.formConfig[props.itemEditing.type]}
                 handleUpdateItem={props.handleUpdateItem}
                 handleSaveItem2={props.handleSaveItem2}
+                handleChildEntityAddition={this.handleChildEntityAddition}
                 handleUpdateMessageOptions={props.handleUpdateMessageOptions}
                 handleUpdateChildEntity={props.handleUpdateChildEntity}
                 onEditEntity={props.handleEditingChildEntity}

@@ -53,6 +53,7 @@ class RulesDropdown extends Component {
       >
         <DropdownToggle
           tag="div"
+          caret
           onClick={this.toggle}
           className="pt-1 pb-1 pl-2 pr-2"
           style={{

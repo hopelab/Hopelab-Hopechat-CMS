@@ -41,6 +41,7 @@ class QuickReply extends Component {
             handleNextMessageSelect={
               (...params) => this.props.onNextItemSelect(this.props.index, ...params)
             }
+            onNewItem={() => null}
           />
         </div>
       </div>

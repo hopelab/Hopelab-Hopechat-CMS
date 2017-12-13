@@ -11,11 +11,12 @@ import {
 const propTypes = {
   childEntities: PropTypes.array.isRequired,
   nextId: PropTypes.string,
-  handleNextMessageSelect: PropTypes.func.isRequired
+  handleNextMessageSelect: PropTypes.func.isRequired,
+  onNewItem: PropTypes.func.isRequired
 };
 
 const getNextMessageOptionsForMessage = props => {
-  return props.childEntities.map((c, i) => (
+  let items = props.childEntities.map((c, i) => (
     <DropdownItem
       key={c.id}
       active={c.id === props.nextId}
@@ -24,6 +25,14 @@ const getNextMessageOptionsForMessage = props => {
       {c.name}
     </DropdownItem>
   ));
+
+  items.push(<DropdownItem divider key={'divider'}/>);
+  items.push((
+    <DropdownItem onClick={props.onNewItem} key='new-item'>
+      New Item
+    </DropdownItem>
+  ));
+  return items;
 };
 
 class NextMessage extends Component {
