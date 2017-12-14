@@ -22,6 +22,7 @@ class ConversationItemContainer extends Component {
     handleSaveItem: PropTypes.func.isRequired,
     handleUpdateMessageOptions: PropTypes.func.isRequired,
     handleChildEntityAddition: PropTypes.func,
+    handleDeleteItem: PropTypes.func.isRequired,
     childEntities: PropTypes.array.isRequired,
     images: PropTypes.array.isRequired
   }

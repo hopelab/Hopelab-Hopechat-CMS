@@ -240,6 +240,7 @@ class Dashboard extends Component {
                 config={props.formConfig[props.itemEditing.type]}
                 handleUpdateItem={props.handleUpdateItem}
                 handleSaveItem2={props.handleSaveItem2}
+                handleDeleteItem={props.handleDeleteItem}
                 handleChildEntityAddition={this.handleChildEntityAddition}
                 handleUpdateMessageOptions={props.handleUpdateMessageOptions}
                 handleUpdateChildEntity={props.handleUpdateChildEntity}

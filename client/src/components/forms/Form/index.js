@@ -28,6 +28,7 @@ const propTypes = {
   onEditEntity: PropTypes.func.isRequired,
   handleSaveItem: PropTypes.func.isRequired,
   handleAddTag: PropTypes.func.isRequired,
+  handleDeleteItem: PropTypes.func.isRequired,
   handleUpdateMessageOptions: PropTypes.func.isRequired,
   images: PropTypes.array.isRequired,
   tags: PropTypes.array.isRequired
@@ -103,6 +104,7 @@ class Form extends Component {
                 handleUpdateMessageOptions={
                   this.props.handleUpdateMessageOptions
                 }
+                handleDeleteItem={this.props.handleDeleteItem}
                 images={this.props.images}
               />
             ))
