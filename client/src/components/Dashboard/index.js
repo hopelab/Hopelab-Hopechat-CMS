@@ -254,6 +254,7 @@ class Dashboard extends Component {
             </div>
           </div>
         )}
+        <div style={{height: '85vh'}} />
       </div>
     );
   }
