@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-//import './style.css';
-
 
 import Form from '../forms/Form';
 import DropDownWithPlus from '../forms/DropDownWithPlus';
 import EditableText from '../forms/EditableText';
 import RulesDropdown from '../forms/RulesDropdown';
+import CopyButton from '../forms/CopyButton';
 import { Button, ButtonGroup, SplitButton, MenuItem } from 'react-bootstrap';
 import {Form as ReactStrapForm, FormGroup, Label, Input } from 'reactstrap';
 
@@ -15,18 +14,14 @@ import {forms} from '../../utils/config';
 
 const propTypes = {
   formConfig: PropTypes.object.isRequired,
-  handleClose: PropTypes.func.isRequired,
   handleUpdateItem: PropTypes.func.isRequired,
   handleSaveItem: PropTypes.func.isRequired,
   handleSaveItem2: PropTypes.func,
   handleDeleteItem: PropTypes.func.isRequired,
   handleNewChildEntity: PropTypes.func.isRequired,
-  handleUpdateChildEntity: PropTypes.func.isRequired,
-  handleEditingChildEntity: PropTypes.func.isRequired,
   handleUpdateMessageOptions: PropTypes.func.isRequired,
   handleAddTag: PropTypes.func.isRequired,
   itemEditing: PropTypes.object,
-  itemHasBeenEdited: PropTypes.bool.isRequired,
   childEntities: PropTypes.array.isRequired,
   entitiesCanCopyTo: PropTypes.array.isRequired,
   handleCopyEntity: PropTypes.func.isRequired,
@@ -196,6 +191,8 @@ class Dashboard extends Component {
                 ) : null}
 
                 {entityCanBeCopied(props.itemEditing.type) && (
+                  <CopyButton copyToItems={props.entitiesCanCopyTo}/> )}
+                {entityCanBeCopied(props.itemEditing.type) && (
                   <ButtonGroup>
                     <SplitButton
                       bsStyle="primary"
@@ -220,8 +217,6 @@ class Dashboard extends Component {
                 handleDeleteItem={props.handleDeleteItem}
                 handleChildEntityAddition={this.handleChildEntityAddition}
                 handleUpdateMessageOptions={props.handleUpdateMessageOptions}
-                handleUpdateChildEntity={props.handleUpdateChildEntity}
-                onEditEntity={props.handleEditingChildEntity}
                 childEntities={props.childEntities}
                 handleSaveItem={props.handleSaveItem}
                 handleAddTag={props.handleAddTag}

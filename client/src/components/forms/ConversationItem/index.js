@@ -47,8 +47,6 @@ class ConversationItem extends Component {
       next: PropTypes.object,
     }).isRequired,
     index: PropTypes.number.isRequired,
-    onUpdate: PropTypes.func.isRequired,
-    onEditEntity: PropTypes.func.isRequired,
     handleSaveItem: PropTypes.func.isRequired,
     handleUpdateMessageOptions: PropTypes.func.isRequired,
     handleChildEntityAddition: PropTypes.func,

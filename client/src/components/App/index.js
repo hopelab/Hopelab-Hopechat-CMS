@@ -8,6 +8,8 @@ import UploadModal from '../UploadModal';
 import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
 
+import { pick } from 'ramda';
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -39,36 +41,30 @@ class App extends Component {
   };
 
   addConversation = () => {
-    if (this.state.itemEditing === null) {
-      dataUtil
-        .post(config.routes.conversation.create, {
-          ...config.initialState[config.entities.conversation]
-        })
-        .then(res => res.json())
-        .then(res => {
-          const conversation = res[config.entities.conversation];
+    dataUtil
+      .post(config.routes.conversation.create, {
+        ...config.initialState[config.entities.conversation]
+      })
+      .then(res => res.json())
+      .then(res => {
+        const conversation = res[config.entities.conversation];
 
-          this.setState(
-            {
-              itemEditing: conversation[conversation.length - 1],
-              ...res
-            },
-            () => {
-              this.setState({
-                entitiesCanCopyTo: dataUtil.getEntitiesCanCopyTo(
-                  this.state.itemEditing,
-                  this.state
-                ),
-                treeData: dataUtil.createTreeView({
-                  data: { ...this.state },
-                  entities: config.entities
-                })
-              });
-            }
-          );
-        })
-        .catch(console.error);
-    }
+        this.setState(
+          {
+            itemEditing: conversation[conversation.length - 1],
+            ...res
+          },
+          () => {
+            this.setState({
+              treeData: dataUtil.createTreeView({
+                data: { ...this.state },
+                entities: config.entities
+              })
+            });
+          }
+        );
+      })
+      .catch(console.error);
   };
 
   resetActionMessage = (stateKey, time) => {
@@ -119,7 +115,6 @@ class App extends Component {
         ...this.state.itemEditing,
         [target.name]: value
       },
-      itemHasBeenEdited: true
     });
   };
 
@@ -129,7 +124,6 @@ class App extends Component {
         ...this.state.itemEditing,
         [field]: value
       },
-      itemHasBeenEdited: true
     });
   };
 
@@ -141,7 +135,12 @@ class App extends Component {
       return entity;
     }
 
-    if (!this.state.childEntities.length) {
+    const childEntities = dataUtil.getChildEntitiesFor(
+      this.state.itemEditing,
+      this.state
+    );
+
+    if (!childEntities.length) {
       return {
         ...entity,
         start: true
@@ -160,32 +159,18 @@ class App extends Component {
         this.setState(
           {
             [entity.type]: res,
-            childEntities: this.state.childEntities.concat(res[res.length - 1])
           },
           () => {
             this.setState({
               treeData: dataUtil.createTreeView({
                 data: { ...this.state },
                 entities: config.entities
-              }),
-              entitiesCanCopyTo: dataUtil.getEntitiesCanCopyTo(
-                this.state.itemEditing,
-                this.state
-              )
+              })
             }, () => !!(callback) && callback(res[res.length - 1]));
           }
         );
       })
       .catch(console.error);
-  };
-
-  handleUpdateChildEntity = ({ index, field, value }) => {
-    const newArray = Array.from(this.state.childEntities);
-    newArray[index][field] = value;
-
-    this.setState({
-      childEntities: newArray
-    });
   };
 
   updateTreeStructure = () => {
@@ -194,15 +179,7 @@ class App extends Component {
         data: { ...this.state },
         entities: config.entities,
         active: (this.state.itemEditing || {}).id
-      }),
-      childEntities: dataUtil.getChildEntitiesFor(
-        this.state.itemEditing,
-        this.state
-      ),
-      entitiesCanCopyTo: dataUtil.getEntitiesCanCopyTo(
-        this.state.itemEditing,
-        this.state
-      )
+      })
     });
   };
 
@@ -225,27 +202,18 @@ class App extends Component {
         }
       });
     }
-    let childEntities =  this.state.childEntities.map(c => (
-      c.id === newRes.id ? newRes : c
-    ));
     this.setState(
       {
         [res.type]: items,
-        childEntities
       },
       () => this.updateTreeStructure2(newRes, callback)
     )
   }
 
   handleUploadNonMessage(res, uploadItem, callback) {
-    let childEntities =  this.state.childEntities.map(c => {
-      let found = res.find(r => c.id === r.id);
-      return found ? found : c;
-    });
     this.setState(
       {
         [uploadItem.type]: res,
-        childEntities
       },
       () => this.updateTreeStructure2(uploadItem, callback)
     );
@@ -275,15 +243,7 @@ class App extends Component {
         data: { ...this.state },
         entities: config.entities,
         active: (item || {}).id
-      })/*,
-      childEntities: dataUtil.getChildEntitiesFor(
-        item,
-        this.state
-      ),/*
-      entitiesCanCopyTo: dataUtil.getEntitiesCanCopyTo(
-        item,
-        this.state
-      )*/
+      })
     }, () => !!(callback) && callback(item));
   }
 
@@ -354,17 +314,14 @@ class App extends Component {
       .then(res => res.json())
       .then(dataUtil.constructEntityState(item.type))
       .then(nextEntityState => {
-        let newState = {
-          ...nextEntityState,
-          childEntities: this.state.childEntities.filter(i => i.id !== item.id)
-        };
+        let newState;
         if (item.id === this.state.itemEditing.id) {
           newState = {
             itemEditing: null,
-            childEntities: [],
-            entitiesCanCopyTo: [],
-            ...newState
+            ...nextEntityState
           }
+        } else {
+          newState = { ...nextEntityState };
         }
         this.setState(newState,
           () => {
@@ -378,53 +335,6 @@ class App extends Component {
         );
       })
       .catch(console.error);
-  };
-
-  handleEditingChildEntity = entity => {
-    this.setState(
-      {
-        itemEditing: entity,
-        itemHasBeenEdited: false
-      },
-      () => {
-        this.setState({
-          childEntities: dataUtil.getChildEntitiesFor(
-            this.state.itemEditing,
-            this.state
-          ),
-          entitiesCanCopyTo: dataUtil.getEntitiesCanCopyTo(
-            this.state.itemEditing,
-            this.state
-          ),
-          treeData: dataUtil.createTreeView({
-            data: { ...this.state },
-            entities: config.entities,
-            active: this.state.itemEditing.id
-          })
-        });
-      }
-    );
-  };
-
-  handleDashboardClose = () => {
-    this.state.cursor.active = false;
-
-    this.setState(
-      {
-        itemEditing: null,
-        itemHasBeenEdited: false,
-        childEntities: []
-      },
-      () => {
-        this.setState({
-          entitiesCanCopyTo: [],
-          treeData: dataUtil.createTreeView({
-            data: { ...this.state },
-            entities: config.entities
-          })
-        });
-      }
-    );
   };
 
   handleTreeToggle = ({ node, expand }) => {
@@ -451,19 +361,6 @@ class App extends Component {
       {
         cursor: node,
         itemEditing: node.type ? node : this.state.itemEditing,
-        itemHasBeenEdited: false
-      },
-      () => {
-        this.setState({
-          childEntities: dataUtil.getChildEntitiesFor(
-            this.state.itemEditing,
-            this.state
-          ),
-          entitiesCanCopyTo: dataUtil.getEntitiesCanCopyTo(
-            this.state.itemEditing,
-            this.state
-          )
-        });
       }
     );
   };
@@ -490,7 +387,18 @@ class App extends Component {
       parent
     });
   };
+
   render() {
+    const entitiesCanCopyTo = dataUtil.getEntitiesCanCopyTo(
+      this.state.itemEditing,
+      this.state
+    );
+
+    const childEntities = dataUtil.getChildEntitiesFor(
+      this.state.itemEditing,
+      this.state
+    );
+
     return (
       <div className="App row">
         <UploadModal
@@ -522,20 +430,16 @@ class App extends Component {
 
         <Dashboard
           formConfig={config.forms}
-          handleClose={this.handleDashboardClose}
           handleUpdateItem={this.handleUpdatingItem}
           handleSaveItem={this.handleSaveItem}
           handleSaveItem2={this.handleSaveItem2}
           handleDeleteItem={this.handleDeleteItem}
           handleNewChildEntity={this.handleNewChildEntity}
-          handleUpdateChildEntity={this.handleUpdateChildEntity}
-          handleEditingChildEntity={this.handleEditingChildEntity}
           handleUpdateMessageOptions={this.handleUpdateMessageOptions}
           handleAddTag={this.handleAddTag}
           itemEditing={this.state.itemEditing}
-          itemHasBeenEdited={this.state.itemHasBeenEdited}
-          childEntities={this.state.childEntities}
-          entitiesCanCopyTo={this.state.entitiesCanCopyTo}
+          childEntities={childEntities}
+          entitiesCanCopyTo={entitiesCanCopyTo}
           handleCopyEntity={this.handleCopyEntity}
           handleCopyToEntity={this.handleCopyToEntity}
           images={this.state.image}
