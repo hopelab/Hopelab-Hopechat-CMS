@@ -354,13 +354,19 @@ class App extends Component {
       .then(res => res.json())
       .then(dataUtil.constructEntityState(item.type))
       .then(nextEntityState => {
-        this.setState(
-          {
+        let newState = {
+          ...nextEntityState,
+          childEntities: this.state.childEntities.filter(i => i.id !== item.id)
+        };
+        if (item.id === this.state.itemEditing.id) {
+          newState = {
             itemEditing: null,
             childEntities: [],
             entitiesCanCopyTo: [],
-            ...nextEntityState
-          },
+            ...newState
+          }
+        }
+        this.setState(newState,
           () => {
             this.setState({
               treeData: dataUtil.createTreeView({
