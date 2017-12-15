@@ -21,15 +21,13 @@ class MediaPreview extends Component {
     const {url, alt, type} = this.props;
     if (type === MESSAGE_TYPE_VIDEO) {
       return (
-        <div>
-          <a
-            style={{color: "white"}}
-            href={url}
-            target="_blank"
-          >
-            ➡ Watch Now
-          </a>
-        </div>
+        <a
+          style={{color: "white", display: "block"}}
+          href={url}
+          target="_blank"
+        >
+          ➡ Watch Now
+        </a>
       );
     }
     return (
