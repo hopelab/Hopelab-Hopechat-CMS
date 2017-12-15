@@ -211,29 +211,6 @@ class Dashboard extends Component {
                     </SplitButton>
                   </ButtonGroup>
                 )}
-                <Button bsStyle="default" onClick={props.handleClose}>
-                  Close
-                </Button>
-
-                <Button
-                  bsStyle="danger"
-                  onClick={() =>
-                    props.handleDeleteItem({
-                      type: props.itemEditing.type,
-                      id: props.itemEditing.id
-                    })}
-                  disabled={props.itemEditing.id === 'intro-conversation'}
-                >
-                  Delete
-                </Button>
-
-                <Button
-                  bsStyle="success"
-                  onClick={() => props.handleSaveItem({ item: props.itemEditing })}
-                  disabled={!props.itemHasBeenEdited}
-                >
-                  Save
-                </Button>
               </div>
               <Form
                 item={props.itemEditing}
