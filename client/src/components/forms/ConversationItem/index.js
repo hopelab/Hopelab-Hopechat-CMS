@@ -4,7 +4,7 @@ import EditableText from '../EditableText';
 import NextMessage from '../NextMessage';
 import ImageDropdown from '../ImageDropdown';
 import MessageTypeDropdown from '../MessageTypeDropdown';
-import MediaPreview, {isEmbedable} from '../MediaPreview';
+import MediaPreview from '../MediaPreview';
 import {
   TYPE_CONVERSATION,
   TYPE_COLLECTION,
@@ -133,8 +133,8 @@ class ConversationItem extends Component {
                 }
               }}
             />
-            {this.messageTypeHasUrl(messageType) && isEmbedable(url) && (
-              <MediaPreview url={url} />
+            {this.messageTypeHasUrl(messageType) && url && (
+              <MediaPreview url={url} type={messageType} />
             )}
           </p>
         </div>
@@ -159,7 +159,7 @@ class ConversationItem extends Component {
             }}
           />
           {this.messageTypeHasUrl(messageType) && url && (
-            <MediaPreview url={url} />
+            <MediaPreview url={url} type={messageType} />
           )}
         </div>
       );

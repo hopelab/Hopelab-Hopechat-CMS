@@ -1,32 +1,35 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
-const isEmbedable = url => url && url.includes('www.youtube.com');
+import {
+  MESSAGE_TYPE_IMAGE,
+  MESSAGE_TYPE_VIDEO,
+} from '../../../utils/config';
 
 class MediaPreview extends Component {
 
   static propTypes = {
     url: PropTypes.string.isRequired,
     alt: PropTypes.string,
+    type: PropTypes.oneOf([MESSAGE_TYPE_VIDEO, MESSAGE_TYPE_IMAGE]).isRequired,
   }
 
   static defaultProps  = {
     alt: 'img preview'
   }
 
-
-
   render() {
-    const {url, alt} = this.props;
-    if (isEmbedable(url)) {
-      let src = url.replace(/www.youtube.com\/watch/i, 'www.youtube.com/embed')
+    const {url, alt, type} = this.props;
+    if (type === MESSAGE_TYPE_VIDEO) {
       return (
-        <iframe
-          title="Intentionally blank"
-          aria-hidden="true"
-          src={src}
-          frameBorder="0"
-          allowFullScreen></iframe>
+        <div>
+          <a
+            style={{color: "white"}}
+            href={url}
+            target="_blank"
+          >
+            ➡ Watch Now
+          </a>
+        </div>
       );
     }
     return (
@@ -37,5 +40,4 @@ class MediaPreview extends Component {
   }
 }
 
-export {isEmbedable};
 export default MediaPreview;
