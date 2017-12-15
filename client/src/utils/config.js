@@ -128,6 +128,8 @@ const MESSAGE_TYPE_IMAGE = 'image';
 const MESSAGE_TYPE_VIDEO = 'video';
 const TYPE_TAG = 'tag';
 
+const QUICK_REPLY_MAX_LENGTH = 20;
+
 const messageTypes = [
   { id: MESSAGE_TYPE_TEXT, display: 'Text' },
   { id: MESSAGE_TYPE_QUESTION, display: 'Question' },
@@ -238,5 +240,6 @@ export {
   MESSAGE_TYPE_ANSWER,
   MESSAGE_TYPE_IMAGE,
   MESSAGE_TYPE_VIDEO,
-  TYPE_TAG
+  TYPE_TAG,
+  QUICK_REPLY_MAX_LENGTH,
 };
