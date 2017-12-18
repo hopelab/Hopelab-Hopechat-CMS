@@ -246,7 +246,6 @@ class App extends Component {
 
   handleTreeToggle = ({ node, expand }) => {
     /* eslint-disable react/no-direct-mutation-state */
-    debugger;
     if (expand) {
       if (node.children) {
         node.toggled = !node.toggled;
@@ -272,25 +271,15 @@ class App extends Component {
     );
   };
 
-  handleCopyEntity = () => {
-    // TODO! Might need the entire object
-    const parent = {
-      ...this.state.itemEditing
-    };
-
-    this.handleCopyItem({
-      parent
-    });
-  };
-
-  handleCopyToEntity = entity => {
-    // TODO! Might need the entire object
-    const parent = {
-      ...this.state.itemEditing,
-      parent: {
-        ...entity.link
-      }
-    };
+  handleCopyEntity = (entity) => {
+    const parent = entity ? {
+        ...this.state.itemEditing,
+        parent: {
+          ...entity.link
+        }
+      } : {
+        ...this.state.itemEditing
+      };
 
     this.handleCopyItem({
       parent
@@ -356,7 +345,6 @@ class App extends Component {
           childEntities={childEntities}
           entitiesCanCopyTo={entitiesCanCopyTo}
           handleCopyEntity={this.handleCopyEntity}
-          handleCopyToEntity={this.handleCopyToEntity}
           images={this.state.image}
           tags={this.state.tag}
         />
