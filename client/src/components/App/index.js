@@ -92,11 +92,6 @@ class App extends Component {
       });
   };
 
-  handleUpdateMessageOptions = ({ field, value }) => {
-    // TODO: remove me?
-    console.warn('DOES THIS DO ANYTING?')
-  };
-
   getFullItemEditing(state) {
     const {itemEditing} = state;
     if (!itemEditing) {
@@ -339,7 +334,6 @@ class App extends Component {
           handleSaveItem={this.handleSaveItem}
           handleDeleteItem={this.handleDeleteItem}
           handleNewChildEntity={this.handleNewChildEntity}
-          handleUpdateMessageOptions={this.handleUpdateMessageOptions}
           handleAddTag={this.handleAddTag}
           itemEditing={itemEditing}
           childEntities={childEntities}

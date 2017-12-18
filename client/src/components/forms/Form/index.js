@@ -23,7 +23,6 @@ const propTypes = {
   handleSaveItem: PropTypes.func.isRequired,
   handleAddTag: PropTypes.func.isRequired,
   handleDeleteItem: PropTypes.func.isRequired,
-  handleUpdateMessageOptions: PropTypes.func.isRequired,
   images: PropTypes.array.isRequired,
   tags: PropTypes.array.isRequired
 };
@@ -93,9 +92,6 @@ class Form extends Component {
                 childEntities={this.props.childEntities}
                 handleSaveItem={this.props.handleSaveItem}
                 handleChildEntityAddition={this.props.handleChildEntityAddition}
-                handleUpdateMessageOptions={
-                  this.props.handleUpdateMessageOptions
-                }
                 handleDeleteItem={this.props.handleDeleteItem}
                 images={this.props.images}
               />

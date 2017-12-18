@@ -22,7 +22,6 @@ const propTypes = {
   handleSaveItem: PropTypes.func,
   handleDeleteItem: PropTypes.func.isRequired,
   handleNewChildEntity: PropTypes.func.isRequired,
-  handleUpdateMessageOptions: PropTypes.func.isRequired,
   handleAddTag: PropTypes.func.isRequired,
   itemEditing: PropTypes.object,
   childEntities: PropTypes.array.isRequired,
@@ -204,7 +203,6 @@ class Dashboard extends Component {
               handleSaveItem={props.handleSaveItem}
               handleDeleteItem={props.handleDeleteItem}
               handleChildEntityAddition={this.handleChildEntityAddition}
-              handleUpdateMessageOptions={props.handleUpdateMessageOptions}
               childEntities={props.childEntities}
               handleAddTag={props.handleAddTag}
               images={props.images}
