@@ -78,7 +78,6 @@ const Sidebar = props => (
             bsStyle="primary"
             className="ml-2"
             onClick={props.addConversation}
-            disabled={!!props.itemEditing}
           >
             New
           </Button>

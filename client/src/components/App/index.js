@@ -14,8 +14,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = config.initialState.App;
-    this.handleSaveItem2 = this.handleSaveItem2.bind(this);
-    this.updateTreeStructure2 = this.updateTreeStructure2.bind(this);
+    this.handleSaveItem = this.handleSaveItem.bind(this);
   }
 
   componentDidMount() {
@@ -23,13 +22,7 @@ class App extends Component {
       .fetchAllDataForApp(config.routes)
       .then(dataUtil.createInitialEntityState)
       .then(data => {
-        this.setState({
-          ...data,
-          treeData: dataUtil.createTreeView({
-            data: { ...data },
-            entities: config.entities
-          })
-        });
+        this.setState({...data});
       })
       .catch(console.error);
   }
@@ -51,16 +44,9 @@ class App extends Component {
 
         this.setState(
           {
-            itemEditing: conversation[conversation.length - 1],
+            itemEditing:
+              pick(['id', 'type'], conversation[conversation.length - 1]),
             ...res
-          },
-          () => {
-            this.setState({
-              treeData: dataUtil.createTreeView({
-                data: { ...this.state },
-                entities: config.entities
-              })
-            });
           }
         );
       })
@@ -106,26 +92,21 @@ class App extends Component {
       });
   };
 
-  handleUpdatingItem = e => {
-    const target = e.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-
-    this.setState({
-      itemEditing: {
-        ...this.state.itemEditing,
-        [target.name]: value
-      },
-    });
-  };
-
   handleUpdateMessageOptions = ({ field, value }) => {
-    this.setState({
-      itemEditing: {
-        ...this.state.itemEditing,
-        [field]: value
-      },
-    });
+    // TODO: remove me?
+    console.warn('DOES THIS DO ANYTING?')
   };
+
+  getFullItemEditing(state) {
+    const {itemEditing} = state;
+    if (!itemEditing) {
+      return null;
+    }
+
+    return state[itemEditing.type].find(
+      item => item.id === itemEditing.id
+    );
+  }
 
   markPosition = entity => {
     if (
@@ -136,7 +117,7 @@ class App extends Component {
     }
 
     const childEntities = dataUtil.getChildEntitiesFor(
-      this.state.itemEditing,
+      this.getFullItemEditing(this.state),
       this.state
     );
 
@@ -157,30 +138,11 @@ class App extends Component {
       .then(dataUtil.throwIfEmptyArray)
       .then(res => {
         this.setState(
-          {
-            [entity.type]: res,
-          },
-          () => {
-            this.setState({
-              treeData: dataUtil.createTreeView({
-                data: { ...this.state },
-                entities: config.entities
-              })
-            }, () => !!(callback) && callback(res[res.length - 1]));
-          }
+          { [entity.type]: res },
+          () => !!(callback) && callback(res[res.length - 1])
         );
       })
       .catch(console.error);
-  };
-
-  updateTreeStructure = () => {
-    this.setState({
-      treeData: dataUtil.createTreeView({
-        data: { ...this.state },
-        entities: config.entities,
-        active: (this.state.itemEditing || {}).id
-      })
-    });
   };
 
   handleUploadMessage(res, uploadItem, callback) {
@@ -203,23 +165,19 @@ class App extends Component {
       });
     }
     this.setState(
-      {
-        [res.type]: items,
-      },
-      () => this.updateTreeStructure2(newRes, callback)
-    )
+      { [res.type]: items },
+      () => !!(callback) && callback(uploadItem)
+    );
   }
 
   handleUploadNonMessage(res, uploadItem, callback) {
     this.setState(
-      {
-        [uploadItem.type]: res,
-      },
-      () => this.updateTreeStructure2(uploadItem, callback)
+      { [uploadItem.type]: res },
+      () => !!(callback) && callback(uploadItem)
     );
   }
 
-  handleSaveItem2(item, callback) {
+  handleSaveItem(item, callback) {
     const route = item.id ? config.operations.update : config.operations.create;
     dataUtil
       .post(
@@ -236,40 +194,6 @@ class App extends Component {
       })
       .catch(console.error);
   }
-
-  updateTreeStructure2(item, callback) {
-    this.setState({
-      treeData: dataUtil.createTreeView({
-        data: { ...this.state },
-        entities: config.entities,
-        active: (item || {}).id
-      })
-    }, () => !!(callback) && callback(item));
-  }
-
-  handleSaveItem = ({ item, reset, switchTo }) => {
-    const route = item.id ? config.operations.update : config.operations.create;
-
-    dataUtil
-      .post(
-        config.routes[item.type][route],
-        dataUtil.makeCopyAndRemoveKeys(item, config.keysToRemove)
-      )
-      .then(res => res.json())
-      .then(dataUtil.throwIfEmptyArray)
-      .then(res => {
-        this.setState(
-          {
-            itemEditing: reset
-              ? null
-              : switchTo ? res[res.length - 1] : this.state.itemEditing,
-            [item.type]: res
-          },
-          this.updateTreeStructure
-        );
-      })
-      .catch(console.error);
-  };
 
   handleAddTag = tag => {
     if (dataUtil.tagExists(tag, this.state.tag)) {
@@ -294,15 +218,7 @@ class App extends Component {
       })
       .then(res => res.json())
       .then(copiedResults => {
-        this.setState(copiedResults, () => {
-          this.setState({
-            treeData: dataUtil.createTreeView({
-              data: { ...this.state },
-              entities: config.entities,
-              active: (this.state.itemEditing || {}).id
-            })
-          });
-        });
+        this.setState(copiedResults);
       })
       .catch(console.error);
   };
@@ -315,7 +231,7 @@ class App extends Component {
       .then(dataUtil.constructEntityState(item.type))
       .then(nextEntityState => {
         let newState;
-        if (item.id === this.state.itemEditing.id) {
+        if (this.state.itemEditing && item.id === this.state.itemEditing.id) {
           newState = {
             itemEditing: null,
             ...nextEntityState
@@ -323,23 +239,14 @@ class App extends Component {
         } else {
           newState = { ...nextEntityState };
         }
-        this.setState(newState,
-          () => {
-            this.setState({
-              treeData: dataUtil.createTreeView({
-                data: { ...this.state },
-                entities: config.entities
-              })
-            });
-          }
-        );
+        this.setState(newState);
       })
       .catch(console.error);
   };
 
   handleTreeToggle = ({ node, expand }) => {
     /* eslint-disable react/no-direct-mutation-state */
-
+    debugger;
     if (expand) {
       if (node.children) {
         node.toggled = !node.toggled;
@@ -360,12 +267,13 @@ class App extends Component {
     this.setState(
       {
         cursor: node,
-        itemEditing: node.type ? node : this.state.itemEditing,
+        itemEditing: node.type ? pick(['id', 'type'],node) : this.state.itemEditing,
       }
     );
   };
 
   handleCopyEntity = () => {
+    // TODO! Might need the entire object
     const parent = {
       ...this.state.itemEditing
     };
@@ -376,6 +284,7 @@ class App extends Component {
   };
 
   handleCopyToEntity = entity => {
+    // TODO! Might need the entire object
     const parent = {
       ...this.state.itemEditing,
       parent: {
@@ -390,14 +299,22 @@ class App extends Component {
 
   render() {
     const entitiesCanCopyTo = dataUtil.getEntitiesCanCopyTo(
-      this.state.itemEditing,
+      this.getFullItemEditing(this.state),
       this.state
     );
 
     const childEntities = dataUtil.getChildEntitiesFor(
-      this.state.itemEditing,
+      this.getFullItemEditing(this.state),
       this.state
     );
+
+    const treeData = dataUtil.createTreeView({
+      data: { ...this.state },
+      entities: config.entities,
+      active: (this.getFullItemEditing(this.state) || {}).id
+    });
+
+    const itemEditing = this.getFullItemEditing(this.state);
 
     return (
       <div className="App row">
@@ -415,9 +332,9 @@ class App extends Component {
         <Sidebar
           addConversation={this.addConversation}
           conversation={this.state.conversation}
-          treeData={this.state.treeData}
+          treeData={treeData}
           handleTreeToggle={this.handleTreeToggle}
-          itemEditing={this.state.itemEditing}
+          itemEditing={itemEditing}
           toggleImageModal={() => {
             this.setState({
               mediaUpload: {
@@ -430,14 +347,12 @@ class App extends Component {
 
         <Dashboard
           formConfig={config.forms}
-          handleUpdateItem={this.handleUpdatingItem}
           handleSaveItem={this.handleSaveItem}
-          handleSaveItem2={this.handleSaveItem2}
           handleDeleteItem={this.handleDeleteItem}
           handleNewChildEntity={this.handleNewChildEntity}
           handleUpdateMessageOptions={this.handleUpdateMessageOptions}
           handleAddTag={this.handleAddTag}
-          itemEditing={this.state.itemEditing}
+          itemEditing={itemEditing}
           childEntities={childEntities}
           entitiesCanCopyTo={entitiesCanCopyTo}
           handleCopyEntity={this.handleCopyEntity}

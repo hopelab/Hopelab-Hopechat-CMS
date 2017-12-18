@@ -151,7 +151,6 @@ const initialState = {
     image: [],
     itemEditing: null,
     addingImages: false,
-    treeData: {},
     cursor: {},
     mediaUpload: {showModal: false, status: ''},
     showImageModal: false,

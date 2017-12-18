@@ -7,8 +7,6 @@ import 'react-tagsinput/react-tagsinput.css';
 
 import { autocompleteRenderInput } from '../../AutoSuggest';
 
-import { last } from 'ramda';
-
 import { FormGroup } from 'reactstrap';
 
 import { createInitialFormState } from '../../../utils/data';
@@ -22,8 +20,6 @@ const propTypes = {
   }),
   config: PropTypes.object,
   childEntities: PropTypes.array.isRequired,
-  handleUpdateItem: PropTypes.func.isRequired,
-  handleSaveItem2: PropTypes.func.isRequired,
   handleSaveItem: PropTypes.func.isRequired,
   handleAddTag: PropTypes.func.isRequired,
   handleDeleteItem: PropTypes.func.isRequired,
@@ -51,14 +47,14 @@ class Form extends Component {
   }
 
   handleTagsInput = e => {
-    this.props.handleUpdateItem({
-      target: {
-        name: 'tags',
-        value: e
-      }
-    });
-
-    this.props.handleAddTag({ name: last(e) });
+    // this.props.handleUpdateItem({
+    //   target: {
+    //     name: 'tags',
+    //     value: e
+    //   }
+    // });
+    //
+    // this.props.handleAddTag({ name: last(e) });
   };
 
   handleChildSelection = e => this.setState({ entityToAdd: e.target.value });
@@ -95,7 +91,7 @@ class Form extends Component {
                 item={e}
                 index={i}
                 childEntities={this.props.childEntities}
-                handleSaveItem={this.props.handleSaveItem2}
+                handleSaveItem={this.props.handleSaveItem}
                 handleChildEntityAddition={this.props.handleChildEntityAddition}
                 handleUpdateMessageOptions={
                   this.props.handleUpdateMessageOptions

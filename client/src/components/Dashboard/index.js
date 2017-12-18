@@ -14,9 +14,7 @@ import {forms} from '../../utils/config';
 
 const propTypes = {
   formConfig: PropTypes.object.isRequired,
-  handleUpdateItem: PropTypes.func.isRequired,
-  handleSaveItem: PropTypes.func.isRequired,
-  handleSaveItem2: PropTypes.func,
+  handleSaveItem: PropTypes.func,
   handleDeleteItem: PropTypes.func.isRequired,
   handleNewChildEntity: PropTypes.func.isRequired,
   handleUpdateMessageOptions: PropTypes.func.isRequired,
@@ -144,21 +142,21 @@ class Dashboard extends Component {
   }
 
   handleItemNameChange(name) {
-    this.props.handleSaveItem2({
+    this.props.handleSaveItem({
       ...this.props.itemEditing,
       name
     })
   }
 
   handleToggleLiveConversation() {
-    this.props.handleSaveItem2({
+    this.props.handleSaveItem({
       ...this.props.itemEditing,
       isLive: !this.props.itemEditing.isLive
     })
   }
 
   handleRuleChanged(rule) {
-    this.props.handleSaveItem2({
+    this.props.handleSaveItem({
       ...this.props.itemEditing,
       rule
     })
@@ -212,13 +210,11 @@ class Dashboard extends Component {
               <Form
                 item={props.itemEditing}
                 config={props.formConfig[props.itemEditing.type]}
-                handleUpdateItem={props.handleUpdateItem}
-                handleSaveItem2={props.handleSaveItem2}
+                handleSaveItem={props.handleSaveItem}
                 handleDeleteItem={props.handleDeleteItem}
                 handleChildEntityAddition={this.handleChildEntityAddition}
                 handleUpdateMessageOptions={props.handleUpdateMessageOptions}
                 childEntities={props.childEntities}
-                handleSaveItem={props.handleSaveItem}
                 handleAddTag={props.handleAddTag}
                 images={props.images}
                 tags={props.tags}
