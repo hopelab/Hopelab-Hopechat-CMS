@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import EditableText from '../EditableText';
 import NextMessage from '../NextMessage';
 import ImageDropdown from '../ImageDropdown';
-import MediaPreview, {isEmbedable} from '../MediaPreview';
+import MessageTypeDropdown from '../MessageTypeDropdown';
+import MediaPreview from '../MediaPreview';
 import {
-  messageTypes,
   TYPE_CONVERSATION,
   TYPE_COLLECTION,
   TYPE_SERIES,
@@ -14,7 +14,6 @@ import {
   MESSAGE_TYPE_QUESTION,
   MESSAGE_TYPE_QUESTION_WITH_REPLIES,
   MESSAGE_TYPE_TEXT,
-  //MESSAGE_TYPE_ANSWER,
   MESSAGE_TYPE_IMAGE,
   MESSAGE_TYPE_VIDEO
 } from '../../../utils/config';
@@ -48,13 +47,18 @@ class ConversationItem extends Component {
       next: PropTypes.object,
     }).isRequired,
     index: PropTypes.number.isRequired,
-    onUpdate: PropTypes.func.isRequired,
-    onEditEntity: PropTypes.func.isRequired,
     handleSaveItem: PropTypes.func.isRequired,
-    handleUpdateMessageOptions: PropTypes.func.isRequired,
     handleChildEntityAddition: PropTypes.func,
+    handleDeleteItem: PropTypes.func.isRequired,
     childEntities: PropTypes.array.isRequired,
     images: PropTypes.array.isRequired,
+  }
+
+  constructor(props) {
+    super(props);
+    this.handleMessageTypeSelection =
+      this.handleMessageTypeSelection.bind(this);
+    this.handleDeleteMessage = this.handleDeleteMessage.bind(this);
   }
 
   messageTypeHasContent(type) {
@@ -87,6 +91,20 @@ class ConversationItem extends Component {
     return item.next.id !== id || item.next.type !== type;
   }
 
+  handleMessageTypeSelection(messageType) {
+    if (messageType !== this.props.item.messageType) {
+      this.props.handleSaveItem({
+        ...this.props.item,
+        messageType
+      });
+    }
+  }
+
+  handleDeleteMessage() {
+    const {type, id} = this.props.item;
+    this.props.handleDeleteItem({type, id});
+  }
+
   renderItemContent(item) {
     let {messageType, url} = item;
     if (this.messageTypeHasContent(messageType)) {
@@ -112,8 +130,8 @@ class ConversationItem extends Component {
                 }
               }}
             />
-            {this.messageTypeHasUrl(messageType) && isEmbedable(url) && (
-              <MediaPreview url={url} />
+            {this.messageTypeHasUrl(messageType) && url && (
+              <MediaPreview url={url} type={messageType} />
             )}
           </p>
         </div>
@@ -138,7 +156,7 @@ class ConversationItem extends Component {
             }}
           />
           {this.messageTypeHasUrl(messageType) && url && (
-            <MediaPreview url={url} />
+            <MediaPreview url={url} type={messageType} />
           )}
         </div>
       );
@@ -169,28 +187,14 @@ class ConversationItem extends Component {
               }
             }}
           />
-          {this.props.item.messageType && (
-            <select
-              defaultValue={this.props.item.messageType}
-              onChange={e => {
-                if (e.target.value !== this.props.item.messageType) {
-                  this.props.handleSaveItem({
-                    ...this.props.item,
-                    messageType: e.target.value
-                  })
-                }
-              }}
-            >
-              {messageTypes.map(mt => (
-                <option
-                  key={mt.id}
-                  value={mt.id}
-                >
-                  {mt.display}
-                </option>
-              ))}}
-            </select>
+          { this.props.item.messageType && (
+            <MessageTypeDropdown
+              selected={this.props.item.messageType}
+              onSelection={this.handleMessageTypeSelection}
+              onDelete={this.handleDeleteMessage}
+            />
           )}
+
         </div>
         {this.renderItemContent(this.props.item)}
         {(!this.messageTypeHasQuickReplies(this.props.item.messageType)) && (

@@ -5,6 +5,7 @@ import QuickReply from '../QuickReply';
 import {
   MESSAGE_TYPE_QUESTION_WITH_REPLIES,
   MESSAGE_TYPE_TEXT,
+  QUICK_REPLY_MAX_LENGTH,
 } from '../../../utils/config';
 
 class ConversationItemContainer extends Component {
@@ -17,11 +18,9 @@ class ConversationItemContainer extends Component {
       next: PropTypes.object,
     }).isRequired,
     index: PropTypes.number.isRequired,
-    onUpdate: PropTypes.func.isRequired,
-    onEditEntity: PropTypes.func.isRequired,
     handleSaveItem: PropTypes.func.isRequired,
-    handleUpdateMessageOptions: PropTypes.func.isRequired,
     handleChildEntityAddition: PropTypes.func,
+    handleDeleteItem: PropTypes.func.isRequired,
     childEntities: PropTypes.array.isRequired,
     images: PropTypes.array.isRequired
   }
@@ -57,6 +56,9 @@ class ConversationItemContainer extends Component {
 
   quickReplyHandleChangeText(index, title) {
     if (this.props.item.quick_replies) {
+      if (title && title.length > QUICK_REPLY_MAX_LENGTH) {
+        title = title.slice(0, QUICK_REPLY_MAX_LENGTH);
+      }
       let quick_replies = this.props.item.quick_replies.map((qr, i) => {
         return i === index ?
           {

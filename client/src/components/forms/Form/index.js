@@ -7,13 +7,7 @@ import 'react-tagsinput/react-tagsinput.css';
 
 import { autocompleteRenderInput } from '../../AutoSuggest';
 
-import { last } from 'ramda';
-
-import {
-  FormGroup,
-  ControlLabel,
-  FormControl,
-} from 'react-bootstrap';
+import { FormGroup } from 'reactstrap';
 
 import { createInitialFormState } from '../../../utils/data';
 
@@ -26,13 +20,9 @@ const propTypes = {
   }),
   config: PropTypes.object,
   childEntities: PropTypes.array.isRequired,
-  handleUpdateItem: PropTypes.func.isRequired,
-  handleSaveItem2: PropTypes.func.isRequired,
-  handleUpdateChildEntity: PropTypes.func.isRequired,
-  onEditEntity: PropTypes.func.isRequired,
   handleSaveItem: PropTypes.func.isRequired,
   handleAddTag: PropTypes.func.isRequired,
-  handleUpdateMessageOptions: PropTypes.func.isRequired,
+  handleDeleteItem: PropTypes.func.isRequired,
   images: PropTypes.array.isRequired,
   tags: PropTypes.array.isRequired
 };
@@ -56,14 +46,14 @@ class Form extends Component {
   }
 
   handleTagsInput = e => {
-    this.props.handleUpdateItem({
-      target: {
-        name: 'tags',
-        value: e
-      }
-    });
-
-    this.props.handleAddTag({ name: last(e) });
+    // this.props.handleUpdateItem({
+    //   target: {
+    //     name: 'tags',
+    //     value: e
+    //   }
+    // });
+    //
+    // this.props.handleAddTag({ name: last(e) });
   };
 
   handleChildSelection = e => this.setState({ entityToAdd: e.target.value });
@@ -79,7 +69,7 @@ class Form extends Component {
           {formHasField('tags', this.props.config.fields) ? (
             <div className="TagsContainer">
               <FormGroup className="Tags">
-                <ControlLabel>TAGS</ControlLabel>
+                <h5>TAGS</h5>
                 <TagsInput
                   id="tags"
                   name="tags"
@@ -91,23 +81,6 @@ class Form extends Component {
               </FormGroup>
             </div>
           ) : null}
-
-          {formHasField('rules', this.props.config.fields) ? (
-            <div className="RulesContainer">
-              <label>
-                {`${this.props.item.type} logic/rules`.toUpperCase()}
-              </label>
-              <FormControl
-                componentClass="select"
-                id="rule"
-                name="rule"
-                value={this.props.item.rule}
-                onChange={this.props.handleUpdateItem}
-              >
-                {this.props.config.rules.map(c => <option key={c}>{c}</option>)}
-              </FormControl>
-            </div>
-          ) : null}
         </div>
 
         {formHasField('children', this.props.config.fields) ? (
@@ -117,13 +90,9 @@ class Form extends Component {
                 item={e}
                 index={i}
                 childEntities={this.props.childEntities}
-                onUpdate={this.props.handleUpdateChildEntity}
-                onEditEntity={this.props.onEditEntity}
-                handleSaveItem={this.props.handleSaveItem2}
+                handleSaveItem={this.props.handleSaveItem}
                 handleChildEntityAddition={this.props.handleChildEntityAddition}
-                handleUpdateMessageOptions={
-                  this.props.handleUpdateMessageOptions
-                }
+                handleDeleteItem={this.props.handleDeleteItem}
                 images={this.props.images}
               />
             ))

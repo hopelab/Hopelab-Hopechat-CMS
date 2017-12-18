@@ -51,10 +51,12 @@ class NextMessage extends Component {
   render() {
     const { childEntities, nextId } = this.props;
     let foundItem = childEntities.find(item => item.id === nextId);
+    let style = {};
     if (foundItem) {
       foundItem = foundItem.name;
     } else {
       foundItem = 'choose next';
+      style = {backgroundColor: 'red', color: 'white'};
     }
     return (
       <Dropdown
@@ -66,6 +68,7 @@ class NextMessage extends Component {
           tag="div"
           onClick={this.toggle}
           data-toggle="dropdown"
+          style={style}
           aria-expanded={this.state.dropdownOpen}
         >
           {foundItem}

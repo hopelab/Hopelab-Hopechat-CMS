@@ -8,12 +8,13 @@ import UploadModal from '../UploadModal';
 import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
 
+import { pick } from 'ramda';
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = config.initialState.App;
-    this.handleSaveItem2 = this.handleSaveItem2.bind(this);
-    this.updateTreeStructure2 = this.updateTreeStructure2.bind(this);
+    this.handleSaveItem = this.handleSaveItem.bind(this);
   }
 
   componentDidMount() {
@@ -21,13 +22,7 @@ class App extends Component {
       .fetchAllDataForApp(config.routes)
       .then(dataUtil.createInitialEntityState)
       .then(data => {
-        this.setState({
-          ...data,
-          treeData: dataUtil.createTreeView({
-            data: { ...data },
-            entities: config.entities
-          })
-        });
+        this.setState({...data});
       })
       .catch(console.error);
   }
@@ -39,36 +34,23 @@ class App extends Component {
   };
 
   addConversation = () => {
-    if (this.state.itemEditing === null) {
-      dataUtil
-        .post(config.routes.conversation.create, {
-          ...config.initialState[config.entities.conversation]
-        })
-        .then(res => res.json())
-        .then(res => {
-          const conversation = res[config.entities.conversation];
+    dataUtil
+      .post(config.routes.conversation.create, {
+        ...config.initialState[config.entities.conversation]
+      })
+      .then(res => res.json())
+      .then(res => {
+        const conversation = res[config.entities.conversation];
 
-          this.setState(
-            {
-              itemEditing: conversation[conversation.length - 1],
-              ...res
-            },
-            () => {
-              this.setState({
-                entitiesCanCopyTo: dataUtil.getEntitiesCanCopyTo(
-                  this.state.itemEditing,
-                  this.state
-                ),
-                treeData: dataUtil.createTreeView({
-                  data: { ...this.state },
-                  entities: config.entities
-                })
-              });
-            }
-          );
-        })
-        .catch(console.error);
-    }
+        this.setState(
+          {
+            itemEditing:
+              pick(['id', 'type'], conversation[conversation.length - 1]),
+            ...res
+          }
+        );
+      })
+      .catch(console.error);
   };
 
   resetActionMessage = (stateKey, time) => {
@@ -110,28 +92,16 @@ class App extends Component {
       });
   };
 
-  handleUpdatingItem = e => {
-    const target = e.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
+  getFullItemEditing(state) {
+    const {itemEditing} = state;
+    if (!itemEditing) {
+      return null;
+    }
 
-    this.setState({
-      itemEditing: {
-        ...this.state.itemEditing,
-        [target.name]: value
-      },
-      itemHasBeenEdited: true
-    });
-  };
-
-  handleUpdateMessageOptions = ({ field, value }) => {
-    this.setState({
-      itemEditing: {
-        ...this.state.itemEditing,
-        [field]: value
-      },
-      itemHasBeenEdited: true
-    });
-  };
+    return state[itemEditing.type].find(
+      item => item.id === itemEditing.id
+    );
+  }
 
   markPosition = entity => {
     if (
@@ -141,7 +111,12 @@ class App extends Component {
       return entity;
     }
 
-    if (!this.state.childEntities.length) {
+    const childEntities = dataUtil.getChildEntitiesFor(
+      this.getFullItemEditing(this.state),
+      this.state
+    );
+
+    if (!childEntities.length) {
       return {
         ...entity,
         start: true
@@ -158,52 +133,11 @@ class App extends Component {
       .then(dataUtil.throwIfEmptyArray)
       .then(res => {
         this.setState(
-          {
-            [entity.type]: res,
-            childEntities: this.state.childEntities.concat(res[res.length - 1])
-          },
-          () => {
-            this.setState({
-              treeData: dataUtil.createTreeView({
-                data: { ...this.state },
-                entities: config.entities
-              }),
-              entitiesCanCopyTo: dataUtil.getEntitiesCanCopyTo(
-                this.state.itemEditing,
-                this.state
-              )
-            }, () => !!(callback) && callback(res[res.length - 1]));
-          }
+          { [entity.type]: res },
+          () => !!(callback) && callback(res[res.length - 1])
         );
       })
       .catch(console.error);
-  };
-
-  handleUpdateChildEntity = ({ index, field, value }) => {
-    const newArray = Array.from(this.state.childEntities);
-    newArray[index][field] = value;
-
-    this.setState({
-      childEntities: newArray
-    });
-  };
-
-  updateTreeStructure = () => {
-    this.setState({
-      treeData: dataUtil.createTreeView({
-        data: { ...this.state },
-        entities: config.entities,
-        active: (this.state.itemEditing || {}).id
-      }),
-      childEntities: dataUtil.getChildEntitiesFor(
-        this.state.itemEditing,
-        this.state
-      ),
-      entitiesCanCopyTo: dataUtil.getEntitiesCanCopyTo(
-        this.state.itemEditing,
-        this.state
-      )
-    });
   };
 
   handleUploadMessage(res, uploadItem, callback) {
@@ -225,33 +159,20 @@ class App extends Component {
         }
       });
     }
-    let childEntities =  this.state.childEntities.map(c => (
-      c.id === newRes.id ? newRes : c
-    ));
     this.setState(
-      {
-        [res.type]: items,
-        childEntities
-      },
-      () => this.updateTreeStructure2(newRes, callback)
-    )
-  }
-
-  handleUploadNonMessage(res, uploadItem, callback) {
-    let childEntities =  this.state.childEntities.map(c => {
-      let found = res.find(r => c.id === r.id);
-      return found ? found : c;
-    });
-    this.setState(
-      {
-        [uploadItem.type]: res,
-        childEntities
-      },
-      () => this.updateTreeStructure2(uploadItem, callback)
+      { [res.type]: items },
+      () => !!(callback) && callback(uploadItem)
     );
   }
 
-  handleSaveItem2(item, callback) {
+  handleUploadNonMessage(res, uploadItem, callback) {
+    this.setState(
+      { [uploadItem.type]: res },
+      () => !!(callback) && callback(uploadItem)
+    );
+  }
+
+  handleSaveItem(item, callback) {
     const route = item.id ? config.operations.update : config.operations.create;
     dataUtil
       .post(
@@ -268,48 +189,6 @@ class App extends Component {
       })
       .catch(console.error);
   }
-
-  updateTreeStructure2(item, callback) {
-    this.setState({
-      treeData: dataUtil.createTreeView({
-        data: { ...this.state },
-        entities: config.entities,
-        active: (item || {}).id
-      })/*,
-      childEntities: dataUtil.getChildEntitiesFor(
-        item,
-        this.state
-      ),/*
-      entitiesCanCopyTo: dataUtil.getEntitiesCanCopyTo(
-        item,
-        this.state
-      )*/
-    }, () => !!(callback) && callback(item));
-  }
-
-  handleSaveItem = ({ item, reset, switchTo }) => {
-    const route = item.id ? config.operations.update : config.operations.create;
-
-    dataUtil
-      .post(
-        config.routes[item.type][route],
-        dataUtil.makeCopyAndRemoveKeys(item, config.keysToRemove)
-      )
-      .then(res => res.json())
-      .then(dataUtil.throwIfEmptyArray)
-      .then(res => {
-        this.setState(
-          {
-            itemEditing: reset
-              ? null
-              : switchTo ? res[res.length - 1] : this.state.itemEditing,
-            [item.type]: res
-          },
-          this.updateTreeStructure
-        );
-      })
-      .catch(console.error);
-  };
 
   handleAddTag = tag => {
     if (dataUtil.tagExists(tag, this.state.tag)) {
@@ -334,15 +213,7 @@ class App extends Component {
       })
       .then(res => res.json())
       .then(copiedResults => {
-        this.setState(copiedResults, () => {
-          this.setState({
-            treeData: dataUtil.createTreeView({
-              data: { ...this.state },
-              entities: config.entities,
-              active: (this.state.itemEditing || {}).id
-            })
-          });
-        });
+        this.setState(copiedResults);
       })
       .catch(console.error);
   };
@@ -354,76 +225,22 @@ class App extends Component {
       .then(res => res.json())
       .then(dataUtil.constructEntityState(item.type))
       .then(nextEntityState => {
-        this.setState(
-          {
+        let newState;
+        if (this.state.itemEditing && item.id === this.state.itemEditing.id) {
+          newState = {
             itemEditing: null,
-            childEntities: [],
-            entitiesCanCopyTo: [],
             ...nextEntityState
-          },
-          () => {
-            this.setState({
-              treeData: dataUtil.createTreeView({
-                data: { ...this.state },
-                entities: config.entities
-              })
-            });
           }
-        );
+        } else {
+          newState = { ...nextEntityState };
+        }
+        this.setState(newState);
       })
       .catch(console.error);
   };
 
-  handleEditingChildEntity = entity => {
-    this.setState(
-      {
-        itemEditing: entity,
-        itemHasBeenEdited: false
-      },
-      () => {
-        this.setState({
-          childEntities: dataUtil.getChildEntitiesFor(
-            this.state.itemEditing,
-            this.state
-          ),
-          entitiesCanCopyTo: dataUtil.getEntitiesCanCopyTo(
-            this.state.itemEditing,
-            this.state
-          ),
-          treeData: dataUtil.createTreeView({
-            data: { ...this.state },
-            entities: config.entities,
-            active: this.state.itemEditing.id
-          })
-        });
-      }
-    );
-  };
-
-  handleDashboardClose = () => {
-    this.state.cursor.active = false;
-
-    this.setState(
-      {
-        itemEditing: null,
-        itemHasBeenEdited: false,
-        childEntities: []
-      },
-      () => {
-        this.setState({
-          entitiesCanCopyTo: [],
-          treeData: dataUtil.createTreeView({
-            data: { ...this.state },
-            entities: config.entities
-          })
-        });
-      }
-    );
-  };
-
   handleTreeToggle = ({ node, expand }) => {
     /* eslint-disable react/no-direct-mutation-state */
-
     if (expand) {
       if (node.children) {
         node.toggled = !node.toggled;
@@ -444,47 +261,45 @@ class App extends Component {
     this.setState(
       {
         cursor: node,
-        itemEditing: node.type ? node : this.state.itemEditing,
-        itemHasBeenEdited: false
-      },
-      () => {
-        this.setState({
-          childEntities: dataUtil.getChildEntitiesFor(
-            this.state.itemEditing,
-            this.state
-          ),
-          entitiesCanCopyTo: dataUtil.getEntitiesCanCopyTo(
-            this.state.itemEditing,
-            this.state
-          )
-        });
+        itemEditing: node.type ? pick(['id', 'type'],node) : this.state.itemEditing,
       }
     );
   };
 
-  handleCopyEntity = () => {
-    const parent = {
-      ...this.state.itemEditing
-    };
+  handleCopyEntity = (entity) => {
+    const parent = entity ? {
+        ...this.state.itemEditing,
+        parent: {
+          ...entity.link
+        }
+      } : {
+        ...this.state.itemEditing
+      };
 
     this.handleCopyItem({
       parent
     });
   };
 
-  handleCopyToEntity = entity => {
-    const parent = {
-      ...this.state.itemEditing,
-      parent: {
-        ...entity.link
-      }
-    };
-
-    this.handleCopyItem({
-      parent
-    });
-  };
   render() {
+    const entitiesCanCopyTo = dataUtil.getEntitiesCanCopyTo(
+      this.getFullItemEditing(this.state),
+      this.state
+    );
+
+    const childEntities = dataUtil.getChildEntitiesFor(
+      this.getFullItemEditing(this.state),
+      this.state
+    );
+
+    const treeData = dataUtil.createTreeView({
+      data: { ...this.state },
+      entities: config.entities,
+      active: (this.getFullItemEditing(this.state) || {}).id
+    });
+
+    const itemEditing = this.getFullItemEditing(this.state);
+
     return (
       <div className="App row">
         <UploadModal
@@ -501,9 +316,9 @@ class App extends Component {
         <Sidebar
           addConversation={this.addConversation}
           conversation={this.state.conversation}
-          treeData={this.state.treeData}
+          treeData={treeData}
           handleTreeToggle={this.handleTreeToggle}
-          itemEditing={this.state.itemEditing}
+          itemEditing={itemEditing}
           toggleImageModal={() => {
             this.setState({
               mediaUpload: {
@@ -516,22 +331,14 @@ class App extends Component {
 
         <Dashboard
           formConfig={config.forms}
-          handleClose={this.handleDashboardClose}
-          handleUpdateItem={this.handleUpdatingItem}
           handleSaveItem={this.handleSaveItem}
-          handleSaveItem2={this.handleSaveItem2}
           handleDeleteItem={this.handleDeleteItem}
           handleNewChildEntity={this.handleNewChildEntity}
-          handleUpdateChildEntity={this.handleUpdateChildEntity}
-          handleEditingChildEntity={this.handleEditingChildEntity}
-          handleUpdateMessageOptions={this.handleUpdateMessageOptions}
           handleAddTag={this.handleAddTag}
-          itemEditing={this.state.itemEditing}
-          itemHasBeenEdited={this.state.itemHasBeenEdited}
-          childEntities={this.state.childEntities}
-          entitiesCanCopyTo={this.state.entitiesCanCopyTo}
+          itemEditing={itemEditing}
+          childEntities={childEntities}
+          entitiesCanCopyTo={entitiesCanCopyTo}
           handleCopyEntity={this.handleCopyEntity}
-          handleCopyToEntity={this.handleCopyToEntity}
           images={this.state.image}
           tags={this.state.tag}
         />

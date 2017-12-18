@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 //import './style.css';
 
 import { Treebeard, decorators } from '../TreeBeard';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Button } from 'reactstrap';
 
 import { entities } from '../../utils/config';
 import treeTheme from '../../utils/treeTheme';
@@ -24,13 +24,16 @@ function handleClick({ expand, onClick }) {
 const PoolContainer = ({ onClick, node }) => {
   const hasChildren = node.children && node.children.length;
 
-  let icon = hasChildren ? (
-    node.toggled ? (
-      <Glyphicon glyph="minus" />
-    ) : (
-      <Glyphicon glyph="plus" />
-    )
-  ) : null;
+  let icon = null;
+
+  // TODO: Look into supporting expandable tree with +, - icon.
+  // hasChildren ? (
+  //   node.toggled ? (
+  //     <Glyphicon glyph="minus" />
+  //   ) : (
+  //     <Glyphicon glyph="plus" />
+  //   )
+  // ) : null;
 
   return (
     <div
@@ -71,14 +74,13 @@ const Sidebar = props => (
       <div className="card-header d-flex flex-row justify-content-between">
         <span style={{fontSize: '1.1em'}}>Conversations</span>
         <div>
-          <Button bsStyle="primary" onClick={props.toggleImageModal}>
+          <Button color="primary" onClick={props.toggleImageModal}>
             Image
           </Button>
           <Button
-            bsStyle="primary"
+            color="primary"
             className="ml-2"
             onClick={props.addConversation}
-            disabled={!!props.itemEditing}
           >
             New
           </Button>

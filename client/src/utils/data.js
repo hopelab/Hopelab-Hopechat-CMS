@@ -92,6 +92,7 @@ export function entityCanBeCopied(entity) {
  * @returns {bool}
 */
 export function getEntitiesCanCopyTo(entity, appState) {
+  if (!entity) { return []; }
   return entitiesForCopy[entity.type].reduce((prev, curr) => {
     return prev.concat(
       ...appState[curr]

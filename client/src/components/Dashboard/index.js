@@ -1,36 +1,32 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-//import './style.css';
-
 
 import Form from '../forms/Form';
 import DropDownWithPlus from '../forms/DropDownWithPlus';
 import EditableText from '../forms/EditableText';
 import RulesDropdown from '../forms/RulesDropdown';
-import { Button, ButtonGroup, SplitButton, MenuItem } from 'react-bootstrap';
-import {Form as ReactStrapForm, FormGroup, Label, Input } from 'reactstrap';
+import CopyButton from '../forms/CopyButton';
+import {
+  Form as ReactStrapForm,
+  FormGroup,
+  Label,
+  Input,
+  Button
+} from 'reactstrap';
 
 import { entityCanBeCopied } from '../../utils/data';
 import {forms} from '../../utils/config';
 
 const propTypes = {
   formConfig: PropTypes.object.isRequired,
-  handleClose: PropTypes.func.isRequired,
-  handleUpdateItem: PropTypes.func.isRequired,
-  handleSaveItem: PropTypes.func.isRequired,
-  handleSaveItem2: PropTypes.func,
+  handleSaveItem: PropTypes.func,
   handleDeleteItem: PropTypes.func.isRequired,
   handleNewChildEntity: PropTypes.func.isRequired,
-  handleUpdateChildEntity: PropTypes.func.isRequired,
-  handleEditingChildEntity: PropTypes.func.isRequired,
-  handleUpdateMessageOptions: PropTypes.func.isRequired,
   handleAddTag: PropTypes.func.isRequired,
   itemEditing: PropTypes.object,
-  itemHasBeenEdited: PropTypes.bool.isRequired,
   childEntities: PropTypes.array.isRequired,
   entitiesCanCopyTo: PropTypes.array.isRequired,
   handleCopyEntity: PropTypes.func.isRequired,
-  handleCopyToEntity: PropTypes.func.isRequired,
   images: PropTypes.array.isRequired,
   tags: PropTypes.array
 };
@@ -47,6 +43,8 @@ class DashboardHeader extends Component {
     onNameChanged: PropTypes.func.isRequired,
     onRuleChanged: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
+    onCopy: PropTypes.func.isRequired,
+    copyToItems: PropTypes.arrayOf(PropTypes.shape),
   }
 
   hasLive(type) {
@@ -72,7 +70,9 @@ class DashboardHeader extends Component {
       onDelete,
       onToggleLive,
       isLive,
-      rule
+      rule,
+      onCopy,
+      copyToItems,
     } = this.props;
     return (
       <div
@@ -100,7 +100,15 @@ class DashboardHeader extends Component {
             onDelete({id: itemId, type: itemType})
           }}
         >
-          <Button className="mr-3" bsStyle="danger" type='submit'>X</Button>
+          {itemType === 'conversation' &&
+            (<CopyButton onCopy={onCopy} />)}
+          {entityCanBeCopied(itemType) && (
+            <CopyButton
+              copyToItems={copyToItems}
+              onCopy={onCopy}
+            />
+          )}
+          <Button className="mr-3" color="danger" type='submit'>X</Button>
           {this.hasLive(itemType) && (
             <FormGroup check>
               <Label check>
@@ -149,21 +157,21 @@ class Dashboard extends Component {
   }
 
   handleItemNameChange(name) {
-    this.props.handleSaveItem2({
+    this.props.handleSaveItem({
       ...this.props.itemEditing,
       name
     })
   }
 
   handleToggleLiveConversation() {
-    this.props.handleSaveItem2({
+    this.props.handleSaveItem({
       ...this.props.itemEditing,
       isLive: !this.props.itemEditing.isLive
     })
   }
 
   handleRuleChanged(rule) {
-    this.props.handleSaveItem2({
+    this.props.handleSaveItem({
       ...this.props.itemEditing,
       rule
     })
@@ -186,73 +194,23 @@ class Dashboard extends Component {
               onNameChanged={this.handleItemNameChange}
               onRuleChanged={this.handleRuleChanged}
               onDelete={props.handleDeleteItem}
+              onCopy={props.handleCopyEntity}
+              copyToItems={props.entitiesCanCopyTo}
             />
-            <div className="FormContainer">
-              <div className="FormActionsContainer">
-                {props.itemEditing.type === 'conversation' ? (
-                  <Button bsStyle="primary" onClick={props.handleCopyEntity}>
-                    Copy
-                  </Button>
-                ) : null}
-
-                {entityCanBeCopied(props.itemEditing.type) && (
-                  <ButtonGroup>
-                    <SplitButton
-                      bsStyle="primary"
-                      title="Copy To"
-                      id="bg-nested-dropdown"
-                      onSelect={props.handleCopyToEntity}
-                    >
-                      {props.entitiesCanCopyTo.map((e, i) => (
-                        <MenuItem key={i} eventKey={e}>
-                          {e.name}
-                        </MenuItem>
-                      ))}
-                    </SplitButton>
-                  </ButtonGroup>
-                )}
-                <Button bsStyle="default" onClick={props.handleClose}>
-                  Close
-                </Button>
-
-                <Button
-                  bsStyle="danger"
-                  onClick={() =>
-                    props.handleDeleteItem({
-                      type: props.itemEditing.type,
-                      id: props.itemEditing.id
-                    })}
-                  disabled={props.itemEditing.id === 'intro-conversation'}
-                >
-                  Delete
-                </Button>
-
-                <Button
-                  bsStyle="success"
-                  onClick={() => props.handleSaveItem({ item: props.itemEditing })}
-                  disabled={!props.itemHasBeenEdited}
-                >
-                  Save
-                </Button>
-              </div>
-              <Form
-                item={props.itemEditing}
-                config={props.formConfig[props.itemEditing.type]}
-                handleUpdateItem={props.handleUpdateItem}
-                handleSaveItem2={props.handleSaveItem2}
-                handleChildEntityAddition={this.handleChildEntityAddition}
-                handleUpdateMessageOptions={props.handleUpdateMessageOptions}
-                handleUpdateChildEntity={props.handleUpdateChildEntity}
-                onEditEntity={props.handleEditingChildEntity}
-                childEntities={props.childEntities}
-                handleSaveItem={props.handleSaveItem}
-                handleAddTag={props.handleAddTag}
-                images={props.images}
-                tags={props.tags}
-              />
-            </div>
+            <Form
+              item={props.itemEditing}
+              config={props.formConfig[props.itemEditing.type]}
+              handleSaveItem={props.handleSaveItem}
+              handleDeleteItem={props.handleDeleteItem}
+              handleChildEntityAddition={this.handleChildEntityAddition}
+              childEntities={props.childEntities}
+              handleAddTag={props.handleAddTag}
+              images={props.images}
+              tags={props.tags}
+            />
           </div>
         )}
+        <div style={{height: '85vh'}} />
       </div>
     );
   }

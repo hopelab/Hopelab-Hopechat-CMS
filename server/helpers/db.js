@@ -89,10 +89,15 @@ const maybeRemoveQuickReply = id => entity =>
       R.assoc('quick_replies', R.__, entity),
       R.always(entity)
     ),
-    R.map(R.over(R.lensProp('payload'), JSON.stringify)),
-    R.reject(R.pathEq(['payload', 'id'], id)),
-    R.map(R.over(R.lensProp('payload'), JSON.parse)),
-    R.propOr([], 'quick_replies')
+    R.tryCatch(
+      R.compose(
+        R.map(R.over(R.lensProp('payload'), JSON.parse)),
+        R.reject(R.pathEq(['payload', 'id'], id)),
+        R.map(R.over(R.lensProp('payload'), JSON.stringify)),
+        R.propOr([], 'quick_replies')
+      ),
+      R.always([])
+    )
   )(entity);
 
 const maybeRemoveNext = id =>
@@ -117,7 +122,10 @@ const maybeDeleteLinksForEntity = (type, id) => {
 }
 
 const deleteLinksFromSameEntitySet = id =>
-  R.compose(R.map(maybeRemoveQuickReply(id)), R.map(maybeRemoveNext(id)));
+  R.compose(
+    R.map(maybeRemoveQuickReply(id)),
+    R.map(maybeRemoveNext(id))
+  );
 
 const deleteLinksFromDifferentEntitySets = (
   id,
