@@ -74,12 +74,21 @@ const Sidebar = props => (
       <div className="card-header d-flex flex-row justify-content-between">
         <span style={{fontSize: '1.1em'}}>Conversations</span>
         <div>
-          <Button color="primary" onClick={props.toggleImageModal}>
+          <a href="/users" target="_blank">
+            <Button color="primary">
+              <i class="fa fa-cloud-download" aria-hidden="true"></i>
+            </Button>
+          </a>
+          <Button
+            color="primary"
+            className='ml-1'
+            onClick={props.toggleImageModal}
+          >
             Image
           </Button>
           <Button
             color="primary"
-            className="ml-2"
+            className="ml-1"
             onClick={props.addConversation}
           >
             New
