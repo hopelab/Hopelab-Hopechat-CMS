@@ -6,6 +6,7 @@ const {
   DB_BLOCKS,
   DB_MEDIA,
   DB_TAG,
+  DB_USERS,
   ONE_DAY_IN_MILLISECONDS
 } = require('./constants');
 
@@ -14,7 +15,7 @@ const helpers = require('./helpers/db');
 module.exports = store => {
   /**
      * Get Conversation
-     * 
+     *
      * @return {Promise<Array>}
     */
   const getConversations = () =>
@@ -28,7 +29,7 @@ module.exports = store => {
 
   /**
      * Get Conversation by ID
-     * 
+     *
      * @param {String} id
      * @return {Promise<Object>}
     */
@@ -44,7 +45,7 @@ module.exports = store => {
 
   /**
      * Set Conversation
-     * 
+     *
      * @param {Object} conversation
      * @return {Promise<bool>}
     */
@@ -66,7 +67,7 @@ module.exports = store => {
 
   /**
      * Update Conversation
-     * 
+     *
      * @param {Object} conversation
      * @return {Promise<bool>}
     */
@@ -83,7 +84,7 @@ module.exports = store => {
 
   /**
      * Get Collection
-     * 
+     *
      * @return {Promise<Array>}
     */
   const getCollections = () =>
@@ -97,7 +98,7 @@ module.exports = store => {
 
   /**
      * Get Collection by ID
-     * 
+     *
      * @param {String} id
      * @return {Promise<Object>}
     */
@@ -113,7 +114,7 @@ module.exports = store => {
 
   /**
      * Set Collection
-     * 
+     *
      * @param {Object} collection
      * @return {Promise<bool>}
     */
@@ -132,7 +133,7 @@ module.exports = store => {
 
   /**
      * Update Collection
-     * 
+     *
      * @param {Object} collection
      * @return {Promise<bool>}
     */
@@ -149,7 +150,7 @@ module.exports = store => {
 
   /**
      * Get Series
-     * 
+     *
      * @return {Promise<Array>}
     */
   const getSeries = () =>
@@ -163,7 +164,7 @@ module.exports = store => {
 
   /**
      * Get Series by ID
-     * 
+     *
      * @param {String} id
      * @return {Promise<Object>}
     */
@@ -179,7 +180,7 @@ module.exports = store => {
 
   /**
      * Set Series
-     * 
+     *
      * @param {Object} series
      * @return {Promise<bool>}
     */
@@ -196,7 +197,7 @@ module.exports = store => {
 
   /**
      * Update Series
-     * 
+     *
      * @param {Object} series
      * @return {Promise<bool>}
     */
@@ -213,7 +214,7 @@ module.exports = store => {
 
   /**
      * Get Messages
-     * 
+     *
      * @return {Promise<Array>}
     */
   const getMessages = () =>
@@ -227,7 +228,7 @@ module.exports = store => {
 
   /**
      * Get Message by ID
-     * 
+     *
      * @param {String} id
      * @return {Promise<Object>}
     */
@@ -243,7 +244,7 @@ module.exports = store => {
 
   /**
      * Set Message
-     * 
+     *
      * @param {Object} message
      * @return {Promise<bool>}
     */
@@ -260,7 +261,7 @@ module.exports = store => {
 
   /**
      * Update Message
-     * 
+     *
      * @param {Object} message
      * @return {Promise<bool>}
     */
@@ -278,7 +279,7 @@ module.exports = store => {
 
   /**
      * Get Blocks
-     * 
+     *
      * @return {Promise<Array>}
     */
   const getBlocks = () =>
@@ -292,7 +293,7 @@ module.exports = store => {
 
   /**
      * Get Block by ID
-     * 
+     *
      * @param {String} id
      * @return {Promise<Object>}
     */
@@ -308,7 +309,7 @@ module.exports = store => {
 
   /**
      * Set Block
-     * 
+     *
      * @param {Object} block
      * @return {Promise<bool>}
     */
@@ -325,7 +326,7 @@ module.exports = store => {
 
   /**
      * Update Block
-     * 
+     *
      * @param {Object} block
      * @return {Promise<bool>}
     */
@@ -342,7 +343,7 @@ module.exports = store => {
 
   /**
      * Get Media
-     * 
+     *
      * @return {Promise<Object>}
     */
   const getMedia = () =>
@@ -356,7 +357,7 @@ module.exports = store => {
 
   /**
      * Get Files
-     * 
+     *
      * @return {Promise<Object>}
     */
   const getImages = () =>
@@ -370,7 +371,7 @@ module.exports = store => {
 
   /**
      * Upload Image
-     * 
+     *
      * @return {Promise<Object>}
     */
   const uploadImage = data =>
@@ -400,7 +401,7 @@ module.exports = store => {
 
   /**
      * Get Tags
-     * 
+     *
      * @return {Promise<Object>}
     */
   const getTags = () =>
@@ -414,7 +415,7 @@ module.exports = store => {
 
   /**
    * Set Tag
-   * 
+   *
    * @param {Object} tag
    * @return {Promise<bool>}
   */
@@ -428,6 +429,16 @@ module.exports = store => {
         .then(resolve)
         .catch(console.error);
     });
+
+  const getUserData = () =>
+    new Promise(resolve => {
+      store
+        .getItem(DB_USERS)
+        .then(JSON.parse)
+        .then(helpers.mapUserHistory)
+        .then(resolve)
+        .catch(console.error);
+    })
 
   return {
     getConversations,
@@ -459,6 +470,8 @@ module.exports = store => {
     uploadImage,
 
     getTags,
-    setTag
+    setTag,
+
+    getUserData,
   };
 };

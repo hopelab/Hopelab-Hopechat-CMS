@@ -8,6 +8,7 @@ const DB_MESSAGES = 'messages';
 const DB_BLOCKS = 'blocks';
 const DB_MEDIA = 'media';
 const DB_TAG = 'tag';
+const DB_USERS = 'users';
 
 const TYPE_CONVERSATION = 'conversation';
 const TYPE_COLLECTION = 'collection';
@@ -36,6 +37,7 @@ module.exports = {
   DB_BLOCKS,
   DB_MEDIA,
   DB_TAG,
+  DB_USERS,
   TYPE_CONVERSATION,
   TYPE_COLLECTION,
   TYPE_SERIES,

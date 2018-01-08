@@ -8,6 +8,7 @@ router.use('/blocks', require('./blocks'));
 router.use('/messages', require('./messages'));
 router.use('/images', require('./images'));
 router.use('/tags', require('./tags'));
+router.use('/users', require('./users'));
 
 router.get('/', (req, res) => {
   res.render('index');

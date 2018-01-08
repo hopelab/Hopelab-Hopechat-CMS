@@ -73,6 +73,12 @@ const createNewEntity = (type, entity) => entities =>
     })
   );
 
+const mapUserHistory = users =>
+  users.map(u => ({
+    id: u.id,
+    history: u.history
+  }));
+
 const maybeReplaceWithEntity = newEntity => old =>
   old.id === newEntity.id ? newEntity : old;
 const updateEntityInList = entity => entities =>
@@ -146,6 +152,7 @@ const deleteLinksFromDifferentEntitySets = (
 
 module.exports = {
   createNewEntity,
+  mapUserHistory,
   updateEntityInList,
   findEntityById,
   deleteEntityFromList,
