@@ -8,11 +8,18 @@ import {
   DropdownToggle
 } from 'reactstrap';
 
+import { END_OF_CONVERSATION_ID } from '../../../utils/config';
+
 const propTypes = {
   childEntities: PropTypes.array.isRequired,
   nextId: PropTypes.string,
   handleNextMessageSelect: PropTypes.func.isRequired,
-  onNewItem: PropTypes.func.isRequired
+  onNewItem: PropTypes.func.isRequired,
+  showEndOfConversation: PropTypes.bool.isRequired
+};
+
+const defaultProps = {
+  showEndOfConversation: false
 };
 
 const getNextMessageOptionsForMessage = props => {
@@ -26,7 +33,20 @@ const getNextMessageOptionsForMessage = props => {
     </DropdownItem>
   ));
 
-  items.push(<DropdownItem divider key={'divider'}/>);
+  if (props.showEndOfConversation) {
+    items.push(<DropdownItem divider key='divider0'/>);
+    items.push((
+      <DropdownItem
+        key='end-of-conversation-xyz123'
+        active={END_OF_CONVERSATION_ID === props.nextId}
+        onClick={() => props.handleNextMessageSelect(END_OF_CONVERSATION_ID)}
+      >
+        End Of Conversation
+      </DropdownItem>
+    ));
+  }
+
+  items.push(<DropdownItem divider key='divider'/>);
   items.push((
     <DropdownItem onClick={props.onNewItem} key='new-item'>
       New Item
@@ -50,8 +70,16 @@ class NextMessage extends Component {
 
   render() {
     const { childEntities, nextId } = this.props;
-    let foundItem = childEntities.find(item => item.id === nextId);
+    let foundItem;
     let style = {};
+    if (nextId === END_OF_CONVERSATION_ID) {
+      foundItem = {name: "End Of Conversation"};
+      style = {backgroundColor: 'yellow'};
+    } else {
+      foundItem = childEntities.find(item => item.id === nextId);
+    }
+
+
     if (foundItem) {
       foundItem = foundItem.name;
     } else {
@@ -82,5 +110,6 @@ class NextMessage extends Component {
 }
 
 NextMessage.propTypes = propTypes;
+NextMessage.defaultProps = defaultProps;
 
 export default NextMessage;

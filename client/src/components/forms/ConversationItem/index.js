@@ -202,17 +202,19 @@ class ConversationItem extends Component {
             <NextMessage
               childEntities={this.props.childEntities}
               nextId={this.props.item.next ? this.props.item.next.id : undefined}
+              showEndOfConversation={this.props.parentItemType === TYPE_CONVERSATION}
               handleNextMessageSelect={(id, type)=> {
                 if (this.nextHasChanged(this.props.item, id, type)) {
                   if (!id) {
                     let item = Object.assign({}, this.props.item);
                     delete item.next;
                     this.props.handleSaveItem(item)
+                  } else {
+                    this.props.handleSaveItem({
+                      ...this.props.item,
+                      next: {id, type}
+                    })
                   }
-                  this.props.handleSaveItem({
-                    ...this.props.item,
-                    next: {id, type}
-                  })
                 }
 
               }}

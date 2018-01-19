@@ -128,6 +128,8 @@ const MESSAGE_TYPE_IMAGE = 'image';
 const MESSAGE_TYPE_VIDEO = 'video';
 const TYPE_TAG = 'tag';
 
+const END_OF_CONVERSATION_ID = 'END-OF-CONVERSATION-ID';
+
 const QUICK_REPLY_MAX_LENGTH = 20;
 
 const messageTypes = [
@@ -238,4 +240,5 @@ export {
   MESSAGE_TYPE_VIDEO,
   TYPE_TAG,
   QUICK_REPLY_MAX_LENGTH,
+  END_OF_CONVERSATION_ID,
 };

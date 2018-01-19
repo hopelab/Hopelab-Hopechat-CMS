@@ -15,6 +15,7 @@ const propTypes = {
   item: PropTypes.shape({
     name: PropTypes.string,
     tags: PropTypes.array,
+    type: PropTypes.string,
     isLive: PropTypes.bool,
     children: PropTypes.array
   }),
@@ -94,6 +95,7 @@ class Form extends Component {
                 handleChildEntityAddition={this.props.handleChildEntityAddition}
                 handleDeleteItem={this.props.handleDeleteItem}
                 images={this.props.images}
+                parentItemType={this.props.item.type}
               />
             ))
         ) : null}

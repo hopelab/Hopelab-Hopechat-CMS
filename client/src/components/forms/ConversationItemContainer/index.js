@@ -6,6 +6,7 @@ import {
   MESSAGE_TYPE_QUESTION_WITH_REPLIES,
   MESSAGE_TYPE_TEXT,
   QUICK_REPLY_MAX_LENGTH,
+  TYPE_CONVERSATION,
 } from '../../../utils/config';
 
 class ConversationItemContainer extends Component {
@@ -137,6 +138,7 @@ class ConversationItemContainer extends Component {
                     this.quickReplyHandleNextItemSelect(i, newItem.id, newItem.type)
                   });
                 }}
+                showEndOfConversation={this.props.parentItemType === TYPE_CONVERSATION}
               />
             ))}
           </div>

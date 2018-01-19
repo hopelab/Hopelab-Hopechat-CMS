@@ -22,7 +22,7 @@ function handleClick({ expand, onClick }) {
 }
 
 const PoolContainer = ({ onClick, node }) => {
-  const hasChildren = node.children && node.children.length;
+  //const hasChildren = node.children && node.children.length;
 
   let icon = null;
 
@@ -76,7 +76,7 @@ const Sidebar = props => (
         <div>
           <a href="/users" target="_blank">
             <Button color="primary">
-              <i class="fa fa-cloud-download" aria-hidden="true"></i>
+              <i className="fa fa-cloud-download" aria-hidden="true"></i>
             </Button>
           </a>
           <Button

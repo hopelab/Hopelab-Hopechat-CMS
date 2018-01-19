@@ -13,6 +13,7 @@ class QuickReply extends Component {
     onUpdateText: PropTypes.func.isRequired,
     onDeleteReply: PropTypes.func.isRequired,
     childEntities: PropTypes.array.isRequired,
+    showEndOfConversation: PropTypes.bool.isRequired,
   }
 
   render() {
@@ -43,6 +44,7 @@ class QuickReply extends Component {
               (...params) => this.props.onNextItemSelect(this.props.index, ...params)
             }
             onNewItem={this.props.onNewItem}
+            showEndOfConversation={this.props.showEndOfConversation}
           />
         </div>
       </div>
