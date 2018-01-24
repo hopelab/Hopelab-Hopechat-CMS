@@ -57,7 +57,7 @@ const makeANewBlock = allSeries => ({
 
 /**
  * Create a new Conversation and default private descendants
- * 
+ *
  * @param {Object} entity
  * @return {Promise}
 */
@@ -77,7 +77,7 @@ exports.createConversation = entity =>
 
 /**
    * Update all Message Pointers Between Two Lists (Old, New)
-   * 
+   *
    * @param {Object} entityOldNew
    * @return {Array}
   */
@@ -95,22 +95,22 @@ function createChainedItemsList(entityOldNew) {
       }
 
       if (newItem.messageType === MESSAGE_TYPE_QUESTION_WITH_REPLIES) {
-        if (
-          newItem.quick_replies.find(
-            qr => JSON.parse(qr.payload).id === oldItem.id
-          )
-        ) {
-          const index = newItem.quick_replies.findIndex(
-            qr => JSON.parse(qr.payload).id === oldItem.id
-          );
-          const quick_replies = [...newItem.quick_replies];
-          quick_replies[index].payload = JSON.stringify({
-            id: listToSave[i].id,
-            type: listToSave[i].type
-          });
+        const quick_replies = newItem.quick_replies.map(qr => {
+          const payload = JSON.parse(qr.payload);
+          if (payload.id === oldItem.id) {
+            const newPayload = JSON.stringify({
+              id: listToSave[i].id,
+              type: listToSave[i].type
+            });
+            return {
+              ...qr,
+              payload: newPayload
+            };
+          }
+          return qr;
+        });
 
-          return R.merge(newItem, { quick_replies });
-        }
+        return R.merge(newItem, { quick_replies });
       }
 
       return newItem;
@@ -122,7 +122,7 @@ function createChainedItemsList(entityOldNew) {
 
 /**
  * Copy children
- * 
+ *
  * @param {Object} parent
  * @param {Array} children
  * @return {Promise}
@@ -158,7 +158,7 @@ function copyChildren(parent) {
 
 /**
  * Copy the Parent Entity
- * 
+ *
  * @param {Object} parent
  * @return {Promise}
 */
@@ -170,7 +170,7 @@ function copyParent(parent) {
 
 /**
  * Construct Return Value By Entity Key
- * 
+ *
  * @param {Object}
  * @return {Function}
 */
@@ -186,7 +186,7 @@ const constructReturnCopiedValues = parent => children => {
 
 /**
  * Fetch all for given entity
- * 
+ *
  * @param {String} entity
  * @return {Promise}
 */
@@ -196,7 +196,7 @@ function fetchAllForEntity(entity) {
 
 /**
  * Get Children for Parent
- * 
+ *
  * @param {Object} parent
  * @return {Function}
 */
@@ -215,7 +215,7 @@ function getChildrenForParent(parent) {
 
 /**
  * Get All Children for an Entity
- * 
+ *
  * @param {Object} parent
  * @return {Promise}
 */
@@ -231,7 +231,7 @@ function getAllChildren(parent) {
 
 /**
  * Connect the children via next pointers
- * 
+ *
  * @param {String} type
  * @return {Promise}
 */
@@ -242,7 +242,6 @@ function connectChildrenForParentType(type) {
     }
 
     const chainedList = createChainedItemsList(children);
-
     const updatePromises = chainedList.map((entityToUpdate, i) => () =>
       modelMap[entityToUpdate.type].update(R.clone(entityToUpdate))
     );
@@ -263,7 +262,7 @@ function connectChildrenForParentType(type) {
 
 /**
  * Check and Perform Recursion if necessary
- * 
+ *
  * @param {Array} children
  * @return {Promise}
 */
@@ -285,7 +284,7 @@ function isRecursionNeeded(children) {
 
 /**
  * Recursively Copy From Parent
- * 
+ *
  * @param {Object} parent
  * @return {Function}
 */
@@ -299,7 +298,7 @@ function recursivelyCopy(parent) {
 
 /**
  * Get All Children for Old Parent and Make New Copies
- * 
+ *
  * @param {Object} oldParent
  * @param {Object} newParent
  * @return {Function}
@@ -335,7 +334,7 @@ const freshDataForUI = () => {
 
 /**
  * Copy an Entity and all it's descendants
- * 
+ *
  * @param {Object} data
  * @return {Promise}
 */
@@ -377,7 +376,7 @@ const deleteEntity = item => {
   const { id, type } = item;
 
   const typeChildren = config.entities[type].children;
-  
+
   let children = [];
 
   if (typeChildren.length) {
