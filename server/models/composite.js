@@ -103,10 +103,7 @@ function createChainedItemsList(entityOldNew) {
               id: listToSave[i].id,
               type: listToSave[i].type
             });
-            return {
-              ...qr,
-              payload: newPayload
-            };
+            return Object.assign({}, qr, {payload: newPayload});
           }
           return qr;
         });
