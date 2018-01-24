@@ -13,6 +13,7 @@ const { promiseSerial } = require('../utils/data');
 
 const config = require('config');
 const store = require('../utils/store');
+const shortid = require('shortid');
 
 const {
   TYPE_CONVERSATION,
@@ -138,7 +139,7 @@ function copyChildren(parent) {
               id: parent.id
             },
             id: null,
-            name: null
+            name: generateCopyName(oldChild.name)
           })
         )
         .then(newChildList => {
@@ -156,6 +157,10 @@ function copyChildren(parent) {
   };
 }
 
+function generateCopyName(name) {
+  return `${name} (${shortid.generate().slice(0,3)})`;
+}
+
 /**
  * Copy the Parent Entity
  *
@@ -164,7 +169,7 @@ function copyChildren(parent) {
 */
 function copyParent(parent) {
   return modelMap[parent.type].create(
-    R.merge(parent, { id: null, name: null })
+    R.merge(parent, { id: null, name: generateCopyName(parent.name) })
   );
 }
 
@@ -339,7 +344,8 @@ const freshDataForUI = () => {
  * @return {Promise}
 */
 exports.copyEntityAndAllChildren = data => {
-  return copyParent(data.parent)
+  return modelMap[data.parent.type].get(data.parent.id)
+    .then(parent => copyParent(parent))
     .then(parentList => {
       const newParent = R.last(parentList);
 
