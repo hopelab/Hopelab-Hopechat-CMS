@@ -11,7 +11,7 @@ const buildPublicLinkList = require('../helpers/buildPublicLinkList');
  * @param {Object} aws-sdk instance reference
  * @returns {Promise}
  */
-const getFiles = R.curry((s3, test) => {
+const getFiles = R.curry((s3, fileType) => {
   return new Promise((resolve, reject) => {
     s3.listObjects(config.aws.listObjectParams(), (err, data) => {
       if (err) {
@@ -21,6 +21,7 @@ const getFiles = R.curry((s3, test) => {
         resolve(
           buildPublicLinkList(
             data.Contents,
+            fileType,
             config.aws.config.region,
             config.aws.bucket
           )

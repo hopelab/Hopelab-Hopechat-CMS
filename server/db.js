@@ -367,7 +367,7 @@ module.exports = store => {
         's3'
       );
 
-      return StaticAssetsSvc.getFiles('yeah').then(resolve);
+      return StaticAssetsSvc.getFiles('image').then(resolve);
     });
 
   /**
@@ -390,7 +390,7 @@ module.exports = store => {
           message: 'Unsupported image type: ' + type
         });
       }
-      debugger;
+
       if (fileUtils.fileSizeExceeds(file, 5000000000)) {
         reject({
           code: 500,
@@ -399,6 +399,15 @@ module.exports = store => {
       }
 
       return StaticAssetsSvc.saveFile(file.name, file).then(resolve);
+    });
+
+  const getVideos = () =>
+    new Promise(resolve => {
+      const StaticAssetsSvc = require('./services/staticAssets/StaticAssets')(
+        's3'
+      );
+
+      return StaticAssetsSvc.getFiles('video').then(resolve);
     });
 
   /**
