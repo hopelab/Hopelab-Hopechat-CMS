@@ -84,7 +84,8 @@ const Sidebar = props => (
             className='ml-1'
             onClick={props.toggleImageModal}
           >
-            Image
+            <i className="fa fa-picture-o" aria-hidden="true"></i>&nbsp;
+            <i className="fa fa-video-camera" aria-hidden="true"></i>
           </Button>
           <Button
             color="primary"

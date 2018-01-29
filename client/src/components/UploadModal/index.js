@@ -22,7 +22,7 @@ const UploadModal = ({
   >
     <span>Drag and Drop Image Below To Upload</span>
     <Dropzone
-      accept="image/jpeg, image/png"
+      accept="image/jpeg, image/png, video/mp4, video/x-msvideo"
       onDrop={onUpload}
       className={`custom-dropzone`}
     />

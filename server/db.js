@@ -7,7 +7,8 @@ const {
   DB_MEDIA,
   DB_TAG,
   DB_USERS,
-  ONE_DAY_IN_MILLISECONDS
+  ONE_DAY_IN_MILLISECONDS,
+  SUPPORTED_FILE_TYPES,
 } = require('./constants');
 
 const helpers = require('./helpers/db');
@@ -382,13 +383,14 @@ module.exports = store => {
         's3'
       );
 
-      if (!fileUtils.isSupportedFileType('image', file)) {
+      if (!fileUtils.isSupportedFileType(file, SUPPORTED_FILE_TYPES)) {
+        let type = !!file ? file.type : "unknown";
         reject({
           code: 500,
-          message: 'Unsupported image type: ' + file.type
+          message: 'Unsupported image type: ' + type
         });
       }
-
+      debugger;
       if (fileUtils.fileSizeExceeds(file, 5000000000)) {
         reject({
           code: 500,

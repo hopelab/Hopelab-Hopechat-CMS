@@ -2,8 +2,8 @@
 
 const R = require('ramda');
 
-const isSupportedFileType = (type, file) =>
-  file.type && file.type.indexOf(type + '/') !== -1;
+const isSupportedFileType = (file, fileTypes) =>
+  R.path(['type'], file) && fileTypes.includes(file.type.toLowerCase());
 
 const fileSizeExceeds = (file, maxBytes) => file.size > maxBytes;
 
