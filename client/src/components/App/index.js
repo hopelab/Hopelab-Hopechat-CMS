@@ -340,6 +340,7 @@ class App extends Component {
           entitiesCanCopyTo={entitiesCanCopyTo}
           handleCopyEntity={this.handleCopyEntity}
           images={this.state.image}
+          videos={this.state.video}
           tags={this.state.tag}
         />
       </div>

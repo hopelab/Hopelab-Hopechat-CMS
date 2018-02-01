@@ -7,6 +7,7 @@ router.use('/series', require('./series'));
 router.use('/blocks', require('./blocks'));
 router.use('/messages', require('./messages'));
 router.use('/images', require('./images'));
+router.use('/videos', require('./videos'));
 router.use('/tags', require('./tags'));
 router.use('/users', require('./users'));
 router.use('/media', require('./media'));

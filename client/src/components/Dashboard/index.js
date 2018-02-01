@@ -206,6 +206,7 @@ class Dashboard extends Component {
               childEntities={props.childEntities}
               handleAddTag={props.handleAddTag}
               images={props.images}
+              videos={props.videos}
               tags={props.tags}
             />
           </div>

@@ -45,7 +45,8 @@ export function createInitialEntityState(data) {
     [entities.block]: data[3],
     [entities.message]: data[4],
     [entities.image]: data[5],
-    [entities.tag]: data[6]
+    [entities.video]: data[6],
+    [entities.tag]: data[7]
   };
 }
 
@@ -150,6 +151,9 @@ export function fetchAllDataForApp(routes) {
       res.json()
     ),
     fetch(routes.image.all, http.makeCommonFetchOptions()).then(res =>
+      res.json()
+    ),
+    fetch(routes.video.all, http.makeCommonFetchOptions()).then(res =>
       res.json()
     ),
     fetch(routes.tag.all, http.makeCommonFetchOptions()).then(res => res.json())

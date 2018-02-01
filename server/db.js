@@ -481,6 +481,8 @@ module.exports = store => {
     getImages,
     uploadMedia,
 
+    getVideos,
+
     getTags,
     setTag,
 

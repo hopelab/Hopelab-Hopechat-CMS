@@ -7,9 +7,9 @@ import {
   DropdownItem,
 } from 'reactstrap'
 
-class ImageDropdown extends Component {
+class MediaDropdown extends Component {
   static propTypes = {
-    images: PropTypes.arrayOf(PropTypes.shape({
+    media: PropTypes.arrayOf(PropTypes.shape({
       url: PropTypes.string,
       key: PropTypes.string,
     })).isRequired,
@@ -29,25 +29,25 @@ class ImageDropdown extends Component {
     this.setState({dropdownOpen: !this.state.dropdownOpen});
   }
 
-  renderImageDropdownItems() {
-    const {onSelection, selectedUrl, images} = this.props;
-    return images.map(img => {
+  renderMediaDropdownItems() {
+    const {onSelection, selectedUrl, media} = this.props;
+    return media.map(m => {
       return (
         <DropdownItem
-          key={img.url}
-          active={selectedUrl === img.url}
-          onClick={() => {onSelection(img.url)}}
+          key={m.url}
+          active={selectedUrl === m.url}
+          onClick={() => {onSelection(m.url)}}
         >
-          {img.key}
+          {m.key}
         </DropdownItem>
       );
     });
   }
 
   render() {
-    const {images, selectedUrl} = this.props;
-    let foundItem = 'choose image';
-    let res = images.find(img => img.url === selectedUrl);
+    const {media, selectedUrl} = this.props;
+    let foundItem = 'choose media';
+    let res = media.find(m => m.url === selectedUrl);
     if (res) { foundItem = res.key; }
     return (
       <Dropdown
@@ -64,11 +64,11 @@ class ImageDropdown extends Component {
           {foundItem}
         </DropdownToggle>
         <DropdownMenu flip={false}>
-          {this.renderImageDropdownItems()}
+          {this.renderMediaDropdownItems()}
         </DropdownMenu>
       </Dropdown>
     );
   }
 }
 
-export default ImageDropdown;
+export default MediaDropdown;

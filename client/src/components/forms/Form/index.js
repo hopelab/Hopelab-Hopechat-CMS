@@ -25,6 +25,7 @@ const propTypes = {
   handleAddTag: PropTypes.func.isRequired,
   handleDeleteItem: PropTypes.func.isRequired,
   images: PropTypes.array.isRequired,
+  videos: PropTypes.array.isRequired,
   tags: PropTypes.array.isRequired
 };
 
@@ -95,6 +96,7 @@ class Form extends Component {
                 handleChildEntityAddition={this.props.handleChildEntityAddition}
                 handleDeleteItem={this.props.handleDeleteItem}
                 images={this.props.images}
+                videos={this.props.videos}
                 parentItemType={this.props.item.type}
               />
             ))

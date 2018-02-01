@@ -10,6 +10,7 @@ const entities = {
   block: 'block',
   message: 'message',
   image: 'image',
+  video: 'video',
   tag: 'tag'
 };
 
@@ -109,6 +110,9 @@ const routes = {
   },
   image: {
     ...getRoutes('images')
+  },
+  video: {
+    ...getRoutes('videos')
   },
   tag: {
     ...getRoutes('tags')

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import EditableText from '../EditableText';
 import NextMessage from '../NextMessage';
-import ImageDropdown from '../ImageDropdown';
+import MediaDropdown from '../ImageDropdown'; //TODO FIX ME!!
 import MessageTypeDropdown from '../MessageTypeDropdown';
 import MediaPreview from '../MediaPreview';
 import {
@@ -52,6 +52,7 @@ class ConversationItem extends Component {
     handleDeleteItem: PropTypes.func.isRequired,
     childEntities: PropTypes.array.isRequired,
     images: PropTypes.array.isRequired,
+    videos: PropTypes.array.isRequired,
   }
 
   constructor(props) {
@@ -65,8 +66,7 @@ class ConversationItem extends Component {
     return (
       type === MESSAGE_TYPE_TEXT ||
       type === MESSAGE_TYPE_QUESTION ||
-      type === MESSAGE_TYPE_QUESTION_WITH_REPLIES ||
-      type === MESSAGE_TYPE_VIDEO
+      type === MESSAGE_TYPE_QUESTION_WITH_REPLIES
     );
   }
 
@@ -79,6 +79,13 @@ class ConversationItem extends Component {
 
   messageTypeHasQuickReplies(type) {
     return type === MESSAGE_TYPE_QUESTION_WITH_REPLIES;
+  }
+
+  messageTypeIsMedia(type) {
+    return (
+      type === MESSAGE_TYPE_VIDEO ||
+      type === MESSAGE_TYPE_IMAGE
+    );
   }
 
   messageTypeIsImage(type) {
@@ -138,12 +145,14 @@ class ConversationItem extends Component {
       );
     }
 
-    if (this.messageTypeIsImage(messageType)) {
+    if (this.messageTypeIsMedia(messageType)) {
       return (
         <div className="card-block">
-          <ImageDropdown
+          <MediaDropdown
             selectedUrl={url}
-            images={this.props.images}
+            media={
+              this.messageTypeIsImage(messageType) ?
+                this.props.images : this.props.videos}
             onSelection={url => {
               let newItem = {
                 ...item,
