@@ -13,6 +13,8 @@ const {
 
 const helpers = require('./helpers/db');
 
+const fileUtils = require('./utils/file');
+
 module.exports = store => {
   /**
      * Get Conversation
@@ -375,10 +377,9 @@ module.exports = store => {
      *
      * @return {Promise<Object>}
     */
-  const uploadImage = data =>
+  const uploadMedia = data =>
     new Promise((resolve, reject) => {
       const file = data.file;
-      const fileUtils = require('./utils/file');
       const StaticAssetsSvc = require('./services/staticAssets/StaticAssets')(
         's3'
       );
@@ -478,7 +479,7 @@ module.exports = store => {
     updateMessage,
 
     getImages,
-    uploadImage,
+    uploadMedia,
 
     getTags,
     setTag,

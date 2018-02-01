@@ -13,7 +13,7 @@ class ImageDropdown extends Component {
       url: PropTypes.string,
       key: PropTypes.string,
     })).isRequired,
-    selectedUrl: PropTypes.string.isRequired,
+    selectedUrl: PropTypes.string,
     onSelection: PropTypes.func.isRequired,
   };
 

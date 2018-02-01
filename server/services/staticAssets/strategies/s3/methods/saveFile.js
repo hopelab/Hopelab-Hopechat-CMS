@@ -24,7 +24,8 @@ const saveFile = R.curry((s3, fileName, file) => {
         resolve({
           key: file.name.replace(/\.[^/.]+$/, ''),
           url: `https://s3-${config.aws.config.region}.amazonaws.com/${config
-            .aws.bucket}/${file.name}`
+            .aws.bucket}/${file.name}`,
+          type: file.type
         });
       });
     });

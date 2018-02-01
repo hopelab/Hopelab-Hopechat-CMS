@@ -62,7 +62,7 @@ class App extends Component {
     data.append('file', acceptedFiles[0]);
 
     fetch(
-      '/images/create',
+      '/media/create',
       config.http.makeUploadFetchOptions({
         method: 'POST',
         body: data

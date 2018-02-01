@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const Image = require('../models/image');
+const Media = require('../models/media');
 const { apiErrorResponse } = require('../utils/data');
 
-router.get('/all', (req, res) => {
-  Promise.resolve()
-    .then(Image.getImages)
+router.post('/create', (req, res) => {
+  Promise.resolve(req.files)
+    .then(Media.upload)
     .then(r => res.send(r))
     .catch(apiErrorResponse(res));
 });

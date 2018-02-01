@@ -9,6 +9,7 @@ router.use('/messages', require('./messages'));
 router.use('/images', require('./images'));
 router.use('/tags', require('./tags'));
 router.use('/users', require('./users'));
+router.use('/media', require('./media'));
 
 router.get('/', (req, res) => {
   res.render('index');
