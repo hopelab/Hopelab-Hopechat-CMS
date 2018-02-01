@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import EditableText from '../EditableText';
 import NextMessage from '../NextMessage';
-import MediaDropdown from '../ImageDropdown'; //TODO FIX ME!!
+import MediaDropdown from '../MediaDropdown';
 import MessageTypeDropdown from '../MessageTypeDropdown';
 import MediaPreview from '../MediaPreview';
 import {
