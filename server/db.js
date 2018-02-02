@@ -392,13 +392,6 @@ module.exports = store => {
         });
       }
 
-      if (fileUtils.fileSizeExceeds(file, 5000000000)) {
-        reject({
-          code: 500,
-          message: 'Image is too large. Please use an image under 5Mb.'
-        });
-      }
-
       return StaticAssetsSvc.saveFile(file.name, file).then(resolve);
     });
 

@@ -2,6 +2,7 @@
 
 const fs = require('fs'),
   R = require('ramda'),
+  getS3Info = require('./getS3Info'),
   config = require('config');
 
 /**
@@ -21,12 +22,7 @@ const saveFile = R.curry((s3, fileName, file) => {
         reject();
       }
       fs.unlink(file.path, () => {
-        resolve({
-          key: file.name.replace(/\.[^/.]+$/, ''),
-          url: `https://s3-${config.aws.config.region}.amazonaws.com/${config
-            .aws.bucket}/${file.name}`,
-          type: file.type
-        });
+        resolve(getS3Info(file));
       });
     });
   });
