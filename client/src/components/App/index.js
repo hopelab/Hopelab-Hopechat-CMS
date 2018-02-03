@@ -70,14 +70,23 @@ class App extends Component {
     )
       .then(res => res.json())
       .then(res => {
-        this.setState({
-          image: this.state.image.concat(res),
+        let newState = {
           imageUploadStatus: 'success',
           mediaUpload: {
             ...this.state.mediaUpload,
             showModal: false
           }
-        });
+        };
+
+        const media = {key: res.key, url: res.url};
+
+        if (res.type === 'image') {
+          newState.image = this.state.image.concat(media);
+        } else {
+          newState.video = this.state.video.concat(media)
+        }
+
+        this.setState(newState);
 
         this.resetActionMessage('imageUploadStatus', 4000);
       })

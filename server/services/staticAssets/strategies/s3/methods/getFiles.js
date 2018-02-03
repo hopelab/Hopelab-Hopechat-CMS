@@ -4,7 +4,7 @@ const fs = require('fs'),
   R = require('ramda'),
   config = require('config');
 
-const buildPublicLinkList = require('../helpers/buildPublicLinkList');
+const { buildPublicLinkList } = require('../helpers/buildPublicLinkList');
 
 /**
  * Get all files from a bucket on amazon s3.

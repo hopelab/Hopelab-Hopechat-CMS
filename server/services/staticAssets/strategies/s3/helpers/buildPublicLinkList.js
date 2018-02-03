@@ -2,11 +2,13 @@
 
 var R = require('ramda');
 
+const typeMap = {
+  image: ['jpg', 'jpeg', 'png', 'gif', 'svg', 'bmp'],
+  video: ['avi', 'mp4'],
+};
+
 var buildPublicLinkList = function(assets, fileType, region, bucket) {
-  const typeMap = {
-    image: ['jpg', 'jpeg', 'png', 'gif', 'svg', 'bmp'],
-    video: ['avi', 'mp4'],
-  };
+
   let filteredAssets = assets.filter(a => (
     typeMap[fileType] &&
     typeMap[fileType].includes(a.Key.substr(a.Key.lastIndexOf('.') + 1))
@@ -18,4 +20,7 @@ var buildPublicLinkList = function(assets, fileType, region, bucket) {
   }));
 };
 
-module.exports = buildPublicLinkList;
+module.exports = {
+  buildPublicLinkList,
+  typeMap,
+};
