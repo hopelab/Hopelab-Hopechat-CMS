@@ -8,12 +8,17 @@
     flex: 1;
 }
 
-.custom-modal .alert {
+.custom-modal .loading {
     position: absolute;
-    top: 2%;
-    font-size: 20px;
-    font-weight: bolder;
+    top: 40%;
+    -webkit-animation: spin 4s infinite linear;
 }
+
+@-webkit-keyframes spin {
+    0%  {-webkit-transform: rotate(0deg);}
+    100% {-webkit-transform: rotate(360deg);}
+}
+
 
 .custom-modal .alert.success {
     color: green;
