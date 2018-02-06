@@ -6,9 +6,9 @@ const { apiErrorResponse } = require('../utils/data');
 
 router.post('/create', (req, res) => {
   req.setTimeout(0);
-  Media.upload(req.files).then(res => {
-    console.log(res);
-  });
+  Media.upload(req.files)
+    .then(Media.uploadToFacebookIfVideo)
+    .then(console.log);
 
   return res.send(getS3Info(req.files.file));
 });

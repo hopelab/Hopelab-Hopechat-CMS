@@ -35,6 +35,12 @@ const config = {
       R.path(['env', 'REDIS_PORT'], process)
     )
   },
+  facebook: {
+    fbPageAccessToken: R.defaultTo(
+      R.path(['facebook', 'fbPageAccessToken'], FALLBACK_DEFAULT_VALUES),
+      R.path(['env', 'FB_PAGE_ACCESS_TOKEN'], process)
+    )
+  },
   aws: {
     client: 'aws-sdk',
     bucket: R.defaultTo(

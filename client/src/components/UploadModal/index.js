@@ -19,6 +19,12 @@ class UploadModal extends Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.isOpen && this.props.isOpen && this.state.loading) {
+      this.setState({loading: false});
+    }
+  }
+
   render() {
     const {
       isOpen,

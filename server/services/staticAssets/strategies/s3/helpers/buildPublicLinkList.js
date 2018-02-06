@@ -1,17 +1,13 @@
 'use strict';
 
 var R = require('ramda');
-
-const typeMap = {
-  image: ['jpg', 'jpeg', 'png', 'gif', 'svg', 'bmp'],
-  video: ['avi', 'mp4'],
-};
+const { fileTypeMap } = require('../../../../../utils/file');
 
 var buildPublicLinkList = function(assets, fileType, region, bucket) {
 
   let filteredAssets = assets.filter(a => (
-    typeMap[fileType] &&
-    typeMap[fileType].includes(a.Key.substr(a.Key.lastIndexOf('.') + 1))
+    fileTypeMap[fileType] &&
+    fileTypeMap[fileType].includes(a.Key.substr(a.Key.lastIndexOf('.') + 1))
   ));
 
   return filteredAssets.map(a => ({
@@ -21,6 +17,5 @@ var buildPublicLinkList = function(assets, fileType, region, bucket) {
 };
 
 module.exports = {
-  buildPublicLinkList,
-  typeMap,
+  buildPublicLinkList
 };

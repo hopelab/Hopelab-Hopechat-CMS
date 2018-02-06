@@ -1,5 +1,6 @@
 const {
-  uploadMedia
+  uploadMedia,
+  uploadToFacebookIfVideo
 } = require('../db')(require('../utils/store'));
 
 /**
@@ -9,3 +10,5 @@ const {
    * @return {Promise}
   */
 exports.upload = uploadMedia;
+
+exports.uploadToFacebookIfVideo = uploadToFacebookIfVideo;

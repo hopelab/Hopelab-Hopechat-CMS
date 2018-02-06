@@ -14,8 +14,14 @@ const isSupportedFont = file => {
   return R.anyPass([isTTF, isWoff])(file);
 };
 
+const fileTypeMap = {
+  image: ['jpg', 'jpeg', 'png', 'gif', 'svg', 'bmp'],
+  video: ['avi', 'mp4'],
+};
+
 module.exports = {
   isSupportedFileType,
   isSupportedFont,
-  fileSizeExceeds
+  fileSizeExceeds,
+  fileTypeMap,
 };
