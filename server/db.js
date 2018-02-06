@@ -15,6 +15,8 @@ const helpers = require('./helpers/db');
 
 const fileUtils = require('./utils/file');
 
+const Facebook = require('./services/facebook');
+
 module.exports = store => {
   /**
      * Get Conversation
@@ -395,6 +397,35 @@ module.exports = store => {
       return StaticAssetsSvc.saveFile(file.name, file).then(resolve);
     });
 
+    const setVideoMedia = ({key, url}) => ({attachment_id}) =>
+        new Promise(resolve => {
+          store
+            .getItem(DB_MEDIA)
+            .then(JSON.parse)
+            .then(media => {
+              if (!media) { media = {video: []}; }
+              if (!media.video || !Array.isArray(media.video)) {
+                media.video = [];
+              }
+              media.video.push({key, url, attachment_id});
+              return media;
+            })
+            .then(store.setItem(DB_MEDIA, ONE_DAY_IN_MILLISECONDS))
+            .then(resolve)
+            .catch(console.error);
+        });
+
+  const uploadToFacebookIfVideo = data =>
+    new Promise((resolve, reject) => {
+      if (data.type !== 'video') {
+        return resolve(data);
+      }
+
+      return Facebook.uploadAttachment(data)
+                .then(setVideoMedia(data))
+                .then(resolve);
+    });
+
   const getVideos = () =>
     new Promise(resolve => {
       const StaticAssetsSvc = require('./services/staticAssets/StaticAssets')(
@@ -473,6 +504,8 @@ module.exports = store => {
 
     getImages,
     uploadMedia,
+
+    uploadToFacebookIfVideo,
 
     getVideos,
 
