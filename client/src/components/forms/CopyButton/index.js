@@ -41,7 +41,13 @@ class CopyButton extends Component {
 
     return copyToItems ? (
       <ButtonDropdown isOpen={isOpen} toggle={this.toggle}>
-        <Button id="caret" color="primary">Copy To</Button>
+        <Button
+          id="caret"
+          onClick={e => e && e.preventDefault()}
+          color="primary"
+        >
+          Copy To
+        </Button>
         <DropdownToggle caret color="primary" />
         <DropdownMenu flip={false}>
           {this.renderCopyToItems()}
