@@ -1,0 +1,79 @@
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+
+import {
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
+  DropdownToggle
+} from 'reactstrap';
+
+const propTypes = {
+  childEntities: PropTypes.array.isRequired,
+  onSelectStart: PropTypes.func.isRequired,
+};
+
+const getNextMessageOptionsForMessage = (childEntities, onSelectStart) => {
+  let items = childEntities.map((c, i) => (
+    <DropdownItem
+      key={c.id}
+      active={c.start}
+      onClick={() => onSelectStart(c.id, c.type)}
+    >
+      {c.name}
+    </DropdownItem>
+  ));
+  return items;
+};
+
+class FirstItemSelect extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      dropdownOpen: false
+    };
+    this.toggle = this.toggle.bind(this);
+  }
+
+  toggle() {
+    this.setState({dropdownOpen: !this.state.dropdownOpen});
+  }
+
+  render() {
+    const { childEntities, onSelectStart } = this.props;
+    let foundItem = childEntities.find(item => item.start);
+    if (foundItem) {
+      foundItem = foundItem.name;
+    } else {
+      foundItem = "no messages";
+    }
+    return (
+      <div className="card m-2" style={{width: '360px'}}>
+        <div className="card-footer">
+          <h6>Start:</h6>
+          <Dropdown
+            style={{cursor: 'pointer'}}
+            isOpen={this.state.dropdownOpen}
+            toggle={this.toggle}
+          >
+            <DropdownToggle
+              tag="div"
+              onClick={this.toggle}
+              data-toggle="dropdown"
+              aria-expanded={this.state.dropdownOpen}
+            >
+              {foundItem}
+            </DropdownToggle>
+            <DropdownMenu flip={false}>
+              {getNextMessageOptionsForMessage(childEntities, onSelectStart)}
+            </DropdownMenu>
+          </Dropdown>
+        </div>
+      </div>
+    );
+  }
+}
+
+FirstItemSelect.propTypes = propTypes;
+
+export default FirstItemSelect;

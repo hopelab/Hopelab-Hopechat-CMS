@@ -5,6 +5,8 @@ import ConversationItemContainer from '../ConversationItemContainer';
 import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css';
 
+import FirstItemSelect from '../FirstItemSelect';
+
 import { autocompleteRenderInput } from '../../AutoSuggest';
 
 import { FormGroup } from 'reactstrap';
@@ -84,6 +86,11 @@ class Form extends Component {
             </div>
           ) : null}
         </div>
+
+        <FirstItemSelect
+          childEntities={this.props.childEntities}
+          onSelectStart={() => undefined}
+        />
 
         {formHasField('children', this.props.config.fields) ? (
             this.props.childEntities.map((e, i) => (
