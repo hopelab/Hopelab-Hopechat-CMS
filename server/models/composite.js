@@ -6,6 +6,7 @@ const conversation = require('./conversation');
 const series = require('./series');
 const message = require('./message');
 
+const { updateStart } = require('../db')(require('../utils/store'));
 const helpers = require('../helpers/db');
 const Constants = require('../constants');
 
@@ -408,3 +409,5 @@ const deleteEntity = item => {
     .catch(console.error);
 };
 exports.deleteEntity = deleteEntity;
+
+exports.updateStart = updateStart;

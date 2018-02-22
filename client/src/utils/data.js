@@ -174,6 +174,10 @@ export function getPostRoutesForChildEntities(entities, routes) {
   });
 }
 
+export function updateStart(entity) {
+  return post('/general/start/update', entity).then(res => res.json());
+}
+
 /**
  * Construct Child Entities For Given Entity
  *
@@ -186,7 +190,7 @@ export function getChildEntitiesFor(item, entities) {
     return [];
   }
 
-  return forms[item.type].children.reduce((prev, curr) => {
+  let childEntities = forms[item.type].children.reduce((prev, curr) => {
     return prev.concat(
       ...R.reject(
         R.prop('private'),
@@ -194,6 +198,14 @@ export function getChildEntitiesFor(item, entities) {
       )
     );
   }, []);
+
+  let indexOfStart = childEntities.findIndex(e => e.start);
+  if (indexOfStart >= 1) {
+    let startEntity = (childEntities.splice(indexOfStart, 1))[0];
+    childEntities.unshift(startEntity);
+  }
+
+  return childEntities;
 }
 
 /**

@@ -7,6 +7,8 @@ const {
   DB_MEDIA,
   DB_TAG,
   DB_USERS,
+  TYPE_MESSAGE,
+  TYPE_COLLECTION,
   ONE_DAY_IN_MILLISECONDS,
   SUPPORTED_FILE_TYPES,
 } = require('./constants');
@@ -282,6 +284,56 @@ module.exports = store => {
         .catch(console.error);
     });
 
+  const updateStart = entity =>
+    new Promise(resolve => {
+      store
+        .getItem(DB_MESSAGES)
+        .then(JSON.parse)
+        .then((messages) => (
+          store.getItem(DB_COLLECTIONS)
+               .then(JSON.parse)
+               .then(collections => ({
+                 messages, collections
+               }))
+        ))
+        .then(({messages, collections}) => {
+          const mapEntity = e => {
+            let newEntity = Object.assign({}, e);
+            if (
+              newEntity.id === entity.id &&
+              (
+                entity.type === TYPE_MESSAGE ||
+                entity.type === TYPE_COLLECTION
+              )
+            ) {
+              newEntity.start = true;
+            } else if (
+              newEntity.start &&
+              newEntity.parent &&
+              entity.parent &&
+              newEntity.parent.id === entity.parent.id
+            ) {
+              delete newEntity.start;
+            }
+            return newEntity;
+          };
+
+          let newMessages = messages.map(mapEntity);
+
+          let newCollections = collections.map(mapEntity);
+
+          return {messages: newMessages, collections: newCollections};
+        })
+        .then(({messages, collections}) => (
+          Promise.all([
+            store.setItem(DB_MESSAGES, ONE_DAY_IN_MILLISECONDS, messages),
+            store.setItem(DB_COLLECTIONS, ONE_DAY_IN_MILLISECONDS, collections)
+          ]).then(data => ({messages: data[0], collections: data[1]}))
+        ))
+        .then(resolve)
+        .catch(console.error);
+    })
+
   /**
      * Get Blocks
      *
@@ -501,6 +553,7 @@ module.exports = store => {
     updateSeries,
     updateBlock,
     updateMessage,
+    updateStart,
 
     getImages,
     uploadMedia,

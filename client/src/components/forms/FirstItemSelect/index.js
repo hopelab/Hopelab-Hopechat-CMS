@@ -18,7 +18,7 @@ const getNextMessageOptionsForMessage = (childEntities, onSelectStart) => {
     <DropdownItem
       key={c.id}
       active={c.start}
-      onClick={() => onSelectStart(c.id, c.type)}
+      onClick={() => onSelectStart(c)}
     >
       {c.name}
     </DropdownItem>
@@ -43,14 +43,13 @@ class FirstItemSelect extends Component {
     const { childEntities, onSelectStart } = this.props;
     let foundItem = childEntities.find(item => item.start);
     if (foundItem) {
-      foundItem = foundItem.name;
+      foundItem = `Start: ${foundItem.name}`;
     } else {
       foundItem = "no messages";
     }
     return (
       <div className="card m-2" style={{width: '360px'}}>
         <div className="card-footer">
-          <h6>Start:</h6>
           <Dropdown
             style={{cursor: 'pointer'}}
             isOpen={this.state.dropdownOpen}

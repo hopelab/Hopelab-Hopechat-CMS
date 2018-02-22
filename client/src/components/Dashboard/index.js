@@ -208,6 +208,7 @@ class Dashboard extends Component {
               images={props.images}
               videos={props.videos}
               tags={props.tags}
+              updateStartEntity={props.updateStartEntity}
             />
           </div>
         )}

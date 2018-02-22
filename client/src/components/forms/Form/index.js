@@ -89,7 +89,7 @@ class Form extends Component {
 
         <FirstItemSelect
           childEntities={this.props.childEntities}
-          onSelectStart={() => undefined}
+          onSelectStart={this.props.updateStartEntity}
         />
 
         {formHasField('children', this.props.config.fields) ? (

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
+router.use('/general', require('./general'));
 router.use('/conversations', require('./conversations'));
 router.use('/collections', require('./collections'));
 router.use('/series', require('./series'));

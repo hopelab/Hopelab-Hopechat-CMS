@@ -15,6 +15,7 @@ class App extends Component {
     super(props);
     this.state = config.initialState.App;
     this.handleSaveItem = this.handleSaveItem.bind(this);
+    this.updateStartEntity = this.updateStartEntity.bind(this);
   }
 
   componentDidMount() {
@@ -290,6 +291,15 @@ class App extends Component {
     });
   };
 
+  updateStartEntity(entity) {
+    dataUtil.updateStart(entity).then(data => {
+      this.setState({
+        message: data.messages,
+        collection: data.collections
+      });
+    })
+  }
+
   render() {
     const entitiesCanCopyTo = dataUtil.getEntitiesCanCopyTo(
       this.getFullItemEditing(this.state),
@@ -351,6 +361,7 @@ class App extends Component {
           images={this.state.image}
           videos={this.state.video}
           tags={this.state.tag}
+          updateStartEntity={this.updateStartEntity}
         />
       </div>
     );
