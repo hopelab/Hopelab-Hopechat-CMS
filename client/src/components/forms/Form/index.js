@@ -13,6 +13,11 @@ import { FormGroup } from 'reactstrap';
 
 import { createInitialFormState } from '../../../utils/data';
 
+import {
+  TYPE_BLOCK,
+  TYPE_CONVERSATION,
+} from '../../../utils/config';
+
 const propTypes = {
   item: PropTypes.shape({
     name: PropTypes.string,
@@ -87,10 +92,13 @@ class Form extends Component {
           ) : null}
         </div>
 
-        <FirstItemSelect
-          childEntities={this.props.childEntities}
-          onSelectStart={this.props.updateStartEntity}
-        />
+        { (this.props.item.type === TYPE_CONVERSATION ||
+          this.props.item.type === TYPE_BLOCK) ?
+          <FirstItemSelect
+            childEntities={this.props.childEntities}
+            onSelectStart={this.props.updateStartEntity}
+          /> : undefined
+        }
 
         {formHasField('children', this.props.config.fields) ? (
             this.props.childEntities.map((e, i) => (
