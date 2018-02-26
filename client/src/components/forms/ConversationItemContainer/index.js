@@ -42,11 +42,18 @@ class ConversationItemContainer extends Component {
   quickReplyHandleNextItemSelect(index, id, type) {
     if (this.props.item.quick_replies) {
       let quick_replies = this.props.item.quick_replies.map((qr, i) => {
-        return i === index ?
-          {
+        if (i !== index) { return qr; }
+        if (!id) {
+          return {
             ...qr,
-            payload: JSON.stringify({id, type})
-          } : qr;
+            payload: JSON.stringify({})
+          };
+        }
+
+        return {
+          ...qr,
+          payload: JSON.stringify({id, type})
+        };
       });
       this.props.handleSaveItem({
         ...this.props.item,

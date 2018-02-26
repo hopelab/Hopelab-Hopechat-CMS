@@ -23,15 +23,30 @@ const defaultProps = {
 };
 
 const getNextMessageOptionsForMessage = props => {
-  let items = props.childEntities.map((c, i) => (
+  let foundActive = false;
+  let items = props.childEntities.map((c, i) => {
+    let active = c.id === props.nextId;
+    if (active) { foundActive = true; }
+    return (
+      <DropdownItem
+        key={c.id}
+        active={active}
+        onClick={() => props.handleNextMessageSelect(c.id, c.type)}
+      >
+        {c.name}
+      </DropdownItem>
+    );
+  });
+
+  items.unshift(
     <DropdownItem
-      key={c.id}
-      active={c.id === props.nextId}
-      onClick={() => props.handleNextMessageSelect(c.id, c.type)}
+      key="noselection"
+      active={!foundActive}
+      onClick={() => props.handleNextMessageSelect()}
     >
-      {c.name}
+      no selection
     </DropdownItem>
-  ));
+  )
 
   if (props.showEndOfConversation) {
     items.push(<DropdownItem divider key='divider0'/>);
