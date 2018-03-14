@@ -59,7 +59,7 @@ class ConversationItemContainer extends Component {
 
       return {
         ...nC,
-        conversationId: id,
+        id,
       }
     });
 
@@ -179,7 +179,7 @@ class ConversationItemContainer extends Component {
       let nextConversations = [];
       const newConvo = {
         text: '',
-        conversationId: undefined
+        id: undefined
       };
 
       if (this.props.item.nextConversations) {
@@ -241,7 +241,7 @@ class ConversationItemContainer extends Component {
                 index={i}
                 childEntities={this.props.childEntities}
                 text={nC.text}
-                nextId={nC.conversationId}
+                nextId={nC.id}
                 onUpdateText={(...params) => (
                   this.quickReplyHandleChangeText(i, ...params)
                 )}
