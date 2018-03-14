@@ -356,6 +356,7 @@ class App extends Component {
           handleAddTag={this.handleAddTag}
           itemEditing={itemEditing}
           childEntities={childEntities}
+          conversations={this.state.conversation}
           entitiesCanCopyTo={entitiesCanCopyTo}
           handleCopyEntity={this.handleCopyEntity}
           images={this.state.image}

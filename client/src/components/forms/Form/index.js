@@ -113,6 +113,7 @@ class Form extends Component {
                 images={this.props.images}
                 videos={this.props.videos}
                 parentItemType={this.props.item.type}
+                conversations={this.props.conversations}
               />
             ))
         ) : null}
