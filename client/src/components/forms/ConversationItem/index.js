@@ -15,7 +15,8 @@ import {
   MESSAGE_TYPE_QUESTION_WITH_REPLIES,
   MESSAGE_TYPE_TEXT,
   MESSAGE_TYPE_IMAGE,
-  MESSAGE_TYPE_VIDEO
+  MESSAGE_TYPE_VIDEO,
+  MESSAGE_TYPE_TRANSITION,
 } from '../../../utils/config';
 import './style.css';
 
@@ -77,8 +78,11 @@ class ConversationItem extends Component {
     );
   }
 
-  messageTypeHasQuickReplies(type) {
-    return type === MESSAGE_TYPE_QUESTION_WITH_REPLIES;
+  messageTypeHasDifferentOptions(type) {
+    return (
+      type === MESSAGE_TYPE_QUESTION_WITH_REPLIES ||
+      type === MESSAGE_TYPE_TRANSITION
+    );
   }
 
   messageTypeIsMedia(type) {
@@ -206,7 +210,7 @@ class ConversationItem extends Component {
 
         </div>
         {this.renderItemContent(this.props.item)}
-        {(!this.messageTypeHasQuickReplies(this.props.item.messageType)) && (
+        {(!this.messageTypeHasDifferentOptions(this.props.item.messageType)) && (
           <div className="card-footer">
             <NextMessage
               childEntities={this.props.childEntities}

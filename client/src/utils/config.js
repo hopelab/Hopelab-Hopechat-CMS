@@ -130,6 +130,7 @@ const MESSAGE_TYPE_TEXT = 'text';
 const MESSAGE_TYPE_ANSWER = 'answer';
 const MESSAGE_TYPE_IMAGE = 'image';
 const MESSAGE_TYPE_VIDEO = 'video';
+const MESSAGE_TYPE_TRANSITION = 'transition';
 const TYPE_TAG = 'tag';
 
 const END_OF_CONVERSATION_ID = 'END-OF-CONVERSATION-ID';
@@ -141,7 +142,8 @@ const messageTypes = [
   { id: MESSAGE_TYPE_QUESTION, display: 'Question' },
   { id: MESSAGE_TYPE_QUESTION_WITH_REPLIES, display: 'Question+Replies' },
   { id: MESSAGE_TYPE_IMAGE, display: 'Image' },
-  { id: MESSAGE_TYPE_VIDEO, display: 'Video' }
+  { id: MESSAGE_TYPE_VIDEO, display: 'Video' },
+  { id: MESSAGE_TYPE_TRANSITION, display: 'Transition'}
 ];
 
 /**
@@ -242,6 +244,7 @@ export {
   MESSAGE_TYPE_ANSWER,
   MESSAGE_TYPE_IMAGE,
   MESSAGE_TYPE_VIDEO,
+  MESSAGE_TYPE_TRANSITION,
   TYPE_TAG,
   QUICK_REPLY_MAX_LENGTH,
   END_OF_CONVERSATION_ID,
