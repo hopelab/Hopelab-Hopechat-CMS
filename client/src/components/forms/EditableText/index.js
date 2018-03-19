@@ -7,6 +7,7 @@ class EditableText extends Component {
     text: PropTypes.string.isRequired,
     onEditWillFinish: PropTypes.func,
     isTextArea: PropTypes.bool,
+    placeholder: PropTypes.string
   }
 
   static defaultProps = {
@@ -78,6 +79,7 @@ class EditableText extends Component {
         value={this.state.text}
         onKeyUp={this.handleEnterKey}
         onChange={this.handleChange}
+        placeholder={this.props.placeholder}
         ref={(i) => this.input = i}
       />
     );

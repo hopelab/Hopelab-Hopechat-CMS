@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import EditableText from '../EditableText';
+import DelayCheckbox from '../DelayCheckbox';
 import NextMessage from '../NextMessage';
 import MediaDropdown from '../MediaDropdown';
 import MessageTypeDropdown from '../MessageTypeDropdown';
@@ -85,6 +86,10 @@ class ConversationItem extends Component {
     );
   }
 
+  messageTypeIsTransition(type) {
+    return type === MESSAGE_TYPE_TRANSITION;
+  }
+
   messageTypeIsMedia(type) {
     return (
       type === MESSAGE_TYPE_VIDEO ||
@@ -148,6 +153,55 @@ class ConversationItem extends Component {
         </div>
       );
     }
+
+    if (this.messageTypeIsTransition(messageType)) {
+      const {delayInMinutes} = this.props.item;
+      const minutesInHour = 60;
+      const hoursInDay = 24;
+      return (
+        <div className="card-block">
+          <div className="card-text">
+            <DelayCheckbox
+              delayChecked={
+                !!delayInMinutes
+              }
+              delayInDays={
+                Number.isFinite(parseFloat(delayInMinutes)) ?
+                  (parseFloat(delayInMinutes) / minutesInHour / hoursInDay) + '' :
+                  ''
+              }
+              onDelayChecked={
+                checked => {
+                  if (checked) {
+                    this.props.handleSaveItem({
+                      ...this.props.item,
+                      delayInMinutes: 14 * minutesInHour * hoursInDay
+                    });
+                  } else {
+                    let itemCopy = {...this.props.item};
+                    delete itemCopy.delayInMinutes;
+                    this.props.handleSaveItem(itemCopy);
+                  }
+                }
+              }
+              onDelayInDaysWillFinish={delayInDays => {
+                const delay = parseFloat(delayInDays);
+                if (Number.isFinite(delay)) {
+                  const delayInMinutes = delay * minutesInHour * hoursInDay;
+
+                  const newItem = {
+                    ...this.props.item,
+                    delayInMinutes
+                  };
+                  this.props.handleSaveItem(newItem);
+                }
+              }}
+            />
+          </div>
+        </div>
+      );
+    }
+
 
     if (this.messageTypeIsMedia(messageType)) {
       return (

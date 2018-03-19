@@ -163,6 +163,9 @@ class App extends Component {
             ...res
           };
           if (i.next && !uploadItem.next) { delete newRes.next; }
+          if (i.delayInMinutes && !uploadItem.delayInMinutes) {
+            delete newRes.delayInMinutes;
+          }
           return newRes;
         } else {
           return i;
