@@ -37,8 +37,10 @@ class DashboardHeader extends Component {
     itemId: PropTypes.string.isRequired,
     itemType: PropTypes.string.isRequired,
     isLive: PropTypes.bool,
+    isStudy: PropTypes.bool,
     rule: PropTypes.string,
     onToggleLive: PropTypes.func,
+    onToggleStudy: PropTypes.func,
     onNewChildEntity: PropTypes.func.isRequired,
     onNameChanged: PropTypes.func.isRequired,
     onRuleChanged: PropTypes.func.isRequired,
@@ -49,6 +51,10 @@ class DashboardHeader extends Component {
 
   hasLive(type) {
     return forms[type].fields.includes('live')
+  }
+
+  hasStudy(type) {
+    return forms[type].fields.includes('study');
   }
 
   hasRules(type) {
@@ -69,7 +75,9 @@ class DashboardHeader extends Component {
       onNewChildEntity,
       onDelete,
       onToggleLive,
+      onToggleStudy,
       isLive,
+      isStudy,
       rule,
       onCopy,
       copyToItems,
@@ -109,14 +117,26 @@ class DashboardHeader extends Component {
             />
           )}
           <Button className="mr-3" color="danger" type='submit'>X</Button>
+          {this.hasStudy(itemType) && (
+            <FormGroup check className="mr-1">
+              <Label check>
+                <Input
+                  onChange={onToggleStudy}
+                  className="mr-1"
+                  type="checkbox"
+                  checked={!!(isStudy)}/>Study
+              </Label>
+            </FormGroup>
+          )}
           {this.hasLive(itemType) && (
-            <FormGroup check>
+            <FormGroup check className="mr-1">
               <Label check>
                 <Input
                   onChange={onToggleLive}
                   className="mr-1"
                   type="checkbox"
-                  defaultChecked={!!(isLive)}/>Live
+                  checked={!!(isLive)}
+                />Live
               </Label>
             </FormGroup>
           )}
@@ -143,6 +163,8 @@ class Dashboard extends Component {
     this.handleItemNameChange = this.handleItemNameChange.bind(this);
     this.handleToggleLiveConversation =
       this.handleToggleLiveConversation.bind(this);
+    this.handleToggleStudy =
+      this.handleToggleStudy.bind(this);
     this.handleRuleChanged = this.handleRuleChanged.bind(this);
   }
 
@@ -170,6 +192,13 @@ class Dashboard extends Component {
     })
   }
 
+  handleToggleStudy() {
+    this.props.handleSaveItem({
+      ...this.props.itemEditing,
+      isStudy: !this.props.itemEditing.isStudy
+    })
+  }
+
   handleRuleChanged(rule) {
     this.props.handleSaveItem({
       ...this.props.itemEditing,
@@ -188,8 +217,10 @@ class Dashboard extends Component {
               itemType={props.itemEditing.type}
               itemId={props.itemEditing.id}
               isLive={props.itemEditing.isLive}
+              isStudy={props.itemEditing.isStudy}
               rule={props.itemEditing.rule}
               onToggleLive={this.handleToggleLiveConversation}
+              onToggleStudy={this.handleToggleStudy}
               onNewChildEntity={this.handleChildEntityAddition}
               onNameChanged={this.handleItemNameChange}
               onRuleChanged={this.handleRuleChanged}

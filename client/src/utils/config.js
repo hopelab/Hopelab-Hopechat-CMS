@@ -45,7 +45,7 @@ const operations = {
 */
 const forms = {
   conversation: {
-    fields: ['name', 'tags', 'live', 'children'],
+    fields: ['name', 'tags', 'live', 'children', 'study'],
     children: ['message', 'collection']
   },
   collection: {
