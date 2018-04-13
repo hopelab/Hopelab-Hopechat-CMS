@@ -98,8 +98,11 @@ function createChainedItemsList(entityOldNew) {
 
       if (newItem.messageType === MESSAGE_TYPE_QUESTION_WITH_REPLIES) {
         const quick_replies = newItem.quick_replies.map(qr => {
-          const payload = JSON.parse(qr.payload);
-          if (payload.id === oldItem.id) {
+          let payload;
+          try {
+            payload = JSON.parse(qr.payload);
+          } catch(e) {}
+          if (!!payload && payload.id === oldItem.id) {
             const newPayload = JSON.stringify({
               id: listToSave[i].id,
               type: listToSave[i].type
