@@ -338,6 +338,19 @@ const freshDataForUI = () => {
   });
 };
 
+function modifyParentIfNeeded(parent) {
+  return function(entity) {
+    if (
+      R.path(['id'], parent) &&
+      R.path(['id'], parent) !== R.path(['parent', 'id'], entity)
+    ) {
+      return Object.assign({}, entity, {parent});
+    }
+
+    return entity;
+  }
+}
+
 /**
  * Copy an Entity and all it's descendants
  *
@@ -346,6 +359,7 @@ const freshDataForUI = () => {
 */
 exports.copyEntityAndAllChildren = data => {
   return modelMap[data.parent.type].get(data.parent.id)
+    .then(modifyParentIfNeeded(R.path(['parent', 'parent'], data)))
     .then(parent => copyParent(parent))
     .then(parentList => {
       const newParent = R.last(parentList);

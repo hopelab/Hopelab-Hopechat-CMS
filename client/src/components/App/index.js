@@ -16,6 +16,8 @@ class App extends Component {
     this.state = config.initialState.App;
     this.handleSaveItem = this.handleSaveItem.bind(this);
     this.updateStartEntity = this.updateStartEntity.bind(this);
+    this.handleCopyEntity = this.handleCopyEntity.bind(this);
+    this.handleCopyItem = this.handleCopyItem.bind(this);
   }
 
   componentDidMount() {
@@ -217,19 +219,34 @@ class App extends Component {
       .catch(console.error);
   };
 
-  handleCopyItem = ({ parent }) => {
+  handleCopyEntity(entity) {
+    const itemToCopy = entity ? {
+        ...this.state.itemEditing,
+        parent: {
+          ...entity.link
+        }
+      } : {
+        ...this.state.itemEditing
+      };
+
+    this.handleCopyItem({
+      itemToCopy
+    });
+  }
+
+  handleCopyItem({ itemToCopy }) {
     const route = config.operations.copy;
 
     dataUtil
-      .post(config.routes[parent.type][route], {
-        parent: dataUtil.makeCopyAndRemoveKeys(parent, config.keysToRemove)
+      .post(config.routes[itemToCopy.type][route], {
+        parent: dataUtil.makeCopyAndRemoveKeys(itemToCopy, config.keysToRemove)
       })
       .then(res => res.json())
       .then(copiedResults => {
         this.setState(copiedResults);
       })
       .catch(console.error);
-  };
+  }
 
   handleDeleteItem = item => {
     const route = config.operations.delete;
@@ -277,21 +294,6 @@ class App extends Component {
         itemEditing: node.type ? pick(['id', 'type'],node) : this.state.itemEditing,
       }
     );
-  };
-
-  handleCopyEntity = (entity) => {
-    const parent = entity ? {
-        ...this.state.itemEditing,
-        parent: {
-          ...entity.link
-        }
-      } : {
-        ...this.state.itemEditing
-      };
-
-    this.handleCopyItem({
-      parent
-    });
   };
 
   updateStartEntity(entity) {
