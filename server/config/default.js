@@ -2,10 +2,13 @@
 
 const R = require('ramda'),
   winston = require('winston'),
-  logUtils = require('alien-node-winston-utils');
+  logUtils = require('alien-node-winston-utils'),
+  AWS = require('aws-sdk');
 
 // These values can be overridden by either environment vars or by a NODE_ENV named config
 // which declares the desired object of the same name.
+
+var credentials = new AWS.SharedIniFileCredentials();
 const FALLBACK_DEFAULT_VALUES = {
   host: 'localhost',
   sessionSecret: 'secret',
@@ -17,8 +20,8 @@ const FALLBACK_DEFAULT_VALUES = {
     bucket: 'hopelab-media',
     acl: 'public-read-write',
     config: {
-      accessKeyId: '',
-      secretAccessKey: '',
+      accessKeyId: credentials.accessKeyId,
+      secretAccessKey: credentials.secretAccessKey,
       region: 'us-west-2'
     }
   }

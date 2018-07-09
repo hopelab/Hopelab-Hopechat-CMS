@@ -18,7 +18,22 @@ AWS_SECRET_ACCESS_KEY
 AWS_REGION
 ```
 
+#### AWS Specific Credentials
+
+You can set AWS_SECRET_ACCESS_KEY and AWS_ACCESS_KEY_ID in either the aws credentials file, which you should create at ~.aws/credentials, or as environmental variables. The current default config created in ./server/config/default.js uses the aws-sdk to load this .aws/credentials file as the default user access. This credential file is used elsewhere to auth ssh commands. Therefore it is my recommendation that this is where you store your personal credentials. You can use the following format:
+
+[default]
+aws_secret_access_key=secret_access_key_here!!
+aws_access_key_id=access_key_id_here!!
+region=us-west-2b
+
+#### config
 This repo is using [config](https://www.npmjs.com/package/config) to manage environment variables and fallback to defaults in case of something missing.
+
+You may need to specify to config where to find your configuration file using the environment variable NODE_CONFIG_DIR. For example my NODE_CONFIG_DIR var in my ~.bash_profile is:
+NODE_CONFIG_DIR=/Users/philiplauffenburger/Documents/Coding/grio/hopelab_ayachatbot_cms/server/config
+
+This of course won't work if you use the config package in multiple locations, so you'll have to specify the env file for each specific project
 
 ### Code Structure
 
@@ -45,6 +60,16 @@ Run the CMS server from root:
 ```bash
 yarn start
 ```
+
+### Redis DB
+This app uses redis to persist data. The redis server is automatically started when you run the CMS server. You can check that it is running in a different terminal using:
+
+```bash
+redis-cli ping
+```
+it should return PONG.
+
+It is possible to set which db is used on startup by modifying the dump.rb file located where the binary for redis is installed.
 
 
 ### Run Tests:
