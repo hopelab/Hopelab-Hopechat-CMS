@@ -30,11 +30,6 @@ region=us-west-2b
 #### config
 This repo is using [config](https://www.npmjs.com/package/config) to manage environment variables and fallback to defaults in case of something missing.
 
-You may need to specify to config where to find your configuration file using the environment variable NODE_CONFIG_DIR. For example my NODE_CONFIG_DIR var in my ~.bash_profile is:
-NODE_CONFIG_DIR=/Users/philiplauffenburger/Documents/Coding/grio/hopelab_ayachatbot_cms/server/config
-
-This of course won't work if you use the config package in multiple locations, so you'll have to specify the env file for each specific project
-
 ### Code Structure
 
 The CMS is split into two pieces, the `client` and `server`. The server is using the same `Redis` db that the Bot reads the message content from. There are a series of endpoints and controllers that manage all `CRUD` operations for a given entity.
