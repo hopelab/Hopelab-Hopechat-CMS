@@ -8,7 +8,7 @@ const R = require('ramda'),
 // These values can be overridden by either environment vars or by a NODE_ENV named config
 // which declares the desired object of the same name.
 
-var credentials = new AWS.SharedIniFileCredentials();
+const credentials = new AWS.SharedIniFileCredentials();
 const FALLBACK_DEFAULT_VALUES = {
   host: 'localhost',
   sessionSecret: 'secret',
