@@ -74,11 +74,6 @@ const Sidebar = props => (
       <div className="card-header d-flex flex-row justify-content-between">
         <span style={{fontSize: '1.1em'}}>Conversations</span>
         <div>
-          <a href="/users" target="_blank">
-            <Button color="primary">
-              <i className="fa fa-cloud-download" aria-hidden="true"></i>
-            </Button>
-          </a>
           <Button
             color="primary"
             className='ml-1'
