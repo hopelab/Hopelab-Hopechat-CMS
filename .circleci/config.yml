@@ -8,5 +8,7 @@ jobs:
       - run: sudo apt-get update
       - run: sudo apt install -y rsync
       - run: if [ "${CIRCLE_BRANCH}" == "circleci" ] || [ "${CIRCLE_BRANCH}" == "master" ]; then rsync -avz -e "ssh -o StrictHostKeyChecking=no" --exclude '.git*' ./ ubuntu@35.162.65.198:/var/www/cms/hopelab_ayachatbot_cms/; fi
-      - run: ssh -o StrictHostKeyChecking=no ubuntu@35.162.65.198 'cd /var/www/cms/hopelab_ayachatbot_cms && yarn install && cd client && yarn install && yarn build client && pm2 restart cms'
+      - run: if [ "${CIRCLE_BRANCH}" == "circleci" ] || [ "${CIRCLE_BRANCH}" == "master" ]; ssh -o StrictHostKeyChecking=no ubuntu@35.162.65.198 'cd /var/www/cms/hopelab_ayachatbot_cms && yarn install && cd client && yarn install && yarn build client && pm2 restart cms'
+      - run: if [ "${CIRCLE_BRANCH}" == "staging" ]; then rsync -avz -e "ssh -o StrictHostKeyChecking=no" --exclude '.git*' ./ ubuntu@34.212.32.132:/var/www/cms/hopelab_ayachatbot_cms/; fi
+      - run: if [ "${CIRCLE_BRANCH}" == "staging" ]; ssh -o StrictHostKeyChecking=no ubuntu@34.212.32.132 'cd /var/www/cms/hopelab_ayachatbot_cms && yarn install && cd client && yarn install && yarn build client && pm2 restart cms'
       - run: echo "done!"
