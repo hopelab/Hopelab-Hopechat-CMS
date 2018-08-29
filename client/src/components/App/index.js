@@ -27,7 +27,7 @@ class App extends Component {
       .then(data => {
         this.setState({...data});
       })
-      .catch(console.error);
+      .catch(err => {console.error(err); console.log('here instead')});
   }
 
   toggleImageModal = () => {
@@ -53,7 +53,7 @@ class App extends Component {
           }
         );
       })
-      .catch(console.error);
+      .catch(err => {console.error(err); console.log('happening here')});
   };
 
   resetActionMessage = (stateKey, time) => {
@@ -95,7 +95,7 @@ class App extends Component {
       })
       .catch(e => {
         console.error(e);
-
+        console.log('heppening here instead')
         this.setState({
           imageUploadStatus: 'fail'
         });
