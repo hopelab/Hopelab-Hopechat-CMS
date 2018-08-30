@@ -16,6 +16,7 @@
   },
   "rules": {
         "arrow-parens": ["error", "as-needed"],
+        "no-console": 1,
         "class-methods-use-this": 0,
         "import/prefer-default-export": 0,
         "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],

@@ -76,7 +76,7 @@ function getRoutes(route) {
   const update = '/update';
   const all = '/all';
   const get = '/';
-  const _delete = '/delete';
+  const _delete = '/delete'; // eslint-disable-line no-underscore-dangle
   const copy = '/copy';
 
   return {
@@ -215,7 +215,7 @@ const http = {
         Authorization: `Basic ${window.sessionStorage.getItem('basicAuthString')}`,
       },
     }),
-  makeUploadFetchOptions: (options, contentType) =>
+  makeUploadFetchOptions: options =>
     R.merge(options, {
       headers: {
         Authorization: `Basic ${window.sessionStorage.getItem('basicAuthString')}`,

@@ -100,13 +100,12 @@ class TreeNode extends React.Component {
     if (!Array.isArray(children)) {
       children = children ? [children] : [];
     }
-    const { _eventBubbles } = this;
 
     return (
       <ul style={style.subtree} ref={ref => { this.subtreeRef = ref; }}>
         {children.map((child, index) => (
           <TreeNode
-            {..._eventBubbles()}
+            {...this.eventBubbles()}
             animations={animations}
             decorators={propDecorators}
             key={child.id || index}
@@ -130,7 +129,7 @@ class TreeNode extends React.Component {
     );
   }
 
-  _eventBubbles() {
+  eventBubbles() {
     const { onToggle } = this.props;
 
     return {

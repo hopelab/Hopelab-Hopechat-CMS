@@ -155,8 +155,8 @@ export function fetchAllDataForApp(routes) {
  * @param {Object} route
  * @returns {Promise}
 */
-export function getPostRoutesForChildEntities(entities, routes) {
-  return entities.map(e => {
+export function getPostRoutesForChildEntities(paramEntities, routes) {
+  return paramEntities.map(e => {
     const action = e.id ? 'update' : 'create';
 
     return post(routes[e.type][action], e).then(res => res.json());
@@ -174,14 +174,14 @@ export function updateStart(entity) {
  * @param {Object} entities
  * @returns {Array}
 */
-export function getChildEntitiesFor(item, entities) {
+export function getChildEntitiesFor(item, paramEntities) {
   if (!item) {
     return [];
   }
 
   const childEntities = forms[item.type].children.reduce((prev, curr) => prev.concat(...R.reject(
     R.prop('private'),
-    entities[curr].filter(R.pathEq(['parent', 'id'], item.id)),
+    paramEntities[curr].filter(R.pathEq(['parent', 'id'], item.id)),
   )), []);
 
   const indexOfStart = childEntities.findIndex(e => e.start);
@@ -213,11 +213,11 @@ export function tagExists(tag, tags) {
  * @returns {Object}
 */
 // TODO: use recursion
-export function createTreeView({ active, data, entities }) {
+export function createTreeView({ active, data, entities: paramEntities }) {
   const tree = {
     name: 'hopelab',
     toggled: true,
-    children: data[entities.conversation].map(c => c),
+    children: data[paramEntities.conversation].map(c => c),
   };
 
   tree.children = tree.children.map(c => ({
@@ -227,7 +227,7 @@ export function createTreeView({ active, data, entities }) {
     isLive: c.isLive,
     children: R.reject(
       R.prop('private'),
-      data[entities.collection].filter(R.pathEq(['parent', 'id'], c.id)),
+      data[paramEntities.collection].filter(R.pathEq(['parent', 'id'], c.id)),
     ),
   }));
 
@@ -239,7 +239,7 @@ export function createTreeView({ active, data, entities }) {
       active: active === d.id,
       children: R.reject(
         R.prop('private'),
-        data[entities.series].filter(R.pathEq(['parent', 'id'], d.id)),
+        data[paramEntities.series].filter(R.pathEq(['parent', 'id'], d.id)),
       ),
     })),
   }));
@@ -254,7 +254,7 @@ export function createTreeView({ active, data, entities }) {
         active: active === f.id,
         children: R.reject(
           R.prop('private'),
-          data[entities.block]
+          data[paramEntities.block]
             .filter(R.pathEq(['parent', 'id'], f.id))
             .map(g => ({
               ...g,

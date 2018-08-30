@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import './style.css';
 import { pick } from 'ramda';
+
+import './style.css';
 
 import Sidebar from '../Sidebar';
 import Dashboard from '../Dashboard';
@@ -58,6 +59,9 @@ class App extends Component {
   };
 
   addImage = (acceptedFiles, rejectedFiles) => {
+    if (rejectedFiles) {
+      console.error(JSON.stringify(rejectedFiles));
+    }
     const data = new FormData();
     data.append('file', acceptedFiles[0]);
 

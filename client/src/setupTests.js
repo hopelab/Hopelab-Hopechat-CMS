@@ -1,16 +1,11 @@
+/* eslint-disable */
 import raf from '../config/raf';
-import { configure } from 'enzyme';
+
 import Adapter from 'enzyme-adapter-react-16';
+import { configure } from 'enzyme';
+
+
 configure({ adapter: new Adapter() });
-
-
-if (typeof Promise === 'undefined') {
-  // Rejection tracking prevents a common issue where React gets into an
-  // inconsistent state due to an error, but it gets swallowed by a Promise,
-  // and the user has no idea what causes React's erratic future behavior.
-  require('promise/lib/rejection-tracking').enable();
-  window.Promise = require('promise/lib/es6-extensions.js');
-}
 
 // fetch() polyfill for making API calls.
 require('whatwg-fetch');
@@ -25,11 +20,11 @@ const sessionStorageMock = {
 };
 
 global.sessionStorage = sessionStorageMock;
-global.fetch = jest.fn().mockImplementation(() => {
-  return new Promise(resolve => {
+global.fetch = jest.fn().mockImplementation(() => (
+  new Promise(resolve => {
     resolve({
       ok: true,
       json: () => new Promise(nestedResolve => nestedResolve({})),
     });
-  });
-});
+  })
+));

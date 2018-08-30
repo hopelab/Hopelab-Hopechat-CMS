@@ -35,4 +35,20 @@ describe('main app component', () => {
     await expect(app.state().imageUploadStatus).toBeTruthy();
     await expect(app.state().video[0]).not.toBeUndefined();
   });
+
+  it('updateStartEntity', async () => {
+    await expect(app.state().video[0]).toBeUndefined();
+    await app.instance().updateStartEntity('conversation');
+    await app.update();
+    await expect(app.state().message).toEqual({});
+  });
+
+  it('handles Tree Toggle', async () => {
+    await expect(app.state().video[0]).toBeUndefined();
+    await app.instance().handleTreeToggle({ node: {}, expand: true });
+    await app.update();
+    await expect(app.state().cursor).toEqual({});
+    await app.instance().handleTreeToggle({ node: { foo: 'bar' } });
+    await expect(app.state().cursor).toEqual({ foo: 'bar', active: true });
+  });
 });

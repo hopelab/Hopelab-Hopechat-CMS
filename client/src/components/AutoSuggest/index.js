@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import Autosuggest from 'react-autosuggest';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
@@ -26,7 +28,7 @@ function renderSuggestion(suggestion, { query }) {
 }
 
 export function autocompleteRenderInput({ addTag, ...props }) {
-  const handleOnChange = (e, { newValue, method }) => {
+  const handleOnChange = (e, { method }) => {
     if (method === 'enter') {
       e.preventDefault();
     } else {
@@ -56,5 +58,14 @@ export function autocompleteRenderInput({ addTag, ...props }) {
     />
   );
 }
+
+autocompleteRenderInput.propTypes = {
+  addTag: PropTypes.func,
+  newValue: PropTypes.string,
+  onChange: PropTypes.func,
+  tags: PropTypes.array,
+  value: PropTypes.string,
+  ref: PropTypes.node,
+};
 
 export default autocompleteRenderInput;
