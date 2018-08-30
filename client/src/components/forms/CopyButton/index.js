@@ -11,24 +11,24 @@ import {
 class CopyButton extends Component {
   static propTypes = {
     copyToItems: PropTypes.arrayOf(PropTypes.object),
-    onCopy: PropTypes.func.isRequired
+    onCopy: PropTypes.func.isRequired,
   }
 
   constructor(props) {
     super(props);
     this.state = {
-      isOpen: false
-    }
+      isOpen: false,
+    };
     this.toggle = this.toggle.bind(this);
   }
 
   toggle() {
-    this.setState({isOpen: !this.state.isOpen})
+    this.setState({ isOpen: !this.state.isOpen });
   }
 
   renderCopyToItems() {
-    const {copyToItems, onCopy} = this.props;
-    return copyToItems.map((item, i)=> (
+    const { copyToItems, onCopy } = this.props;
+    return copyToItems.map((item, i) => (
       <DropdownItem onClick={() => onCopy(item)} key={i}>
         {item.name}
       </DropdownItem>
@@ -36,8 +36,8 @@ class CopyButton extends Component {
   }
 
   render() {
-    const {isOpen} = this.state;
-    const {copyToItems, onCopy} = this.props;
+    const { isOpen } = this.state;
+    const { copyToItems, onCopy } = this.props;
 
     return copyToItems ? (
       <ButtonDropdown isOpen={isOpen} toggle={this.toggle}>
@@ -55,9 +55,8 @@ class CopyButton extends Component {
       </ButtonDropdown>
     ) : (
       <Button color="primary" onClick={onCopy}>Copy</Button>
-    )
+    );
   }
-
 }
 
 export default CopyButton;

@@ -1,20 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-//import './style.css';
-
-import { Treebeard, decorators } from '../TreeBeard';
 import { Button } from 'reactstrap';
 
-import { entities } from '../../utils/config';
+import { Treebeard, decorators } from '../TreeBeard';
+
 import treeTheme from '../../utils/treeTheme';
 
 const propTypes = {
   addConversation: PropTypes.func.isRequired,
-  [entities.conversation]: PropTypes.array,
   treeData: PropTypes.object.isRequired,
   handleTreeToggle: PropTypes.func.isRequired,
   toggleImageModal: PropTypes.func.isRequired,
-  itemEditing: PropTypes.object
 };
 
 function handleClick({ expand, onClick }) {
@@ -22,9 +18,9 @@ function handleClick({ expand, onClick }) {
 }
 
 const PoolContainer = ({ onClick, node }) => {
-  //const hasChildren = node.children && node.children.length;
+  // const hasChildren = node.children && node.children.length;
 
-  let icon = null;
+  const icon = null;
 
   // TODO: Look into supporting expandable tree with +, - icon.
   // hasChildren ? (
@@ -40,10 +36,12 @@ const PoolContainer = ({ onClick, node }) => {
       className="PoolContainer"
       style={{
         color: node.active ? '#fff' : '#333',
-        background: node.active ? '#428bca' : 'transparent'
+        background: node.active ? '#428bca' : 'transparent',
       }}
     >
       <div
+        role="button"
+        tabIndex={0}
         className="IconContainer"
         onClick={() => {
           handleClick({ expand: true, onClick });
@@ -52,6 +50,8 @@ const PoolContainer = ({ onClick, node }) => {
         {icon}
       </div>
       <span
+        role="button"
+        tabIndex={0}
         onClick={() => {
           handleClick({ expand: false, onClick });
         }}
@@ -63,6 +63,11 @@ const PoolContainer = ({ onClick, node }) => {
   );
 };
 
+PoolContainer.propTypes = {
+  onClick: PropTypes.func,
+  node: PropTypes.object,
+};
+
 decorators.Container = PoolContainer;
 
 /**
@@ -70,17 +75,17 @@ decorators.Container = PoolContainer;
 */
 const Sidebar = props => (
   <aside className="Sidebar col-md-4 pl-3 pt-1">
-    <div className="card" style={{borderColor: 'white'}}>
+    <div className="card" style={{ borderColor: 'white' }}>
       <div className="card-header d-flex flex-row justify-content-between">
-        <span style={{fontSize: '1.1em'}}>Conversations</span>
+        <span style={{ fontSize: '1.1em' }}>Conversations</span>
         <div>
           <Button
             color="primary"
-            className='ml-1'
+            className="ml-1"
             onClick={props.toggleImageModal}
           >
-            <i className="fa fa-picture-o" aria-hidden="true"></i>&nbsp;
-            <i className="fa fa-video-camera" aria-hidden="true"></i>
+            <i className="fa fa-picture-o" aria-hidden="true" />&nbsp;
+            <i className="fa fa-video-camera" aria-hidden="true" />
           </Button>
           <Button
             color="primary"

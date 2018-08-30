@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import onClickOutside from "react-onclickoutside";
+import onClickOutside from 'react-onclickoutside';
 
-class EditableText extends Component {
+export class EditableText extends Component {
   static propTypes = {
     text: PropTypes.string.isRequired,
     onEditWillFinish: PropTypes.func,
     isTextArea: PropTypes.bool,
-    placeholder: PropTypes.string
+    placeholder: PropTypes.string,
   }
 
   static defaultProps = {
@@ -19,8 +19,8 @@ class EditableText extends Component {
     super(props);
     this.state = {
       editing: this.emptyText(props.text),
-      text: props.text
-    }
+      text: props.text,
+    };
     this.handleClickOutside = this.handleClickOutside.bind(this);
     this.handleEnterKey = this.handleEnterKey.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -28,7 +28,7 @@ class EditableText extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.text !== this.state.text) {
-      this.setState({text: nextProps.text});
+      this.setState({ text: nextProps.text });
     }
   }
 
@@ -43,7 +43,7 @@ class EditableText extends Component {
         this.props.onEditWillFinish(this.state.text);
       }
       if (!this.emptyText(this.state.text)) {
-        this.setState({editing: false});
+        this.setState({ editing: false });
       }
     }
   }
@@ -54,13 +54,13 @@ class EditableText extends Component {
         this.input === document.activeElement) {
       this.props.onEditWillFinish(this.state.text);
       if (!this.emptyText(this.state.text)) {
-        this.setState({editing: false});
+        this.setState({ editing: false });
       }
     }
   }
 
   handleChange(e) {
-    this.setState({text: e.target.value});
+    this.setState({ text: e.target.value });
   }
 
   render() {
@@ -68,10 +68,10 @@ class EditableText extends Component {
       <textarea
         type="text"
         value={this.state.text}
-        style={{width: "100%"}}
+        style={{ width: '100%' }}
         onKeyUp={this.handleEnterKey}
         onChange={this.handleChange}
-        ref={(i) => this.input = i}
+        ref={i => { this.input = i; }}
       />
     ) : (
       <input
@@ -80,19 +80,24 @@ class EditableText extends Component {
         onKeyUp={this.handleEnterKey}
         onChange={this.handleChange}
         placeholder={this.props.placeholder}
-        ref={(i) => this.input = i}
+        ref={i => { this.input = i; }}
       />
     );
 
     return (this.state.editing || this.emptyText(this.state.text)) ? (
       input
     ) : (
-      <span onClick={() => {
-        if (this.state.editing && this.input) {
-          this.props.onEditWillFinish(this.input.value);
-        }
-        this.setState(prevState => ({editing:!prevState.editing}))
-      }}>{this.state.text}</span>
+      <span
+        role="button"
+        tabIndex={0}
+        onClick={() => {
+          if (this.state.editing && this.input) {
+            this.props.onEditWillFinish(this.input.value);
+          }
+          this.setState(prevState => ({ editing: !prevState.editing }));
+        }}
+      >{this.state.text}
+      </span>
     );
   }
 }

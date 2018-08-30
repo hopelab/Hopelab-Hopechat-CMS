@@ -15,7 +15,7 @@ class ConversationItemContainer extends Component {
     item: PropTypes.shape({
       messageType: PropTypes.string,
       type: PropTypes.string,
-      name: PropTypes.stirng,
+      name: PropTypes.string,
       id: PropTypes.string,
       next: PropTypes.object,
     }).isRequired,
@@ -24,7 +24,7 @@ class ConversationItemContainer extends Component {
     handleChildEntityAddition: PropTypes.func,
     handleDeleteItem: PropTypes.func.isRequired,
     childEntities: PropTypes.array.isRequired,
-    images: PropTypes.array.isRequired
+    images: PropTypes.array.isRequired,
   }
 
   constructor(props) {
@@ -52,47 +52,48 @@ class ConversationItemContainer extends Component {
     return this.transitionHandleNextItemSelect(index, id, type);
   }
 
-  transitionHandleNextItemSelect(index, id, type) {
-    if (! this.props.item.nextConversations) { return; }
-    let nextConversations = this.props.item.nextConversations.map((nC, i) => {
+  transitionHandleNextItemSelect(index, id) {
+    if (!this.props.item.nextConversations) { return; }
+    const nextConversations = this.props.item.nextConversations.map((nC, i) => {
       if (i !== index) { return nC; }
 
       return {
         ...nC,
         id,
-      }
+      };
     });
 
     this.props.handleSaveItem({
       ...this.props.item,
-      nextConversations
-    })
+      nextConversations,
+    });
   }
 
   quickReplyHandleNextItemSelect(index, id, type) {
     if (this.props.item.quick_replies) {
-      let quick_replies = this.props.item.quick_replies.map((qr, i) => {
+      const quick_replies = this.props.item.quick_replies.map((qr, i) => { //eslint-disable-line
         if (i !== index) { return qr; }
         if (!id) {
           return {
             ...qr,
-            payload: JSON.stringify({})
+            payload: JSON.stringify({}),
           };
         }
 
         return {
           ...qr,
-          payload: JSON.stringify({id, type})
+          payload: JSON.stringify({ id, type }),
         };
       });
       this.props.handleSaveItem({
         ...this.props.item,
-        quick_replies
-      })
+        quick_replies,
+      });
     }
   }
 
-  quickReplyHandleChangeText(index, title) {
+  quickReplyHandleChangeText(index, newTitle) {
+    let title = newTitle;
     if (
       this.props.item.messageType === MESSAGE_TYPE_QUESTION_WITH_REPLIES &&
       this.props.item.quick_replies
@@ -100,86 +101,81 @@ class ConversationItemContainer extends Component {
       if (title && title.length > QUICK_REPLY_MAX_LENGTH) {
         title = title.slice(0, QUICK_REPLY_MAX_LENGTH);
       }
-      let quick_replies = this.props.item.quick_replies.map((qr, i) => {
-        return i === index ?
-          {
-            ...qr,
-            title
-          } : qr;
-      });
+      const quick_replies = this.props.item.quick_replies.map((qr, i) => (i === index ? //eslint-disable-line
+        {
+          ...qr,
+          title,
+        } : qr));
       this.props.handleSaveItem({
         ...this.props.item,
-        quick_replies
+        quick_replies,
       });
     } else if (
       this.props.item.messageType === MESSAGE_TYPE_TRANSITION
     ) {
-      let nextConversations = this.props.item.nextConversations.map((nC, i) => {
-        return i === index ?
-          {
-            ...nC,
-            text: title
-          } : nC;
-      });
+      const nextConversations = this.props.item.nextConversations.map((nC, i) => (i === index ?
+        {
+          ...nC,
+          text: title,
+        } : nC));
 
       this.props.handleSaveItem({
         ...this.props.item,
-        nextConversations
-      })
+        nextConversations,
+      });
     }
   }
 
   quickReplyHandleDelete(index) {
-
     if (
       this.props.item.messageType === MESSAGE_TYPE_QUESTION_WITH_REPLIES &&
       this.props.item.quick_replies
     ) {
-      let quick_replies = this.props.item.quick_replies.filter((qr, i) => (
+      const quick_replies = this.props.item.quick_replies.filter((qr, i) => ( //eslint-disable-line
         i !== index
       ));
 
       this.props.handleSaveItem({
         ...this.props.item,
-        quick_replies
+        quick_replies,
       });
     } else if (
       this.props.item.messageType === MESSAGE_TYPE_TRANSITION &&
       this.props.item.nextConversations
     ) {
-      let nextConversations = this.props.item.nextConversations.filter((nC, i) => (
+      const nextConversations = this.props.item.nextConversations.filter((nC, i) => (
         i !== index
       ));
 
       this.props.handleSaveItem({
         ...this.props.item,
-        nextConversations
-      })
+        nextConversations,
+      });
     }
   }
 
   quickReplyHandleAdd() {
     if (this.props.item.messageType === MESSAGE_TYPE_QUESTION_WITH_REPLIES) {
-      let quick_replies = [];
+      let quick_replies = []; //eslint-disable-line
       const newReply = {
         content_type: MESSAGE_TYPE_TEXT,
-        title: ''
+        title: '',
       };
 
       if (this.props.item.quick_replies) {
-        quick_replies = [...this.props.item.quick_replies, newReply];
+        quick_replies = [...this.props.item.quick_replies, newReply]; //eslint-disable-line
       } else {
-        quick_replies = [newReply];
+        quick_replies = [newReply]; //eslint-disable-line
       }
       this.props.handleSaveItem({
         ...this.props.item,
-        quick_replies
+        quick_replies,
       });
     } else if (this.props.item.messageType === MESSAGE_TYPE_TRANSITION) {
       let nextConversations = [];
       const newConvo = {
         text: '',
-        id: undefined
+        id: undefined,
       };
 
       if (this.props.item.nextConversations) {
@@ -190,12 +186,10 @@ class ConversationItemContainer extends Component {
 
       this.props.handleSaveItem({
         ...this.props.item,
-        nextConversations
-      })
+        nextConversations,
+      });
     }
-
-
-  };
+  }
 
   render() {
     if (this.messageTypeHasDifferentOptions(this.props.item.messageType)) {
@@ -207,59 +201,60 @@ class ConversationItemContainer extends Component {
             />
             <button
               onClick={this.quickReplyHandleAdd}
-              style={{fontSize: '1.5em'}}
-            >+</button>
+              style={{ fontSize: '1.5em' }}
+            >+
+            </button>
           </div>
           <div className="d-flex flex-row">
             { this.props.item.messageType === MESSAGE_TYPE_QUESTION_WITH_REPLIES &&
               this.props.item.quick_replies &&
               this.props.item.quick_replies.map((qr, i) => (
-              <QuickReply
-                key={i}
-                index={i}
-                childEntities={this.props.childEntities}
-                text={qr.title}
-                nextId={JSON.parse(qr.payload || '{}').id}
-                onUpdateText={(...params) => (
-                  this.quickReplyHandleChangeText(i, ...params)
-                )}
-                onDeleteReply={() => this.quickReplyHandleDelete(i)}
-                onNextItemSelect={this.handleNextItemSelect}
-                onNewItem={() => {
-                  this.props.handleChildEntityAddition(this.props.item.type, newItem => {
-                    this.handleNextItemSelect(i, newItem.id, newItem.type)
-                  });
-                }}
-                showEndOfConversation={this.props.parentItemType === TYPE_CONVERSATION}
-              />
-            ))}
+                <QuickReply
+                  key={i}
+                  index={i}
+                  childEntities={this.props.childEntities}
+                  text={qr.title}
+                  nextId={JSON.parse(qr.payload || '{}').id}
+                  onUpdateText={(...params) => (
+                    this.quickReplyHandleChangeText(i, ...params)
+                  )}
+                  onDeleteReply={() => this.quickReplyHandleDelete(i)}
+                  onNextItemSelect={this.handleNextItemSelect}
+                  onNewItem={() => {
+                    this.props.handleChildEntityAddition(this.props.item.type, newItem => {
+                      this.handleNextItemSelect(i, newItem.id, newItem.type);
+                    });
+                  }}
+                  showEndOfConversation={this.props.parentItemType === TYPE_CONVERSATION}
+                />
+              ))}
             { this.props.item.messageType === MESSAGE_TYPE_TRANSITION &&
               this.props.item.nextConversations &&
               this.props.item.nextConversations.map((nC, i) => (
-              <QuickReply
-                key={i}
-                index={i}
-                childEntities={this.props.childEntities}
-                text={nC.text}
-                nextId={nC.id}
-                onUpdateText={(...params) => (
-                  this.quickReplyHandleChangeText(i, ...params)
-                )}
-                onDeleteReply={() => this.quickReplyHandleDelete(i)}
-                onNextItemSelect={this.handleNextItemSelect}
-                onNewItem={() => {
-                  this.props.handleChildEntityAddition(this.props.item.type, newItem => {
-                    this.handleNextItemSelect(i, newItem.id, newItem.type)
-                  });
-                }}
-                messageType={this.props.item.messageType}
-                conversations={this.props.conversations}
-                showEndOfConversation={false}
-              />
-            ))}
+                <QuickReply
+                  key={i}
+                  index={i}
+                  childEntities={this.props.childEntities}
+                  text={nC.text}
+                  nextId={nC.id}
+                  onUpdateText={(...params) => (
+                    this.quickReplyHandleChangeText(i, ...params)
+                  )}
+                  onDeleteReply={() => this.quickReplyHandleDelete(i)}
+                  onNextItemSelect={this.handleNextItemSelect}
+                  onNewItem={() => {
+                    this.props.handleChildEntityAddition(this.props.item.type, newItem => {
+                      this.handleNextItemSelect(i, newItem.id, newItem.type);
+                    });
+                  }}
+                  messageType={this.props.item.messageType}
+                  conversations={this.props.conversations}
+                  showEndOfConversation={false}
+                />
+              ))}
           </div>
         </div>
-      )
+      );
     }
     return (
 

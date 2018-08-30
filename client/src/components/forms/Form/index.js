@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { FormGroup } from 'reactstrap';
+import TagsInput from 'react-tagsinput';
+
+import 'react-tagsinput/react-tagsinput.css';
 
 import ConversationItemContainer from '../ConversationItemContainer';
-import TagsInput from 'react-tagsinput';
-import 'react-tagsinput/react-tagsinput.css';
 
 import FirstItemSelect from '../FirstItemSelect';
 
 import { autocompleteRenderInput } from '../../AutoSuggest';
 
-import { FormGroup } from 'reactstrap';
 
 import { createInitialFormState } from '../../../utils/data';
 
@@ -24,16 +25,18 @@ const propTypes = {
     tags: PropTypes.array,
     type: PropTypes.string,
     isLive: PropTypes.bool,
-    children: PropTypes.array
+    children: PropTypes.array,
   }),
   config: PropTypes.object,
   childEntities: PropTypes.array.isRequired,
   handleSaveItem: PropTypes.func.isRequired,
-  handleAddTag: PropTypes.func.isRequired,
   handleDeleteItem: PropTypes.func.isRequired,
+  updateStartEntity: PropTypes.func.isRequired,
   images: PropTypes.array.isRequired,
   videos: PropTypes.array.isRequired,
-  tags: PropTypes.array.isRequired
+  tags: PropTypes.array.isRequired,
+  handleChildEntityAddition: PropTypes.func,
+  conversations: PropTypes.array,
 };
 
 /**
@@ -54,23 +57,23 @@ class Form extends Component {
     this.setState(createInitialFormState(nextProps));
   }
 
-  handleTagsInput = e => {
-    // this.props.handleUpdateItem({
-    //   target: {
-    //     name: 'tags',
-    //     value: e
-    //   }
-    // });
-    //
-    // this.props.handleAddTag({ name: last(e) });
-  };
+  // handleTagsInput = e => {
+  //   // this.props.handleUpdateItem({
+  //   //   target: {
+  //   //     name: 'tags',
+  //   //     value: e
+  //   //   }
+  //   // });
+  //   //
+  //   // this.props.handleAddTag({ name: last(e) });
+  // };
 
-  handleChildSelection = e => this.setState({ entityToAdd: e.target.value });
+  // handleChildSelection = e => this.setState({ entityToAdd: e.target.value });
 
   render() {
     return (
       <div className="d-flex flex-column align-items-start">
-        {/*inputProps=
+        {/* inputProps=
           tags: this.props.tags,
           handleAddTag: this.props.handleAddTag
         */}
@@ -93,29 +96,29 @@ class Form extends Component {
         </div>
 
         { (this.props.item.type === TYPE_CONVERSATION ||
-          this.props.item.type === TYPE_BLOCK) ?
-          <FirstItemSelect
+          this.props.item.type === TYPE_BLOCK)
+          ? <FirstItemSelect
             childEntities={this.props.childEntities}
             onSelectStart={this.props.updateStartEntity}
           /> : undefined
         }
 
         {formHasField('children', this.props.config.fields) ? (
-            this.props.childEntities.map((e, i) => (
-              <ConversationItemContainer
-                key={e.id}
-                item={e}
-                index={i}
-                childEntities={this.props.childEntities}
-                handleSaveItem={this.props.handleSaveItem}
-                handleChildEntityAddition={this.props.handleChildEntityAddition}
-                handleDeleteItem={this.props.handleDeleteItem}
-                images={this.props.images}
-                videos={this.props.videos}
-                parentItemType={this.props.item.type}
-                conversations={this.props.conversations}
-              />
-            ))
+          this.props.childEntities.map((e, i) => (
+            <ConversationItemContainer
+              key={e.id}
+              item={e}
+              index={i}
+              childEntities={this.props.childEntities}
+              handleSaveItem={this.props.handleSaveItem}
+              handleChildEntityAddition={this.props.handleChildEntityAddition}
+              handleDeleteItem={this.props.handleDeleteItem}
+              images={this.props.images}
+              videos={this.props.videos}
+              parentItemType={this.props.item.type}
+              conversations={this.props.conversations}
+            />
+          ))
         ) : null}
       </div>
     );

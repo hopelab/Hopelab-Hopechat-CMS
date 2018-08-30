@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { pick } from 'ramda';
+
 import './style.css';
 
 import Sidebar from '../Sidebar';
@@ -8,7 +10,6 @@ import UploadModal from '../UploadModal';
 import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
 
-import { pick } from 'ramda';
 
 class App extends Component {
   constructor(props) {
@@ -25,33 +26,30 @@ class App extends Component {
       .fetchAllDataForApp(config.routes)
       .then(dataUtil.createInitialEntityState)
       .then(data => {
-        this.setState({...data});
+        this.setState({ ...data });
       })
-      .catch(console.error);
+      .catch(err => { console.error(err); console.log('here instead'); });
   }
 
   toggleImageModal = () => {
     this.setState({
-      showImageModal: !this.state.showImageModal
+      showImageModal: !this.state.showImageModal,
     });
   };
 
   addConversation = () => {
     dataUtil
       .post(config.routes.conversation.create, {
-        ...config.initialState[config.entities.conversation]
+        ...config.initialState[config.entities.conversation],
       })
       .then(res => res.json())
       .then(res => {
         const conversation = res[config.entities.conversation];
-
-        this.setState(
-          {
-            itemEditing:
+        this.setState({
+          itemEditing:
               pick(['id', 'type'], conversation[conversation.length - 1]),
-            ...res
-          }
-        );
+          ...res,
+        });
       })
       .catch(console.error);
   };
@@ -61,6 +59,9 @@ class App extends Component {
   };
 
   addImage = (acceptedFiles, rejectedFiles) => {
+    if (rejectedFiles) {
+      console.error(JSON.stringify(rejectedFiles));
+    }
     const data = new FormData();
     data.append('file', acceptedFiles[0]);
 
@@ -68,25 +69,25 @@ class App extends Component {
       '/media/create',
       config.http.makeUploadFetchOptions({
         method: 'POST',
-        body: data
-      })
+        body: data,
+      }),
     )
       .then(res => res.json())
       .then(res => {
-        let newState = {
+        const newState = {
           imageUploadStatus: 'success',
           mediaUpload: {
             ...this.state.mediaUpload,
-            showModal: false
-          }
+            showModal: false,
+          },
         };
 
-        const media = {key: res.key, url: res.url};
+        const media = { key: res.key, url: res.url };
 
         if (res.type === 'image') {
           newState.image = this.state.image.concat(media);
         } else {
-          newState.video = this.state.video.concat(media)
+          newState.video = this.state.video.concat(media);
         }
 
         this.setState(newState);
@@ -95,9 +96,8 @@ class App extends Component {
       })
       .catch(e => {
         console.error(e);
-
         this.setState({
-          imageUploadStatus: 'fail'
+          imageUploadStatus: 'fail',
         });
 
         this.resetActionMessage('imageUploadStatus', 4000);
@@ -105,14 +105,12 @@ class App extends Component {
   };
 
   getFullItemEditing(state) {
-    const {itemEditing} = state;
+    const { itemEditing } = state;
     if (!itemEditing) {
       return null;
     }
 
-    return state[itemEditing.type].find(
-      item => item.id === itemEditing.id
-    );
+    return state[itemEditing.type].find(item => item.id === itemEditing.id);
   }
 
   markPosition = entity => {
@@ -125,13 +123,13 @@ class App extends Component {
 
     const childEntities = dataUtil.getChildEntitiesFor(
       this.getFullItemEditing(this.state),
-      this.state
+      this.state,
     );
 
     if (!childEntities.length) {
       return {
         ...entity,
-        start: true
+        start: true,
       };
     }
 
@@ -146,7 +144,7 @@ class App extends Component {
       .then(res => {
         this.setState(
           { [entity.type]: res },
-          () => !!(callback) && callback(res[res.length - 1])
+          () => !!(callback) && callback(res[res.length - 1]),
         );
       })
       .catch(console.error);
@@ -162,28 +160,27 @@ class App extends Component {
         if (i.id === res.id) {
           newRes = {
             ...i,
-            ...res
+            ...res,
           };
           if (i.next && !uploadItem.next) { delete newRes.next; }
           if (i.delayInMinutes && !uploadItem.delayInMinutes) {
             delete newRes.delayInMinutes;
           }
           return newRes;
-        } else {
-          return i;
         }
+        return i;
       });
     }
     this.setState(
       { [res.type]: items },
-      () => !!(callback) && callback(uploadItem)
+      () => !!(callback) && callback(uploadItem),
     );
   }
 
   handleUploadNonMessage(res, uploadItem, callback) {
     this.setState(
       { [uploadItem.type]: res },
-      () => !!(callback) && callback(uploadItem)
+      () => !!(callback) && callback(uploadItem),
     );
   }
 
@@ -192,7 +189,7 @@ class App extends Component {
     dataUtil
       .post(
         config.routes[item.type][route],
-        dataUtil.makeCopyAndRemoveKeys(item, config.keysToRemove)
+        dataUtil.makeCopyAndRemoveKeys(item, config.keysToRemove),
       )
       .then(res => res.json())
       .then(res => {
@@ -221,16 +218,16 @@ class App extends Component {
 
   handleCopyEntity(entity) {
     const itemToCopy = entity ? {
-        ...this.state.itemEditing,
-        parent: {
-          ...entity.link
-        }
-      } : {
-        ...this.state.itemEditing
-      };
+      ...this.state.itemEditing,
+      parent: {
+        ...entity.link,
+      },
+    } : {
+      ...this.state.itemEditing,
+    };
 
     this.handleCopyItem({
-      itemToCopy
+      itemToCopy,
     });
   }
 
@@ -239,7 +236,7 @@ class App extends Component {
 
     dataUtil
       .post(config.routes[itemToCopy.type][route], {
-        parent: dataUtil.makeCopyAndRemoveKeys(itemToCopy, config.keysToRemove)
+        parent: dataUtil.makeCopyAndRemoveKeys(itemToCopy, config.keysToRemove),
       })
       .then(res => res.json())
       .then(copiedResults => {
@@ -259,8 +256,8 @@ class App extends Component {
         if (this.state.itemEditing && item.id === this.state.itemEditing.id) {
           newState = {
             itemEditing: null,
-            ...nextEntityState
-          }
+            ...nextEntityState,
+          };
         } else {
           newState = { ...nextEntityState };
         }
@@ -269,15 +266,16 @@ class App extends Component {
       .catch(console.error);
   };
 
-  handleTreeToggle = ({ node, expand }) => {
+  handleTreeToggle = ({ node: pNode, expand }) => {
     /* eslint-disable react/no-direct-mutation-state */
+    const node = pNode;
     if (expand) {
       if (node.children) {
         node.toggled = !node.toggled;
       }
 
       this.setState({
-        cursor: node
+        cursor: node,
       });
 
       return;
@@ -288,38 +286,36 @@ class App extends Component {
     }
     node.active = true;
 
-    this.setState(
-      {
-        cursor: node,
-        itemEditing: node.type ? pick(['id', 'type'],node) : this.state.itemEditing,
-      }
-    );
+    this.setState({
+      cursor: node,
+      itemEditing: node.type ? pick(['id', 'type'], node) : this.state.itemEditing,
+    });
   };
 
   updateStartEntity(entity) {
     dataUtil.updateStart(entity).then(data => {
       this.setState({
         message: data.messages,
-        collection: data.collections
+        collection: data.collections,
       });
-    })
+    });
   }
 
   render() {
     const entitiesCanCopyTo = dataUtil.getEntitiesCanCopyTo(
       this.getFullItemEditing(this.state),
-      this.state
+      this.state,
     );
 
     const childEntities = dataUtil.getChildEntitiesFor(
       this.getFullItemEditing(this.state),
-      this.state
+      this.state,
     );
 
     const treeData = dataUtil.createTreeView({
       data: { ...this.state },
       entities: config.entities,
-      active: (this.getFullItemEditing(this.state) || {}).id
+      active: (this.getFullItemEditing(this.state) || {}).id,
     });
 
     const itemEditing = this.getFullItemEditing(this.state);
@@ -332,7 +328,7 @@ class App extends Component {
             mediaUpload: {
               ...this.state.mediaUpload,
               showModal: false,
-            }
+            },
           })}
           onUpload={this.addImage}
         />
@@ -347,9 +343,9 @@ class App extends Component {
             this.setState({
               mediaUpload: {
                 ...this.state.mediaUpload,
-                showModal: !this.state.mediaUpload.showModal
-              }
-            })
+                showModal: !this.state.mediaUpload.showModal,
+              },
+            });
           }}
         />
 

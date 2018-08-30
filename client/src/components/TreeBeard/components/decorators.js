@@ -2,11 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { VelocityComponent } from 'velocity-react';
 
-const Loading = ({ style }) => {
-  return <div style={style}>loading...</div>;
-};
+const Loading = ({ style }) => <div style={style}>loading...</div>;
 Loading.propTypes = {
-  style: PropTypes.object
+  style: PropTypes.object,
 };
 
 const Toggle = ({ style }) => {
@@ -25,19 +23,17 @@ const Toggle = ({ style }) => {
   );
 };
 Toggle.propTypes = {
-  style: PropTypes.object
+  style: PropTypes.object,
 };
 
-const Header = ({ node, style }) => {
-  return (
-    <div style={style.base}>
-      <div style={style.title}>{node.name}</div>
-    </div>
-  );
-};
+const Header = ({ node, style }) => (
+  <div style={style.base}>
+    <div style={style.title}>{node.name}</div>
+  </div>
+);
 Header.propTypes = {
   style: PropTypes.object,
-  node: PropTypes.object.isRequired
+  node: PropTypes.object.isRequired,
 };
 
 class Container extends React.Component {
@@ -46,8 +42,10 @@ class Container extends React.Component {
 
     return (
       <div
+        role="button"
+        tabIndex={0}
         onClick={onClick}
-        ref={ref => (this.clickableRef = ref)}
+        ref={ref => { this.clickableRef = ref; }}
         style={style.container}
       >
         {!terminal ? this.renderToggle() : null}
@@ -68,7 +66,7 @@ class Container extends React.Component {
       <VelocityComponent
         animation={animations.toggle.animation}
         duration={animations.toggle.duration}
-        ref={ref => (this.velocityRef = ref)}
+        ref={ref => { this.velocityRef = ref; }}
       >
         {this.renderToggleDecorator()}
       </VelocityComponent>
@@ -88,12 +86,12 @@ Container.propTypes = {
   onClick: PropTypes.func.isRequired,
   animations: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
     .isRequired,
-  node: PropTypes.object.isRequired
+  node: PropTypes.object.isRequired,
 };
 
 export default {
   Loading,
   Toggle,
   Header,
-  Container
+  Container,
 };
