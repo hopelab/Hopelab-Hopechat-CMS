@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import {
   Dropdown,
   DropdownMenu,
   DropdownItem,
-  DropdownToggle
+  DropdownToggle,
 } from 'reactstrap';
 
 const propTypes = {
@@ -14,7 +14,7 @@ const propTypes = {
 };
 
 const getNextMessageOptionsForMessage = (childEntities, onSelectStart) => {
-  let items = childEntities.map((c, i) => (
+  const items = childEntities.map(c => (
     <DropdownItem
       key={c.id}
       active={c.start}
@@ -30,13 +30,13 @@ class FirstItemSelect extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dropdownOpen: false
+      dropdownOpen: false,
     };
     this.toggle = this.toggle.bind(this);
   }
 
   toggle() {
-    this.setState({dropdownOpen: !this.state.dropdownOpen});
+    this.setState({ dropdownOpen: !this.state.dropdownOpen });
   }
 
   render() {
@@ -45,13 +45,13 @@ class FirstItemSelect extends Component {
     if (foundItem) {
       foundItem = `Start: ${foundItem.name}`;
     } else {
-      foundItem = "no messages";
+      foundItem = 'no messages';
     }
     return (
-      <div className="card m-2" style={{width: '360px'}}>
+      <div className="card m-2" style={{ width: '360px' }}>
         <div className="card-footer">
           <Dropdown
-            style={{cursor: 'pointer'}}
+            style={{ cursor: 'pointer' }}
             isOpen={this.state.dropdownOpen}
             toggle={this.toggle}
           >

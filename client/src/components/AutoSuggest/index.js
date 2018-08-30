@@ -34,14 +34,12 @@ export function autocompleteRenderInput({ addTag, ...props }) {
     }
   };
 
-  const tags = props.tags || []
+  const tags = props.tags || [];
 
   const inputValue = (props.value && props.value.trim().toLowerCase()) || '';
   const inputLength = inputValue.length;
 
-  let suggestions = tags.filter(tag => {
-    return tag.name.toLowerCase().slice(0, inputLength) === inputValue;
-  });
+  const suggestions = tags.filter(tag => tag.name.toLowerCase().slice(0, inputLength) === inputValue);
 
   return (
     <Autosuggest

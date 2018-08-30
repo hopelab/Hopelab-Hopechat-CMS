@@ -9,7 +9,7 @@ import { entities, entitiesForCopy, http, forms } from './config';
 export function bootstrap() {
   window.sessionStorage.setItem(
     'basicAuthString',
-    process.env.REACT_APP_DEV_BASIC_AUTH_STRING
+    process.env.REACT_APP_DEV_BASIC_AUTH_STRING,
   );
 }
 
@@ -26,8 +26,8 @@ export function post(route, data) {
     http.makeCommonFetchOptions({
       method: http.post,
       headers: http.getPostHeaders(),
-      body: JSON.stringify(data)
-    })
+      body: JSON.stringify(data),
+    }),
   );
 }
 
@@ -46,7 +46,7 @@ export function createInitialEntityState(data) {
     [entities.message]: data[4],
     [entities.image]: data[5],
     [entities.video]: data[6],
-    [entities.tag]: data[7]
+    [entities.tag]: data[7],
   };
 }
 
@@ -59,7 +59,7 @@ export function createInitialEntityState(data) {
 export function createInitialFormState(props) {
   return {
     ruleSelection: props.item.rule,
-    entityToAdd: R.pathOr('', ['config', 'children', 0])(props)
+    entityToAdd: R.pathOr('', ['config', 'children', 0])(props),
   };
 }
 
@@ -94,13 +94,9 @@ export function entityCanBeCopied(entity) {
 */
 export function getEntitiesCanCopyTo(entity, appState) {
   if (!entity) { return []; }
-  return entitiesForCopy[entity.type].reduce((prev, curr) => {
-    return prev.concat(
-      ...appState[curr]
-        .filter(R.compose(R.not, R.prop('private')))
-        .map(({ id, name, type }) => ({ name, link: { type, id } }))
-    );
-  }, []);
+  return entitiesForCopy[entity.type].reduce((prev, curr) => prev.concat(...appState[curr]
+    .filter(R.compose(R.not, R.prop('private')))
+    .map(({ id, name, type }) => ({ name, link: { type, id } }))), []);
 }
 
 /**
@@ -125,7 +121,7 @@ export function throwIfEmptyArray(data) {
  * @returns {Object}
 */
 export const constructEntityState = type => nextState =>
-  Array.isArray(nextState) ? { [type]: nextState } : nextState;
+  (Array.isArray(nextState) ? { [type]: nextState } : nextState);
 
 /**
  * Fetch All Data For App
@@ -136,27 +132,20 @@ export const constructEntityState = type => nextState =>
 export function fetchAllDataForApp(routes) {
   return Promise.all([
     fetch(routes.conversation.all, http.makeCommonFetchOptions()).then(res =>
-      res.json()
-    ),
+      res.json()),
     fetch(routes.collection.all, http.makeCommonFetchOptions()).then(res =>
-      res.json()
-    ),
+      res.json()),
     fetch(routes.series.all, http.makeCommonFetchOptions()).then(res =>
-      res.json()
-    ),
+      res.json()),
     fetch(routes.block.all, http.makeCommonFetchOptions()).then(res =>
-      res.json()
-    ),
+      res.json()),
     fetch(routes.message.all, http.makeCommonFetchOptions()).then(res =>
-      res.json()
-    ),
+      res.json()),
     fetch(routes.image.all, http.makeCommonFetchOptions()).then(res =>
-      res.json()
-    ),
+      res.json()),
     fetch(routes.video.all, http.makeCommonFetchOptions()).then(res =>
-      res.json()
-    ),
-    fetch(routes.tag.all, http.makeCommonFetchOptions()).then(res => res.json())
+      res.json()),
+    fetch(routes.tag.all, http.makeCommonFetchOptions()).then(res => res.json()),
   ]).then(throwIfEmptyArray);
 }
 
@@ -190,18 +179,14 @@ export function getChildEntitiesFor(item, entities) {
     return [];
   }
 
-  let childEntities = forms[item.type].children.reduce((prev, curr) => {
-    return prev.concat(
-      ...R.reject(
-        R.prop('private'),
-        entities[curr].filter(R.pathEq(['parent', 'id'], item.id))
-      )
-    );
-  }, []);
+  const childEntities = forms[item.type].children.reduce((prev, curr) => prev.concat(...R.reject(
+    R.prop('private'),
+    entities[curr].filter(R.pathEq(['parent', 'id'], item.id)),
+  )), []);
 
-  let indexOfStart = childEntities.findIndex(e => e.start);
+  const indexOfStart = childEntities.findIndex(e => e.start);
   if (indexOfStart >= 1) {
-    let startEntity = (childEntities.splice(indexOfStart, 1))[0];
+    const startEntity = (childEntities.splice(indexOfStart, 1))[0];
     childEntities.unshift(startEntity);
   }
 
@@ -229,68 +214,56 @@ export function tagExists(tag, tags) {
 */
 // TODO: use recursion
 export function createTreeView({ active, data, entities }) {
-  let tree = {
+  const tree = {
     name: 'hopelab',
     toggled: true,
-    children: data[entities.conversation].map(c => c)
+    children: data[entities.conversation].map(c => c),
   };
 
-  tree.children = tree.children.map(c => {
-    return {
-      ...c,
+  tree.children = tree.children.map(c => ({
+    ...c,
+    toggled: true,
+    active: active === c.id,
+    isLive: c.isLive,
+    children: R.reject(
+      R.prop('private'),
+      data[entities.collection].filter(R.pathEq(['parent', 'id'], c.id)),
+    ),
+  }));
+
+  tree.children = tree.children.map(c => ({
+    ...c,
+    children: c.children.map(d => ({
+      ...d,
       toggled: true,
-      active: active === c.id,
-      isLive: c.isLive,
+      active: active === d.id,
       children: R.reject(
         R.prop('private'),
-        data[entities.collection].filter(R.pathEq(['parent', 'id'], c.id))
-      )
-    };
-  });
+        data[entities.series].filter(R.pathEq(['parent', 'id'], d.id)),
+      ),
+    })),
+  }));
 
-  tree.children = tree.children.map(c => {
-    return {
-      ...c,
-      children: c.children.map(d => {
-        return {
-          ...d,
-          toggled: true,
-          active: active === d.id,
-          children: R.reject(
-            R.prop('private'),
-            data[entities.series].filter(R.pathEq(['parent', 'id'], d.id))
-          )
-        };
-      })
-    };
-  });
-
-  tree.children = tree.children.map(c => {
-    return {
-      ...c,
-      children: c.children.map(d => {
-        return {
-          ...d,
-          children: d.children.map(f => {
-            return {
-              ...f,
-              toggled: true,
-              active: active === f.id,
-              children: R.reject(
-                R.prop('private'),
-                data[entities.block]
-                  .filter(R.pathEq(['parent', 'id'], f.id))
-                  .map(g => ({
-                    ...g,
-                    active: active === g.id
-                  }))
-              )
-            };
-          })
-        };
-      })
-    };
-  });
+  tree.children = tree.children.map(c => ({
+    ...c,
+    children: c.children.map(d => ({
+      ...d,
+      children: d.children.map(f => ({
+        ...f,
+        toggled: true,
+        active: active === f.id,
+        children: R.reject(
+          R.prop('private'),
+          data[entities.block]
+            .filter(R.pathEq(['parent', 'id'], f.id))
+            .map(g => ({
+              ...g,
+              active: active === g.id,
+            })),
+        ),
+      })),
+    })),
+  }));
 
   return tree;
 }

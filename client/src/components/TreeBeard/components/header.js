@@ -5,13 +5,13 @@ import deepEqual from 'deep-equal';
 
 class NodeHeader extends React.Component {
   shouldComponentUpdate(nextProps) {
-    const props = this.props;
+    const { props } = this;
     const nextPropKeys = Object.keys(nextProps);
 
     for (let i = 0; i < nextPropKeys.length; i++) {
       const key = nextPropKeys[i];
       if (key === 'animations') {
-        continue;
+        continue; // eslint-disable-line no-continue
       }
 
       const isEqual = shallowEqual(props[key], nextProps[key]);
@@ -49,7 +49,7 @@ NodeHeader.propTypes = {
   animations: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
     .isRequired,
   node: PropTypes.object.isRequired,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
 };
 
 export default NodeHeader;

@@ -5,10 +5,9 @@ import {
   Dropdown,
   DropdownToggle,
   DropdownItem,
-} from 'reactstrap'
+} from 'reactstrap';
 
 class RulesDropdown extends Component {
-
   static propTypes = {
     rules: PropTypes.arrayOf(PropTypes.string).isRequired,
     selected: PropTypes.string.isRequired,
@@ -18,36 +17,34 @@ class RulesDropdown extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dropdownOpen: false
+      dropdownOpen: false,
     };
     this.toggle = this.toggle.bind(this);
   }
 
   toggle() {
-    this.setState({dropdownOpen: !this.state.dropdownOpen});
+    this.setState({ dropdownOpen: !this.state.dropdownOpen });
   }
 
   renderRuleDropdownItems() {
-    const {onSelection, selected, rules} = this.props;
-    return rules.map(r => {
-      return (
-        <DropdownItem
-          key={r}
-          active={selected === r}
-          onClick={() => onSelection(r)}
-        >
-          {r}
-        </DropdownItem>
-      );
-    });
+    const { onSelection, selected, rules } = this.props;
+    return rules.map(r => (
+      <DropdownItem
+        key={r}
+        active={selected === r}
+        onClick={() => onSelection(r)}
+      >
+        {r}
+      </DropdownItem>
+    ));
   }
 
   render() {
-    const {rules, selected} = this.props;
-    let foundItem = rules.find(r => r === selected) || 'choose rule';
+    const { rules, selected } = this.props;
+    const foundItem = rules.find(r => r === selected) || 'choose rule';
     return (
       <Dropdown
-        style={{cursor: 'pointer'}}
+        style={{ cursor: 'pointer' }}
         isOpen={this.state.dropdownOpen}
         toggle={this.toggle}
       >
@@ -59,7 +56,7 @@ class RulesDropdown extends Component {
           style={{
             border: '1px solid  #c6c6c6',
             backgroundColor: '#e2e2e2',
-            borderRadius: '5px'
+            borderRadius: '5px',
           }}
           data-toggle="dropdown"
           aria-expanded={this.state.dropdownOpen}

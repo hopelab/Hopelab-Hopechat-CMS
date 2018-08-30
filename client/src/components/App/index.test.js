@@ -1,24 +1,38 @@
 import React from 'react';
-import { shallow } from 'enzyme';
-
+import { mount } from 'enzyme';
 import App from './';
+
 jest.mock('../../utils/data');
 
 describe('main app component', () => {
-    const props = {};
-    it('should render', () => {
-      const app = shallow(<App {...props} />);
-      expect(app.exists()).toBeTruthy()
+  const props = {};
+  let app;
+  beforeEach(() => {
+    app = mount(<App {...props} />);
+  });
+
+  it('should render', () => {
+    expect(app.exists()).toBeTruthy();
+  });
+
+  it('should toggle image model', () => {
+    expect(app.state().showImageModal).toBeFalsy();
+    app.instance().toggleImageModal();
+    expect(app.state().showImageModal).toBeTruthy();
+  });
+
+  it('should add Conversations', async () => {
+    await expect(app.state().conversation[0]).toBeUndefined();
+    await app.instance().addConversation();
+    await app.update();
+    await expect(app.state().conversation[0]).not.toBeUndefined();
+  });
+
+  it('should add images/videos', async () => {
+    await expect(app.state().video[0]).toBeUndefined();
+    await app.instance().addImage([{}]);
+    await app.update();
+    await expect(app.state().imageUploadStatus).toBeTruthy();
+    await expect(app.state().video[0]).not.toBeUndefined();
   });
 });
-
-// it('should not render an input if pwRecoveryEmail exists', () => {
-//     const props = {
-//         requestNewPassword: jest.fn(),
-//         pwRecoveryEmail: 'test@email.com',
-//         emailExists: true,
-//     };
-//     const forgotPassword = mount(<ForgotPassword {...props} />);
-//     expect(forgotPassword.hasClass('ForgotPassword')).toBeTruthy();
-//     expect(forgotPassword.find('input').length).toBe(0);
-// });

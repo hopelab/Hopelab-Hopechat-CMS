@@ -26,10 +26,10 @@ const sessionStorageMock = {
 
 global.sessionStorage = sessionStorageMock;
 global.fetch = jest.fn().mockImplementation(() => {
-    return new Promise((resolve) => {
-      resolve({
-        ok: true,
-        json: () => true
-      })
-    })
+  return new Promise(resolve => {
+    resolve({
+      ok: true,
+      json: () => new Promise(nestedResolve => nestedResolve({})),
+    });
   });
+});
