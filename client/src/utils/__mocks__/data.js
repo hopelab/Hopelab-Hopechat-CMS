@@ -7,6 +7,7 @@ export const getEntitiesCanCopyTo = jest.fn().mockReturnValue([]);
 export const getChildEntitiesFor = jest.fn().mockReturnValue([]);
 export const createTreeView = jest.fn().mockReturnValue({});
 export const entityCanBeCopied = jest.fn().mockReturnValue(true);
+export const createInitialFormState = jest.fn().mockReturnValue(true);
 
 const updatedConvo = App.conversation.slice();
 updatedConvo.push({ id: 'foo', type: 'bar' });

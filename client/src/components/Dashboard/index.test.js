@@ -30,6 +30,7 @@ describe('DashboardHeader component', () => {
     onDelete: jest.fn(),
     onCopy: jest.fn(),
     copyToItems: [],
+    updateStartEntity: jest.fn(),
   };
   let component;
   beforeEach(() => {

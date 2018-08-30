@@ -65,7 +65,7 @@ const PoolContainer = ({ onClick, node }) => {
 
 PoolContainer.propTypes = {
   onClick: PropTypes.func,
-  node: PropTypes.node,
+  node: PropTypes.object,
 };
 
 decorators.Container = PoolContainer;

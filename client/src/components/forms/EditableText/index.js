@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import onClickOutside from 'react-onclickoutside';
 
-class EditableText extends Component {
+export class EditableText extends Component {
   static propTypes = {
     text: PropTypes.string.isRequired,
     onEditWillFinish: PropTypes.func,
