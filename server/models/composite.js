@@ -89,7 +89,7 @@ function createChainedItemsList(entityOldNew) {
   let listToSave = newList;
 
   oldList.forEach((oldItem, i) => {
-    listToSave = listToSave.map((newItem, j) => {
+    listToSave = listToSave.map(newItem => {
       if (R.pathEq(['next', 'id'], oldItem.id, newItem)) {
         return R.merge(newItem, {
           next: { id: listToSave[i].id, type: listToSave[i].type }
@@ -101,7 +101,9 @@ function createChainedItemsList(entityOldNew) {
           let payload;
           try {
             payload = JSON.parse(qr.payload);
-          } catch(e) {}
+          } catch(e) {
+            console.error(e); 
+          }
           if (!!payload && payload.id === oldItem.id) {
             const newPayload = JSON.stringify({
               id: listToSave[i].id,
@@ -131,7 +133,7 @@ function createChainedItemsList(entityOldNew) {
 */
 function copyChildren(parent) {
   return function(children) {
-    const childPromises = children.map((oldChild, i) => () => {
+    const childPromises = children.map(oldChild => () => {
       return modelMap[oldChild.type]
         .create(
           R.merge(oldChild, {
@@ -226,7 +228,7 @@ function getChildrenForParent(parent) {
  * @return {Promise}
 */
 function getAllChildren(parent) {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     return Promise.all(
       config.entities[parent.type].children.map(fetchAllForEntity)
     )
@@ -248,7 +250,7 @@ function connectChildrenForParentType(type) {
     }
 
     const chainedList = createChainedItemsList(children);
-    const updatePromises = chainedList.map((entityToUpdate, i) => () =>
+    const updatePromises = chainedList.map(entityToUpdate => () =>
       modelMap[entityToUpdate.type].update(R.clone(entityToUpdate))
     );
 
@@ -258,7 +260,7 @@ function connectChildrenForParentType(type) {
       })
       .then(R.uniq)
       .then(updatedChildren => {
-        return updatedChildren.filter((child, i) =>
+        return updatedChildren.filter(child =>
           R.find(R.propEq('id', child.id))(chainedList)
         );
       })
@@ -273,7 +275,7 @@ function connectChildrenForParentType(type) {
  * @return {Promise}
 */
 function isRecursionNeeded(children) {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     let promises = [];
 
     promises = children.map(c => {
@@ -319,7 +321,7 @@ function getAllChildrenAndCopy(oldParent, newParent) {
  * @return {Promise}
 */
 const freshDataForUI = () => {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     Promise.all([
       conversation.all(),
       collection.all(),
@@ -348,7 +350,7 @@ function modifyParentIfNeeded(parent) {
     }
 
     return entity;
-  }
+  };
 }
 
 /**
@@ -376,7 +378,7 @@ const parentMatchesId = id => child => child.parent && child.parent.id === id;
 const getAllChildrenForParent = id => children =>
   children.filter(parentMatchesId(id));
 
-const deleteAllRemainingChildren = store => children =>
+const deleteAllRemainingChildren = store => children => // eslint-disable-line
   promiseSerial(
     children.map(c => () => deleteEntity({ type: c.type, id: c.id }))
   );

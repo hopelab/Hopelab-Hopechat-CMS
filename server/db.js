@@ -289,12 +289,12 @@ module.exports = store => {
       store
         .getItem(DB_MESSAGES)
         .then(JSON.parse)
-        .then((messages) => (
+        .then(messages => (
           store.getItem(DB_COLLECTIONS)
-               .then(JSON.parse)
-               .then(collections => ({
-                 messages, collections
-               }))
+            .then(JSON.parse)
+            .then(collections => ({
+              messages, collections
+            }))
         ))
         .then(({messages, collections}) => {
           const mapEntity = e => {
@@ -332,7 +332,7 @@ module.exports = store => {
         ))
         .then(resolve)
         .catch(console.error);
-    })
+    });
 
   /**
      * Get Blocks
@@ -439,7 +439,7 @@ module.exports = store => {
       );
 
       if (!fileUtils.isSupportedFileType(file, SUPPORTED_FILE_TYPES)) {
-        let type = !!file ? file.type : "unknown";
+        let type = file && file.type ? file.type : "unknown";
         reject({
           code: 500,
           message: 'Unsupported image type: ' + type
@@ -449,33 +449,33 @@ module.exports = store => {
       return StaticAssetsSvc.saveFile(file.name, file).then(resolve);
     });
 
-    const setVideoMedia = ({key, url}) => ({attachment_id}) =>
-        new Promise(resolve => {
-          store
-            .getItem(DB_MEDIA)
-            .then(JSON.parse)
-            .then(media => {
-              if (!media) { media = {video: []}; }
-              if (!media.video || !Array.isArray(media.video)) {
-                media.video = [];
-              }
-              media.video.push({key, url, attachment_id});
-              return media;
-            })
-            .then(store.setItem(DB_MEDIA, ONE_DAY_IN_MILLISECONDS))
-            .then(resolve)
-            .catch(console.error);
-        });
+  const setVideoMedia = ({key, url}) => ({attachment_id}) =>
+    new Promise(resolve => {
+      store
+        .getItem(DB_MEDIA)
+        .then(JSON.parse)
+        .then(media => {
+          if (!media) { media = {video: []}; }
+          if (!media.video || !Array.isArray(media.video)) {
+            media.video = [];
+          }
+          media.video.push({key, url, attachment_id});
+          return media;
+        })
+        .then(store.setItem(DB_MEDIA, ONE_DAY_IN_MILLISECONDS))
+        .then(resolve)
+        .catch(console.error);
+    });
 
   const uploadToFacebookIfVideo = data =>
-    new Promise((resolve, reject) => {
+    new Promise(resolve => {
       if (data.type !== 'video') {
         return resolve(data);
       }
 
       return Facebook.uploadAttachment(data)
-                .then(setVideoMedia(data))
-                .then(resolve);
+        .then(setVideoMedia(data))
+        .then(resolve);
     });
 
   const getVideos = () =>
@@ -526,7 +526,7 @@ module.exports = store => {
         .then(helpers.mapUserHistory)
         .then(resolve)
         .catch(console.error);
-    })
+    });
 
   return {
     getConversations,
