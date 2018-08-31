@@ -1,5 +1,4 @@
 'use strict';
-
 const R = require('ramda');
 
 // These values can be overridden by either environment vars or by a NODE_ENV named config

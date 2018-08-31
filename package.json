@@ -9,7 +9,8 @@
     "debug": "node --inspect ./server/cms.js",
     "start": "node ./server/cms.js",
     "prettify": "prettier --write './server/**/*.js'",
-    "test": "jest ./server && jest ./server --watch"
+    "test": "jest ./server && jest ./server --watch",
+    "coverage": "jest ./server --coverage"
   },
   "author": "Presence PG",
   "dependencies": {

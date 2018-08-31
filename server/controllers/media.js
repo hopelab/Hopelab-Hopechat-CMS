@@ -9,7 +9,7 @@ router.post('/create', (req, res) => {
   Media.upload(req.files)
     .then(Media.uploadToFacebookIfVideo)
     .then(console.log) // eslint-disable-line no-console
-    .catch(apiErrorResponse);
+    .catch(apiErrorResponse); // eslint-disable-line no-console
 
   return res.send(getS3Info(req.files.file));
 });
