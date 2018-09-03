@@ -18,6 +18,7 @@ AWS_SECRET_ACCESS_KEY
 AWS_REGION
 ```
 
+#### config
 This repo is using [config](https://www.npmjs.com/package/config) to manage environment variables and fallback to defaults in case of something missing.
 
 ### Code Structure
@@ -49,14 +50,27 @@ yarn start
 
 ### Run Tests:
 
+Server Tests
 ```bash
 yarn test
 ```
 
+Client Tests
+```bash
+cd client && yarn test
+```
+
+
 ### Run Coverage:
 
+server
 ```bash
 yarn coverage
+```
+
+Client Tests
+```bash
+cd client && yarn coverage
 ```
 
 ### Run Prettier:
@@ -71,10 +85,27 @@ yarn prettify
 yarn lint
 ```
 
+Client
+```bash
+cd client && yarn lint
+```
+
 ### Setup a Mock DB with some fake data:
 
-This doesn't actually load mock data, but will reset the database to defaults.
+This doesn't actually load mock data, but will reset the database to defaults. This is required for the tests to pass
 
 ```bash
 yarn run mock-db
 ```
+
+### Redis DB
+This app uses redis to persist data. The redis server is automatically started when you run the CMS server. You can check that it is running in a different terminal using:
+
+```bash
+redis-cli ping
+```
+it should return PONG.
+
+It is possible to set which db is used on startup by modifying the dump.rb file located where the binary for redis is installed.
+
+See the hopelab_ayachatbot repo readme for much more information on getting a copy of the production/staging db on your machine, and for more manipulation of the db/redis system in general

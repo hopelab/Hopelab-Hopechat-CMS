@@ -3,7 +3,6 @@ const R = require('ramda');
 
 const Constants = require('../constants');
 
-const { promiseSerial } = require('../utils/data');
 const store = require('../utils/store');
 
 const entityTypes = {
@@ -60,8 +59,8 @@ const getDBKeyForEntityType = type => {
   return key;
 };
 
-const findNewEntity = newList => entity =>
-  R.compose(R.defaultTo(entity), R.find(R.__, newList), R.propEq('id'))(entity);
+// const findNewEntity = newList => entity =>
+  // R.compose(R.defaultTo(entity), R.find(R.__, newList), R.propEq('id'))(entity);
 
 const createNewEntity = (type, entity) => entities =>
   entities.concat(
@@ -117,15 +116,15 @@ const maybeDeleteLinksForEntity = (type, id) => {
       Constants.DB_MESSAGES,
       Constants.TYPE_COLLECTION,
       Constants.TYPE_MESSAGE
-    )
+    );
   }
 
   if (type === Constants.TYPE_MESSAGE) {
     return deleteLinksFromSameEntitySet(id);
   }
 
-  return (entities) => entities;
-}
+  return entities => entities;
+};
 
 const deleteLinksFromSameEntitySet = id =>
   R.compose(
