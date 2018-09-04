@@ -14,11 +14,12 @@ const propTypes = {
 };
 
 const getNextMessageOptionsForMessage = (childEntities, onSelectStart) => {
+  const oldStart = childEntities.find(c => c.start);
   const items = childEntities.map(c => (
     <DropdownItem
       key={c.id}
       active={c.start}
-      onClick={() => onSelectStart(c)}
+      onClick={() => onSelectStart(c, oldStart)}
     >
       {c.name}
     </DropdownItem>

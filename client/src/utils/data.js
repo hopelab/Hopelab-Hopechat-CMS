@@ -163,8 +163,8 @@ export function getPostRoutesForChildEntities(paramEntities, routes) {
   });
 }
 
-export function updateStart(entity) {
-  return post('/general/start/update', entity).then(res => res.json());
+export function updateStart(newStart, prevStart) {
+  return post('/general/start/update', { newStart, prevStart }).then(res => res.json());
 }
 
 /**
