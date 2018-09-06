@@ -49,9 +49,9 @@ class Container extends React.Component {
             this.handleClick({ expand: false, onClick });
           }}
         >
-          {node.name}{node.id}
+          {node.name}&nbsp;
         </span>
-        {node.isLive ? <span className="Circle green" /> : null}
+        {node.isLive ? <i className="fa fa-circle live-circle" /> : null}
       </div>
     );
   }

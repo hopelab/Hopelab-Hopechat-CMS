@@ -7,3 +7,7 @@
 div.focused {
   border: dashed 1px rgb(66, 139, 202);
 }
+
+.live-circle {
+  color: #29AB87;
+}

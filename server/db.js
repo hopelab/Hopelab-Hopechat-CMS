@@ -113,15 +113,12 @@ module.exports = store => {
     })
   );
 
-  const getCollections = () =>  new Promise(resolve => {
+  const getCollections = () =>
     getLAsync(DB_COLLECTION_LIST, 0, -1)
-      .then(collIds => {
-        resolve(Promise.all(
-          collIds.map(id => getCollectionById(id)))
-        );
-      })
+      .then(collIds => Promise.all(
+        collIds.map(id => getCollectionById(id)))
+      )
       .catch(e => console.error(e));
-  });
 
   const setCollection = collection =>
     updateCollection(createNewEntity(TYPE_COLLECTION, collection))
@@ -225,15 +222,12 @@ module.exports = store => {
     })
   );
 
-  const getMessages = () =>  new Promise(resolve => {
+  const getMessages = () =>
     getLAsync(DB_MESSAGE_LIST, 0, -1)
-      .then(messageIds => {
-        resolve(Promise.all(
-          messageIds.map(id => getMessageById(id)))
-        );
-      })
+      .then(messageIds => Promise.all(
+        messageIds.map(id => getMessageById(id)))
+      )
       .catch(console.error);
-  });
 
   /**
      * Update Message
