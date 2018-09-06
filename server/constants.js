@@ -18,14 +18,14 @@ const DB_USERS = 'users';
 const TYPE_CONVERSATION = 'conversation';
 const TYPE_COLLECTION = 'collection';
 const TYPE_SERIES = 'series';
-const TYPE_BLOCK = 'block' ;
-const TYPE_MESSAGE =  'message';
+const TYPE_BLOCK = 'block';
+const TYPE_MESSAGE = 'message';
 const MESSAGE_TYPE_QUESTION = 'question';
 const MESSAGE_TYPE_QUESTION_WITH_REPLIES = 'questionWithReplies';
 const MESSAGE_TYPE_ANSWER = 'answer';
 const MESSAGE_TYPE_IMAGE = 'image';
 const MESSAGE_TYPE_VIDEO = 'video';
-const TYPE_TAG = 'Tag' || 'tag';
+const TYPE_TAG = 'tag';
 
 const DEFAULT_NAME = 'default';
 
