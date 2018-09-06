@@ -1,18 +1,15 @@
 const {
   DB_CONVERSATIONS,
-  DB_COLLECTIONS,
   DB_SERIES,
-  DB_MESSAGES,
   DB_BLOCKS,
   DB_MEDIA,
   DB_TAG,
-  DB_USERS,
   TYPE_MESSAGE,
-  TYPE_COLLECTION,
   ONE_DAY_IN_MILLISECONDS,
   SUPPORTED_FILE_TYPES,
   DB_MESSAGE_LIST,
   DB_COLLECTION_LIST,
+  TYPE_COLLECTION
 } = require('./constants');
 
 const redisClient = require('./utils/client');
@@ -27,6 +24,8 @@ const { keyFormatMessageId } = require('./utils/messages');
 const { keyFormatCollectionId } = require('./utils/collections');
 
 const Facebook = require('./services/facebook');
+
+const { createNewEntity, createNewSingleEntity } = helpers;
 
 module.exports = store => {
 
@@ -109,7 +108,7 @@ module.exports = store => {
             `error: getMessageById - getJSONItemFromCache(collection:${id}})`,
             e
           );
-          resolve({});
+          resolve();
         });
     })
   );
@@ -125,7 +124,8 @@ module.exports = store => {
   });
 
   const setCollection = collection =>
-    updateCollection(collection).then(c =>redisClient.lpush(DB_COLLECTION_LIST, c.id));
+    updateCollection(createNewEntity(TYPE_COLLECTION, collection))
+      .then(c => redisClient.lpush(DB_COLLECTION_LIST, c.id));
 
 
     /**
@@ -220,7 +220,7 @@ module.exports = store => {
             `error: getMessageById - getJSONItemFromCache(message:${id}})`,
             e
           );
-          resolve({});
+          resolve();
         });
     })
   );
@@ -232,7 +232,7 @@ module.exports = store => {
           messageIds.map(id => getMessageById(id)))
         );
       })
-      .catch(e => console.error(e));
+      .catch(console.error);
   });
 
   /**
@@ -247,7 +247,15 @@ module.exports = store => {
       resolve(message);
     });
 
-  const setMessage = message => updateMessage(message).then(m =>redisClient.lpush(DB_MESSAGE_LIST, m.id));
+  // TODO: not ideal to call getMessages 2x. We will deprecate this method when we allow
+  // less nonsensical names to be chosen
+  const setMessage = message =>
+    getMessages()
+      .then(createNewSingleEntity(TYPE_MESSAGE, message))
+      .then(updateMessage)
+      .then(m => redisClient.lpush(DB_MESSAGE_LIST, m.id))
+      .then(getMessages)
+      .catch(console.error);
 
 
   const updateStart = ({ newStart: n, prevStart: p }) =>
@@ -263,7 +271,8 @@ module.exports = store => {
           .then(data => ({messages: data[0], collections: data[1]}))
           .then(resolve)
           .catch(console.error);
-      });
+      })
+        .catch(console.error);
     });
 
   /**
@@ -450,16 +459,6 @@ module.exports = store => {
         .catch(console.error);
     });
 
-  const getUserData = () =>
-    new Promise(resolve => {
-      store
-        .getItem(DB_USERS)
-        .then(JSON.parse)
-        .then(helpers.mapUserHistory)
-        .then(resolve)
-        .catch(console.error);
-    });
-
   return {
     getConversations,
     getCollections,
@@ -496,7 +495,5 @@ module.exports = store => {
 
     getTags,
     setTag,
-
-    getUserData,
   };
 };

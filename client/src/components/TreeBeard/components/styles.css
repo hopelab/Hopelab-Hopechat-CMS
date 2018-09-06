@@ -1,0 +1,9 @@
+.PoolContainer {
+  cursor: pointer;
+  border: dashed 1px #fff;
+  line-height: 19px;
+}
+
+div.focused {
+  border: dashed 1px rgb(66, 139, 202);
+}

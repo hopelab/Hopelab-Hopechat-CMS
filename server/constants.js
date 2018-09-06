@@ -15,17 +15,17 @@ const DB_MEDIA = 'media';
 const DB_TAG = 'tag';
 const DB_USERS = 'users';
 
-const TYPE_CONVERSATION = 'conversation';
-const TYPE_COLLECTION = 'collection';
-const TYPE_SERIES = 'series';
-const TYPE_BLOCK = 'block';
-const TYPE_MESSAGE = 'message';
+const TYPE_CONVERSATION = 'Conversation' || 'conversation';
+const TYPE_COLLECTION = 'Collection' || 'collection';
+const TYPE_SERIES = 'Series' || 'series';
+const TYPE_BLOCK = 'Block' || 'block' ;
+const TYPE_MESSAGE =  'Message' || 'message';
 const MESSAGE_TYPE_QUESTION = 'question';
 const MESSAGE_TYPE_QUESTION_WITH_REPLIES = 'questionWithReplies';
 const MESSAGE_TYPE_ANSWER = 'answer';
 const MESSAGE_TYPE_IMAGE = 'image';
 const MESSAGE_TYPE_VIDEO = 'video';
-const TYPE_TAG = 'tag';
+const TYPE_TAG = 'Tag' || 'tag';
 
 const DEFAULT_NAME = 'default';
 

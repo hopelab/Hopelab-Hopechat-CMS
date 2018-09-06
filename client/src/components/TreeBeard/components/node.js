@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { VelocityTransitionGroup } from 'velocity-react';
-
+import './styles.css';
 import NodeHeader from './header';
 
 class TreeNode extends React.Component {
   constructor(props) {
     super(props);
-
     this.onClick = this.onClick.bind(this);
   }
 
@@ -91,7 +90,6 @@ class TreeNode extends React.Component {
 
   renderChildren(decorators) {
     const { animations, decorators: propDecorators, node, style } = this.props;
-
     if (node.loading) {
       return this.renderLoading(decorators);
     }
@@ -100,7 +98,6 @@ class TreeNode extends React.Component {
     if (!Array.isArray(children)) {
       children = children ? [children] : [];
     }
-
     return (
       <ul style={style.subtree} ref={ref => { this.subtreeRef = ref; }}>
         {children.map((child, index) => (

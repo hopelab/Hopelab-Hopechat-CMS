@@ -5,12 +5,13 @@ const collection = require('./collection');
 const conversation = require('./conversation');
 const series = require('./series');
 const message = require('./message');
+const redisClient = require('../utils/client');
 
-const { updateStart } = require('../db')(require('../utils/store'));
+const { updateStart, getMessages, getCollections } = require('../db')(require('../utils/store'));
 const helpers = require('../helpers/db');
 const Constants = require('../constants');
 
-const { promiseSerial } = require('../utils/data');
+const { promiseSerial, keyFormatForCollOrMessage } = require('../utils/data');
 
 const config = require('config');
 const store = require('../utils/store');
@@ -22,7 +23,10 @@ const {
   TYPE_SERIES,
   TYPE_BLOCK,
   MESSAGE_TYPE_QUESTION_WITH_REPLIES,
-  DEFAULT_NAME
+  DEFAULT_NAME,
+  TYPE_MESSAGE,
+  DB_MESSAGE_LIST,
+  DB_COLLECTION_LIST
 } = require('../constants');
 
 const modelMap = { conversation, collection, series, block, message };
@@ -102,7 +106,7 @@ function createChainedItemsList(entityOldNew) {
           try {
             payload = JSON.parse(qr.payload);
           } catch(e) {
-            console.error(e); 
+            console.error(e);
           }
           if (!!payload && payload.id === oldItem.id) {
             const newPayload = JSON.stringify({
@@ -395,6 +399,15 @@ const tryToParseList = list => {
   return parsedList;
 };
 
+const mapChildrenForDeletion = (typeChildren, id) => typeChildren.map(childType => () =>
+  store
+    .getItem(helpers.getDBKeyForEntityType(childType))
+    .then(tryToParseList)
+    .then(getAllChildrenForParent(id))
+    .then(deleteAllRemainingChildren(store))
+    .catch(console.error)
+);
+
 const deleteEntity = item => {
   const { id, type } = item;
 
@@ -403,14 +416,10 @@ const deleteEntity = item => {
   let children = [];
 
   if (typeChildren.length) {
-    children = typeChildren.map(childType => () =>
-      store
-        .getItem(helpers.getDBKeyForEntityType(childType))
-        .then(tryToParseList)
-        .then(getAllChildrenForParent(id))
-        .then(deleteAllRemainingChildren(store))
-        .catch(console.error)
-    );
+    children = mapChildrenForDeletion(typeChildren, id);
+  }
+  if (type === TYPE_MESSAGE || type === TYPE_COLLECTION) {
+    return deleteMessageOrBlock(item, children);
   }
 
   return promiseSerial(children)
@@ -427,6 +436,22 @@ const deleteEntity = item => {
     .then(freshDataForUI)
     .catch(console.error);
 };
+
+const deleteMessageOrBlock = (item, children) => {
+  const { id, type } = item;
+
+  return promiseSerial(children)
+    .then(() => {
+      redisClient.del(keyFormatForCollOrMessage(item));
+      // remove the id from the list
+      redisClient.lrem(type === TYPE_MESSAGE ? DB_MESSAGE_LIST : DB_COLLECTION_LIST, 1, id);
+      return type === TYPE_MESSAGE ? getMessages() : getCollections();
+    })
+    .then(helpers.maybeDeleteLinksForEntity(type, id))
+    .then(freshDataForUI)
+    .catch(console.error);
+};
+
 exports.deleteEntity = deleteEntity;
 
 exports.updateStart = updateStart;

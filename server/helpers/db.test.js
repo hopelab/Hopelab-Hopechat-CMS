@@ -11,7 +11,7 @@ describe('db helpers', () => {
       testModule.entityTypes.conversation,{})(conversations);
     expect(newEntity[1].name).toEqual("Conversation 2");
     const now = new Date();
-    expect(newEntity[1].created/1000).toBeCloseTo(now.getTime()/1000, 2);
+    expect(newEntity[1].created/1000).toBeCloseTo(now.getTime()/1000, 1);
   });
 
   it('updateEntityInList should do that', () => {
