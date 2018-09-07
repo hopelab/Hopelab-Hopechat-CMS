@@ -28,7 +28,7 @@ class App extends Component {
       .then(data => {
         this.setState({ ...data });
       })
-      .catch(err => { console.error(err); console.log('here instead'); });
+      .catch(console.error);
   }
 
   toggleImageModal = () => {
@@ -292,11 +292,12 @@ class App extends Component {
     });
   };
 
-  updateStartEntity(entity) {
-    dataUtil.updateStart(entity).then(data => {
+  updateStartEntity(entity, oldEntity) {
+    const { collection, message } = this.state;
+    dataUtil.updateStart(entity, oldEntity).then(data => {
       this.setState({
-        message: data.messages,
-        collection: data.collections,
+        message: data.messages ? data.messages : message,
+        collection: data.collections ? data.collections : collection,
       });
     });
   }

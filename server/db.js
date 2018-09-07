@@ -1,25 +1,34 @@
 const {
   DB_CONVERSATIONS,
-  DB_COLLECTIONS,
   DB_SERIES,
-  DB_MESSAGES,
   DB_BLOCKS,
   DB_MEDIA,
   DB_TAG,
-  DB_USERS,
   TYPE_MESSAGE,
-  TYPE_COLLECTION,
   ONE_DAY_IN_MILLISECONDS,
   SUPPORTED_FILE_TYPES,
+  DB_MESSAGE_LIST,
+  DB_COLLECTION_LIST,
+  TYPE_COLLECTION
 } = require('./constants');
 
+const redisClient = require('./utils/client');
+
 const helpers = require('./helpers/db');
+const R = require('ramda');
+const {promisify} = require('util');
+const getLAsync = promisify(redisClient.lrange).bind(redisClient);
 
 const fileUtils = require('./utils/file');
+const { keyFormatMessageId } = require('./utils/messages');
+const { keyFormatCollectionId } = require('./utils/collections');
 
 const Facebook = require('./services/facebook');
 
+const { createNewEntity, createNewSingleEntity } = helpers;
+
 module.exports = store => {
+
   /**
      * Get Conversation
      *
@@ -89,70 +98,43 @@ module.exports = store => {
         .catch(console.error);
     });
 
-  /**
-     * Get Collection
-     *
-     * @return {Promise<Array>}
-    */
+  const getCollectionById = id => (
+    new Promise(resolve => {
+      store.getItem(keyFormatCollectionId(id))
+        .then(msg => resolve(JSON.parse(msg)))
+        .catch(e => {
+          // no item found matching cacheKey
+          console.error(
+            `error: getMessageById - getJSONItemFromCache(collection:${id}})`,
+            e
+          );
+          resolve();
+        });
+    })
+  );
+
   const getCollections = () =>
-    new Promise(resolve => {
-      store
-        .getItem(DB_COLLECTIONS)
-        .then(JSON.parse)
-        .then(resolve)
-        .catch(console.error);
-    });
+    getLAsync(DB_COLLECTION_LIST, 0, -1)
+      .then(collIds => Promise.all(
+        collIds.map(id => getCollectionById(id)))
+      )
+      .catch(e => console.error(e));
 
-  /**
-     * Get Collection by ID
-     *
-     * @param {String} id
-     * @return {Promise<Object>}
-    */
-  const getCollectionById = id =>
-    new Promise(resolve => {
-      store
-        .getItem(DB_COLLECTIONS)
-        .then(JSON.parse)
-        .then(helpers.findEntityById(id))
-        .then(resolve)
-        .catch(console.error);
-    });
-
-  /**
-     * Set Collection
-     *
-     * @param {Object} collection
-     * @return {Promise<bool>}
-    */
   const setCollection = collection =>
-    new Promise(resolve => {
-      store
-        .getItem(DB_COLLECTIONS)
-        .then(JSON.parse)
-        .then(
-          helpers.createNewEntity(helpers.entityTypes.collection, collection)
-        )
-        .then(store.setItem(DB_COLLECTIONS, ONE_DAY_IN_MILLISECONDS))
-        .then(resolve)
-        .catch(console.error);
-    });
+    updateCollection(createNewEntity(TYPE_COLLECTION, collection))
+      .then(c => redisClient.lpush(DB_COLLECTION_LIST, c.id));
 
-  /**
-     * Update Collection
-     *
-     * @param {Object} collection
-     * @return {Promise<bool>}
-    */
+
+    /**
+       * Update Collection
+       *
+       * @param {Object} collection
+       * @return {Promise<bool>}
+      */
   const updateCollection = collection =>
     new Promise(resolve => {
-      store
-        .getItem(DB_COLLECTIONS)
-        .then(JSON.parse)
-        .then(helpers.updateEntityInList(collection))
-        .then(store.setItem(DB_COLLECTIONS, ONE_DAY_IN_MILLISECONDS))
-        .then(resolve)
-        .catch(console.error);
+      redisClient.set(keyFormatCollectionId(collection.id), JSON.stringify(collection));
+      resolve(collection);
     });
 
   /**
@@ -219,52 +201,33 @@ module.exports = store => {
         .catch(console.error);
     });
 
-  /**
+    /**
      * Get Messages
      *
      * @return {Promise<Array>}
     */
+
+  const getMessageById = id => (
+    new Promise(resolve => {
+      store.getItem(keyFormatMessageId(id))
+        .then(msg => resolve(JSON.parse(msg)))
+        .catch(e => {
+          // no item found matching cacheKey
+          console.error(
+            `error: getMessageById - getJSONItemFromCache(message:${id}})`,
+            e
+          );
+          resolve();
+        });
+    })
+  );
+
   const getMessages = () =>
-    new Promise(resolve => {
-      store
-        .getItem(DB_MESSAGES)
-        .then(JSON.parse)
-        .then(resolve)
-        .catch(console.error);
-    });
-
-  /**
-     * Get Message by ID
-     *
-     * @param {String} id
-     * @return {Promise<Object>}
-    */
-  const getMessageById = id =>
-    new Promise(resolve => {
-      store
-        .getItem(DB_MESSAGES)
-        .then(JSON.parse)
-        .then(helpers.findEntityById(id))
-        .then(resolve)
-        .catch(console.error);
-    });
-
-  /**
-     * Set Message
-     *
-     * @param {Object} message
-     * @return {Promise<bool>}
-    */
-  const setMessage = message =>
-    new Promise(resolve => {
-      store
-        .getItem(DB_MESSAGES)
-        .then(JSON.parse)
-        .then(helpers.createNewEntity(helpers.entityTypes.message, message))
-        .then(store.setItem(DB_MESSAGES, ONE_DAY_IN_MILLISECONDS))
-        .then(resolve)
-        .catch(console.error);
-    });
+    getLAsync(DB_MESSAGE_LIST, 0, -1)
+      .then(messageIds => Promise.all(
+        messageIds.map(id => getMessageById(id)))
+      )
+      .catch(console.error);
 
   /**
      * Update Message
@@ -274,63 +237,35 @@ module.exports = store => {
     */
   const updateMessage = message =>
     new Promise(resolve => {
-      store
-        .getItem(DB_MESSAGES)
-        .then(JSON.parse)
-        .then(helpers.updateEntityInList(message))
-        .then(store.setItem(DB_MESSAGES, ONE_DAY_IN_MILLISECONDS))
-        .then(() => getMessageById(message.id))
-        .then(resolve)
-        .catch(console.error);
+      redisClient.set(keyFormatMessageId(message.id), JSON.stringify(message));
+      resolve(message);
     });
 
-  const updateStart = entity =>
+  // TODO: not ideal to call getMessages 2x. We will deprecate this method when we allow
+  // less nonsensical names to be chosen
+  const setMessage = message =>
+    getMessages()
+      .then(createNewSingleEntity(TYPE_MESSAGE, message))
+      .then(updateMessage)
+      .then(m => redisClient.lpush(DB_MESSAGE_LIST, m.id))
+      .then(getMessages)
+      .catch(console.error);
+
+
+  const updateStart = ({ newStart: n, prevStart: p }) =>
     new Promise(resolve => {
-      store
-        .getItem(DB_MESSAGES)
-        .then(JSON.parse)
-        .then(messages => (
-          store.getItem(DB_COLLECTIONS)
-            .then(JSON.parse)
-            .then(collections => ({
-              messages, collections
-            }))
-        ))
-        .then(({messages, collections}) => {
-          const mapEntity = e => {
-            let newEntity = Object.assign({}, e);
-            if (
-              newEntity.id === entity.id &&
-              (
-                entity.type === TYPE_MESSAGE ||
-                entity.type === TYPE_COLLECTION
-              )
-            ) {
-              newEntity.start = true;
-            } else if (
-              newEntity.start &&
-              newEntity.parent &&
-              entity.parent &&
-              newEntity.parent.id === entity.parent.id
-            ) {
-              delete newEntity.start;
-            }
-            return newEntity;
-          };
-
-          let newMessages = messages.map(mapEntity);
-
-          let newCollections = collections.map(mapEntity);
-
-          return {messages: newMessages, collections: newCollections};
-        })
-        .then(({messages, collections}) => (
-          Promise.all([
-            store.setItem(DB_MESSAGES, ONE_DAY_IN_MILLISECONDS, messages),
-            store.setItem(DB_COLLECTIONS, ONE_DAY_IN_MILLISECONDS, collections)
-          ]).then(data => ({messages: data[0], collections: data[1]}))
-        ))
-        .then(resolve)
+      const newStart = Object.assign({}, {...n}, { start: true});
+      const prevStart = Object.assign({}, {...p}, { start: false});
+      const promises = [
+        R.equals(newStart.type, TYPE_MESSAGE) ? updateMessage(newStart) : updateCollection(newStart),
+        R.equals(prevStart.type, TYPE_MESSAGE) ? updateMessage(prevStart) : updateCollection(prevStart),
+      ];
+      Promise.all(promises).then(() => {
+        Promise.all([getMessages(), getCollections()])
+          .then(data => ({messages: data[0], collections: data[1]}))
+          .then(resolve)
+          .catch(console.error);
+      })
         .catch(console.error);
     });
 
@@ -518,16 +453,6 @@ module.exports = store => {
         .catch(console.error);
     });
 
-  const getUserData = () =>
-    new Promise(resolve => {
-      store
-        .getItem(DB_USERS)
-        .then(JSON.parse)
-        .then(helpers.mapUserHistory)
-        .then(resolve)
-        .catch(console.error);
-    });
-
   return {
     getConversations,
     getCollections,
@@ -564,7 +489,5 @@ module.exports = store => {
 
     getTags,
     setTag,
-
-    getUserData,
   };
 };

@@ -29,7 +29,6 @@ class NodeHeader extends React.Component {
     const terminal = !children;
     const container = [style.link, active ? style.activeLink : null];
     const headerStyles = Object.assign({ container }, style);
-
     return (
       <decorators.Container
         animations={animations}

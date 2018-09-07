@@ -5,6 +5,7 @@ import TreeNode from './node';
 import defaultDecorators from './decorators';
 import defaultTheme from '../themes/default';
 import defaultAnimations from '../themes/animations';
+import Loader from '../../common/Loader';
 
 class TreeBeard extends React.Component {
   render() {
@@ -16,6 +17,7 @@ class TreeBeard extends React.Component {
       style,
     } = this.props;
     let data = propsData;
+    if (!(data && data.children) || data.children.length === 0) return <Loader />;
 
     // Support Multiple Root Nodes. Its not formally a tree, but its a use-case.
     if (!Array.isArray(data)) {

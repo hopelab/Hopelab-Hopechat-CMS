@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import App from './';
+import App from './index';
 
 jest.mock('../../utils/data');
 

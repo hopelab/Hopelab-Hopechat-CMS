@@ -3,14 +3,19 @@ const R = require('ramda');
 
 const Constants = require('../constants');
 
+const {TYPE_CONVERSATION, TYPE_COLLECTION, TYPE_SERIES, TYPE_BLOCK, TYPE_MESSAGE} = Constants;
+
 const store = require('../utils/store');
 
+// FIXME: this is nuts. we have two different 'type' definitions. TYPE_MESSAGE in constants.js
+// is 'message'. Here, it is capitalized. These are not equivalent. I'll need to create a
+// way to reconcile the two.
 const entityTypes = {
-  conversation: 'Conversation',
-  collection: 'Collection',
-  series: 'Series',
-  block: 'Block',
-  message: 'Message',
+  conversation: TYPE_CONVERSATION,
+  collection: TYPE_COLLECTION,
+  series: TYPE_SERIES,
+  block: TYPE_BLOCK,
+  message: TYPE_MESSAGE,
   tag: 'tag'
 };
 
@@ -61,6 +66,14 @@ const getDBKeyForEntityType = type => {
 
 // const findNewEntity = newList => entity =>
   // R.compose(R.defaultTo(entity), R.find(R.__, newList), R.propEq('id'))(entity);
+
+const createNewSingleEntity = (type, entity) => entities =>
+  Object.assign({}, getDefaultDataForEntityType(type), entity, {
+    id: shortid.generate(),
+    name:
+      entity.name || `${type} ${getDefaultIndexForPublicEntity(entities)}`,
+    created: Date.now()
+  });
 
 const createNewEntity = (type, entity) => entities =>
   entities.concat(
@@ -159,5 +172,6 @@ module.exports = {
   maybeDeleteLinksForEntity,
   deleteLinksFromSameEntitySet,
   deleteLinksFromDifferentEntitySets,
-  getDBKeyForEntityType
+  getDBKeyForEntityType,
+  createNewSingleEntity
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 
-import { Treebeard, decorators } from '../TreeBeard';
+import { Treebeard, decorators, Container } from '../TreeBeard';
 
 import treeTheme from '../../utils/treeTheme';
 
@@ -13,62 +13,7 @@ const propTypes = {
   toggleImageModal: PropTypes.func.isRequired,
 };
 
-function handleClick({ expand, onClick }) {
-  onClick({ expand });
-}
-
-const PoolContainer = ({ onClick, node }) => {
-  // const hasChildren = node.children && node.children.length;
-
-  const icon = null;
-
-  // TODO: Look into supporting expandable tree with +, - icon.
-  // hasChildren ? (
-  //   node.toggled ? (
-  //     <Glyphicon glyph="minus" />
-  //   ) : (
-  //     <Glyphicon glyph="plus" />
-  //   )
-  // ) : null;
-
-  return (
-    <div
-      className="PoolContainer"
-      style={{
-        color: node.active ? '#fff' : '#333',
-        background: node.active ? '#428bca' : 'transparent',
-      }}
-    >
-      <div
-        role="button"
-        tabIndex={0}
-        className="IconContainer"
-        onClick={() => {
-          handleClick({ expand: true, onClick });
-        }}
-      >
-        {icon}
-      </div>
-      <span
-        role="button"
-        tabIndex={0}
-        onClick={() => {
-          handleClick({ expand: false, onClick });
-        }}
-      >
-        {node.name}
-      </span>
-      {node.isLive ? <span className="Circle green" /> : null}
-    </div>
-  );
-};
-
-PoolContainer.propTypes = {
-  onClick: PropTypes.func,
-  node: PropTypes.object,
-};
-
-decorators.Container = PoolContainer;
+decorators.Container = Container;
 
 /**
  * Sidebar Component

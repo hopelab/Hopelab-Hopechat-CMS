@@ -9,9 +9,9 @@ describe('db helpers', () => {
   it('createNewEntity should create a conversation', () => {
     const newEntity = testModule.createNewEntity(
       testModule.entityTypes.conversation,{})(conversations);
-    expect(newEntity[1].name).toEqual("Conversation 2");
+    expect(newEntity[1].name).toEqual("conversation 2");
     const now = new Date();
-    expect(newEntity[1].created/1000).toBeCloseTo(now.getTime()/1000, 2);
+    expect(newEntity[1].created/1000).toBeCloseTo(now.getTime()/1000, 1);
   });
 
   it('updateEntityInList should do that', () => {
