@@ -267,6 +267,7 @@ class App extends Component {
   };
 
   handleTreeToggle = ({ node: pNode, expand }) => {
+    this.setState({ showStudyIdView: false });
     /* eslint-disable react/no-direct-mutation-state */
     const node = pNode;
     if (expand) {
@@ -302,6 +303,22 @@ class App extends Component {
     });
   }
 
+  toggleStudyIdView() {
+    const { showStudyIdView } = this.state;
+    if (!this.state.studyIds && !showStudyIdView) {
+      this.loadStudyIds();
+    }
+    this.setState({ showStudyIdView: !showStudyIdView });
+  }
+
+  loadStudyIds() {
+    fetch('/study/all').then(res => {
+      res.json().then(studyIds => {
+        this.setState({ studyIds });
+      });
+    });
+  }
+
   render() {
     const entitiesCanCopyTo = dataUtil.getEntitiesCanCopyTo(
       this.getFullItemEditing(this.state),
@@ -320,7 +337,7 @@ class App extends Component {
     });
 
     const itemEditing = this.getFullItemEditing(this.state);
-
+    const { showStudyIdView, studyIds, conversation, image, video, tag } = this.state;
     return (
       <div className="App row">
         <UploadModal
@@ -340,6 +357,7 @@ class App extends Component {
           treeData={treeData}
           handleTreeToggle={this.handleTreeToggle}
           itemEditing={itemEditing}
+          toggleStudyIdView={() => this.toggleStudyIdView()}
           toggleImageModal={() => {
             this.setState({
               mediaUpload: {
@@ -358,13 +376,15 @@ class App extends Component {
           handleAddTag={this.handleAddTag}
           itemEditing={itemEditing}
           childEntities={childEntities}
-          conversations={this.state.conversation}
+          conversations={conversation}
           entitiesCanCopyTo={entitiesCanCopyTo}
           handleCopyEntity={this.handleCopyEntity}
-          images={this.state.image}
-          videos={this.state.video}
-          tags={this.state.tag}
+          images={image}
+          videos={video}
+          tags={tag}
           updateStartEntity={this.updateStartEntity}
+          showStudyIdView={showStudyIdView}
+          studyIds={studyIds}
         />
       </div>
     );

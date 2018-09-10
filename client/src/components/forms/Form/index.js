@@ -11,7 +11,6 @@ import FirstItemSelect from '../FirstItemSelect';
 
 import { autocompleteRenderInput } from '../../AutoSuggest';
 
-
 import { createInitialFormState } from '../../../utils/data';
 
 import {

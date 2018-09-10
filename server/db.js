@@ -9,7 +9,8 @@ const {
   SUPPORTED_FILE_TYPES,
   DB_MESSAGE_LIST,
   DB_COLLECTION_LIST,
-  TYPE_COLLECTION
+  TYPE_COLLECTION,
+  DB_STUDY
 } = require('./constants');
 
 const redisClient = require('./utils/client');
@@ -453,6 +454,17 @@ module.exports = store => {
         .catch(console.error);
     });
 
+
+  const getStudyIds = () =>
+    new Promise(resolve => {
+      store
+        .getItem(DB_STUDY)
+        .then(JSON.parse)
+        .then(resolve)
+        .catch(console.error);
+    });
+  // createStudyId
+
   return {
     getConversations,
     getCollections,
@@ -489,5 +501,7 @@ module.exports = store => {
 
     getTags,
     setTag,
+
+    getStudyIds
   };
 };

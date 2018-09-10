@@ -14,6 +14,7 @@ const DB_BLOCKS = 'blocks';
 const DB_MEDIA = 'media';
 const DB_TAG = 'tag';
 const DB_USERS = 'users';
+const DB_STUDY = 'study';
 
 const TYPE_CONVERSATION = 'conversation';
 const TYPE_COLLECTION = 'collection';
@@ -61,5 +62,6 @@ module.exports = {
   ONE_WEEK_IN_MILLISECONDS,
   SUPPORTED_FILE_TYPES,
   DB_MESSAGE_LIST,
-  DB_COLLECTION_LIST
+  DB_COLLECTION_LIST,
+  DB_STUDY
 };

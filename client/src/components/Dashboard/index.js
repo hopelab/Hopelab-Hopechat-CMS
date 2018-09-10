@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import Form from '../forms/Form';
 import DashboardHeader from './DashboardHeader';
+import StudyIdView from '../StudyIdView';
 
 const propTypes = {
   handleSaveItem: PropTypes.func,
@@ -62,6 +63,8 @@ class Dashboard extends Component {
 
   render() {
     const { props } = this;
+    const { showStudyIdView, studyIds } = props;
+    if (showStudyIdView) return <StudyIdView studyIds={studyIds} />;
     return (
       <div className="Dashboard col-md-8 mt-1">
         {props.itemEditing !== null && (
