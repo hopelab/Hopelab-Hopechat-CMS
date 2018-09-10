@@ -15,7 +15,7 @@ export const StudyIdView = ({ studyIds }) => {
           className="d-flex flex-row justify-content-between"
           style={{ }}
         >
-          <h4>Total # of Study Ids (remaining/original): <strong>({studyIds.length}</strong> / 200)</h4>
+          <h4>Total # of used Study Ids (used/original): <strong>({studyIds.length}</strong> / 200)</h4>
         </div>
       </div>
       <div>
