@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
+import './style.css';
 
 import { Treebeard, decorators, Container } from '../TreeBeard';
 
@@ -11,6 +12,7 @@ const propTypes = {
   treeData: PropTypes.object.isRequired,
   handleTreeToggle: PropTypes.func.isRequired,
   toggleImageModal: PropTypes.func.isRequired,
+  toggleStudyIdView: PropTypes.func.isRequired,
 };
 
 decorators.Container = Container;
@@ -40,6 +42,16 @@ const Sidebar = props => (
             New
           </Button>
         </div>
+
+      </div>
+      <div className="card-header d-flex flex-row justify-content-between">
+        <Button
+          color="warning"
+          className="ml-1"
+          onClick={() => props.toggleStudyIdView()}
+        >
+          Study Ids
+        </Button>
       </div>
       <div className="Inner">
         <Treebeard
