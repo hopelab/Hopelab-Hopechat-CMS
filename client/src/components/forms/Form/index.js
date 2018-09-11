@@ -103,7 +103,7 @@ class Form extends Component {
         }
 
         {formHasField('children', this.props.config.fields) ? (
-          this.props.childEntities.map((e, i) => (
+          this.props.childEntities.sort((a, b) => ((a.created < b.created) ? -1 : 1)).map((e, i) => (
             <ConversationItemContainer
               key={e.id}
               item={e}

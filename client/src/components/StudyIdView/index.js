@@ -9,11 +9,9 @@ export const StudyIdView = ({ studyIds }) => {
     <div className="col-8 StudyIdView">
       <div
         className="card-header d-flex flex-row justify-content-between col-12"
-        style={{}}
       >
         <div
           className="d-flex flex-row justify-content-between"
-          style={{ }}
         >
           <h4>Total # of used Study Ids (used/original): <strong>({studyIds.length}</strong> / 200)</h4>
         </div>
