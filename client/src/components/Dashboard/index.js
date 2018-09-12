@@ -9,6 +9,13 @@ const propTypes = {
   handleSaveItem: PropTypes.func,
   handleNewChildEntity: PropTypes.func.isRequired,
   itemEditing: PropTypes.object,
+  childEntities: PropTypes.arrayOf(PropTypes.shape({
+    type: PropTypes.string,
+    name: PropTypes.string,
+    id: PropTypes.string,
+    created: PropTypes.int,
+    parent: PropTypes.object,
+  })),
 };
 
 class Dashboard extends Component {
@@ -24,11 +31,15 @@ class Dashboard extends Component {
   }
 
   handleChildEntityAddition(selectedOption, callback) {
+    const { childEntities, itemEditing } = this.props;
+    const setNameRelToParent = ({ parent, newInt }) =>
+      (`${parent.name.substr(0, 5).toUpperCase()}-${newInt}`);
     this.props.handleNewChildEntity({
       type: selectedOption,
+      name: setNameRelToParent({ parent: itemEditing, newInt: childEntities.length + 1 }),
       parent: {
-        type: this.props.itemEditing.type,
-        id: this.props.itemEditing.id,
+        type: itemEditing.type,
+        id: itemEditing.id,
       },
     }, callback);
   }

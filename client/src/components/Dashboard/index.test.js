@@ -8,8 +8,9 @@ describe('DashboardHeader component', () => {
   const props = {
     itemEditing: {
       type: 'conversation',
-      name: '',
+      name: 'testConvo',
       id: '',
+      parent: { type: 'foo', id: 'bar' },
     },
     isLive: true,
     isStudy: false,
@@ -18,7 +19,7 @@ describe('DashboardHeader component', () => {
     handleDeleteItem: jest.fn(),
     handleNewChildEntity: jest.fn(),
     handleAddTag: jest.fn(),
-    childEntities: [],
+    childEntities: [{}, {}, {}],
     handleCopyEntity: jest.fn(),
     images: [],
     videos: [],
@@ -39,5 +40,12 @@ describe('DashboardHeader component', () => {
 
   it('should render', () => {
     expect(component.exists()).toBeTruthy();
+  });
+
+  it('should name a new entity correctly', () => {
+    component.instance().handleChildEntityAddition();
+    const args = props.handleNewChildEntity.mock.calls[0][0];
+    expect(props.handleNewChildEntity).toBeCalled();
+    expect(args.name).toEqual('TESTC-4');
   });
 });
