@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { pick } from 'ramda';
+import { pick, omit, isEmpty } from 'ramda';
 
 import './style.css';
+
+import Loader from '../common/Loader';
 
 import Sidebar from '../Sidebar';
 import Dashboard from '../Dashboard';
@@ -38,6 +40,7 @@ class App extends Component {
   };
 
   addConversation = () => {
+    this.setState({ loading: true });
     dataUtil
       .post(config.routes.conversation.create, {
         ...config.initialState[config.entities.conversation],
@@ -46,6 +49,7 @@ class App extends Component {
       .then(res => {
         const conversation = res[config.entities.conversation];
         this.setState({
+          loading: false,
           itemEditing:
               pick(['id', 'type'], conversation[conversation.length - 1]),
           ...res,
@@ -59,6 +63,7 @@ class App extends Component {
   };
 
   addImage = (acceptedFiles, rejectedFiles) => {
+    this.setState({ loading: true });
     if (rejectedFiles) {
       console.error(JSON.stringify(rejectedFiles));
     }
@@ -75,6 +80,7 @@ class App extends Component {
       .then(res => res.json())
       .then(res => {
         const newState = {
+          loading: false,
           imageUploadStatus: 'success',
           mediaUpload: {
             ...this.state.mediaUpload,
@@ -137,13 +143,17 @@ class App extends Component {
   };
 
   handleNewChildEntity = (entity, callback) => {
+    this.setState({ loading: true });
     dataUtil
       .post(config.routes[entity.type].create, this.markPosition(entity))
       .then(res => res.json())
       .then(dataUtil.throwIfEmptyArray)
       .then(res => {
         this.setState(
-          { [entity.type]: res },
+          {
+            [entity.type]: res,
+            loading: false,
+          },
           () => !!(callback) && callback(res[res.length - 1]),
         );
       })
@@ -185,6 +195,7 @@ class App extends Component {
   }
 
   handleSaveItem(item, callback) {
+    this.setState({ loading: true });
     const route = item.id ? config.operations.update : config.operations.create;
     dataUtil
       .post(
@@ -193,6 +204,7 @@ class App extends Component {
       )
       .then(res => res.json())
       .then(res => {
+        this.setState({ loading: false });
         if (Array.isArray(res)) {
           this.handleUploadNonMessage(res, item, callback);
         } else {
@@ -233,6 +245,7 @@ class App extends Component {
 
   handleCopyItem({ itemToCopy }) {
     const route = config.operations.copy;
+    this.setState({ loading: true });
 
     dataUtil
       .post(config.routes[itemToCopy.type][route], {
@@ -240,21 +253,23 @@ class App extends Component {
       })
       .then(res => res.json())
       .then(copiedResults => {
-        this.setState(copiedResults);
+        this.setState({ ...copiedResults, loading: false });
       })
       .catch(console.error);
   }
 
   handleDeleteItem = item => {
+    this.setState({ loading: true });
     const route = config.operations.delete;
     dataUtil
       .post(config.routes[item.type][route], item)
       .then(res => res.json())
       .then(dataUtil.constructEntityState(item.type))
       .then(nextEntityState => {
-        let newState;
+        let newState = { loading: false };
         if (this.state.itemEditing && item.id === this.state.itemEditing.id) {
           newState = {
+            ...newState,
             itemEditing: null,
             ...nextEntityState,
           };
@@ -320,6 +335,10 @@ class App extends Component {
   }
 
   render() {
+    const { loading } = this.state;
+    const data = omit(['loading'], this.state);
+    if (isEmpty(data)) return <Loader />;
+
     const entitiesCanCopyTo = dataUtil.getEntitiesCanCopyTo(
       this.getFullItemEditing(this.state),
       this.state,
@@ -331,7 +350,7 @@ class App extends Component {
     );
 
     const treeData = dataUtil.createTreeView({
-      data: { ...this.state },
+      data,
       entities: config.entities,
       active: (this.getFullItemEditing(this.state) || {}).id,
     });
@@ -367,6 +386,11 @@ class App extends Component {
             });
           }}
         />
+        {loading &&
+          <div className="floating-loader">
+            <Loader text={false} />
+          </div>
+        }
 
         <Dashboard
           formConfig={config.forms}

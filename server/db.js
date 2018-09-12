@@ -19,10 +19,12 @@ const helpers = require('./helpers/db');
 const R = require('ramda');
 const {promisify} = require('util');
 const getLAsync = promisify(redisClient.lrange).bind(redisClient);
+const getAsync = promisify(redisClient.get).bind(redisClient);
 
 const fileUtils = require('./utils/file');
 const { keyFormatMessageId } = require('./utils/messages');
 const { keyFormatCollectionId } = require('./utils/collections');
+const { formatNameCopy } = require('./utils/general');
 
 const Facebook = require('./services/facebook');
 
@@ -229,6 +231,9 @@ module.exports = store => {
         messageIds.map(id => getMessageById(id)))
       )
       .catch(console.error);
+
+  const getNameCopyNumber = name =>
+    new Promise(resolve => redisClient.incr(formatNameCopy(name), (err, val) => resolve(val)));
 
   /**
      * Update Message
@@ -502,6 +507,7 @@ module.exports = store => {
     getTags,
     setTag,
 
-    getStudyIds
+    getStudyIds,
+    getNameCopyNumber
   };
 };

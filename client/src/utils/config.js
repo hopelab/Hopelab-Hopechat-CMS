@@ -165,6 +165,7 @@ const initialState = {
     showImageModal: false,
     imageUploadStatus: '',
     showStudyIdView: false,
+    loading: true,
   },
 
   conversation: {
