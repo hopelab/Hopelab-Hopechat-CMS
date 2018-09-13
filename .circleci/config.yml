@@ -9,7 +9,7 @@ jobs:
       - run: yarn install
       - run: yarn lint
       - run: yarn mock-db
-      - run: yarn test
+      - run: yarn test-only
       - run: cd client
       - run: yarn install
       - run: yarn lint

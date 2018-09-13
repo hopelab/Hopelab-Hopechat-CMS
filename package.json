@@ -10,6 +10,7 @@
     "start": "node ./server/cms.js",
     "prettify": "prettier --write './server/**/*.js'",
     "test": "jest ./server && jest ./server --watch",
+    "test-only": "jest ./server",
     "coverage": "jest ./server --coverage"
   },
   "author": "Presence PG",
@@ -34,7 +35,6 @@
     "eslint": "^4.8.0",
     "eslint-plugin-jest": "^21.22.0",
     "jest": "^23.5.0",
-    "mocha": "^2.2.4",
     "prettier": "^1.7.4"
   },
   "prettier": {
