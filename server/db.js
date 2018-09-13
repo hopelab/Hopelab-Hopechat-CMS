@@ -19,7 +19,6 @@ const helpers = require('./helpers/db');
 const R = require('ramda');
 const {promisify} = require('util');
 const getLAsync = promisify(redisClient.lrange).bind(redisClient);
-const getAsync = promisify(redisClient.get).bind(redisClient);
 
 const fileUtils = require('./utils/file');
 const { keyFormatMessageId } = require('./utils/messages');
