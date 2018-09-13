@@ -2,9 +2,15 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:6.10
+      - image: circleci/node:9.5
+      - image: redis
     steps:
       - checkout
+      - run: yarn install
+      - run: yarn lint
+      - run: yarn mock-db
+      - run: yarn test-only
+      - run: cd client && yarn install && yarn lint && yarn test
       - run: sudo apt-get update
       - run: sudo apt install -y rsync
       - run: if [ "${CIRCLE_BRANCH}" == "circleci" ] || [ "${CIRCLE_BRANCH}" == "master" ]; then rsync -avz -e "ssh -o StrictHostKeyChecking=no" --exclude '.git*' ./ ubuntu@35.162.65.198:/var/www/cms/hopelab_ayachatbot_cms/; fi

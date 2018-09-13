@@ -32,6 +32,8 @@ class Container extends React.Component {
 
     return (
       <div
+        role="button"
+        tabIndex={0}
         className={`PoolContainer ${focused ? 'focused' : ''}`}
         style={{
           color: node.active ? '#fff' : '#333',
@@ -41,14 +43,11 @@ class Container extends React.Component {
         onMouseOut={() => { this.onSetFocus(); }}
         onFocus={() => { this.onSetFocus(); }}
         onBlur={() => { this.onSetFocus(); }}
+        onClick={() => {
+          this.handleClick({ expand: false, onClick });
+        }}
       >
-        <span
-          role="button"
-          tabIndex={0}
-          onClick={() => {
-            this.handleClick({ expand: false, onClick });
-          }}
-        >
+        <span>
           {node.name}&nbsp;
         </span>
         {node.isLive ? <i className="fa fa-circle live-circle" /> : null}

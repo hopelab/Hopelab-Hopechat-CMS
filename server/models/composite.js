@@ -7,7 +7,7 @@ const series = require('./series');
 const message = require('./message');
 const redisClient = require('../utils/client');
 
-const { updateStart, getMessages, getCollections } = require('../db')(require('../utils/store'));
+const { updateStart, getMessages, getCollections, getNameCopyNumber } = require('../db')(require('../utils/store'));
 const helpers = require('../helpers/db');
 const Constants = require('../constants');
 
@@ -15,7 +15,6 @@ const { promiseSerial, keyFormatForCollOrMessage } = require('../utils/data');
 
 const config = require('config');
 const store = require('../utils/store');
-const shortid = require('shortid');
 
 const {
   TYPE_CONVERSATION,
@@ -135,9 +134,9 @@ function createChainedItemsList(entityOldNew) {
  * @param {Array} children
  * @return {Promise}
 */
-function copyChildren(parent) {
-  return function(children) {
-    const childPromises = children.map(oldChild => () => {
+const copyChildren = parent =>
+  function(children) {
+    const childPromises = children.map(oldChild => async () => {
       return modelMap[oldChild.type]
         .create(
           R.merge(oldChild, {
@@ -146,7 +145,7 @@ function copyChildren(parent) {
               id: parent.id
             },
             id: null,
-            name: generateCopyName(oldChild.name)
+            name: await generateCopyName(oldChild.name)
           })
         )
         .then(newChildList => {
@@ -162,11 +161,10 @@ function copyChildren(parent) {
 
     return promiseSerial(childPromises).then(R.uniq);
   };
-}
 
-function generateCopyName(name) {
-  return `${name} (${shortid.generate().slice(0,3)})`;
-}
+const generateCopyName = name =>
+  getNameCopyNumber(name).then(val => `${name} copy-${val}`);
+
 
 /**
  * Copy the Parent Entity
@@ -174,11 +172,11 @@ function generateCopyName(name) {
  * @param {Object} parent
  * @return {Promise}
 */
-function copyParent(parent) {
-  return modelMap[parent.type].create(
-    R.merge(parent, { id: null, name: generateCopyName(parent.name) })
+const copyParent = async parent =>
+  modelMap[parent.type].create(
+    R.merge(parent, { id: null, name: await generateCopyName(parent.name) })
   );
-}
+
 
 /**
  * Construct Return Value By Entity Key
