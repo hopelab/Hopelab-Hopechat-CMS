@@ -149,12 +149,13 @@ class App extends Component {
       .then(res => res.json())
       .then(dataUtil.throwIfEmptyArray)
       .then(res => {
+        const addedItem = res.sort((a, b) => (a.created < b.created ? 1 : -1))[0];
         this.setState(
           {
             [entity.type]: res,
             loading: false,
           },
-          () => !!(callback) && callback(res[res.length - 1]),
+          () => !!(callback) && callback(addedItem),
         );
       })
       .catch(console.error);
@@ -274,7 +275,7 @@ class App extends Component {
             ...nextEntityState,
           };
         } else {
-          newState = { ...nextEntityState };
+          newState = { ...newState, ...nextEntityState };
         }
         this.setState(newState);
       })
@@ -345,8 +346,8 @@ class App extends Component {
     );
 
     const childEntities = dataUtil.getChildEntitiesFor(
-      this.getFullItemEditing(this.state),
-      this.state,
+      this.getFullItemEditing(data),
+      data,
     );
 
     const treeData = dataUtil.createTreeView({

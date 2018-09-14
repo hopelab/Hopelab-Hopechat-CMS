@@ -271,6 +271,7 @@ class ConversationItem extends Component {
         {(!this.messageTypeHasDifferentOptions(this.props.item.messageType)) && (
           <div className="card-footer">
             <NextMessage
+              parentItemType={this.props.parentItemType}
               childEntities={this.props.childEntities}
               nextId={this.props.item.next ? this.props.item.next.id : undefined}
               showEndOfConversation={this.props.parentItemType === TYPE_CONVERSATION}
@@ -288,8 +289,8 @@ class ConversationItem extends Component {
                   }
                 }
               }}
-              onNewItem={() => {
-                this.props.handleChildEntityAddition(this.props.item.type, newItem => {
+              onNewItem={type => {
+                this.props.handleChildEntityAddition(type, newItem => {
                   this.props.handleSaveItem({
                     ...this.props.item,
                     next: { id: newItem.id, type: newItem.type },

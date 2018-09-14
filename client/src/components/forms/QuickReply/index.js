@@ -17,6 +17,7 @@ const QuickReply = ({
   onNextItemSelect,
   showEndOfConversation,
   messageType,
+  parentItemType,
 }) => (
   <div className="card" style={{ width: '360px' }}>
     <div
@@ -41,6 +42,7 @@ const QuickReply = ({
       {
         messageType === MESSAGE_TYPE_QUESTION_WITH_REPLIES ? (
           <NextMessage
+            parentItemType={parentItemType}
             childEntities={childEntities}
             nextId={nextId}
             handleNextMessageSelect={
@@ -76,6 +78,7 @@ QuickReply.propTypes = {
   childEntities: PropTypes.array.isRequired,
   showEndOfConversation: PropTypes.bool.isRequired,
   messageType: PropTypes.string,
+  parentItemType: PropTypes.string.isRequired,
 };
 
 QuickReply.defaultProps = {

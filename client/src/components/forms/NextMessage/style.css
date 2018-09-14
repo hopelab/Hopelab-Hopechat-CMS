@@ -1,0 +1,12 @@
+.dropdown div {
+  cursor: pointer;
+}
+
+.dropdown-menu button.dropdown-item {
+  cursor: pointer;
+}
+
+.dropdown .btn.btn-outline-primary.btn-lg {
+  margin: 30px;
+  width: 400px;
+}

@@ -122,9 +122,17 @@ module.exports = store => {
       )
       .catch(e => console.error(e));
 
-  const setCollection = collection =>
-    updateCollection(createNewEntity(TYPE_COLLECTION, collection))
-      .then(c => redisClient.lpush(DB_COLLECTION_LIST, c.id));
+      const setCollection = collection =>
+        getCollections()
+          .then(createNewSingleEntity(TYPE_COLLECTION, collection))
+          .then(updateCollection)
+          .then(c => redisClient.lpush(DB_COLLECTION_LIST, c.id))
+          .then(getCollections)
+          .catch(console.error);
+
+  // const setCollection = collection =>
+  //   updateCollection(createNewEntity(TYPE_COLLECTION, collection))
+  //     .then(c => redisClient.lpush(DB_COLLECTION_LIST, c.id));
 
 
     /**

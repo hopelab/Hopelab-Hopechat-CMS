@@ -210,6 +210,7 @@ class ConversationItemContainer extends Component {
               this.props.item.quick_replies &&
               this.props.item.quick_replies.map((qr, i) => (
                 <QuickReply
+                  parentItemType={this.props.item.parent.type}
                   key={i}
                   index={i}
                   childEntities={this.props.childEntities}
@@ -232,6 +233,7 @@ class ConversationItemContainer extends Component {
               this.props.item.nextConversations &&
               this.props.item.nextConversations.map((nC, i) => (
                 <QuickReply
+                  parentItemType={this.props.item.parent.type}
                   key={i}
                   index={i}
                   childEntities={this.props.childEntities}
