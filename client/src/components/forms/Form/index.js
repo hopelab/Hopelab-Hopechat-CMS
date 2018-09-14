@@ -82,7 +82,7 @@ class Form extends Component {
             });
           });
         }}
-      />)
+      />);
     }
     return (
       <div className="d-flex flex-column align-items-start">
