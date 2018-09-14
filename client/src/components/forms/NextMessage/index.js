@@ -10,6 +10,8 @@ import {
 
 import { END_OF_CONVERSATION_ID, forms } from '../../../utils/config';
 
+import './style.css';
+
 const propTypes = {
   childEntities: PropTypes.array.isRequired,
   nextId: PropTypes.string,
@@ -83,32 +85,34 @@ class NextMessage extends Component {
   render() {
     const { childEntities, nextId } = this.props;
     let foundItem;
-    let style = {};
+    let className = {};
     if (nextId === END_OF_CONVERSATION_ID) {
       foundItem = { name: 'End Of Conversation' };
-      style = { backgroundColor: 'yellow' };
+      className = 'bg-warning';
     } else {
       foundItem = childEntities.find(item => item.id === nextId);
     }
-
-
     if (foundItem) {
       foundItem = foundItem.name;
+    } else if (!foundItem && !childEntities.length) {
+      foundItem = 'choose first';
+      className = 'btn btn-outline-primary btn-lg';
     } else {
       foundItem = 'choose next';
-      style = { backgroundColor: 'red', color: 'white' };
+      className = 'bg-danger text-light';
     }
     return (
       <Dropdown
         style={{ cursor: 'pointer' }}
         isOpen={this.state.dropdownOpen}
         toggle={this.toggle}
+        className="text-center"
       >
         <DropdownToggle
           tag="div"
           onClick={this.toggle}
           data-toggle="dropdown"
-          style={style}
+          className={className}
           aria-expanded={this.state.dropdownOpen}
         >
           {foundItem}

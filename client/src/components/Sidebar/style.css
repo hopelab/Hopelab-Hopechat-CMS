@@ -1,3 +1,7 @@
+.Sidebar {
+  padding-right: 0;
+}
+
 .Sidebar .Inner {
     border: 1px solid #333;
     display: flex;

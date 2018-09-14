@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Form from '../forms/Form';
 import DashboardHeader from './DashboardHeader';
 import StudyIdView from '../StudyIdView';
+import './style.css';
 
 const propTypes = {
   handleSaveItem: PropTypes.func,

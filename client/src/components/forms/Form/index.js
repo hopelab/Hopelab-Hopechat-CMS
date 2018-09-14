@@ -6,8 +6,8 @@ import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css';
 
 import ConversationItemContainer from '../ConversationItemContainer';
-
 import FirstItemSelect from '../FirstItemSelect';
+import NextMessage from '../NextMessage';
 
 import { autocompleteRenderInput } from '../../AutoSuggest';
 
@@ -70,6 +70,20 @@ class Form extends Component {
   // handleChildSelection = e => this.setState({ entityToAdd: e.target.value });
 
   render() {
+    if (!this.props.childEntities.length) {
+      return (<NextMessage
+        parentItemType={this.props.item.type}
+        childEntities={this.props.childEntities}
+        onNewItem={type => {
+          this.props.handleChildEntityAddition(type, newItem => {
+            this.props.handleSaveItem({
+              ...this.props.item,
+              next: { id: newItem.id, type: newItem.type },
+            });
+          });
+        }}
+      />)
+    }
     return (
       <div className="d-flex flex-column align-items-start">
         {/* inputProps=
@@ -94,12 +108,12 @@ class Form extends Component {
           ) : null}
         </div>
 
-        { (this.props.item.type === TYPE_CONVERSATION ||
-          this.props.item.type === TYPE_BLOCK)
+        { ((this.props.item.type === TYPE_CONVERSATION ||
+          this.props.item.type === TYPE_BLOCK) && this.props.childEntities.length)
           ? <FirstItemSelect
             childEntities={this.props.childEntities}
             onSelectStart={this.props.updateStartEntity}
-          /> : undefined
+          /> : null
         }
 
         {formHasField('children', this.props.config.fields) ? (

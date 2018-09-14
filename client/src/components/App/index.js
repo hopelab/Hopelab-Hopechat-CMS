@@ -275,7 +275,7 @@ class App extends Component {
             ...nextEntityState,
           };
         } else {
-          newState = { ...nextEntityState };
+          newState = { ...newState, ...nextEntityState };
         }
         this.setState(newState);
       })
