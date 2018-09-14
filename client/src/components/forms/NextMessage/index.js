@@ -8,7 +8,7 @@ import {
   DropdownToggle,
 } from 'reactstrap';
 
-import { END_OF_CONVERSATION_ID } from '../../../utils/config';
+import { END_OF_CONVERSATION_ID, TYPE_COLLECTION, TYPE_MESSAGE } from '../../../utils/config';
 
 const propTypes = {
   childEntities: PropTypes.array.isRequired,
@@ -16,6 +16,16 @@ const propTypes = {
 };
 
 const getNextMessageOptionsForMessage = props => {
+  const newItems = [
+    <DropdownItem divider key="divider" />,
+    <DropdownItem onClick={() => props.onNewItem(TYPE_MESSAGE)} key="new-msg">
+          New Message
+    </DropdownItem>,
+    <DropdownItem onClick={() => props.onNewItem(TYPE_COLLECTION)} key="new-coll">
+        New Collection
+    </DropdownItem>,
+  ];
+
   let foundActive = false;
   const items = props.childEntities.map(c => {
     const active = c.id === props.nextId;
@@ -52,12 +62,7 @@ const getNextMessageOptionsForMessage = props => {
     ));
   }
 
-  items.push(<DropdownItem divider key="divider" />);
-  items.push((
-    <DropdownItem onClick={props.onNewItem} key="new-item">
-      New Item
-    </DropdownItem>
-  ));
+  items.push(...newItems);
   return items;
 };
 

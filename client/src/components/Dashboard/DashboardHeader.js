@@ -8,7 +8,6 @@ import {
   Button,
 } from 'reactstrap';
 
-import DropDownWithPlus from '../forms/DropDownWithPlus';
 import EditableText from '../forms/EditableText';
 import RulesDropdown from '../forms/RulesDropdown';
 import CopyButton from '../forms/CopyButton';
@@ -28,7 +27,6 @@ export class DashboardHeader extends Component {
     rule: PropTypes.string,
     onToggleLive: PropTypes.func,
     onToggleStudy: PropTypes.func,
-    onNewChildEntity: PropTypes.func.isRequired,
     onNameChanged: PropTypes.func.isRequired,
     onRuleChanged: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
@@ -59,7 +57,6 @@ export class DashboardHeader extends Component {
       itemType,
       onNameChanged,
       onRuleChanged,
-      onNewChildEntity,
       onDelete,
       onToggleLive,
       onToggleStudy,
@@ -83,10 +80,6 @@ export class DashboardHeader extends Component {
             onEditWillFinish={onNameChanged}
           />
           <input type="text" placeholder="tags" />
-          <DropDownWithPlus
-            itemType={itemType}
-            onClickPlus={onNewChildEntity}
-          />
         </div>
         <ReactStrapForm
           className="d-flex justify-content-end"

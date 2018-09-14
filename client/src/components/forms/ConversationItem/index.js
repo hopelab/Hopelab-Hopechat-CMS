@@ -288,8 +288,8 @@ class ConversationItem extends Component {
                   }
                 }
               }}
-              onNewItem={() => {
-                this.props.handleChildEntityAddition(this.props.item.type, newItem => {
+              onNewItem={type => {
+                this.props.handleChildEntityAddition(type, newItem => {
                   this.props.handleSaveItem({
                     ...this.props.item,
                     next: { id: newItem.id, type: newItem.type },
