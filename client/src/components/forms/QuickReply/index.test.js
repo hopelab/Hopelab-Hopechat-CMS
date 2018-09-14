@@ -10,6 +10,7 @@ describe('QuickReply component', () => {
     onDeleteReply: jest.fn(),
     childEntities: [],
     showEndOfConversation: true,
+    parentItemType: '',
   };
   let component;
   beforeEach(() => {

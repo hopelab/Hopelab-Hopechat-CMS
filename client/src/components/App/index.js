@@ -346,8 +346,8 @@ class App extends Component {
     );
 
     const childEntities = dataUtil.getChildEntitiesFor(
-      this.getFullItemEditing(this.state),
-      this.state,
+      this.getFullItemEditing(data),
+      data,
     );
 
     const treeData = dataUtil.createTreeView({
