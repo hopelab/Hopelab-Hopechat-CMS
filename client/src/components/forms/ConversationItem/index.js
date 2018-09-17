@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { CheckBox } from '../../common/CheckBox';
+
 import EditableText from '../EditableText';
 import DelayCheckbox from '../DelayCheckbox';
 import NextMessage from '../NextMessage';
 import MediaDropdown from '../MediaDropdown';
 import MessageTypeDropdown from '../MessageTypeDropdown';
 import MediaPreview from '../MediaPreview';
+
+
 import {
   TYPE_CONVERSATION,
   TYPE_COLLECTION,
@@ -49,6 +53,7 @@ class ConversationItem extends Component {
       next: PropTypes.object,
       delayInMinutes: PropTypes.number,
       text: PropTypes.string,
+      isEvent: PropTypes.bool,
     }).isRequired,
     handleSaveItem: PropTypes.func.isRequired,
     handleChildEntityAddition: PropTypes.func,
@@ -234,39 +239,61 @@ class ConversationItem extends Component {
     return null;
   }
 
+  makeEvent() {
+    if (this.props.item) {
+      const { isEvent = false } = this.props.item;
+      this.props.handleSaveItem({
+        ...this.props.item,
+        isEvent: !isEvent,
+      });
+    }
+  }
+
+  editAttribute(name, value) {
+    if (this.props.item[name] !== value) {
+      this.props.handleSaveItem({
+        ...this.props.item,
+        [name]: value,
+      });
+    }
+  }
+
   render() {
+    const { item: { isEvent = false } } = this.props;
     return (
       <div
         className={`card ConversationItem ${this.props.className}`}
         style={{ width: '360px' }}
       >
         <div
-          className="card-header d-flex flex-row justify-content-between"
-          style={{
-            flexWrap: 'wrap',
-            ...conversationItemStyles[this.props.item.type],
-          }}
+          className="card-header d-flex flex-column"
         >
-          <EditableText
-            text={this.props.item.name}
-            onEditWillFinish={name => {
-              if (this.props.item.name !== name) {
-                this.props.handleSaveItem({
-                  ...this.props.item,
-                  name,
-                });
-              }
+          <div
+            className="d-flex flex-row justify-content-between"
+            style={{
+              flexWrap: 'wrap',
+              ...conversationItemStyles[this.props.item.type],
             }}
-          />
-          { this.props.item.messageType && (
-            <MessageTypeDropdown
-              selected={this.props.item.messageType}
-              onSelection={this.handleMessageTypeSelection}
-              onDelete={this.handleDeleteMessage}
+          >
+            <EditableText
+              text={this.props.item.name}
+              onEditWillFinish={val => this.editAttribute('name', val)}
             />
-          )}
-
+            { this.props.item.messageType && (
+              <MessageTypeDropdown
+                selected={this.props.item.messageType}
+                onSelection={this.handleMessageTypeSelection}
+                onDelete={this.handleDeleteMessage}
+              />
+            )}
+          </div>
+          <CheckBox
+            checked={isEvent}
+            onChange={() => this.makeEvent()}
+            label="Track Events"
+          />
         </div>
+
         {this.renderItemContent(this.props.item)}
         {(!this.messageTypeHasDifferentOptions(this.props.item.messageType)) && (
           <div className="card-footer">
