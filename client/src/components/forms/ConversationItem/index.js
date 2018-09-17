@@ -249,6 +249,15 @@ class ConversationItem extends Component {
     }
   }
 
+  editAttribute(name, value) {
+    if (this.props.item[name] !== value) {
+      this.props.handleSaveItem({
+        ...this.props.item,
+        [name]: value,
+      });
+    }
+  }
+
   render() {
     const { item: { isEvent = false } } = this.props;
     return (
@@ -268,14 +277,7 @@ class ConversationItem extends Component {
           >
             <EditableText
               text={this.props.item.name}
-              onEditWillFinish={name => {
-                if (this.props.item.name !== name) {
-                  this.props.handleSaveItem({
-                    ...this.props.item,
-                    name,
-                  });
-                }
-              }}
+              onEditWillFinish={val => this.editAttribute('name', val)}
             />
             { this.props.item.messageType && (
               <MessageTypeDropdown
