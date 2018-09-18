@@ -18,5 +18,8 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+}
 
+.Dashboard button {
+  cursor: pointer;
 }

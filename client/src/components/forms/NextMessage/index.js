@@ -85,7 +85,7 @@ class NextMessage extends Component {
   render() {
     const { childEntities, nextId } = this.props;
     let foundItem;
-    let className = {};
+    let className = '';
     if (nextId === END_OF_CONVERSATION_ID) {
       foundItem = { name: 'End Of Conversation' };
       className = 'bg-warning';
