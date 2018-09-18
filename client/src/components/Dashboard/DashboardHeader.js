@@ -86,7 +86,7 @@ export class DashboardHeader extends Component {
           style={{ flex: '1 0', whiteSpace: 'nowrap' }}
           onSubmit={e => {
             e.preventDefault();
-            onDelete({ id: itemId, type: itemType });
+            onDelete({ id: itemId, type: itemType, name: itemName });
           }}
         >
           {itemType === 'conversation' &&
@@ -97,7 +97,7 @@ export class DashboardHeader extends Component {
               onCopy={onCopy}
             />
           )}
-          <Button className="mr-3" color="danger" type="submit">X</Button>
+          <Button className="mr-3" color="danger" type="submit">Delete</Button>
           {this.hasStudy(itemType) && (
             <FormGroup check className="mr-1">
               <Label check>

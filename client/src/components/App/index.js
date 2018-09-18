@@ -8,6 +8,7 @@ import Loader from '../common/Loader';
 import Sidebar from '../Sidebar';
 import Dashboard from '../Dashboard';
 import UploadModal from '../UploadModal';
+import Modal from '../common/Modal';
 
 import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
@@ -259,8 +260,12 @@ class App extends Component {
       .catch(console.error);
   }
 
-  handleDeleteItem = item => {
-    this.setState({ loading: true });
+  handleDeleteItem = itemToDelete => {
+    this.setState({ itemToDelete, openDeleteModal: !this.state.openDeleteModal });
+  }
+
+  handleDeleteConfirm = item => {
+    this.setState({ loading: true, openDeleteModal: false });
     const route = config.operations.delete;
     dataUtil
       .post(config.routes[item.type][route], item)
@@ -357,7 +362,7 @@ class App extends Component {
     });
 
     const itemEditing = this.getFullItemEditing(this.state);
-    const { showStudyIdView, studyIds, conversation, image, video, tag } = this.state;
+    const { showStudyIdView, studyIds, conversation, image, video, tag, openDeleteModal, itemToDelete } = this.state;
     return (
       <div className="App row">
         <UploadModal
@@ -391,6 +396,15 @@ class App extends Component {
           <div className="floating-loader">
             <Loader text={false} />
           </div>
+        }
+
+        {openDeleteModal &&
+          <Modal
+            header={<span>Delete <strong>{itemToDelete.name}</strong>?</span>}
+            text={<span>Are you sure you want to delete this <strong>{itemToDelete.type}</strong>?</span>}
+            onCancel={() => this.handleDeleteItem(null)}
+            onConfirm={() => this.handleDeleteConfirm(itemToDelete)}
+          />
         }
 
         <Dashboard

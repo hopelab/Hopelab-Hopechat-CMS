@@ -4,7 +4,7 @@ import './styles.css';
 
 export const CheckBox = ({ checked, onChange, label }) => (
   <div className="form-check">
-    <input className="form-check-input" type="checkbox" checked={checked} onClick={onChange} />
+    <input className="form-check-input" type="checkbox" checked={checked} onChange={onChange} />
     <label className="form-check-label">
       {label}
     </label>
