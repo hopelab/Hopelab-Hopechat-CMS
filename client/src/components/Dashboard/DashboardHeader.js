@@ -2,16 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   Form as ReactStrapForm,
-  FormGroup,
-  Label,
-  Input,
   Button,
 } from 'reactstrap';
 
 import EditableText from '../forms/EditableText';
 import RulesDropdown from '../forms/RulesDropdown';
 import CopyButton from '../forms/CopyButton';
-
+import CheckBox from '../common/CheckBox';
 
 import { entityCanBeCopied } from '../../utils/data';
 import { forms } from '../../utils/config';
@@ -32,6 +29,8 @@ export class DashboardHeader extends Component {
     onDelete: PropTypes.func.isRequired,
     onCopy: PropTypes.func.isRequired,
     copyToItems: PropTypes.arrayOf(PropTypes.shape),
+    readOnly: PropTypes.bool.isRequired,
+    toggleReadOnly: PropTypes.func.isRequired,
   }
 
   hasLive(type) {
@@ -65,6 +64,8 @@ export class DashboardHeader extends Component {
       rule,
       onCopy,
       copyToItems,
+      readOnly,
+      toggleReadOnly,
     } = this.props;
     return (
       <div
@@ -78,8 +79,8 @@ export class DashboardHeader extends Component {
           <EditableText
             text={itemName}
             onEditWillFinish={onNameChanged}
+            disabled={readOnly}
           />
-          <input type="text" placeholder="tags" />
         </div>
         <ReactStrapForm
           className="d-flex justify-content-end"
@@ -90,38 +91,39 @@ export class DashboardHeader extends Component {
           }}
         >
           {itemType === 'conversation' &&
-            (<CopyButton onCopy={onCopy} />)}
+            (<CopyButton onCopy={onCopy} disabled={readOnly} />)}
           {entityCanBeCopied(itemType) && (
             <CopyButton
               copyToItems={copyToItems}
               onCopy={onCopy}
+              disabled={readOnly}
             />
           )}
-          <Button className="mr-3" color="danger" type="submit">Delete</Button>
+          <Button
+            className="mr-3"
+            color="danger"
+            disabled={readOnly}
+            type="submit"
+          >
+            Delete
+          </Button>
           {this.hasStudy(itemType) && (
-            <FormGroup check className="mr-1">
-              <Label check>
-                <Input
-                  onChange={onToggleStudy}
-                  className="mr-1"
-                  type="checkbox"
-                  checked={!!(isStudy)}
-                />
-                  Study
-              </Label>
-            </FormGroup>
+            <CheckBox
+              onChange={onToggleStudy}
+              className="mr-1"
+              checked={!!(isStudy)}
+              label="Study"
+              disabled={readOnly}
+            />
           )}
           {this.hasLive(itemType) && (
-            <FormGroup check className="mr-1">
-              <Label check>
-                <Input
-                  onChange={onToggleLive}
-                  className="mr-1"
-                  type="checkbox"
-                  checked={!!(isLive)}
-                />Live
-              </Label>
-            </FormGroup>
+            <CheckBox
+              onChange={onToggleLive}
+              className="mr-1"
+              checked={!!(isLive)}
+              label="Live"
+              disabled={readOnly}
+            />
           )}
           {this.hasRules(itemType) && (
             <div>
@@ -129,9 +131,15 @@ export class DashboardHeader extends Component {
                 rules={this.getRules(itemType)}
                 selected={rule}
                 onSelection={onRuleChanged}
+                disabled={readOnly}
               />
             </div>
           )}
+          <CheckBox
+            checked={readOnly}
+            onChange={toggleReadOnly}
+            label="Read-Only"
+          />
         </ReactStrapForm>
       </div>
     );

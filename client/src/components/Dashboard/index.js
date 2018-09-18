@@ -96,6 +96,8 @@ class Dashboard extends Component {
               onDelete={props.handleDeleteItem}
               onCopy={props.handleCopyEntity}
               copyToItems={props.entitiesCanCopyTo}
+              readOnly={props.readOnly}
+              toggleReadOnly={props.toggleReadOnly}
             />
             <Form
               item={props.itemEditing}
@@ -110,6 +112,7 @@ class Dashboard extends Component {
               videos={props.videos}
               tags={props.tags}
               updateStartEntity={props.updateStartEntity}
+              readOnly={props.readOnly}
             />
           </div>
         )}

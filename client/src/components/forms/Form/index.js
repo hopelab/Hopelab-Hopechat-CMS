@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { FormGroup } from 'reactstrap';
-import TagsInput from 'react-tagsinput';
 
 import 'react-tagsinput/react-tagsinput.css';
 
@@ -9,9 +7,10 @@ import ConversationItemContainer from '../ConversationItemContainer';
 import FirstItemSelect from '../FirstItemSelect';
 import NextMessage from '../NextMessage';
 
-import { autocompleteRenderInput } from '../../AutoSuggest';
 
 import { createInitialFormState } from '../../../utils/data';
+
+import './style.css';
 
 import {
   TYPE_BLOCK,
@@ -33,9 +32,9 @@ const propTypes = {
   updateStartEntity: PropTypes.func.isRequired,
   images: PropTypes.array.isRequired,
   videos: PropTypes.array.isRequired,
-  tags: PropTypes.array.isRequired,
   handleChildEntityAddition: PropTypes.func,
   conversations: PropTypes.array,
+  readOnly: PropTypes.bool.isRequired,
 };
 
 /**
@@ -56,21 +55,9 @@ class Form extends Component {
     this.setState(createInitialFormState(nextProps));
   }
 
-  // handleTagsInput = e => {
-  //   // this.props.handleUpdateItem({
-  //   //   target: {
-  //   //     name: 'tags',
-  //   //     value: e
-  //   //   }
-  //   // });
-  //   //
-  //   // this.props.handleAddTag({ name: last(e) });
-  // };
-
-  // handleChildSelection = e => this.setState({ entityToAdd: e.target.value });
-
   render() {
-    if (!this.props.childEntities.length) {
+    const { readOnly, childEntities = [] } = this.props;
+    if (!childEntities.length && !readOnly) {
       return (<NextMessage
         parentItemType={this.props.item.type}
         childEntities={this.props.childEntities}
@@ -86,28 +73,7 @@ class Form extends Component {
     }
     return (
       <div className="d-flex flex-column align-items-start">
-        {/* inputProps=
-          tags: this.props.tags,
-          handleAddTag: this.props.handleAddTag
-        */}
-        <div className="Row">
-          {formHasField('tags', this.props.config.fields) ? (
-            <div className="TagsContainer">
-              <FormGroup className="Tags">
-                <h5>TAGS</h5>
-                <TagsInput
-                  id="tags"
-                  name="tags"
-                  renderInput={autocompleteRenderInput}
-                  value={this.props.item.tags || []}
-                  onChange={this.handleTagsInput}
-
-                />
-              </FormGroup>
-            </div>
-          ) : null}
-        </div>
-
+        {readOnly && <div className="read-only" /> }
         { ((this.props.item.type === TYPE_CONVERSATION ||
           this.props.item.type === TYPE_BLOCK) && this.props.childEntities.length)
           ? <FirstItemSelect

@@ -32,6 +32,8 @@ describe('DashboardHeader component', () => {
     onCopy: jest.fn(),
     copyToItems: [],
     updateStartEntity: jest.fn(),
+    readOnly: false,
+    toggleReadOnly: jest.fn(),
   };
   let component;
   beforeEach(() => {

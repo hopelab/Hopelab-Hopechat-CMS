@@ -20,7 +20,6 @@ describe('DashboardHeader component', () => {
     handleCopyEntity: jest.fn(),
     images: [],
     videos: [],
-    tags: [],
     handleSaveItem: jest.fn(),
     onNewChildEntity: jest.fn(),
     onNameChanged: jest.fn(),
@@ -28,6 +27,9 @@ describe('DashboardHeader component', () => {
     onDelete: jest.fn(),
     onCopy: jest.fn(),
     copyToItems: [],
+    readOnly: false,
+    toggleReadOnly: jest.fn(),
+    onToggleStudy: jest.fn(),
   };
   let component;
   beforeEach(() => {

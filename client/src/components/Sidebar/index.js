@@ -13,6 +13,7 @@ const propTypes = {
   handleTreeToggle: PropTypes.func.isRequired,
   toggleImageModal: PropTypes.func.isRequired,
   toggleStudyIdView: PropTypes.func.isRequired,
+  readOnly: PropTypes.bool.isRequired,
 };
 
 decorators.Container = Container;
@@ -27,6 +28,7 @@ const Sidebar = props => (
         <span style={{ fontSize: '1.1em' }}>Conversations</span>
         <div>
           <Button
+            disabled={props.readOnly}
             color="primary"
             className="ml-1"
             onClick={props.toggleImageModal}
@@ -35,6 +37,7 @@ const Sidebar = props => (
             <i className="fa fa-video-camera" aria-hidden="true" />
           </Button>
           <Button
+            disabled={props.readOnly}
             color="primary"
             className="ml-1"
             onClick={props.addConversation}

@@ -332,6 +332,11 @@ class App extends Component {
     this.setState({ showStudyIdView: !showStudyIdView });
   }
 
+  toggleReadOnly() {
+    const { readOnly } = this.state;
+    this.setState({ readOnly: !readOnly });
+  }
+
   loadStudyIds() {
     fetch('/study/all').then(res => {
       res.json().then(studyIds => {
@@ -341,7 +346,7 @@ class App extends Component {
   }
 
   render() {
-    const { loading } = this.state;
+    const { loading, readOnly } = this.state;
     const data = omit(['loading'], this.state);
     if (isEmpty(data)) return <Loader />;
 
@@ -383,6 +388,7 @@ class App extends Component {
           handleTreeToggle={this.handleTreeToggle}
           itemEditing={itemEditing}
           toggleStudyIdView={() => this.toggleStudyIdView()}
+          readOnly={readOnly}
           toggleImageModal={() => {
             this.setState({
               mediaUpload: {
@@ -424,6 +430,8 @@ class App extends Component {
           updateStartEntity={this.updateStartEntity}
           showStudyIdView={showStudyIdView}
           studyIds={studyIds}
+          readOnly={readOnly}
+          toggleReadOnly={() => this.toggleReadOnly()}
         />
       </div>
     );

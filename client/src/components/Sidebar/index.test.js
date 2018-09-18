@@ -10,6 +10,7 @@ describe('Sidebar component', () => {
     toggleImageModal: jest.fn(),
     toggleStudyIdView: jest.fn(),
     data: [],
+    readOnly: false,
   };
   let component;
   beforeEach(() => {

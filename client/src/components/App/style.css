@@ -9,3 +9,11 @@
   right: 0;
   z-index: 3;
 }
+
+.App button.disabled {
+  cursor: not-allowed;
+}
+
+.App .dropdown div.disabled {
+  cursor: not-allowed;
+}
