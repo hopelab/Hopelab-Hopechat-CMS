@@ -30,6 +30,7 @@ describe('DashboardHeader component', () => {
     readOnly: false,
     toggleReadOnly: jest.fn(),
     onToggleStudy: jest.fn(),
+    onToggleLive: jest.fn(),
   };
   let component;
   beforeEach(() => {
