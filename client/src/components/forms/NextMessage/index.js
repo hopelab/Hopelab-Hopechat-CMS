@@ -86,6 +86,7 @@ class NextMessage extends Component {
     const { childEntities, nextId } = this.props;
     let foundItem;
     let className = '';
+    let brokenLink = false;
     if (nextId === END_OF_CONVERSATION_ID) {
       foundItem = { name: 'End Of Conversation' };
       className = 'bg-warning';
@@ -97,6 +98,10 @@ class NextMessage extends Component {
     } else if (!foundItem && !childEntities.length) {
       foundItem = 'choose first';
       className = 'btn btn-outline-primary btn-lg';
+    } else if (nextId) {
+      brokenLink = true;
+      foundItem = 'Broken link, choose next (or no selection)';
+      className = 'bg-danger text-light';
     } else {
       foundItem = 'choose next';
       className = 'bg-danger text-light';
@@ -120,6 +125,7 @@ class NextMessage extends Component {
         <DropdownMenu flip={false}>
           {getNextMessageOptionsForMessage(this.props)}
         </DropdownMenu>
+        {brokenLink && <div className="broken-link" >Broken Link Present</div>}
       </Dropdown>
     );
   }

@@ -171,7 +171,6 @@ const initialState = {
   conversation: {
     type: entities.conversation,
     name: '',
-    userId: '',
     tags: [],
   },
 
