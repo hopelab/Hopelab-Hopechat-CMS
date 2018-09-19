@@ -162,6 +162,9 @@ const deleteLinksFromDifferentEntitySets = (
       [entitySetTwoKey]: entitySetTwo
     }));
 
+const getNewestInList = entities =>
+  R.head(entities.filter(e => e.created).sort((a, b) => (a.created < b.created ? 1 : -1)));
+
 module.exports = {
   createNewEntity,
   mapUserHistory,
@@ -173,5 +176,6 @@ module.exports = {
   deleteLinksFromSameEntitySet,
   deleteLinksFromDifferentEntitySets,
   getDBKeyForEntityType,
-  createNewSingleEntity
+  createNewSingleEntity,
+  getNewestInList
 };

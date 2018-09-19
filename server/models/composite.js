@@ -30,13 +30,15 @@ const {
 
 const modelMap = { conversation, collection, series, block, message };
 
+const { getNewestInList } = helpers;
+
 const makeANewCollection = conversations => ({
   type: TYPE_COLLECTION,
   private: true,
   name: DEFAULT_NAME,
   parent: {
     type: TYPE_CONVERSATION,
-    id: R.last(conversations).id
+    id: getNewestInList(conversations).id
   }
 });
 
@@ -46,7 +48,7 @@ const makeANewSeries = collections => ({
   name: DEFAULT_NAME,
   parent: {
     type: TYPE_COLLECTION,
-    id: R.last(collections).id
+    id: getNewestInList(collections).id
   }
 });
 
@@ -56,7 +58,7 @@ const makeANewBlock = allSeries => ({
   name: DEFAULT_NAME,
   parent: {
     type: TYPE_SERIES,
-    id: R.last(allSeries).id
+    id: getNewestInList(allSeries).id
   }
 });
 
@@ -149,7 +151,7 @@ const copyChildren = parent =>
           })
         )
         .then(newChildList => {
-          const newChild = R.last(newChildList);
+          const newChild = getNewestInList(newChildList);
 
           return {
             oldChild,
@@ -313,9 +315,7 @@ function recursivelyCopy(parent) {
  * @param {Object} newParent
  * @return {Function}
 */
-function getAllChildrenAndCopy(oldParent, newParent) {
-  return getAllChildren(oldParent).then(recursivelyCopy(newParent));
-}
+const  getAllChildrenAndCopy = (oldParent, newParent) =>  getAllChildren(oldParent).then(recursivelyCopy(newParent));
 
 /**
  * Get Fresh Batch of all Data for UI
@@ -366,8 +366,7 @@ exports.copyEntityAndAllChildren = data => {
     .then(modifyParentIfNeeded(R.path(['parent', 'parent'], data)))
     .then(parent => copyParent(parent))
     .then(parentList => {
-      const newParent = R.last(parentList);
-
+      const newParent = getNewestInList(parentList);
       return getAllChildrenAndCopy(data.parent, newParent)
         .then(constructReturnCopiedValues(newParent))
         .then(freshDataForUI)
