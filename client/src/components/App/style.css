@@ -1,6 +1,7 @@
 .App {
     display: flex;
     flex-direction: row;
+    flex-wrap: nowrap;
 }
 
 .App .floating-loader {
@@ -8,4 +9,12 @@
   top: 0;
   right: 0;
   z-index: 3;
+}
+
+.App button.disabled {
+  cursor: not-allowed;
+}
+
+.App .dropdown div.disabled {
+  cursor: not-allowed;
 }

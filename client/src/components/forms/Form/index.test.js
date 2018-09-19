@@ -22,6 +22,7 @@ describe('Form component', () => {
     item: {
       type: TYPE_CONVERSATION,
     },
+    readOnly: false,
   };
   let component;
   beforeEach(() => {

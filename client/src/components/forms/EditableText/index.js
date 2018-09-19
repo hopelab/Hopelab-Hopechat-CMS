@@ -8,6 +8,7 @@ export class EditableText extends Component {
     onEditWillFinish: PropTypes.func,
     isTextArea: PropTypes.bool,
     placeholder: PropTypes.string,
+    disabled: PropTypes.bool,
   }
 
   static defaultProps = {
@@ -64,6 +65,7 @@ export class EditableText extends Component {
   }
 
   render() {
+    const { disabled } = this.props;
     const input = this.props.isTextArea ? (
       <textarea
         type="text"
@@ -72,6 +74,7 @@ export class EditableText extends Component {
         onKeyUp={this.handleEnterKey}
         onChange={this.handleChange}
         ref={i => { this.input = i; }}
+        disabled={disabled}
       />
     ) : (
       <input
@@ -81,10 +84,11 @@ export class EditableText extends Component {
         onChange={this.handleChange}
         placeholder={this.props.placeholder}
         ref={i => { this.input = i; }}
+        disabled={disabled}
       />
     );
 
-    return (this.state.editing || this.emptyText(this.state.text)) ? (
+    return ((this.state.editing || this.emptyText(this.state.text)) && !disabled) ? (
       input
     ) : (
       <span

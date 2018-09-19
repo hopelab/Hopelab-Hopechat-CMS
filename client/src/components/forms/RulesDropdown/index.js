@@ -12,6 +12,7 @@ class RulesDropdown extends Component {
     rules: PropTypes.arrayOf(PropTypes.string).isRequired,
     selected: PropTypes.string.isRequired,
     onSelection: PropTypes.func.isRequired,
+    disabled: PropTypes.bool.isRequired,
   };
 
   constructor(props) {
@@ -40,7 +41,7 @@ class RulesDropdown extends Component {
   }
 
   render() {
-    const { rules, selected } = this.props;
+    const { rules, selected, disabled } = this.props;
     const foundItem = rules.find(r => r === selected) || 'choose rule';
     return (
       <Dropdown
@@ -52,7 +53,8 @@ class RulesDropdown extends Component {
           tag="div"
           caret
           onClick={this.toggle}
-          className="pt-1 pb-1 pl-2 pr-2"
+          disabled={disabled}
+          className={`pt-1 pb-1 pl-2 pr-2 ${disabled ? 'disabled' : ''}`}
           style={{
             border: '1px solid  #c6c6c6',
             backgroundColor: '#e2e2e2',

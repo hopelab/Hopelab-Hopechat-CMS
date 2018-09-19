@@ -12,6 +12,7 @@ class CopyButton extends Component {
   static propTypes = {
     copyToItems: PropTypes.arrayOf(PropTypes.object),
     onCopy: PropTypes.func.isRequired,
+    disabled: PropTypes.bool,
   }
 
   constructor(props) {
@@ -37,24 +38,25 @@ class CopyButton extends Component {
 
   render() {
     const { isOpen } = this.state;
-    const { copyToItems, onCopy } = this.props;
+    const { copyToItems, onCopy, disabled } = this.props;
 
     return copyToItems ? (
-      <ButtonDropdown isOpen={isOpen} toggle={this.toggle}>
+      <ButtonDropdown isOpen={isOpen} toggle={this.toggle} >
         <Button
+          disabled={disabled}
           id="caret"
           onClick={e => e && e.preventDefault()}
           color="primary"
         >
           Copy To
         </Button>
-        <DropdownToggle caret color="primary" />
+        <DropdownToggle caret color="primary" disabled={disabled} />
         <DropdownMenu flip={false}>
           {this.renderCopyToItems()}
         </DropdownMenu>
       </ButtonDropdown>
     ) : (
-      <Button color="primary" onClick={onCopy}>Copy</Button>
+      <Button color="primary" onClick={onCopy} disabled={disabled}>Copy</Button>
     );
   }
 }

@@ -78,7 +78,7 @@ class Dashboard extends Component {
     const { showStudyIdView, studyIds } = props;
     if (showStudyIdView) return <StudyIdView studyIds={studyIds} />;
     return (
-      <div className="Dashboard col-md-8 mt-1">
+      <div className="Dashboard mt-1">
         {props.itemEditing !== null && (
           <div className="Inner card" style={{ borderColor: 'white' }}>
             <DashboardHeader
@@ -96,6 +96,8 @@ class Dashboard extends Component {
               onDelete={props.handleDeleteItem}
               onCopy={props.handleCopyEntity}
               copyToItems={props.entitiesCanCopyTo}
+              readOnly={props.readOnly}
+              toggleReadOnly={props.toggleReadOnly}
             />
             <Form
               item={props.itemEditing}
@@ -110,6 +112,7 @@ class Dashboard extends Component {
               videos={props.videos}
               tags={props.tags}
               updateStartEntity={props.updateStartEntity}
+              readOnly={props.readOnly}
             />
           </div>
         )}

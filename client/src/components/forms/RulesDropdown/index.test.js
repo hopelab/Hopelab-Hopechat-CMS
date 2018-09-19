@@ -7,6 +7,7 @@ describe('RulesDropdown component', () => {
     rules: [],
     selected: '',
     onSelection: jest.fn(),
+    disabled: false,
   };
   let component;
   beforeEach(() => {
