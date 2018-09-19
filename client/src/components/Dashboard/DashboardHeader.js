@@ -69,21 +69,16 @@ export class DashboardHeader extends Component {
     } = this.props;
     return (
       <div
-        className="card-header d-flex flex-row justify-content-between"
+        className="card-header d-flex flex-row justify-content-start align-items-center"
         style={{ flexWrap: 'wrap' }}
       >
-        <div
-          className="d-flex flex-row justify-content-between"
-          style={{ flex: '1 1', whiteSpace: 'nowrap' }}
-        >
-          <EditableText
-            text={itemName}
-            onEditWillFinish={onNameChanged}
-            disabled={readOnly}
-          />
-        </div>
+        <EditableText
+          text={itemName}
+          onEditWillFinish={onNameChanged}
+          disabled={readOnly}
+        />
         <ReactStrapForm
-          className="d-flex justify-content-end"
+          className="d-flex"
           style={{ flex: '1 0', whiteSpace: 'nowrap' }}
           onSubmit={e => {
             e.preventDefault();

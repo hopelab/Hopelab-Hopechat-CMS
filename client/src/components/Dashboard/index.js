@@ -78,7 +78,7 @@ class Dashboard extends Component {
     const { showStudyIdView, studyIds } = props;
     if (showStudyIdView) return <StudyIdView studyIds={studyIds} />;
     return (
-      <div className="Dashboard col-md-8 mt-1">
+      <div className="Dashboard mt-1">
         {props.itemEditing !== null && (
           <div className="Inner card" style={{ borderColor: 'white' }}>
             <DashboardHeader
