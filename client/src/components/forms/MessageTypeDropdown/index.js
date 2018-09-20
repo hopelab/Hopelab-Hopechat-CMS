@@ -19,32 +19,34 @@ class MessageTypeDropdown extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dropdownOpen: false,
+      dropdownOpen: false
     };
     this.toggle = this.toggle.bind(this);
   }
 
   toggle() {
-    this.setState({ dropdownOpen: !this.state.dropdownOpen });
+    this.setState({dropdownOpen: !this.state.dropdownOpen});
   }
 
   renderMessageTypeDropdownItems() {
-    const { onSelection, selected, onDelete } = this.props;
-    const types = messageTypes.map(m => (
-      <DropdownItem
-        key={m.id}
-        active={selected === m.id}
-        onClick={() => onSelection(m.id)}
-      >
-        {m.display}
-      </DropdownItem>
-    ));
+    const {onSelection, selected, onDelete} = this.props;
+    let types = messageTypes.map(m => {
+      return (
+        <DropdownItem
+          key={m.id}
+          active={selected === m.id}
+          onClick={() => onSelection(m.id)}
+        >
+          {m.display}
+        </DropdownItem>
+      );
+    });
 
     types.push((
       <DropdownItem
-        key="DELETE"
+        key='DELETE'
         onClick={onDelete}
-        style={{ color: 'red', fontWeight: '900' }}
+        style={{color: 'red', fontWeight: '900'}}
       >
         Delete
       </DropdownItem>
@@ -54,11 +56,11 @@ class MessageTypeDropdown extends Component {
   }
 
   render() {
-    const { selected } = this.props;
-    const foundItem = messageTypes.find(m => m.id === selected) || { display: 'type' };
+    const {selected} = this.props;
+    let foundItem = messageTypes.find(m => m.id === selected) || {display: 'type'};
     return (
       <Dropdown
-        style={{ cursor: 'pointer' }}
+        style={{cursor: 'pointer'}}
         isOpen={this.state.dropdownOpen}
         toggle={this.toggle}
       >
@@ -68,9 +70,9 @@ class MessageTypeDropdown extends Component {
           onClick={this.toggle}
           className="pl-2 pr-2"
           style={{
-            backgroundColor: '#757f86',
-            borderRadius: '20px',
-            color: 'white',
+            backgroundColor: "#757f86",
+            borderRadius: "20px",
+            color: "white",
           }}
           data-toggle="dropdown"
           aria-expanded={this.state.dropdownOpen}

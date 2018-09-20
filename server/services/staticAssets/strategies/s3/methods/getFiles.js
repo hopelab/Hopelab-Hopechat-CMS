@@ -1,6 +1,7 @@
 'use strict';
 
-const  R = require('ramda'),
+const fs = require('fs'),
+  R = require('ramda'),
   config = require('config');
 
 const { buildPublicLinkList } = require('../helpers/buildPublicLinkList');

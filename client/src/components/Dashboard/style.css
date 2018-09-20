@@ -1,11 +1,13 @@
 .Dashboard {
     height: 100vh;
-    padding: 0;
+    width: 70vw;
+    padding: 15px 15px;
 }
 
 .Dashboard .Inner {
     border: 1px solid #333;
     border-radius: 10px;
+    padding: 20px 10px;
 }
 
 .FormContainer {
@@ -17,13 +19,6 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-}
-
-.Dashboard button {
-  cursor: pointer;
-}
-
-.Dashboard .card-header span {
-  min-width: 100px;
-  margin-right: 1rem;
+    margin: 15px 0 15px auto;
+    width: 40%;
 }

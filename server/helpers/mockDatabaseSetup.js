@@ -1,8 +1,7 @@
 const cacheUtils = require('../utils/store');
-const { keyFormatMessageId } = require('../utils/messages');
-const { keyFormatCollectionId } = require('../utils/collections');
+
 const conversation = require('../stubs/conversation.json');
-const collections = require('../stubs/collection.json');
+const collection = require('../stubs/collection.json');
 const series = require('../stubs/series.json');
 const messages = require('../stubs/messages.json');
 const blocks = require('../stubs/blocks.json');
@@ -28,9 +27,7 @@ let promises = [
   }),
 
   cacheUtils.deleteItem(DB_COLLECTIONS).then(() => {
-    collections.forEach(coll => {
-      cacheUtils.setItem(keyFormatCollectionId(coll.id), ONE_WEEK_IN_MILLISECONDS, coll);
-    });
+    cacheUtils.setItem(DB_COLLECTIONS, ONE_WEEK_IN_MILLISECONDS, collection);
   }),
 
   cacheUtils.deleteItem(DB_SERIES).then(() => {
@@ -38,9 +35,7 @@ let promises = [
   }),
 
   cacheUtils.deleteItem(DB_MESSAGES).then(() => {
-    messages.forEach(msg => {
-      cacheUtils.setItem(keyFormatMessageId(msg.id), ONE_WEEK_IN_MILLISECONDS, msg);
-    });
+    cacheUtils.setItem(DB_MESSAGES, ONE_WEEK_IN_MILLISECONDS, messages);
   }),
 
   cacheUtils.deleteItem(DB_BLOCKS).then(() => {

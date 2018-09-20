@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { Modal } from 'reactstrap';
+import {Modal} from 'reactstrap';
 import Dropzone from 'react-dropzone';
 import './style.css';
 
@@ -15,13 +15,13 @@ class UploadModal extends Component {
     super(props);
 
     this.state = {
-      loading: false,
+      loading: false
     };
   }
 
   componentWillReceiveProps(nextProps) {
     if (!nextProps.isOpen && this.props.isOpen && this.state.loading) {
-      this.setState({ loading: false });
+      this.setState({loading: false});
     }
   }
 
@@ -38,23 +38,23 @@ class UploadModal extends Component {
       <Modal
         isOpen={isOpen}
         toggle={() => {
-          this.setState({ loading: false }, () => {
+          this.setState({loading: false}, () => {
             onHide();
-          });
+          })
         }}
-        className="custom-modal d-flex"
+        className='custom-modal d-flex'
       >
         <span>Drag and Drop Image Below To Upload</span>
         <Dropzone
           accept="image/jpeg, image/png, video/mp4, video/x-msvideo"
           onDrop={(accepted, rejected) => {
-            this.setState({ loading: true }, () => {
+            this.setState({loading: true}, () => {
               onUpload(accepted, rejected);
-            });
+            })
           }}
-          className="custom-dropzone"
+          className={`custom-dropzone`}
         />
-        { loading ? <i className="fa fa-spinner fa-3x loading" /> : undefined }
+        { loading ? <i className="fa fa-spinner fa-3x loading"></i> : undefined }
       </Modal>
     );
   }

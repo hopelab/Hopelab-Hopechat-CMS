@@ -5,7 +5,7 @@ import {
   Dropdown,
   DropdownToggle,
   DropdownItem,
-} from 'reactstrap';
+} from 'reactstrap'
 
 class MediaDropdown extends Component {
   static propTypes = {
@@ -20,36 +20,38 @@ class MediaDropdown extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dropdownOpen: false,
+      dropdownOpen: false
     };
     this.toggle = this.toggle.bind(this);
   }
 
   toggle() {
-    this.setState({ dropdownOpen: !this.state.dropdownOpen });
+    this.setState({dropdownOpen: !this.state.dropdownOpen});
   }
 
   renderMediaDropdownItems() {
-    const { onSelection, selectedUrl, media } = this.props;
-    return media.map(m => (
-      <DropdownItem
-        key={m.url}
-        active={selectedUrl === m.url}
-        onClick={() => { onSelection(m.url); }}
-      >
-        {m.key}
-      </DropdownItem>
-    ));
+    const {onSelection, selectedUrl, media} = this.props;
+    return media.map(m => {
+      return (
+        <DropdownItem
+          key={m.url}
+          active={selectedUrl === m.url}
+          onClick={() => {onSelection(m.url)}}
+        >
+          {m.key}
+        </DropdownItem>
+      );
+    });
   }
 
   render() {
-    const { media, selectedUrl } = this.props;
+    const {media, selectedUrl} = this.props;
     let foundItem = 'choose media';
-    const res = media.find(m => m.url === selectedUrl);
+    let res = media.find(m => m.url === selectedUrl);
     if (res) { foundItem = res.key; }
     return (
       <Dropdown
-        style={{ cursor: 'pointer' }}
+        style={{cursor: 'pointer'}}
         isOpen={this.state.dropdownOpen}
         toggle={this.toggle}
       >
