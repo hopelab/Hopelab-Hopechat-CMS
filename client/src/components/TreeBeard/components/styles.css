@@ -11,3 +11,8 @@ div.focused {
 .live-circle {
   color: #29AB87;
 }
+
+.fa.fa-chevron-right, .fa.fa-chevron-down {
+  padding: 2px;
+  margin-right: 4px;
+}

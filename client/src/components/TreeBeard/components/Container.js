@@ -17,18 +17,13 @@ class Container extends React.Component {
     onClick({ expand });
   }
 
-  render() {
-    const { onClick, node } = this.props;
-    const { focused } = this.state;
+  expand() {
+    this.props.onExpand();
+  }
 
-    // TODO: Look into supporting expandable tree with +, - icon.
-    // hasChildren ? (
-    //   node.toggled ? (
-    //     <Glyphicon glyph="minus" />
-    //   ) : (
-    //     <Glyphicon glyph="plus" />
-    //   )
-    // ) : null;
+  render() {
+    const { onClick, node, expanded, terminal } = this.props;
+    const { focused } = this.state;
 
     return (
       <div
@@ -47,6 +42,13 @@ class Container extends React.Component {
           this.handleClick({ expand: false, onClick });
         }}
       >
+        {!terminal &&
+        <i
+          className={`fa fa-chevron-${expanded ? 'down' : 'right'}`}
+          onClick={() => this.expand()}
+          role="button"
+          tabIndex={0}
+        />}
         <span>
           {node.name}&nbsp;
         </span>
@@ -59,6 +61,9 @@ class Container extends React.Component {
 Container.propTypes = {
   onClick: PropTypes.func,
   node: PropTypes.object,
+  onExpand: PropTypes.func.isRequired,
+  expanded: PropTypes.bool.isRequired,
+  terminal: PropTypes.bool.isRequired,
 };
 
 export default Container;

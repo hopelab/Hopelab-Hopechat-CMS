@@ -4,7 +4,7 @@ import treebeard from '../components/treebeard';
 
 describe('treebeard component', () => {
   const props = {
-
+    expandAll: false,
   };
   let component;
   beforeEach(() => {

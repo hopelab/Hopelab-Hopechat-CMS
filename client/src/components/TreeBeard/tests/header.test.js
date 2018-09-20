@@ -4,7 +4,8 @@ import header from '../components/header';
 
 describe('header component', () => {
   const props = {
-
+    onExpand: jest.fn(),
+    expanded: false,
   };
   let component;
   beforeEach(() => {
