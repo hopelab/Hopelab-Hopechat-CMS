@@ -1,15 +1,11 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { CheckBox } from '../../common/CheckBox';
-
 import EditableText from '../EditableText';
 import DelayCheckbox from '../DelayCheckbox';
 import NextMessage from '../NextMessage';
 import MediaDropdown from '../MediaDropdown';
 import MessageTypeDropdown from '../MessageTypeDropdown';
 import MediaPreview from '../MediaPreview';
-
-
 import {
   TYPE_CONVERSATION,
   TYPE_COLLECTION,
@@ -30,39 +26,35 @@ const conversationItemStyles = {
 
   },
   [TYPE_COLLECTION]: {
-    backgroundColor: 'rgb(82, 175, 82)',
+    backgroundColor: 'rgb(82, 175, 82)'
   },
   [TYPE_SERIES]: {
-    backgroundColor: 'rgb(82, 175, 82)',
+    backgroundColor: 'rgb(82, 175, 82)'
   },
   [TYPE_BLOCK]: {
 
   },
   [TYPE_MESSAGE]: {
 
-  },
-};
+  }
+}
 
 class ConversationItem extends Component {
   static propTypes = {
     item: PropTypes.shape({
       messageType: PropTypes.string,
       type: PropTypes.string,
-      name: PropTypes.string,
+      name: PropTypes.stirng,
       id: PropTypes.string,
       next: PropTypes.object,
-      delayInMinutes: PropTypes.number,
-      text: PropTypes.string,
-      isEvent: PropTypes.bool,
     }).isRequired,
+    index: PropTypes.number.isRequired,
     handleSaveItem: PropTypes.func.isRequired,
     handleChildEntityAddition: PropTypes.func,
     handleDeleteItem: PropTypes.func.isRequired,
     childEntities: PropTypes.array.isRequired,
     images: PropTypes.array.isRequired,
     videos: PropTypes.array.isRequired,
-    className: PropTypes.string,
-    parentItemType: PropTypes.string,
   }
 
   constructor(props) {
@@ -119,20 +111,20 @@ class ConversationItem extends Component {
     if (messageType !== this.props.item.messageType) {
       this.props.handleSaveItem({
         ...this.props.item,
-        messageType,
+        messageType
       });
     }
   }
 
   handleDeleteMessage() {
-    const { type, id } = this.props.item;
-    this.props.handleDeleteItem({ type, id });
+    const {type, id} = this.props.item;
+    this.props.handleDeleteItem({type, id});
   }
 
   renderItemContent(item) {
-    const { messageType, url } = item;
+    let {messageType, url} = item;
     if (this.messageTypeHasContent(messageType)) {
-      const editableText = this.messageTypeHasUrl(messageType) ?
+      let editableText = this.messageTypeHasUrl(messageType) ?
         url : this.props.item.text;
 
       return (
@@ -140,15 +132,15 @@ class ConversationItem extends Component {
           <p className="card-text">
             <EditableText
               text={editableText || ''}
-              isTextArea
+              isTextArea={true}
               onEditWillFinish={text => {
-                const newItem = this.messageTypeHasUrl(messageType) ? {
+                let newItem = this.messageTypeHasUrl(messageType) ? {
                   ...item,
-                  url: text,
+                  url: text
                 } : {
                   ...item,
-                  text,
-                };
+                  text
+                }
                 if (item.text !== text) {
                   this.props.handleSaveItem(newItem);
                 }
@@ -163,7 +155,7 @@ class ConversationItem extends Component {
     }
 
     if (this.messageTypeIsTransition(messageType)) {
-      const { delayInMinutes } = this.props.item;
+      const {delayInMinutes} = this.props.item;
       const minutesInHour = 60;
       const hoursInDay = 24;
       return (
@@ -175,7 +167,7 @@ class ConversationItem extends Component {
               }
               delayInDays={
                 Number.isFinite(parseFloat(delayInMinutes)) ?
-                  `${parseFloat(delayInMinutes) / minutesInHour / hoursInDay}` :
+                  (parseFloat(delayInMinutes) / minutesInHour / hoursInDay) + '' :
                   ''
               }
               onDelayChecked={
@@ -183,10 +175,10 @@ class ConversationItem extends Component {
                   if (checked) {
                     this.props.handleSaveItem({
                       ...this.props.item,
-                      delayInMinutes: 14 * minutesInHour * hoursInDay,
+                      delayInMinutes: 14 * minutesInHour * hoursInDay
                     });
                   } else {
-                    const itemCopy = { ...this.props.item };
+                    let itemCopy = {...this.props.item};
                     delete itemCopy.delayInMinutes;
                     this.props.handleSaveItem(itemCopy);
                   }
@@ -195,11 +187,11 @@ class ConversationItem extends Component {
               onDelayInDaysWillFinish={delayInDays => {
                 const delay = parseFloat(delayInDays);
                 if (Number.isFinite(delay)) {
-                  const tempDelay = delay * minutesInHour * hoursInDay;
+                  const delayInMinutes = delay * minutesInHour * hoursInDay;
 
                   const newItem = {
                     ...this.props.item,
-                    delayInMinutes: tempDelay,
+                    delayInMinutes
                   };
                   this.props.handleSaveItem(newItem);
                 }
@@ -219,10 +211,10 @@ class ConversationItem extends Component {
             media={
               this.messageTypeIsImage(messageType) ?
                 this.props.images : this.props.videos}
-            onSelection={newUrl => {
-              const newItem = {
+            onSelection={url => {
+              let newItem = {
                 ...item,
-                url: newUrl,
+                url
               };
               if (!url) {
                 delete newItem.url;
@@ -236,91 +228,68 @@ class ConversationItem extends Component {
         </div>
       );
     }
-    return null;
-  }
-
-  makeEvent() {
-    if (this.props.item) {
-      const { isEvent = false } = this.props.item;
-      this.props.handleSaveItem({
-        ...this.props.item,
-        isEvent: !isEvent,
-      });
-    }
-  }
-
-  editAttribute(name, value) {
-    if (this.props.item[name] !== value) {
-      this.props.handleSaveItem({
-        ...this.props.item,
-        [name]: value,
-      });
-    }
   }
 
   render() {
-    const { item: { isEvent = false } } = this.props;
     return (
       <div
         className={`card ConversationItem ${this.props.className}`}
-        style={{ width: '360px' }}
+        style={{width: '360px'}}
       >
         <div
-          className="card-header d-flex flex-column"
+          className="card-header d-flex flex-row justify-content-between"
+          style={{
+            flexWrap: "wrap",
+            ...conversationItemStyles[this.props.item.type]
+          }}
         >
-          <div
-            className="d-flex flex-row justify-content-between"
-            style={{
-              flexWrap: 'wrap',
-              ...conversationItemStyles[this.props.item.type],
+          <EditableText
+            text={this.props.item.name}
+            onEditWillFinish={name => {
+              if (this.props.item.name !== name) {
+                this.props.handleSaveItem({
+                  ...this.props.item,
+                  name
+                });
+              }
             }}
-          >
-            <EditableText
-              text={this.props.item.name}
-              onEditWillFinish={val => this.editAttribute('name', val)}
-            />
-            { this.props.item.messageType && (
-              <MessageTypeDropdown
-                selected={this.props.item.messageType}
-                onSelection={this.handleMessageTypeSelection}
-                onDelete={this.handleDeleteMessage}
-              />
-            )}
-          </div>
-          <CheckBox
-            checked={isEvent}
-            onChange={() => this.makeEvent()}
-            label="Track Events"
           />
-        </div>
+          { this.props.item.messageType && (
+            <MessageTypeDropdown
+              selected={this.props.item.messageType}
+              onSelection={this.handleMessageTypeSelection}
+              onDelete={this.handleDeleteMessage}
+            />
+          )}
 
+        </div>
         {this.renderItemContent(this.props.item)}
         {(!this.messageTypeHasDifferentOptions(this.props.item.messageType)) && (
           <div className="card-footer">
             <NextMessage
-              parentItemType={this.props.parentItemType}
               childEntities={this.props.childEntities}
               nextId={this.props.item.next ? this.props.item.next.id : undefined}
               showEndOfConversation={this.props.parentItemType === TYPE_CONVERSATION}
-              handleNextMessageSelect={(id, type) => {
+              handleNextMessageSelect={(id, type)=> {
                 if (this.nextHasChanged(this.props.item, id, type)) {
                   if (!id) {
-                    const item = Object.assign({}, this.props.item);
+                    let item = Object.assign({}, this.props.item);
                     delete item.next;
-                    this.props.handleSaveItem(item);
+                    this.props.handleSaveItem(item)
                   } else {
                     this.props.handleSaveItem({
                       ...this.props.item,
-                      next: { id, type },
-                    });
+                      next: {id, type}
+                    })
                   }
                 }
+
               }}
-              onNewItem={type => {
-                this.props.handleChildEntityAddition(type, newItem => {
+              onNewItem={() => {
+                this.props.handleChildEntityAddition(this.props.item.type, newItem => {
                   this.props.handleSaveItem({
                     ...this.props.item,
-                    next: { id: newItem.id, type: newItem.type },
+                    next: {id: newItem.id, type: newItem.type}
                   });
                 });
               }}

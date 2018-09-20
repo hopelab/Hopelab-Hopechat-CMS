@@ -1,7 +1,0 @@
-.read-only {
-  height: 100%;
-  z-index: 10;
-  background-color: rgba(0, 0, 0, .1);
-  position: absolute;
-  width: 100%;
-}

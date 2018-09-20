@@ -13,5 +13,5 @@ app.use(errorHandler);
 app.use(require('./controllers'));
 
 app.listen(port, () => {
-  console.log(`Listening on port ${port}`); //eslint-disable-line no-console
+  console.log(`Listening on port ${port}`);
 });

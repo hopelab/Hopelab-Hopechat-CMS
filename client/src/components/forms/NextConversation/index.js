@@ -1,26 +1,29 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import {
   Dropdown,
   DropdownMenu,
   DropdownItem,
-  DropdownToggle,
+  DropdownToggle
 } from 'reactstrap';
 
 const propTypes = {
   conversations: PropTypes.array.isRequired,
+  handleConversationSelect: PropTypes.func.isRequired,
   nextId: PropTypes.string,
 };
 
 const defaultProps = {
+  conversations: [],
+  handleConversationSelect() {},
   nextId: undefined,
-};
+}
 
 const getNextMessageOptionsForMessage = props => {
   let foundActive = false;
-  const items = props.conversations.map(c => {
-    const active = c.id === props.nextId;
+  let items = props.conversations.map((c, i) => {
+    let active = c.id === props.nextId;
     if (active) { foundActive = true; }
     return (
       <DropdownItem
@@ -33,13 +36,15 @@ const getNextMessageOptionsForMessage = props => {
     );
   });
 
-  items.unshift(<DropdownItem
-    key="noselection"
-    active={!foundActive}
-    onClick={() => props.handleConversationSelect()}
-  >
+  items.unshift(
+    <DropdownItem
+      key="noselection"
+      active={!foundActive}
+      onClick={() => props.handleConversationSelect()}
+    >
       no selection
-  </DropdownItem>); //eslint-disable-line
+    </DropdownItem>
+  );
 
   return items;
 };
@@ -48,13 +53,13 @@ class NextConversation extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dropdownOpen: false,
+      dropdownOpen: false
     };
     this.toggle = this.toggle.bind(this);
   }
 
   toggle() {
-    this.setState({ dropdownOpen: !this.state.dropdownOpen });
+    this.setState({dropdownOpen: !this.state.dropdownOpen});
   }
 
   render() {
@@ -70,11 +75,11 @@ class NextConversation extends Component {
       foundItem = foundItem.name;
     } else {
       foundItem = 'choose conversation';
-      style = { backgroundColor: 'red', color: 'white' };
+      style = {backgroundColor: 'red', color: 'white'};
     }
     return (
       <Dropdown
-        style={{ cursor: 'pointer' }}
+        style={{cursor: 'pointer'}}
         isOpen={this.state.dropdownOpen}
         toggle={this.toggle}
       >

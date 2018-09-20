@@ -5,13 +5,13 @@ import deepEqual from 'deep-equal';
 
 class NodeHeader extends React.Component {
   shouldComponentUpdate(nextProps) {
-    const { props } = this;
+    const props = this.props;
     const nextPropKeys = Object.keys(nextProps);
 
     for (let i = 0; i < nextPropKeys.length; i++) {
       const key = nextPropKeys[i];
       if (key === 'animations') {
-        continue; // eslint-disable-line no-continue
+        continue;
       }
 
       const isEqual = shallowEqual(props[key], nextProps[key]);
@@ -29,6 +29,7 @@ class NodeHeader extends React.Component {
     const terminal = !children;
     const container = [style.link, active ? style.activeLink : null];
     const headerStyles = Object.assign({ container }, style);
+
     return (
       <decorators.Container
         animations={animations}
@@ -48,7 +49,7 @@ NodeHeader.propTypes = {
   animations: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
     .isRequired,
   node: PropTypes.object.isRequired,
-  onClick: PropTypes.func,
+  onClick: PropTypes.func
 };
 
 export default NodeHeader;

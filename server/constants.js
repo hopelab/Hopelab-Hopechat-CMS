@@ -2,19 +2,13 @@ const REST_PORT = process.env.PORT || 5000;
 const FB_GRAPH_ROOT_URL = 'https://graph.facebook.com/v2.6/';
 
 const DB_CONVERSATIONS = 'conversations';
-// deprecated
 const DB_COLLECTIONS = 'collections';
-const DB_COLLECTION_LIST = 'collectionList';
-
 const DB_SERIES = 'series';
-//deprecated
 const DB_MESSAGES = 'messages';
-const DB_MESSAGE_LIST = 'msglist';
 const DB_BLOCKS = 'blocks';
 const DB_MEDIA = 'media';
 const DB_TAG = 'tag';
 const DB_USERS = 'users';
-const DB_STUDY = 'study';
 
 const TYPE_CONVERSATION = 'conversation';
 const TYPE_COLLECTION = 'collection';
@@ -61,7 +55,4 @@ module.exports = {
   ONE_DAY_IN_MILLISECONDS,
   ONE_WEEK_IN_MILLISECONDS,
   SUPPORTED_FILE_TYPES,
-  DB_MESSAGE_LIST,
-  DB_COLLECTION_LIST,
-  DB_STUDY
 };

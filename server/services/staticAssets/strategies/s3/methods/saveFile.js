@@ -17,7 +17,7 @@ const saveFile = R.curry((s3, fileName, file) => {
     const bodyStream = fs.createReadStream(file.path),
       params = config.aws.setObjectParams(fileName, bodyStream, file.type);
 
-    s3.putObject(params, err => {
+    s3.putObject(params, (err, res) => {
       if (err) {
         reject();
       }

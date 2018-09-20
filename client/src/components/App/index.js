@@ -1,18 +1,14 @@
 import React, { Component } from 'react';
-import { pick, omit, isEmpty } from 'ramda';
-
 import './style.css';
-
-import Loader from '../common/Loader';
 
 import Sidebar from '../Sidebar';
 import Dashboard from '../Dashboard';
 import UploadModal from '../UploadModal';
-import Modal from '../common/Modal';
 
 import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
 
+import { pick } from 'ramda';
 
 class App extends Component {
   constructor(props) {
@@ -29,32 +25,33 @@ class App extends Component {
       .fetchAllDataForApp(config.routes)
       .then(dataUtil.createInitialEntityState)
       .then(data => {
-        this.setState({ ...data });
+        this.setState({...data});
       })
       .catch(console.error);
   }
 
   toggleImageModal = () => {
     this.setState({
-      showImageModal: !this.state.showImageModal,
+      showImageModal: !this.state.showImageModal
     });
   };
 
   addConversation = () => {
-    this.setState({ loading: true });
     dataUtil
       .post(config.routes.conversation.create, {
-        ...config.initialState[config.entities.conversation],
+        ...config.initialState[config.entities.conversation]
       })
       .then(res => res.json())
       .then(res => {
         const conversation = res[config.entities.conversation];
-        this.setState({
-          loading: false,
-          itemEditing:
+
+        this.setState(
+          {
+            itemEditing:
               pick(['id', 'type'], conversation[conversation.length - 1]),
-          ...res,
-        });
+            ...res
+          }
+        );
       })
       .catch(console.error);
   };
@@ -64,10 +61,6 @@ class App extends Component {
   };
 
   addImage = (acceptedFiles, rejectedFiles) => {
-    this.setState({ loading: true });
-    if (rejectedFiles) {
-      console.error(JSON.stringify(rejectedFiles));
-    }
     const data = new FormData();
     data.append('file', acceptedFiles[0]);
 
@@ -75,26 +68,25 @@ class App extends Component {
       '/media/create',
       config.http.makeUploadFetchOptions({
         method: 'POST',
-        body: data,
-      }),
+        body: data
+      })
     )
       .then(res => res.json())
       .then(res => {
-        const newState = {
-          loading: false,
+        let newState = {
           imageUploadStatus: 'success',
           mediaUpload: {
             ...this.state.mediaUpload,
-            showModal: false,
-          },
+            showModal: false
+          }
         };
 
-        const media = { key: res.key, url: res.url };
+        const media = {key: res.key, url: res.url};
 
         if (res.type === 'image') {
           newState.image = this.state.image.concat(media);
         } else {
-          newState.video = this.state.video.concat(media);
+          newState.video = this.state.video.concat(media)
         }
 
         this.setState(newState);
@@ -103,8 +95,9 @@ class App extends Component {
       })
       .catch(e => {
         console.error(e);
+
         this.setState({
-          imageUploadStatus: 'fail',
+          imageUploadStatus: 'fail'
         });
 
         this.resetActionMessage('imageUploadStatus', 4000);
@@ -112,12 +105,14 @@ class App extends Component {
   };
 
   getFullItemEditing(state) {
-    const { itemEditing } = state;
+    const {itemEditing} = state;
     if (!itemEditing) {
       return null;
     }
 
-    return state[itemEditing.type].find(item => item.id === itemEditing.id);
+    return state[itemEditing.type].find(
+      item => item.id === itemEditing.id
+    );
   }
 
   markPosition = entity => {
@@ -130,13 +125,13 @@ class App extends Component {
 
     const childEntities = dataUtil.getChildEntitiesFor(
       this.getFullItemEditing(this.state),
-      this.state,
+      this.state
     );
 
     if (!childEntities.length) {
       return {
         ...entity,
-        start: true,
+        start: true
       };
     }
 
@@ -144,19 +139,14 @@ class App extends Component {
   };
 
   handleNewChildEntity = (entity, callback) => {
-    this.setState({ loading: true });
     dataUtil
       .post(config.routes[entity.type].create, this.markPosition(entity))
       .then(res => res.json())
       .then(dataUtil.throwIfEmptyArray)
       .then(res => {
-        const addedItem = res.sort((a, b) => (a.created < b.created ? 1 : -1))[0];
         this.setState(
-          {
-            [entity.type]: res,
-            loading: false,
-          },
-          () => !!(callback) && callback(addedItem),
+          { [entity.type]: res },
+          () => !!(callback) && callback(res[res.length - 1])
         );
       })
       .catch(console.error);
@@ -172,41 +162,40 @@ class App extends Component {
         if (i.id === res.id) {
           newRes = {
             ...i,
-            ...res,
+            ...res
           };
           if (i.next && !uploadItem.next) { delete newRes.next; }
           if (i.delayInMinutes && !uploadItem.delayInMinutes) {
             delete newRes.delayInMinutes;
           }
           return newRes;
+        } else {
+          return i;
         }
-        return i;
       });
     }
     this.setState(
       { [res.type]: items },
-      () => !!(callback) && callback(uploadItem),
+      () => !!(callback) && callback(uploadItem)
     );
   }
 
   handleUploadNonMessage(res, uploadItem, callback) {
     this.setState(
       { [uploadItem.type]: res },
-      () => !!(callback) && callback(uploadItem),
+      () => !!(callback) && callback(uploadItem)
     );
   }
 
   handleSaveItem(item, callback) {
-    this.setState({ loading: true });
     const route = item.id ? config.operations.update : config.operations.create;
     dataUtil
       .post(
         config.routes[item.type][route],
-        dataUtil.makeCopyAndRemoveKeys(item, config.keysToRemove),
+        dataUtil.makeCopyAndRemoveKeys(item, config.keysToRemove)
       )
       .then(res => res.json())
       .then(res => {
-        this.setState({ loading: false });
         if (Array.isArray(res)) {
           this.handleUploadNonMessage(res, item, callback);
         } else {
@@ -232,72 +221,63 @@ class App extends Component {
 
   handleCopyEntity(entity) {
     const itemToCopy = entity ? {
-      ...this.state.itemEditing,
-      parent: {
-        ...entity.link,
-      },
-    } : {
-      ...this.state.itemEditing,
-    };
+        ...this.state.itemEditing,
+        parent: {
+          ...entity.link
+        }
+      } : {
+        ...this.state.itemEditing
+      };
 
     this.handleCopyItem({
-      itemToCopy,
+      itemToCopy
     });
   }
 
   handleCopyItem({ itemToCopy }) {
     const route = config.operations.copy;
-    this.setState({ loading: true });
 
     dataUtil
       .post(config.routes[itemToCopy.type][route], {
-        parent: dataUtil.makeCopyAndRemoveKeys(itemToCopy, config.keysToRemove),
+        parent: dataUtil.makeCopyAndRemoveKeys(itemToCopy, config.keysToRemove)
       })
       .then(res => res.json())
       .then(copiedResults => {
-        this.setState({ ...copiedResults, loading: false });
+        this.setState(copiedResults);
       })
       .catch(console.error);
   }
 
-  handleDeleteItem = itemToDelete => {
-    this.setState({ itemToDelete, openDeleteModal: !this.state.openDeleteModal });
-  }
-
-  handleDeleteConfirm = item => {
-    this.setState({ loading: true, openDeleteModal: false });
+  handleDeleteItem = item => {
     const route = config.operations.delete;
     dataUtil
       .post(config.routes[item.type][route], item)
       .then(res => res.json())
       .then(dataUtil.constructEntityState(item.type))
       .then(nextEntityState => {
-        let newState = { loading: false };
+        let newState;
         if (this.state.itemEditing && item.id === this.state.itemEditing.id) {
           newState = {
-            ...newState,
             itemEditing: null,
-            ...nextEntityState,
-          };
+            ...nextEntityState
+          }
         } else {
-          newState = { ...newState, ...nextEntityState };
+          newState = { ...nextEntityState };
         }
         this.setState(newState);
       })
       .catch(console.error);
   };
 
-  handleTreeToggle = ({ node: pNode, expand }) => {
-    this.setState({ showStudyIdView: false });
+  handleTreeToggle = ({ node, expand }) => {
     /* eslint-disable react/no-direct-mutation-state */
-    const node = pNode;
     if (expand) {
       if (node.children) {
         node.toggled = !node.toggled;
       }
 
       this.setState({
-        cursor: node,
+        cursor: node
       });
 
       return;
@@ -308,66 +288,42 @@ class App extends Component {
     }
     node.active = true;
 
-    this.setState({
-      cursor: node,
-      itemEditing: node.type ? pick(['id', 'type'], node) : this.state.itemEditing,
-    });
+    this.setState(
+      {
+        cursor: node,
+        itemEditing: node.type ? pick(['id', 'type'],node) : this.state.itemEditing,
+      }
+    );
   };
 
-  updateStartEntity(entity, oldEntity) {
-    const { collection, message } = this.state;
-    dataUtil.updateStart(entity, oldEntity).then(data => {
+  updateStartEntity(entity) {
+    dataUtil.updateStart(entity).then(data => {
       this.setState({
-        message: data.messages ? data.messages : message,
-        collection: data.collections ? data.collections : collection,
+        message: data.messages,
+        collection: data.collections
       });
-    });
-  }
-
-  toggleStudyIdView() {
-    const { showStudyIdView } = this.state;
-    if (!this.state.studyIds && !showStudyIdView) {
-      this.loadStudyIds();
-    }
-    this.setState({ showStudyIdView: !showStudyIdView });
-  }
-
-  toggleReadOnly() {
-    const { readOnly } = this.state;
-    this.setState({ readOnly: !readOnly });
-  }
-
-  loadStudyIds() {
-    fetch('/study/all').then(res => {
-      res.json().then(studyIds => {
-        this.setState({ studyIds });
-      });
-    });
+    })
   }
 
   render() {
-    const { loading, readOnly } = this.state;
-    const data = omit(['loading'], this.state);
-    if (isEmpty(data)) return <Loader />;
-
     const entitiesCanCopyTo = dataUtil.getEntitiesCanCopyTo(
       this.getFullItemEditing(this.state),
-      this.state,
+      this.state
     );
 
     const childEntities = dataUtil.getChildEntitiesFor(
-      this.getFullItemEditing(data),
-      data,
+      this.getFullItemEditing(this.state),
+      this.state
     );
 
     const treeData = dataUtil.createTreeView({
-      data,
+      data: { ...this.state },
       entities: config.entities,
-      active: (this.getFullItemEditing(this.state) || {}).id,
+      active: (this.getFullItemEditing(this.state) || {}).id
     });
 
     const itemEditing = this.getFullItemEditing(this.state);
-    const { showStudyIdView, studyIds, conversation, image, video, tag, openDeleteModal, itemToDelete } = this.state;
+
     return (
       <div className="App row">
         <UploadModal
@@ -376,7 +332,7 @@ class App extends Component {
             mediaUpload: {
               ...this.state.mediaUpload,
               showModal: false,
-            },
+            }
           })}
           onUpload={this.addImage}
         />
@@ -387,31 +343,15 @@ class App extends Component {
           treeData={treeData}
           handleTreeToggle={this.handleTreeToggle}
           itemEditing={itemEditing}
-          toggleStudyIdView={() => this.toggleStudyIdView()}
-          readOnly={readOnly}
           toggleImageModal={() => {
             this.setState({
               mediaUpload: {
                 ...this.state.mediaUpload,
-                showModal: !this.state.mediaUpload.showModal,
-              },
-            });
+                showModal: !this.state.mediaUpload.showModal
+              }
+            })
           }}
         />
-        {loading &&
-          <div className="floating-loader">
-            <Loader text={false} />
-          </div>
-        }
-
-        {openDeleteModal &&
-          <Modal
-            header={<span>Delete <strong>{itemToDelete.name}</strong>?</span>}
-            text={<span>Are you sure you want to delete this <strong>{itemToDelete.type}</strong>?</span>}
-            onCancel={() => this.handleDeleteItem(null)}
-            onConfirm={() => this.handleDeleteConfirm(itemToDelete)}
-          />
-        }
 
         <Dashboard
           formConfig={config.forms}
@@ -421,17 +361,13 @@ class App extends Component {
           handleAddTag={this.handleAddTag}
           itemEditing={itemEditing}
           childEntities={childEntities}
-          conversations={conversation}
+          conversations={this.state.conversation}
           entitiesCanCopyTo={entitiesCanCopyTo}
           handleCopyEntity={this.handleCopyEntity}
-          images={image}
-          videos={video}
-          tags={tag}
+          images={this.state.image}
+          videos={this.state.video}
+          tags={this.state.tag}
           updateStartEntity={this.updateStartEntity}
-          showStudyIdView={showStudyIdView}
-          studyIds={studyIds}
-          readOnly={readOnly}
-          toggleReadOnly={() => this.toggleReadOnly()}
         />
       </div>
     );

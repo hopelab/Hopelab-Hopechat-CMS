@@ -1,37 +1,31 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import {
   Dropdown,
   DropdownMenu,
   DropdownItem,
-  DropdownToggle,
+  DropdownToggle
 } from 'reactstrap';
 
-import { END_OF_CONVERSATION_ID, forms } from '../../../utils/config';
-
-import './style.css';
+import { END_OF_CONVERSATION_ID } from '../../../utils/config';
 
 const propTypes = {
   childEntities: PropTypes.array.isRequired,
   nextId: PropTypes.string,
+  handleNextMessageSelect: PropTypes.func.isRequired,
+  onNewItem: PropTypes.func.isRequired,
+  showEndOfConversation: PropTypes.bool.isRequired
+};
+
+const defaultProps = {
+  showEndOfConversation: false
 };
 
 const getNextMessageOptionsForMessage = props => {
-  const { onNewItem, parentItemType } = props;
-  const newItems = [
-    <DropdownItem divider key="divider" />,
-    ...forms[parentItemType].children.map(child =>
-      (
-        <DropdownItem onClick={() => onNewItem(child)} key={`new-${child}`}>
-          New {child}
-        </DropdownItem>
-      )),
-  ];
-
   let foundActive = false;
-  const items = props.childEntities.map(c => {
-    const active = c.id === props.nextId;
+  let items = props.childEntities.map((c, i) => {
+    let active = c.id === props.nextId;
     if (active) { foundActive = true; }
     return (
       <DropdownItem
@@ -44,19 +38,21 @@ const getNextMessageOptionsForMessage = props => {
     );
   });
 
-  items.unshift(<DropdownItem
-    key="noselection"
-    active={!foundActive}
-    onClick={() => props.handleNextMessageSelect()}
-  >
+  items.unshift(
+    <DropdownItem
+      key="noselection"
+      active={!foundActive}
+      onClick={() => props.handleNextMessageSelect()}
+    >
       no selection
-  </DropdownItem>); //eslint-disable-line
+    </DropdownItem>
+  )
 
   if (props.showEndOfConversation) {
-    items.push(<DropdownItem divider key="divider0" />);
+    items.push(<DropdownItem divider key='divider0'/>);
     items.push((
       <DropdownItem
-        key="end-of-conversation-xyz123"
+        key='end-of-conversation-xyz123'
         active={END_OF_CONVERSATION_ID === props.nextId}
         onClick={() => props.handleNextMessageSelect(END_OF_CONVERSATION_ID)}
       >
@@ -65,7 +61,12 @@ const getNextMessageOptionsForMessage = props => {
     ));
   }
 
-  items.push(...newItems);
+  items.push(<DropdownItem divider key='divider'/>);
+  items.push((
+    <DropdownItem onClick={props.onNewItem} key='new-item'>
+      New Item
+    </DropdownItem>
+  ));
   return items;
 };
 
@@ -73,51 +74,44 @@ class NextMessage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dropdownOpen: false,
+      dropdownOpen: false
     };
     this.toggle = this.toggle.bind(this);
   }
 
   toggle() {
-    this.setState({ dropdownOpen: !this.state.dropdownOpen });
+    this.setState({dropdownOpen: !this.state.dropdownOpen});
   }
 
   render() {
     const { childEntities, nextId } = this.props;
     let foundItem;
-    let className = '';
-    let brokenLink = false;
+    let style = {};
     if (nextId === END_OF_CONVERSATION_ID) {
-      foundItem = { name: 'End Of Conversation' };
-      className = 'bg-warning';
+      foundItem = {name: "End Of Conversation"};
+      style = {backgroundColor: 'yellow'};
     } else {
       foundItem = childEntities.find(item => item.id === nextId);
     }
+
+
     if (foundItem) {
       foundItem = foundItem.name;
-    } else if (!foundItem && !childEntities.length) {
-      foundItem = 'choose first';
-      className = 'btn btn-outline-primary btn-lg';
-    } else if (nextId) {
-      brokenLink = true;
-      foundItem = 'Broken link, choose next (or no selection)';
-      className = 'bg-danger text-light';
     } else {
       foundItem = 'choose next';
-      className = 'bg-danger text-light';
+      style = {backgroundColor: 'red', color: 'white'};
     }
     return (
       <Dropdown
-        style={{ cursor: 'pointer' }}
+        style={{cursor: 'pointer'}}
         isOpen={this.state.dropdownOpen}
         toggle={this.toggle}
-        className="text-center"
       >
         <DropdownToggle
           tag="div"
           onClick={this.toggle}
           data-toggle="dropdown"
-          className={className}
+          style={style}
           aria-expanded={this.state.dropdownOpen}
         >
           {foundItem}
@@ -125,12 +119,12 @@ class NextMessage extends Component {
         <DropdownMenu flip={false}>
           {getNextMessageOptionsForMessage(this.props)}
         </DropdownMenu>
-        {brokenLink && <div className="broken-link" >Broken Link Present</div>}
       </Dropdown>
     );
   }
 }
 
 NextMessage.propTypes = propTypes;
+NextMessage.defaultProps = defaultProps;
 
 export default NextMessage;
