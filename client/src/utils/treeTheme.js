@@ -12,17 +12,17 @@ export default {
     node: {
       base: {
         position: 'relative',
-        borderRadius: 5
+        borderRadius: 5,
       },
       link: {
         cursor: 'pointer',
         position: 'relative',
         padding: '2px 5px',
         display: 'block',
-        borderRadius: 1
+        borderRadius: 1,
       },
       activeLink: {
-        background: 'rgba(0, 0, 0, 0.05)'
+        background: 'rgba(0, 0, 0, 0.05)',
       },
       toggle: {
         base: {
@@ -31,27 +31,27 @@ export default {
           verticalAlign: 'top',
           marginLeft: '-5px',
           height: '24px',
-          width: '24px'
+          width: '24px',
         },
         wrapper: {
           position: 'absolute',
           top: '50%',
           left: '50%',
           margin: '-7px 0 0 -7px',
-          height: '14px'
+          height: '14px',
         },
         height: 14,
         width: 14,
         arrow: {
           fill: '#333',
-          strokeWidth: 0
-        }
+          strokeWidth: 0,
+        },
       },
       header: {
         base: {
           display: 'inline-block',
           verticalAlign: 'top',
-          color: '#333'
+          color: '#333',
         },
         connector: {
           width: '2px',
@@ -60,20 +60,20 @@ export default {
           borderBottom: 'solid 2px black',
           position: 'absolute',
           top: '0px',
-          left: '-21px'
+          left: '-21px',
         },
         title: {
           lineHeight: '24px',
-          verticalAlign: 'middle'
-        }
+          verticalAlign: 'middle',
+        },
       },
       subtree: {
         listStyle: 'none',
-        paddingLeft: '19px'
+        paddingLeft: '19px',
       },
       loading: {
-        color: '#E2C089'
-      }
-    }
-  }
+        color: '#E2C089',
+      },
+    },
+  },
 };

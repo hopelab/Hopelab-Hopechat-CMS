@@ -5,16 +5,16 @@ const collection = require('./collection');
 const conversation = require('./conversation');
 const series = require('./series');
 const message = require('./message');
+const redisClient = require('../utils/client');
 
-const { updateStart } = require('../db')(require('../utils/store'));
+const { updateStart, getMessages, getCollections, getNameCopyNumber } = require('../db')(require('../utils/store'));
 const helpers = require('../helpers/db');
 const Constants = require('../constants');
 
-const { promiseSerial } = require('../utils/data');
+const { promiseSerial, keyFormatForCollOrMessage } = require('../utils/data');
 
 const config = require('config');
 const store = require('../utils/store');
-const shortid = require('shortid');
 
 const {
   TYPE_CONVERSATION,
@@ -22,10 +22,15 @@ const {
   TYPE_SERIES,
   TYPE_BLOCK,
   MESSAGE_TYPE_QUESTION_WITH_REPLIES,
-  DEFAULT_NAME
+  DEFAULT_NAME,
+  TYPE_MESSAGE,
+  DB_MESSAGE_LIST,
+  DB_COLLECTION_LIST
 } = require('../constants');
 
 const modelMap = { conversation, collection, series, block, message };
+
+const { getNewestInList } = helpers;
 
 const makeANewCollection = conversations => ({
   type: TYPE_COLLECTION,
@@ -33,7 +38,7 @@ const makeANewCollection = conversations => ({
   name: DEFAULT_NAME,
   parent: {
     type: TYPE_CONVERSATION,
-    id: R.last(conversations).id
+    id: getNewestInList(conversations).id
   }
 });
 
@@ -43,7 +48,7 @@ const makeANewSeries = collections => ({
   name: DEFAULT_NAME,
   parent: {
     type: TYPE_COLLECTION,
-    id: R.last(collections).id
+    id: getNewestInList(collections).id
   }
 });
 
@@ -53,7 +58,7 @@ const makeANewBlock = allSeries => ({
   name: DEFAULT_NAME,
   parent: {
     type: TYPE_SERIES,
-    id: R.last(allSeries).id
+    id: getNewestInList(allSeries).id
   }
 });
 
@@ -89,7 +94,7 @@ function createChainedItemsList(entityOldNew) {
   let listToSave = newList;
 
   oldList.forEach((oldItem, i) => {
-    listToSave = listToSave.map((newItem, j) => {
+    listToSave = listToSave.map(newItem => {
       if (R.pathEq(['next', 'id'], oldItem.id, newItem)) {
         return R.merge(newItem, {
           next: { id: listToSave[i].id, type: listToSave[i].type }
@@ -101,7 +106,9 @@ function createChainedItemsList(entityOldNew) {
           let payload;
           try {
             payload = JSON.parse(qr.payload);
-          } catch(e) {}
+          } catch(e) {
+            console.error(e);
+          }
           if (!!payload && payload.id === oldItem.id) {
             const newPayload = JSON.stringify({
               id: listToSave[i].id,
@@ -129,9 +136,9 @@ function createChainedItemsList(entityOldNew) {
  * @param {Array} children
  * @return {Promise}
 */
-function copyChildren(parent) {
-  return function(children) {
-    const childPromises = children.map((oldChild, i) => () => {
+const copyChildren = parent =>
+  function(children) {
+    const childPromises = children.map(oldChild => async () => {
       return modelMap[oldChild.type]
         .create(
           R.merge(oldChild, {
@@ -140,11 +147,11 @@ function copyChildren(parent) {
               id: parent.id
             },
             id: null,
-            name: generateCopyName(oldChild.name)
+            name: await generateCopyName(oldChild.name)
           })
         )
         .then(newChildList => {
-          const newChild = R.last(newChildList);
+          const newChild = getNewestInList(newChildList);
 
           return {
             oldChild,
@@ -156,11 +163,10 @@ function copyChildren(parent) {
 
     return promiseSerial(childPromises).then(R.uniq);
   };
-}
 
-function generateCopyName(name) {
-  return `${name} (${shortid.generate().slice(0,3)})`;
-}
+const generateCopyName = name =>
+  getNameCopyNumber(name).then(val => `${name} copy-${val}`);
+
 
 /**
  * Copy the Parent Entity
@@ -168,11 +174,11 @@ function generateCopyName(name) {
  * @param {Object} parent
  * @return {Promise}
 */
-function copyParent(parent) {
-  return modelMap[parent.type].create(
-    R.merge(parent, { id: null, name: generateCopyName(parent.name) })
+const copyParent = async parent =>
+  modelMap[parent.type].create(
+    R.merge(parent, { id: null, name: await generateCopyName(parent.name) })
   );
-}
+
 
 /**
  * Construct Return Value By Entity Key
@@ -226,7 +232,7 @@ function getChildrenForParent(parent) {
  * @return {Promise}
 */
 function getAllChildren(parent) {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     return Promise.all(
       config.entities[parent.type].children.map(fetchAllForEntity)
     )
@@ -248,7 +254,7 @@ function connectChildrenForParentType(type) {
     }
 
     const chainedList = createChainedItemsList(children);
-    const updatePromises = chainedList.map((entityToUpdate, i) => () =>
+    const updatePromises = chainedList.map(entityToUpdate => () =>
       modelMap[entityToUpdate.type].update(R.clone(entityToUpdate))
     );
 
@@ -258,7 +264,7 @@ function connectChildrenForParentType(type) {
       })
       .then(R.uniq)
       .then(updatedChildren => {
-        return updatedChildren.filter((child, i) =>
+        return updatedChildren.filter(child =>
           R.find(R.propEq('id', child.id))(chainedList)
         );
       })
@@ -273,7 +279,7 @@ function connectChildrenForParentType(type) {
  * @return {Promise}
 */
 function isRecursionNeeded(children) {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     let promises = [];
 
     promises = children.map(c => {
@@ -309,9 +315,7 @@ function recursivelyCopy(parent) {
  * @param {Object} newParent
  * @return {Function}
 */
-function getAllChildrenAndCopy(oldParent, newParent) {
-  return getAllChildren(oldParent).then(recursivelyCopy(newParent));
-}
+const  getAllChildrenAndCopy = (oldParent, newParent) =>  getAllChildren(oldParent).then(recursivelyCopy(newParent));
 
 /**
  * Get Fresh Batch of all Data for UI
@@ -319,7 +323,7 @@ function getAllChildrenAndCopy(oldParent, newParent) {
  * @return {Promise}
 */
 const freshDataForUI = () => {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     Promise.all([
       conversation.all(),
       collection.all(),
@@ -348,7 +352,7 @@ function modifyParentIfNeeded(parent) {
     }
 
     return entity;
-  }
+  };
 }
 
 /**
@@ -362,8 +366,7 @@ exports.copyEntityAndAllChildren = data => {
     .then(modifyParentIfNeeded(R.path(['parent', 'parent'], data)))
     .then(parent => copyParent(parent))
     .then(parentList => {
-      const newParent = R.last(parentList);
-
+      const newParent = getNewestInList(parentList);
       return getAllChildrenAndCopy(data.parent, newParent)
         .then(constructReturnCopiedValues(newParent))
         .then(freshDataForUI)
@@ -376,7 +379,7 @@ const parentMatchesId = id => child => child.parent && child.parent.id === id;
 const getAllChildrenForParent = id => children =>
   children.filter(parentMatchesId(id));
 
-const deleteAllRemainingChildren = store => children =>
+const deleteAllRemainingChildren = store => children => // eslint-disable-line
   promiseSerial(
     children.map(c => () => deleteEntity({ type: c.type, id: c.id }))
   );
@@ -393,6 +396,15 @@ const tryToParseList = list => {
   return parsedList;
 };
 
+const mapChildrenForDeletion = (typeChildren, id) => typeChildren.map(childType => () =>
+  store
+    .getItem(helpers.getDBKeyForEntityType(childType))
+    .then(tryToParseList)
+    .then(getAllChildrenForParent(id))
+    .then(deleteAllRemainingChildren(store))
+    .catch(console.error)
+);
+
 const deleteEntity = item => {
   const { id, type } = item;
 
@@ -401,14 +413,10 @@ const deleteEntity = item => {
   let children = [];
 
   if (typeChildren.length) {
-    children = typeChildren.map(childType => () =>
-      store
-        .getItem(helpers.getDBKeyForEntityType(childType))
-        .then(tryToParseList)
-        .then(getAllChildrenForParent(id))
-        .then(deleteAllRemainingChildren(store))
-        .catch(console.error)
-    );
+    children = mapChildrenForDeletion(typeChildren, id);
+  }
+  if (type === TYPE_MESSAGE || type === TYPE_COLLECTION) {
+    return deleteMessageOrBlock(item, children);
   }
 
   return promiseSerial(children)
@@ -425,6 +433,22 @@ const deleteEntity = item => {
     .then(freshDataForUI)
     .catch(console.error);
 };
+
+const deleteMessageOrBlock = (item, children) => {
+  const { id, type } = item;
+
+  return promiseSerial(children)
+    .then(() => {
+      redisClient.del(keyFormatForCollOrMessage(item));
+      // remove the id from the list
+      redisClient.lrem(type === TYPE_MESSAGE ? DB_MESSAGE_LIST : DB_COLLECTION_LIST, 1, id);
+      return type === TYPE_MESSAGE ? getMessages() : getCollections();
+    })
+    .then(helpers.maybeDeleteLinksForEntity(type, id))
+    .then(freshDataForUI)
+    .catch(console.error);
+};
+
 exports.deleteEntity = deleteEntity;
 
 exports.updateStart = updateStart;

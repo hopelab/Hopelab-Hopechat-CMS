@@ -20,3 +20,7 @@
   color: rgb(130, 138, 144);
   padding: 0.4em;
 }
+
+.ConversationItem .form-check {
+  clear: both;
+}

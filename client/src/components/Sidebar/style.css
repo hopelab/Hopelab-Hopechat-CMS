@@ -1,10 +1,16 @@
+.Sidebar {
+  padding-right: 0;
+}
+
 .Sidebar .Inner {
     border: 1px solid #333;
-    border-radius: 10px;
-    padding: 30px 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.Sidebar .btn {
+  cursor: pointer;
 }
 
 .Sidebar .Inner button {
@@ -31,9 +37,9 @@
     width: 11px;
     height: 11px;
     line-height: 11px;
-    border-radius: 50%; /* the magic */
-    -moz-border-radius: 50%;
-    -webkit-border-radius: 50%;
+    /* border-radius: 50%; /* the magic */ */
+    /* -moz-border-radius: 50%; */
+    /* -webkit-border-radius: 50%; */
     text-align: center;
     color: white;
     font-size: 10px;
