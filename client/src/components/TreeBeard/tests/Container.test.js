@@ -6,6 +6,9 @@ describe('header component', () => {
   const props = {
     node: {},
     onClick: jest.fn(),
+    onExpand: jest.fn(),
+    expanded: false,
+    terminal: false,
   };
   let component;
   beforeEach(() => {
@@ -21,5 +24,11 @@ describe('header component', () => {
     component.instance().onSetFocus();
     component.update();
     expect(component.hasClass('focused')).toBeTruthy();
+  });
+
+  it('should have the correct chevron if it is/is not expanded', () => {
+    expect(component.find('.fa-chevron-right')).toHaveLength(1);
+    component.setProps({ expanded: true });
+    expect(component.find('.fa-chevron-down')).toHaveLength(1);
   });
 });

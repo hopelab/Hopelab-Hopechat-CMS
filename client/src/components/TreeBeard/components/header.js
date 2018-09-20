@@ -24,9 +24,9 @@ class NodeHeader extends React.Component {
   }
 
   render() {
-    const { animations, decorators, node, onClick, style } = this.props;
+    const { animations, decorators, node, onClick, style, onExpand, expanded } = this.props;
     const { active, children } = node;
-    const terminal = !children;
+    const terminal = !children || !children.length;
     const container = [style.link, active ? style.activeLink : null];
     const headerStyles = Object.assign({ container }, style);
     return (
@@ -37,6 +37,8 @@ class NodeHeader extends React.Component {
         onClick={onClick}
         style={headerStyles}
         terminal={terminal}
+        onExpand={() => onExpand()}
+        expanded={expanded}
       />
     );
   }
@@ -49,6 +51,8 @@ NodeHeader.propTypes = {
     .isRequired,
   node: PropTypes.object.isRequired,
   onClick: PropTypes.func,
+  onExpand: PropTypes.func.isRequired,
+  expanded: PropTypes.bool.isRequired,
 };
 
 export default NodeHeader;

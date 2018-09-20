@@ -8,6 +8,13 @@ class TreeNode extends React.Component {
   constructor(props) {
     super(props);
     this.onClick = this.onClick.bind(this);
+    this.state = { expanded: props.expandAll };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.expandAll !== nextProps.expandAll) {
+      this.setState({ expanded: nextProps.expandAll });
+    }
   }
 
   onClick(props) {
@@ -74,22 +81,30 @@ class TreeNode extends React.Component {
     );
   }
 
+  onExpand() {
+    this.setState({ expanded: !this.state.expanded });
+  }
+
   renderHeader(decorators, animations) {
     const { node, style } = this.props;
-
+    const { expanded } = this.state;
     return (
       <NodeHeader
         animations={animations}
         decorators={decorators}
         node={Object.assign({}, node)}
         onClick={this.onClick}
+        onExpand={() => this.onExpand()}
+        expanded={expanded}
         style={style}
       />
     );
   }
 
   renderChildren(decorators) {
-    const { animations, decorators: propDecorators, node, style } = this.props;
+    const { expanded } = this.state;
+    if (!expanded) return null;
+    const { animations, decorators: propDecorators, node, style, expandAll } = this.props;
     if (node.loading) {
       return this.renderLoading(decorators);
     }
@@ -108,6 +123,7 @@ class TreeNode extends React.Component {
             key={child.id || index}
             node={child}
             style={style}
+            expandAll={expandAll}
           />
         ))}
       </ul>

@@ -15,6 +15,7 @@ class TreeBeard extends React.Component {
       data: propsData,
       onToggle,
       style,
+      expandAll,
     } = this.props;
     let data = propsData;
     if (!(data && data.children) || data.children.length === 0) return <Loader />;
@@ -37,6 +38,7 @@ class TreeBeard extends React.Component {
             node={node}
             onToggle={onToggle}
             style={style.tree.node}
+            expandAll={expandAll}
           />
         ))}
       </ul>
@@ -50,6 +52,7 @@ TreeBeard.propTypes = {
   animations: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
   onToggle: PropTypes.func,
   decorators: PropTypes.object,
+  expandAll: PropTypes.bool.isRequired,
 };
 
 TreeBeard.defaultProps = {
