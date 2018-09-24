@@ -1,0 +1,51 @@
+{
+  "extends": "airbnb",
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 2016,
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "sourceType": "module"
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true,
+    "jest": true
+  },
+  "rules": {
+        "arrow-parens": ["error", "as-needed"],
+        "no-console": 1,
+        "class-methods-use-this": 0,
+        "import/prefer-default-export": 0,
+        "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+        "import/no-named-as-default": 0,
+        "import/no-named-as-default-member": 0,
+        "indent": ["error", 2, { "SwitchCase": 1 }],
+        "max-len": ["error", {
+            "code": 120,
+            "tabWidth": 4
+        }],
+        "react/jsx-filename-extension": 0,
+        "react/jsx-indent": ["error", 2],
+        "react/forbid-prop-types": 0,
+        "react/jsx-indent-props": ["error", 2],
+        // Fixme: temporary disabling for linting pass
+        "react/require-default-props": 0,
+        "react/sort-comp": 0,
+        "no-plusplus": 0,
+        "jsx-a11y/label-has-for": 0,
+        "jsx-a11y/media-has-caption": 0,
+        "jsx-a11y/click-events-have-key-events": 0,
+        "react/no-array-index-key": 0,
+        "space-before-function-paren": 0,
+        "object-curly-newline": ["error", {
+            "consistent": true
+        }],
+        "jsx-a11y/anchor-is-valid": [ "error", {
+            "components": [ "Link" ],
+            "specialLink": [ "to" ]
+        }]
+    },
+}

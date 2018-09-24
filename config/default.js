@@ -1,8 +1,5 @@
 'use strict';
-
-const R = require('ramda'),
-  winston = require('winston'),
-  logUtils = require('alien-node-winston-utils');
+const R = require('ramda');
 
 // These values can be overridden by either environment vars or by a NODE_ENV named config
 // which declares the desired object of the same name.
@@ -110,5 +107,3 @@ const config = {
 };
 
 module.exports = config;
-
-console.log('USING DEFAULT CONFIG');

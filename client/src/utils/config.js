@@ -11,7 +11,7 @@ const entities = {
   message: 'message',
   image: 'image',
   video: 'video',
-  tag: 'tag'
+  tag: 'tag',
 };
 
 /**
@@ -22,7 +22,7 @@ const entitiesForCopy = {
   [entities.collection]: [],
   [entities.series]: [entities.collection],
   [entities.block]: [entities.series],
-  [entities.message]: []
+  [entities.message]: [],
 };
 
 /**
@@ -37,7 +37,7 @@ const operations = {
   create: 'create',
   update: 'update',
   delete: 'delete',
-  copy: 'copy'
+  copy: 'copy',
 };
 
 /**
@@ -46,26 +46,26 @@ const operations = {
 const forms = {
   conversation: {
     fields: ['name', 'tags', 'live', 'children', 'study'],
-    children: ['message', 'collection']
+    children: ['message', 'collection'],
   },
   collection: {
     fields: ['name', 'tags', 'rules', 'children'],
     children: ['series'],
-    rules: ['random', 'sequential']
+    rules: ['random', 'sequential'],
   },
   series: {
     fields: ['name', 'tags', 'rules', 'children'],
     children: ['block'],
-    rules: ['random', 'sequential']
+    rules: ['random', 'sequential'],
   },
   block: {
     fields: ['name', 'tags', 'children'],
-    children: ['message']
+    children: ['message'],
   },
   message: {
     fields: ['name'],
-    children: []
-  }
+    children: [],
+  },
 };
 
 /**
@@ -76,7 +76,7 @@ function getRoutes(route) {
   const update = '/update';
   const all = '/all';
   const get = '/';
-  const _delete = '/delete';
+  const _delete = '/delete'; // eslint-disable-line no-underscore-dangle
   const copy = '/copy';
 
   return {
@@ -85,7 +85,7 @@ function getRoutes(route) {
     all: `/${route}${all}`,
     get: `/${route}${get}`,
     delete: `/${route}${_delete}`,
-    copy: `/${route}${copy}`
+    copy: `/${route}${copy}`,
   };
 }
 
@@ -94,29 +94,29 @@ function getRoutes(route) {
 */
 const routes = {
   conversation: {
-    ...getRoutes('conversations')
+    ...getRoutes('conversations'),
   },
   collection: {
-    ...getRoutes('collections')
+    ...getRoutes('collections'),
   },
   series: {
-    ...getRoutes('series')
+    ...getRoutes('series'),
   },
   block: {
-    ...getRoutes('blocks')
+    ...getRoutes('blocks'),
   },
   message: {
-    ...getRoutes('messages')
+    ...getRoutes('messages'),
   },
   image: {
-    ...getRoutes('images')
+    ...getRoutes('images'),
   },
   video: {
-    ...getRoutes('videos')
+    ...getRoutes('videos'),
   },
   tag: {
-    ...getRoutes('tags')
-  }
+    ...getRoutes('tags'),
+  },
 };
 
 const TYPE_CONVERSATION = 'conversation';
@@ -143,7 +143,7 @@ const messageTypes = [
   { id: MESSAGE_TYPE_QUESTION_WITH_REPLIES, display: 'Question+Replies' },
   { id: MESSAGE_TYPE_IMAGE, display: 'Image' },
   { id: MESSAGE_TYPE_VIDEO, display: 'Video' },
-  { id: MESSAGE_TYPE_TRANSITION, display: 'Transition'}
+  { id: MESSAGE_TYPE_TRANSITION, display: 'Transition' },
 ];
 
 /**
@@ -157,70 +157,73 @@ const initialState = {
     block: [],
     message: [],
     image: [],
+    video: [],
     itemEditing: null,
     addingImages: false,
     cursor: {},
-    mediaUpload: {showModal: false, status: ''},
+    mediaUpload: { showModal: false, status: '' },
     showImageModal: false,
-    imageUploadStatus: ''
+    imageUploadStatus: '',
+    showStudyIdView: false,
+    loading: false,
+    readOnly: true,
   },
 
   conversation: {
     type: entities.conversation,
     name: '',
-    userId: '',
-    tags: []
+    tags: [],
   },
 
   collection: {
     type: entities.collection,
     name: '',
     conversationId: '',
-    tags: []
+    tags: [],
   },
 
   series: {
     type: entities.series,
     name: '',
     collectionId: '',
-    tags: []
+    tags: [],
   },
 
   block: {
     type: entities.block,
     name: '',
     seriesId: '',
-    tags: []
+    tags: [],
   },
 
   message: {
     type: entities.message,
     name: '',
     blockId: '',
-    tags: []
-  }
+    tags: [],
+  },
 };
 
 // prettier-ignore
 const http = {
   getPostHeaders: () => ({
     Accept: 'application/json',
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
   }),
   makeCommonFetchOptions: options =>
     R.merge(options, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Basic ${window.sessionStorage.getItem('basicAuthString')}`
-      }
+        Authorization: `Basic ${window.sessionStorage.getItem('basicAuthString')}`,
+      },
     }),
-  makeUploadFetchOptions: (options, contentType) =>
+  makeUploadFetchOptions: options =>
     R.merge(options, {
       headers: {
-        Authorization: `Basic ${window.sessionStorage.getItem('basicAuthString')}`
-      }
+        Authorization: `Basic ${window.sessionStorage.getItem('basicAuthString')}`,
+      },
     }),
-  post: 'POST'
+  post: 'POST',
 };
 
 export {

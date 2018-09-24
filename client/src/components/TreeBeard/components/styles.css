@@ -1,0 +1,18 @@
+.PoolContainer {
+  cursor: pointer;
+  border: dashed 1px #fff;
+  line-height: 19px;
+}
+
+div.focused {
+  border: dashed 1px rgb(66, 139, 202);
+}
+
+.live-circle {
+  color: #29AB87;
+}
+
+.fa.fa-chevron-right, .fa.fa-chevron-down {
+  padding: 2px;
+  margin-right: 4px;
+}

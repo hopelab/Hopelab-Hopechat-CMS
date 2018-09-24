@@ -1,14 +1,13 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import EditableText from '../EditableText';
 
 class DelayCheckbox extends Component {
-
   static propTypes = {
     delayChecked: PropTypes.bool.isRequired,
     delayInDays: PropTypes.string,
     onDelayChecked: PropTypes.func.isRequired,
-    onDelayInDaysWillFinish: PropTypes.func.isRequired
+    onDelayInDaysWillFinish: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -21,7 +20,7 @@ class DelayCheckbox extends Component {
   }
 
   render() {
-    const {delayChecked, delayInDays, onDelayInDaysWillFinish} = this.props;
+    const { delayChecked, delayInDays, onDelayInDaysWillFinish } = this.props;
     return (
       <div className="d-flex justify-content-between">
         <span>
@@ -35,7 +34,7 @@ class DelayCheckbox extends Component {
         {
           delayChecked &&
           <EditableText
-            placeholder=' delay in days'
+            placeholder=" delay in days"
             onEditWillFinish={onDelayInDaysWillFinish}
             text={delayInDays}
           />
