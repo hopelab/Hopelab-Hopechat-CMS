@@ -11,6 +11,7 @@ router.use('/images', require('./images'));
 router.use('/videos', require('./videos'));
 router.use('/tags', require('./tags'));
 router.use('/media', require('./media'));
+router.use('/study', require('./study'));
 
 router.get('/', (req, res) => {
   res.render('index');

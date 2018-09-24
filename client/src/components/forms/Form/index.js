@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import ConversationItemContainer from '../ConversationItemContainer';
-import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css';
 
+import ConversationItemContainer from '../ConversationItemContainer';
 import FirstItemSelect from '../FirstItemSelect';
+import NextMessage from '../NextMessage';
 
-import { autocompleteRenderInput } from '../../AutoSuggest';
-
-import { FormGroup } from 'reactstrap';
 
 import { createInitialFormState } from '../../../utils/data';
+
+import './style.css';
 
 import {
   TYPE_BLOCK,
@@ -24,16 +23,18 @@ const propTypes = {
     tags: PropTypes.array,
     type: PropTypes.string,
     isLive: PropTypes.bool,
-    children: PropTypes.array
+    children: PropTypes.array,
   }),
   config: PropTypes.object,
   childEntities: PropTypes.array.isRequired,
   handleSaveItem: PropTypes.func.isRequired,
-  handleAddTag: PropTypes.func.isRequired,
   handleDeleteItem: PropTypes.func.isRequired,
+  updateStartEntity: PropTypes.func.isRequired,
   images: PropTypes.array.isRequired,
   videos: PropTypes.array.isRequired,
-  tags: PropTypes.array.isRequired
+  handleChildEntityAddition: PropTypes.func,
+  conversations: PropTypes.array,
+  readOnly: PropTypes.bool.isRequired,
 };
 
 /**
@@ -54,68 +55,49 @@ class Form extends Component {
     this.setState(createInitialFormState(nextProps));
   }
 
-  handleTagsInput = e => {
-    // this.props.handleUpdateItem({
-    //   target: {
-    //     name: 'tags',
-    //     value: e
-    //   }
-    // });
-    //
-    // this.props.handleAddTag({ name: last(e) });
-  };
-
-  handleChildSelection = e => this.setState({ entityToAdd: e.target.value });
-
   render() {
+    const { readOnly, childEntities = [] } = this.props;
+    if (!childEntities.length && !readOnly) {
+      return (<NextMessage
+        parentItemType={this.props.item.type}
+        childEntities={this.props.childEntities}
+        onNewItem={type => {
+          this.props.handleChildEntityAddition(type, newItem => {
+            this.props.handleSaveItem({
+              ...this.props.item,
+              next: { id: newItem.id, type: newItem.type },
+            });
+          });
+        }}
+      />);
+    }
     return (
       <div className="d-flex flex-column align-items-start">
-        {/*inputProps=
-          tags: this.props.tags,
-          handleAddTag: this.props.handleAddTag
-        */}
-        <div className="Row">
-          {formHasField('tags', this.props.config.fields) ? (
-            <div className="TagsContainer">
-              <FormGroup className="Tags">
-                <h5>TAGS</h5>
-                <TagsInput
-                  id="tags"
-                  name="tags"
-                  renderInput={autocompleteRenderInput}
-                  value={this.props.item.tags || []}
-                  onChange={this.handleTagsInput}
-
-                />
-              </FormGroup>
-            </div>
-          ) : null}
-        </div>
-
-        { (this.props.item.type === TYPE_CONVERSATION ||
-          this.props.item.type === TYPE_BLOCK) ?
-          <FirstItemSelect
+        {readOnly && <div className="read-only" /> }
+        { ((this.props.item.type === TYPE_CONVERSATION ||
+          this.props.item.type === TYPE_BLOCK) && this.props.childEntities.length)
+          ? <FirstItemSelect
             childEntities={this.props.childEntities}
             onSelectStart={this.props.updateStartEntity}
-          /> : undefined
+          /> : null
         }
 
         {formHasField('children', this.props.config.fields) ? (
-            this.props.childEntities.map((e, i) => (
-              <ConversationItemContainer
-                key={e.id}
-                item={e}
-                index={i}
-                childEntities={this.props.childEntities}
-                handleSaveItem={this.props.handleSaveItem}
-                handleChildEntityAddition={this.props.handleChildEntityAddition}
-                handleDeleteItem={this.props.handleDeleteItem}
-                images={this.props.images}
-                videos={this.props.videos}
-                parentItemType={this.props.item.type}
-                conversations={this.props.conversations}
-              />
-            ))
+          this.props.childEntities.sort((a, b) => ((a.created < b.created) ? -1 : 1)).map((e, i) => (
+            <ConversationItemContainer
+              key={e.id}
+              item={e}
+              index={i}
+              childEntities={this.props.childEntities}
+              handleSaveItem={this.props.handleSaveItem}
+              handleChildEntityAddition={this.props.handleChildEntityAddition}
+              handleDeleteItem={this.props.handleDeleteItem}
+              images={this.props.images}
+              videos={this.props.videos}
+              parentItemType={this.props.item.type}
+              conversations={this.props.conversations}
+            />
+          ))
         ) : null}
       </div>
     );

@@ -4,11 +4,14 @@
   "description": "hopelab_ayachatbot_cms",
   "main": "cms.js",
   "scripts": {
-    "lint": "eslint **/*.js",
+    "lint": "eslint ./server/**/*.js --fix",
     "mock-db": "node ./server/helpers/mockDatabaseSetup.js",
     "debug": "node --inspect ./server/cms.js",
     "start": "node ./server/cms.js",
-    "prettify": "prettier --write './server/**/*.js'"
+    "prettify": "prettier --write './server/**/*.js'",
+    "test": "jest ./server && jest ./server --watch",
+    "test-only": "jest ./server",
+    "coverage": "jest ./server --coverage"
   },
   "author": "Presence PG",
   "dependencies": {
@@ -28,23 +31,14 @@
     "winston": "^2.4.0"
   },
   "devDependencies": {
+    "babel-eslint": "^9.0.0",
     "eslint": "^4.8.0",
-    "mocha": "^2.2.4",
+    "eslint-plugin-jest": "^21.22.0",
+    "jest": "^23.5.0",
     "prettier": "^1.7.4"
   },
   "prettier": {
     "single-quote": true,
     "tab-width": 2
-  },
-  "eslintConfig": {
-    "env": {
-      "node": true
-    },
-    "parserOptions": {
-      "ecmaVersion": 6
-    },
-    "rules": {
-      "no-unused-vars": 1
-    }
   }
 }
