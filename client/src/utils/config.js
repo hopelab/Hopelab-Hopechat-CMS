@@ -12,6 +12,7 @@ const entities = {
   image: 'image',
   video: 'video',
   tag: 'tag',
+  orders: 'orders',
 };
 
 /**
@@ -117,6 +118,9 @@ const routes = {
   tag: {
     ...getRoutes('tags'),
   },
+  orders: {
+    ...getRoutes('orders'),
+  },
 };
 
 const TYPE_CONVERSATION = 'conversation';
@@ -158,6 +162,7 @@ const initialState = {
     message: [],
     image: [],
     video: [],
+    orders: [],
     itemEditing: null,
     addingImages: false,
     cursor: {},
@@ -166,7 +171,7 @@ const initialState = {
     imageUploadStatus: '',
     showStudyIdView: false,
     loading: false,
-    readOnly: true,
+    readOnly: false,
   },
 
   conversation: {

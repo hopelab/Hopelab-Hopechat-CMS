@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { DragSource, DropTarget } from 'react-dnd';
+import { compose } from 'ramda';
+
 import { CheckBox } from '../../common/CheckBox';
 
 import EditableText from '../EditableText';
@@ -43,6 +46,8 @@ const conversationItemStyles = {
   },
 };
 
+
+
 class ConversationItem extends Component {
   static propTypes = {
     item: PropTypes.shape({
@@ -63,6 +68,8 @@ class ConversationItem extends Component {
     videos: PropTypes.array.isRequired,
     className: PropTypes.string,
     parentItemType: PropTypes.string,
+    connectDragSource: PropTypes.func.isRequired,
+    connectDropTarget: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -70,6 +77,22 @@ class ConversationItem extends Component {
     this.handleMessageTypeSelection =
       this.handleMessageTypeSelection.bind(this);
     this.handleDeleteMessage = this.handleDeleteMessage.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!this.props.isOver && nextProps.isOver) {
+      // You can use this as enter handler
+      console.log('entered')
+    }
+
+    if (this.props.isOver && !nextProps.isOver) {
+      // You can use this as leave handler
+    }
+
+    if (this.props.isOverCurrent && !nextProps.isOverCurrent) {
+      // You can be more specific and track enter/leave
+      // shallowly, not including nested targets
+    }
   }
 
   messageTypeHasContent(type) {
@@ -260,9 +283,11 @@ class ConversationItem extends Component {
 
   render() {
     const { item: { isEvent = false } } = this.props;
-    return (
+    const { connectDragSource, connectDropTarget, isOver, className } = this.props;
+    const target = connectDropTarget(connectDragSource(
       <div
-        className={`card ConversationItem ${this.props.className}`}
+        key="ogItem"
+        className={`card ConversationItem ${className}`}
         style={{ width: '360px' }}
       >
         <div
@@ -327,9 +352,46 @@ class ConversationItem extends Component {
             />
           </div>
         )}
-      </div>
-    );
+      </div>));
+    const array = [target];
+    if (isOver) array.push(<div className="over" key="dndItem">Drop it here</div>);
+    return array;
   }
 }
 
-export default ConversationItem;
+
+const dragSource = {
+  beginDrag() {
+    return {};
+  },
+  endDrag(props, monitor) {
+    if (monitor.didDrop()) {
+      const { newIndex } = monitor.getDropResult();
+      props.setNewIndex(newIndex);
+    }
+  },
+};
+
+const conversationtItemTarget = {
+  drop(props) {
+    return { newIndex: props.index };
+  },
+};
+
+function collect(connect, monitor) {
+  return {
+    connectDragSource: connect.dragSource(),
+    isDragging: monitor.isDragging(),
+  };
+}
+
+export default compose(
+  DropTarget('item', conversationtItemTarget, (connect, monitor) => ({
+    connectDropTarget: connect.dropTarget(),
+    isOver: monitor.isOver(),
+    isOverCurrent: monitor.isOver({ shallow: true }),
+    canDrop: monitor.canDrop(),
+    itemType: monitor.getItemType(),
+  })),
+  DragSource('item', dragSource, collect),
+)(ConversationItem);

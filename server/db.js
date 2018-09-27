@@ -10,7 +10,9 @@ const {
   DB_MESSAGE_LIST,
   DB_COLLECTION_LIST,
   TYPE_COLLECTION,
-  DB_STUDY
+  DB_STUDY,
+  TYPE_ORDER,
+  DB_ORDERS_LIST,
 } = require('./constants');
 
 const redisClient = require('./utils/client');
@@ -22,6 +24,7 @@ const getLAsync = promisify(redisClient.lrange).bind(redisClient);
 
 const fileUtils = require('./utils/file');
 const { keyFormatMessageId } = require('./utils/messages');
+const { keyFormatOrderId } = require('./utils/orders');
 const { keyFormatCollectionId } = require('./utils/collections');
 const { formatNameCopy } = require('./utils/general');
 
@@ -472,6 +475,40 @@ module.exports = store => {
     });
   // createStudyId
 
+  const getOrderById = id => (
+    new Promise(resolve => {
+      store.getItem(keyFormatOrderId(id))
+        .then(order => resolve(JSON.parse(order)))
+        .catch(e => {
+          // no item found matching cacheKey
+          console.error(
+            `error: getOrderById - getJSONItemFromCache(order:${id}})`,
+            e
+          );
+          resolve();
+        });
+    })
+  );
+
+  const getOrders = () =>
+    getLAsync(DB_ORDERS_LIST, 0, -1)
+      .then(orderIds => Promise.all(
+        orderIds.map(id => getOrderById(id)))
+      )
+      .catch(console.error);
+
+  const updateOrder = order =>
+    new Promise(resolve => {
+      redisClient.set(keyFormatOrderId(order.id), JSON.stringify(order));
+      resolve(order);
+    });
+
+  const setOrder = order =>
+    updateOrder(order)
+      .then(order => redisClient.lpush(DB_ORDERS_LIST, order.id))
+      .then(getOrders)
+      .catch(console.error);
+
   return {
     getConversations,
     getCollections,
@@ -510,6 +547,11 @@ module.exports = store => {
     setTag,
 
     getStudyIds,
-    getNameCopyNumber
+    getNameCopyNumber,
+
+    getOrders,
+    getOrderById,
+    setOrder,
+    updateOrder,
   };
 };

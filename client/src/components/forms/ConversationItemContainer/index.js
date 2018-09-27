@@ -192,6 +192,7 @@ class ConversationItemContainer extends Component {
   }
 
   render() {
+    const { setNewIndex } = this.props;
     if (this.messageTypeHasDifferentOptions(this.props.item.messageType)) {
       return (
         <div className="p-2">
@@ -252,6 +253,7 @@ class ConversationItemContainer extends Component {
                   messageType={this.props.item.messageType}
                   conversations={this.props.conversations}
                   showEndOfConversation={false}
+                  setNewIndex={args => setNewIndex(args)}
                 />
               ))}
           </div>

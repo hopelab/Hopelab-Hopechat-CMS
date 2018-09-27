@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import 'react-tagsinput/react-tagsinput.css';
+
+import { DragDropContext } from 'react-dnd';
+
+import HTML5Backend from 'react-dnd-html5-backend';
 
 import ConversationItemContainer from '../ConversationItemContainer';
 import FirstItemSelect from '../FirstItemSelect';
@@ -35,6 +38,8 @@ const propTypes = {
   handleChildEntityAddition: PropTypes.func,
   conversations: PropTypes.array,
   readOnly: PropTypes.bool.isRequired,
+  setNewIndex: PropTypes.func.isRequired,
+  order: PropTypes.arrayOf(PropTypes.string),
 };
 
 /**
@@ -56,7 +61,11 @@ class Form extends Component {
   }
 
   render() {
-    const { readOnly, childEntities = [] } = this.props;
+    const { readOnly, childEntities = [], setNewIndex, order } = this.props;
+    const orderedChildren = [];
+    childEntities.forEach(c => {
+      orderedChildren[order.indexOf(c.id)] = c;
+    });
     if (!childEntities.length && !readOnly) {
       return (<NextMessage
         parentItemType={this.props.item.type}
@@ -83,8 +92,9 @@ class Form extends Component {
         }
 
         {formHasField('children', this.props.config.fields) ? (
-          this.props.childEntities.sort((a, b) => ((a.created < b.created) ? -1 : 1)).map((e, i) => (
+          orderedChildren.map((e, i) => (
             <ConversationItemContainer
+              setNewIndex={newIndex => setNewIndex({ newIndex, id: e.id })}
               key={e.id}
               item={e}
               index={i}
@@ -105,5 +115,4 @@ class Form extends Component {
 }
 
 Form.propTypes = propTypes;
-
-export default Form;
+export default DragDropContext(HTML5Backend)(Form);
