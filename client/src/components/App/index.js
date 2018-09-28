@@ -360,26 +360,28 @@ class App extends Component {
   }
 
   saveOrdering(ordering) {
+    this.setState({ loading: true });
     dataUtil
       .post(
-        config.routes['orders'].create,
+        config.routes[config.entities.orders].create,
         ordering,
-      ).then(res => res.json()).then(orders => this.setState({ orders }));
+      ).then(res => res.json()).then(orders => this.setState({ orders, loading: false }));
   }
 
   changeOrder({ id, newIndex, itemEditing }) {
+    this.setState({ loading: true });
     const oldOrder = this.getOrdering({ id: itemEditing.id });
     const oldIndex = oldOrder.indexOf(id);
     const ordering = oldOrder.slice(0);
     ordering.splice(oldIndex, 1);
-    ordering.splice(newIndex, 0, id);
+    ordering.splice(newIndex + (newIndex < oldIndex ? 1 : 0), 0, id);
     dataUtil
       .post(
-        config.routes['orders'].update,
+        config.routes[config.entities.orders].update,
         { ordering, id: itemEditing.id },
       ).then(res => res.json()).then(data => {
         const orders = this.state.orders.map(o => (o.id === data.id ? { ...data } : o));
-        this.setState({ orders });
+        this.setState({ orders, loading: false });
       });
   }
 

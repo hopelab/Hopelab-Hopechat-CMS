@@ -1,7 +1,7 @@
 /* eslint-disable */
 import raf from '../config/raf';
 
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from 'enzyme-adapter-react-16.3';
 import { configure } from 'enzyme';
 
 

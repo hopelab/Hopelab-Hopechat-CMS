@@ -88,6 +88,7 @@ class Form extends Component {
           ? <FirstItemSelect
             childEntities={this.props.childEntities}
             onSelectStart={this.props.updateStartEntity}
+            index={-1}
           /> : null
         }
 

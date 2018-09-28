@@ -231,6 +231,12 @@ const http = {
   post: 'POST',
 };
 
+const ITEMS = {
+  CONVERSATION_ITEM: 'conversationItem',
+  CONVERSATION_ITEM_CONTAINER: 'conversationItemContainer',
+  FIRST_ITEM_SELECT: 'firstItemSelect',
+};
+
 export {
   entities,
   entitiesForCopy,
@@ -256,4 +262,5 @@ export {
   TYPE_TAG,
   QUICK_REPLY_MAX_LENGTH,
   END_OF_CONVERSATION_ID,
+  ITEMS,
 };
