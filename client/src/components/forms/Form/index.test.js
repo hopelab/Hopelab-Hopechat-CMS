@@ -23,6 +23,7 @@ describe('Form component', () => {
       type: TYPE_CONVERSATION,
     },
     readOnly: false,
+    setNewIndex: jest.fn(),
   };
   let component;
   beforeEach(() => {

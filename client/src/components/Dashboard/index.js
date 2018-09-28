@@ -75,7 +75,7 @@ class Dashboard extends Component {
 
   render() {
     const { props } = this;
-    const { showStudyIdView, studyIds } = props;
+    const { showStudyIdView, studyIds, setNewIndex, order } = props;
     if (showStudyIdView) return <StudyIdView studyIds={studyIds} />;
     return (
       <div className="Dashboard mt-1">
@@ -100,6 +100,7 @@ class Dashboard extends Component {
               toggleReadOnly={props.toggleReadOnly}
             />
             <Form
+              setNewIndex={args => setNewIndex(args)}
               item={props.itemEditing}
               config={props.formConfig[props.itemEditing.type]}
               handleSaveItem={props.handleSaveItem}
@@ -113,6 +114,7 @@ class Dashboard extends Component {
               tags={props.tags}
               updateStartEntity={props.updateStartEntity}
               readOnly={props.readOnly}
+              order={order}
             />
           </div>
         )}

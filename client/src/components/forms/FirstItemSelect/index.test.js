@@ -6,6 +6,8 @@ describe('FirstItemSelect component', () => {
   const props = {
     childEntities: [],
     onSelectStart: jest.fn(),
+    connectDropTarget: jest.fn(),
+    isOver: false,
   };
   let component;
   beforeEach(() => {

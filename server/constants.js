@@ -6,6 +6,9 @@ const DB_CONVERSATIONS = 'conversations';
 const DB_COLLECTIONS = 'collections';
 const DB_COLLECTION_LIST = 'collectionList';
 
+const TYPE_ORDER = 'orders';
+const DB_ORDERS_LIST = 'ordersList';
+
 const DB_SERIES = 'series';
 //deprecated
 const DB_MESSAGES = 'messages';
@@ -63,5 +66,7 @@ module.exports = {
   SUPPORTED_FILE_TYPES,
   DB_MESSAGE_LIST,
   DB_COLLECTION_LIST,
-  DB_STUDY
+  DB_STUDY,
+  TYPE_ORDER,
+  DB_ORDERS_LIST,
 };

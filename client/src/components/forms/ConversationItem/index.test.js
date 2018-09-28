@@ -11,6 +11,7 @@ describe('Conversation component', () => {
     childEntities: [],
     images: [],
     videos: [],
+    connectDragSource: jest.fn(),
   };
   let component;
   beforeEach(() => {

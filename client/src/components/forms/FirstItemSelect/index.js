@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { DropTarget } from 'react-dnd';
 
 import {
   Dropdown,
@@ -8,9 +9,18 @@ import {
   DropdownToggle,
 } from 'reactstrap';
 
+import DnDPlaceHolder from '../../common/DND/DnDPlaceHolder';
+
+import {
+  ITEMS,
+} from '../../../utils/config';
+
+
 const propTypes = {
   childEntities: PropTypes.array.isRequired,
   onSelectStart: PropTypes.func.isRequired,
+  connectDropTarget: PropTypes.func.isRequired,
+  isOver: PropTypes.bool.isRequired,
 };
 
 const getNextMessageOptionsForMessage = (childEntities, onSelectStart) => {
@@ -48,8 +58,8 @@ class FirstItemSelect extends Component {
     } else {
       foundItem = 'no messages';
     }
-    return (
-      <div className="card m-2" style={{ width: '360px' }}>
+    const firstItemSelect = (
+      <div className="card m-2" style={{ width: '360px' }} key="origFirstIS">
         <div className="card-footer">
           <Dropdown
             style={{ cursor: 'pointer' }}
@@ -71,9 +81,26 @@ class FirstItemSelect extends Component {
         </div>
       </div>
     );
+    const { connectDropTarget, isOver } = this.props;
+    const array = [connectDropTarget(firstItemSelect)];
+    if (isOver) array.push(<DnDPlaceHolder key="dndItem" />);
+    return array;
   }
 }
 
 FirstItemSelect.propTypes = propTypes;
 
-export default FirstItemSelect;
+
+const conversationtItemTarget = {
+  drop(props) {
+    return { newIndex: props.index };
+  },
+};
+
+export default DropTarget(ITEMS.CONVERSATION_ITEM, conversationtItemTarget, (connect, monitor) => ({
+  connectDropTarget: connect.dropTarget(),
+  isOver: monitor.isOver(),
+  isOverCurrent: monitor.isOver({ shallow: true }),
+  canDrop: monitor.canDrop(),
+  itemType: monitor.getItemType(),
+}))(FirstItemSelect);

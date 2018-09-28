@@ -12,6 +12,7 @@ const entities = {
   image: 'image',
   video: 'video',
   tag: 'tag',
+  orders: 'orders',
 };
 
 /**
@@ -117,6 +118,9 @@ const routes = {
   tag: {
     ...getRoutes('tags'),
   },
+  orders: {
+    ...getRoutes('orders'),
+  },
 };
 
 const TYPE_CONVERSATION = 'conversation';
@@ -158,6 +162,7 @@ const initialState = {
     message: [],
     image: [],
     video: [],
+    orders: [],
     itemEditing: null,
     addingImages: false,
     cursor: {},
@@ -166,7 +171,7 @@ const initialState = {
     imageUploadStatus: '',
     showStudyIdView: false,
     loading: false,
-    readOnly: true,
+    readOnly: false,
   },
 
   conversation: {
@@ -226,6 +231,12 @@ const http = {
   post: 'POST',
 };
 
+const ITEMS = {
+  CONVERSATION_ITEM: 'conversationItem',
+  CONVERSATION_ITEM_CONTAINER: 'conversationItemContainer',
+  FIRST_ITEM_SELECT: 'firstItemSelect',
+};
+
 export {
   entities,
   entitiesForCopy,
@@ -251,4 +262,5 @@ export {
   TYPE_TAG,
   QUICK_REPLY_MAX_LENGTH,
   END_OF_CONVERSATION_ID,
+  ITEMS,
 };

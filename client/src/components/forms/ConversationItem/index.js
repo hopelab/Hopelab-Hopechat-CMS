@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { DragSource } from 'react-dnd';
+
 import { CheckBox } from '../../common/CheckBox';
 
 import EditableText from '../EditableText';
@@ -22,6 +24,7 @@ import {
   MESSAGE_TYPE_IMAGE,
   MESSAGE_TYPE_VIDEO,
   MESSAGE_TYPE_TRANSITION,
+  ITEMS,
 } from '../../../utils/config';
 import './style.css';
 
@@ -63,6 +66,7 @@ class ConversationItem extends Component {
     videos: PropTypes.array.isRequired,
     className: PropTypes.string,
     parentItemType: PropTypes.string,
+    connectDragSource: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -260,9 +264,11 @@ class ConversationItem extends Component {
 
   render() {
     const { item: { isEvent = false } } = this.props;
-    return (
+    const { connectDragSource, className } = this.props;
+    return connectDragSource(
       <div
-        className={`card ConversationItem ${this.props.className}`}
+        key="ogItem"
+        className={`card ConversationItem ${className}`}
         style={{ width: '360px' }}
       >
         <div
@@ -327,9 +333,30 @@ class ConversationItem extends Component {
             />
           </div>
         )}
-      </div>
+      </div>,
     );
   }
 }
 
-export default ConversationItem;
+
+const dragSource = {
+  beginDrag({ index }) {
+    return { index };
+  },
+  endDrag(props, monitor) {
+    if (monitor.didDrop()) {
+      const { newIndex } = monitor.getDropResult();
+      props.setNewIndex(newIndex);
+    }
+  },
+};
+
+
+function collect(connect, monitor) {
+  return {
+    connectDragSource: connect.dragSource(),
+    isDragging: monitor.isDragging(),
+  };
+}
+
+export default DragSource(ITEMS.CONVERSATION_ITEM, dragSource, collect)(ConversationItem);
