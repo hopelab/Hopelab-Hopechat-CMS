@@ -353,14 +353,14 @@ class App extends Component {
   }
 
   createOrder({ id, childEntities }) {
-    const sorted = childEntities.sort((a, b) => (a.created < b.created)).map(({ id: cid }) => cid);
+    const sorted = childEntities.sort((a, b) => ((a.created < b.created) ? -1 : 1)).map(({ id: cid }) => cid);
     const ordering = { id, ordering: sorted };
     this.saveOrdering(ordering);
     return ordering;
   }
 
-  saveOrdering(ordering) {
-    this.setState({ loading: true });
+  saveOrdering(ordering, setLoad) {
+    if (setLoad) this.setState({ loading: true });
     dataUtil
       .post(
         config.routes[config.entities.orders].create,
@@ -454,7 +454,7 @@ class App extends Component {
         }
 
         <Dashboard
-          setNewIndex={({ id, newIndex }) => this.changeOrder({ id, newIndex, itemEditing })}
+          setNewIndex={({ id, newIndex }) => this.changeOrder({ id, newIndex, itemEditing }, true)}
           formConfig={config.forms}
           handleSaveItem={this.handleSaveItem}
           handleDeleteItem={this.handleDeleteItem}
