@@ -3,7 +3,6 @@ const {
   DB_SERIES,
   DB_BLOCKS,
   DB_MEDIA,
-  DB_TAG,
   TYPE_MESSAGE,
   ONE_DAY_IN_MILLISECONDS,
   SUPPORTED_FILE_TYPES,
@@ -428,38 +427,6 @@ module.exports = store => {
       return StaticAssetsSvc.getFiles('video').then(resolve);
     });
 
-  /**
-     * Get Tags
-     *
-     * @return {Promise<Object>}
-    */
-  const getTags = () =>
-    new Promise(resolve => {
-      store
-        .getItem(DB_TAG)
-        .then(JSON.parse)
-        .then(resolve)
-        .catch(console.error);
-    });
-
-  /**
-   * Set Tag
-   *
-   * @param {Object} tag
-   * @return {Promise<bool>}
-  */
-  const setTag = tag =>
-    new Promise(resolve => {
-      store
-        .getItem(DB_TAG)
-        .then(JSON.parse)
-        .then(helpers.createNewEntity(helpers.entityTypes.tag, tag))
-        .then(store.setItem(DB_TAG, ONE_DAY_IN_MILLISECONDS))
-        .then(resolve)
-        .catch(console.error);
-    });
-
-
   const getStudyIds = () =>
     new Promise(resolve => {
       store
@@ -537,9 +504,6 @@ module.exports = store => {
     uploadToFacebookIfVideo,
 
     getVideos,
-
-    getTags,
-    setTag,
 
     getStudyIds,
     getNameCopyNumber,

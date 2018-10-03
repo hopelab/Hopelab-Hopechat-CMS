@@ -3,13 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "autosuggest-highlight": "^3.1.1",
     "deep-equal": "^1.0.1",
     "object-assign": "^4.1.1",
     "prop-types": "^15.6.2",
     "ramda": "^0.25.0",
     "react": "16.3.0",
-    "react-autosuggest": "^9.3.2",
     "react-dnd": "^5.0.0",
     "react-dnd-html5-backend": "^5.0.1",
     "react-dom": "16.3.0",

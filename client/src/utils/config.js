@@ -11,7 +11,6 @@ const entities = {
   message: 'message',
   image: 'image',
   video: 'video',
-  tag: 'tag',
   orders: 'orders',
 };
 
@@ -46,21 +45,21 @@ const operations = {
 */
 const forms = {
   conversation: {
-    fields: ['name', 'tags', 'live', 'children', 'study'],
+    fields: ['name', 'live', 'children', 'study'],
     children: ['message', 'collection'],
   },
   collection: {
-    fields: ['name', 'tags', 'rules', 'children'],
+    fields: ['name', 'rules', 'children'],
     children: ['series'],
     rules: ['random', 'sequential'],
   },
   series: {
-    fields: ['name', 'tags', 'rules', 'children'],
+    fields: ['name', 'rules', 'children'],
     children: ['block'],
     rules: ['random', 'sequential'],
   },
   block: {
-    fields: ['name', 'tags', 'children'],
+    fields: ['name', 'children'],
     children: ['message'],
   },
   message: {
@@ -115,9 +114,6 @@ const routes = {
   video: {
     ...getRoutes('videos'),
   },
-  tag: {
-    ...getRoutes('tags'),
-  },
   orders: {
     ...getRoutes('orders'),
   },
@@ -135,7 +131,6 @@ const MESSAGE_TYPE_ANSWER = 'answer';
 const MESSAGE_TYPE_IMAGE = 'image';
 const MESSAGE_TYPE_VIDEO = 'video';
 const MESSAGE_TYPE_TRANSITION = 'transition';
-const TYPE_TAG = 'tag';
 
 const END_OF_CONVERSATION_ID = 'END-OF-CONVERSATION-ID';
 
@@ -177,35 +172,30 @@ const initialState = {
   conversation: {
     type: entities.conversation,
     name: '',
-    tags: [],
   },
 
   collection: {
     type: entities.collection,
     name: '',
     conversationId: '',
-    tags: [],
   },
 
   series: {
     type: entities.series,
     name: '',
     collectionId: '',
-    tags: [],
   },
 
   block: {
     type: entities.block,
     name: '',
     seriesId: '',
-    tags: [],
   },
 
   message: {
     type: entities.message,
     name: '',
     blockId: '',
-    tags: [],
   },
 };
 
@@ -259,7 +249,6 @@ export {
   MESSAGE_TYPE_IMAGE,
   MESSAGE_TYPE_VIDEO,
   MESSAGE_TYPE_TRANSITION,
-  TYPE_TAG,
   QUICK_REPLY_MAX_LENGTH,
   END_OF_CONVERSATION_ID,
   ITEMS,
