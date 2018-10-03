@@ -264,22 +264,26 @@ class ConversationItem extends Component {
   }
 
   render() {
-    const { item: { isEvent = false }, index } = this.props;
-    const { connectDragSource, className } = this.props;
+    const { item: { isEvent = false }, index, connectDragSource, className, item: { messageType } } = this.props;
+
     return connectDragSource(
       <div
         key="ogItem"
         className={`card ConversationItem ${className}`}
-        style={{ width: '360px' }}
+        style={{
+          width: '360px',
+        }}
       >
         <div
-          className="card-header d-flex flex-column"
+          className={`card-header d-flex flex-column ${messageType === MESSAGE_TYPE_TRANSITION ? 'bg-warning' : ''}`}
+          style={{
+            ...conversationItemStyles[this.props.item.type],
+          }}
         >
           <div
             className="d-flex flex-row justify-content-between"
             style={{
               flexWrap: 'wrap',
-              ...conversationItemStyles[this.props.item.type],
             }}
           >
             <EditableText
