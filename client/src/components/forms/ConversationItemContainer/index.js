@@ -241,7 +241,7 @@ export class ConversationItemContainer extends Component {
                   onNewItem={() => {
                     this.props.handleChildEntityAddition(this.props.item.type, newItem => {
                       this.handleNextItemSelect(i, newItem.id, newItem.type);
-                    });
+                    }, i);
                   }}
                   showEndOfConversation={this.props.parentItemType === TYPE_CONVERSATION}
                 />
@@ -264,7 +264,7 @@ export class ConversationItemContainer extends Component {
                   onNewItem={() => {
                     this.props.handleChildEntityAddition(this.props.item.type, newItem => {
                       this.handleNextItemSelect(i, newItem.id, newItem.type);
-                    });
+                    }, i);
                   }}
                   messageType={this.props.item.messageType}
                   conversations={this.props.conversations}

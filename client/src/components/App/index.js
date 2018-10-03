@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { pick, omit, isEmpty } from 'ramda';
+import { pick, omit, isEmpty, isNil } from 'ramda';
 
 import './style.css';
 
@@ -143,7 +143,7 @@ class App extends Component {
     return entity;
   };
 
-  handleNewChildEntity = (entity, callback) => {
+  handleNewChildEntity = (entity, callback, addedFromIndex) => {
     this.setState({ loading: true });
     dataUtil
       .post(config.routes[entity.type].create, this.markPosition(entity))
@@ -151,6 +151,21 @@ class App extends Component {
       .then(dataUtil.throwIfEmptyArray)
       .then(res => {
         const addedItem = res.sort((a, b) => (a.created < b.created ? 1 : -1))[0];
+        const itemEditing = this.getFullItemEditing(this.state);
+        const data = omit(['loading'], this.state);
+
+        const childEntities = dataUtil.getChildEntitiesFor(
+          itemEditing,
+          data,
+        );
+        const order = this.getOrdering({ id: itemEditing.id, childEntities });
+        this.changeOrder({
+          id: addedItem.id,
+          newIndex: !isNil(addedFromIndex) ? addedFromIndex + 1 : order.length,
+          itemEditing,
+          isNew: true,
+        });
+
         this.setState(
           {
             [entity.type]: res,
@@ -159,6 +174,7 @@ class App extends Component {
           () => !!(callback) && callback(addedItem),
         );
       })
+      .then(() => this.setOrder)
       .catch(console.error);
   };
 
@@ -273,6 +289,8 @@ class App extends Component {
       .then(dataUtil.constructEntityState(item.type))
       .then(nextEntityState => {
         let newState = { loading: false };
+        const itemEditing = this.getFullItemEditing(this.state);
+        this.changeOrder({ id: item.id, itemEditing, isDelete: true });
         if (this.state.itemEditing && item.id === this.state.itemEditing.id) {
           newState = {
             ...newState,
@@ -368,13 +386,13 @@ class App extends Component {
       ).then(res => res.json()).then(orders => this.setState({ orders, loading: false }));
   }
 
-  changeOrder({ id, newIndex, itemEditing }) {
+  changeOrder({ id, newIndex, itemEditing, isNew, isDelete }) {
     this.setState({ loading: true });
     const oldOrder = this.getOrdering({ id: itemEditing.id });
     const oldIndex = oldOrder.indexOf(id);
     const ordering = oldOrder.slice(0);
-    ordering.splice(oldIndex, 1);
-    ordering.splice(newIndex + (newIndex < oldIndex ? 1 : 0), 0, id);
+    if (!isNew) ordering.splice(oldIndex, 1);
+    if (!isDelete) ordering.splice(newIndex + (newIndex < oldIndex ? 1 : 0), 0, id);
     dataUtil
       .post(
         config.routes[config.entities.orders].update,
