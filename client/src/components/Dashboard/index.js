@@ -107,11 +107,9 @@ class Dashboard extends Component {
               handleDeleteItem={props.handleDeleteItem}
               handleChildEntityAddition={this.handleChildEntityAddition}
               childEntities={props.childEntities}
-              handleAddTag={props.handleAddTag}
               images={props.images}
               conversations={props.conversations}
               videos={props.videos}
-              tags={props.tags}
               updateStartEntity={props.updateStartEntity}
               readOnly={props.readOnly}
               order={order}

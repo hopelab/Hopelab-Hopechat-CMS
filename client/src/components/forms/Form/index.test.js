@@ -15,7 +15,6 @@ describe('Form component', () => {
     updateStartEntity: jest.fn(),
     images: [],
     videos: [],
-    tags: [],
     config: {
       fields: '',
     },

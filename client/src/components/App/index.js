@@ -216,20 +216,6 @@ class App extends Component {
       .catch(console.error);
   }
 
-  handleAddTag = tag => {
-    if (dataUtil.tagExists(tag, this.state.tag)) {
-      return;
-    }
-
-    dataUtil
-      .post(config.routes[config.TYPE_TAG][config.operations.create], tag)
-      .then(res => res.json())
-      .then(res => {
-        this.setState({ [config.TYPE_TAG]: res });
-      })
-      .catch(console.error);
-  };
-
   handleCopyEntity(entity) {
     const itemToCopy = entity ? {
       ...this.state.itemEditing,
@@ -407,7 +393,7 @@ class App extends Component {
       active: (itemEditing || {}).id,
     });
 
-    const { showStudyIdView, studyIds, conversation, image, video, tag, openDeleteModal, itemToDelete } = this.state;
+    const { showStudyIdView, studyIds, conversation, image, video, openDeleteModal, itemToDelete } = this.state;
     return (
       <div className="App row">
         <UploadModal
@@ -459,7 +445,6 @@ class App extends Component {
           handleSaveItem={this.handleSaveItem}
           handleDeleteItem={this.handleDeleteItem}
           handleNewChildEntity={this.handleNewChildEntity}
-          handleAddTag={this.handleAddTag}
           itemEditing={itemEditing}
           childEntities={childEntities}
           conversations={conversation}
@@ -467,7 +452,6 @@ class App extends Component {
           handleCopyEntity={this.handleCopyEntity}
           images={image}
           videos={video}
-          tags={tag}
           updateStartEntity={this.updateStartEntity}
           showStudyIdView={showStudyIdView}
           studyIds={studyIds}

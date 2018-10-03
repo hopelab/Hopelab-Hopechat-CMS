@@ -16,7 +16,6 @@ const entityTypes = {
   series: TYPE_SERIES,
   block: TYPE_BLOCK,
   message: TYPE_MESSAGE,
-  tag: 'tag'
 };
 
 const defaultData = {

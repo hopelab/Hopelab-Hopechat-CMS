@@ -23,7 +23,6 @@ import {
 const propTypes = {
   item: PropTypes.shape({
     name: PropTypes.string,
-    tags: PropTypes.array,
     type: PropTypes.string,
     isLive: PropTypes.bool,
     children: PropTypes.array,
@@ -45,9 +44,9 @@ const propTypes = {
 /**
  * Check if Form has given field
 */
-function formHasField(field, fields = []) {
-  return fields.indexOf(field) > -1;
-}
+const formHasField = (field, fields = []) =>
+  fields.indexOf(field) > -1;
+
 
 class Form extends Component {
   constructor(props) {
@@ -64,8 +63,9 @@ class Form extends Component {
     const { readOnly, childEntities = [], setNewIndex, order } = this.props;
     const orderedChildren = [];
     childEntities.forEach(c => {
-      orderedChildren[order.indexOf(c.id)] = c;
+      orderedChildren[order.indexOf(c.id) > 0 ? order.indexOf(c.id) : order.length] = c;
     });
+
     if (!childEntities.length && !readOnly) {
       return (<NextMessage
         parentItemType={this.props.item.type}
