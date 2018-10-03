@@ -289,6 +289,8 @@ class App extends Component {
       .then(dataUtil.constructEntityState(item.type))
       .then(nextEntityState => {
         let newState = { loading: false };
+        const itemEditing = this.getFullItemEditing(this.state);
+        this.changeOrder({ id: item.id, itemEditing, isDelete: true });
         if (this.state.itemEditing && item.id === this.state.itemEditing.id) {
           newState = {
             ...newState,
@@ -384,13 +386,13 @@ class App extends Component {
       ).then(res => res.json()).then(orders => this.setState({ orders, loading: false }));
   }
 
-  changeOrder({ id, newIndex, itemEditing, isNew }) {
+  changeOrder({ id, newIndex, itemEditing, isNew, isDelete }) {
     this.setState({ loading: true });
     const oldOrder = this.getOrdering({ id: itemEditing.id });
     const oldIndex = oldOrder.indexOf(id);
     const ordering = oldOrder.slice(0);
     if (!isNew) ordering.splice(oldIndex, 1);
-    ordering.splice(newIndex + (newIndex < oldIndex ? 1 : 0), 0, id);
+    if (!isDelete) ordering.splice(newIndex + (newIndex < oldIndex ? 1 : 0), 0, id);
     dataUtil
       .post(
         config.routes[config.entities.orders].update,
