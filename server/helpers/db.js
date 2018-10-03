@@ -75,6 +75,13 @@ const createNewSingleEntity = (type, entity) => entities =>
     created: Date.now()
   });
 
+const createNewSingleMsgOrColl = (type, entity) =>
+  Object.assign({}, getDefaultDataForEntityType(type), entity, {
+    id: shortid.generate(),
+    name: entity.name,
+    created: Date.now()
+  });
+
 const createNewEntity = (type, entity) => entities =>
   entities.concat(
     Object.assign({}, getDefaultDataForEntityType(type), entity, {
@@ -177,5 +184,6 @@ module.exports = {
   deleteLinksFromDifferentEntitySets,
   getDBKeyForEntityType,
   createNewSingleEntity,
-  getNewestInList
+  getNewestInList,
+  createNewSingleMsgOrColl
 };

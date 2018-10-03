@@ -31,7 +31,7 @@ class Dashboard extends Component {
     this.handleRuleChanged = this.handleRuleChanged.bind(this);
   }
 
-  handleChildEntityAddition(selectedOption, callback) {
+  handleChildEntityAddition(selectedOption, callback, addedFromIndex) {
     const { childEntities, itemEditing } = this.props;
     const setNameRelToParent = ({ parent, newInt }) =>
       (`${parent.name.substr(0, 5).toUpperCase()}-${newInt}`);
@@ -42,7 +42,7 @@ class Dashboard extends Component {
         type: itemEditing.type,
         id: itemEditing.id,
       },
-    }, callback);
+    }, callback, addedFromIndex);
   }
 
   handleItemNameChange(name) {

@@ -11,7 +11,6 @@ const {
   DB_COLLECTION_LIST,
   TYPE_COLLECTION,
   DB_STUDY,
-  TYPE_ORDER,
   DB_ORDERS_LIST,
 } = require('./constants');
 
@@ -30,7 +29,7 @@ const { formatNameCopy } = require('./utils/general');
 
 const Facebook = require('./services/facebook');
 
-const { createNewSingleEntity } = helpers;
+const { createNewSingleEntity, createNewSingleMsgOrColl } = helpers;
 
 module.exports = store => {
 
@@ -126,9 +125,7 @@ module.exports = store => {
       .catch(e => console.error(e));
 
   const setCollection = collection =>
-    getCollections()
-      .then(createNewSingleEntity(TYPE_COLLECTION, collection))
-      .then(updateCollection)
+    updateCollection(createNewSingleMsgOrColl(TYPE_COLLECTION, collection))
       .then(c => redisClient.lpush(DB_COLLECTION_LIST, c.id))
       .then(getCollections)
       .catch(console.error);
@@ -255,9 +252,7 @@ module.exports = store => {
   // TODO: not ideal to call getMessages 2x. We will deprecate this method when we allow
   // less nonsensical names to be chosen
   const setMessage = message =>
-    getMessages()
-      .then(createNewSingleEntity(TYPE_MESSAGE, message))
-      .then(updateMessage)
+    updateMessage(createNewSingleMsgOrColl(TYPE_MESSAGE, message))
       .then(m => redisClient.lpush(DB_MESSAGE_LIST, m.id))
       .then(getMessages)
       .catch(console.error);

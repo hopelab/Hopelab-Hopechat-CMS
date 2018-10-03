@@ -67,6 +67,7 @@ class ConversationItem extends Component {
     className: PropTypes.string,
     parentItemType: PropTypes.string,
     connectDragSource: PropTypes.func.isRequired,
+    index: PropTypes.number.isRequired,
   }
 
   constructor(props) {
@@ -263,7 +264,7 @@ class ConversationItem extends Component {
   }
 
   render() {
-    const { item: { isEvent = false } } = this.props;
+    const { item: { isEvent = false }, index } = this.props;
     const { connectDragSource, className } = this.props;
     return connectDragSource(
       <div
@@ -328,7 +329,7 @@ class ConversationItem extends Component {
                     ...this.props.item,
                     next: { id: newItem.id, type: newItem.type },
                   });
-                });
+                }, index);
               }}
             />
           </div>
