@@ -63,7 +63,7 @@ class Form extends Component {
     const { readOnly, childEntities = [], setNewIndex, order } = this.props;
     const orderedChildren = [];
     childEntities.forEach(c => {
-      orderedChildren[order.indexOf(c.id) > 0 ? order.indexOf(c.id) : order.length] = c;
+      orderedChildren[order.indexOf(c.id) > -1 ? order.indexOf(c.id) : order.length] = c;
     });
 
     if (!childEntities.length && !readOnly) {
