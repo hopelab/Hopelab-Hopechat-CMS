@@ -14,7 +14,6 @@ const {
   DB_MESSAGES,
   DB_BLOCKS,
   DB_MEDIA,
-  DB_TAG,
   ONE_WEEK_IN_MILLISECONDS
 } = require('../constants');
 
@@ -49,9 +48,6 @@ let promises = [
   cacheUtils.deleteItem(DB_MEDIA).then(() => {
     cacheUtils.setItem(DB_MEDIA, ONE_WEEK_IN_MILLISECONDS, media);
   }),
-  cacheUtils.deleteItem(DB_TAG).then(() => {
-    cacheUtils.setItem(DB_TAG, ONE_WEEK_IN_MILLISECONDS, []);
-  })
 ];
 
 Promise.all(promises).then(process.exit);

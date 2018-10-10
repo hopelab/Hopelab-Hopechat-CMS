@@ -46,7 +46,7 @@ export function createInitialEntityState(data) {
     [entities.message]: data[4],
     [entities.image]: data[5],
     [entities.video]: data[6],
-    [entities.tag]: data[7],
+    [entities.orders]: data[7],
   };
 }
 
@@ -145,7 +145,7 @@ export function fetchAllDataForApp(routes) {
       res.json()),
     fetch(routes.video.all, http.makeCommonFetchOptions()).then(res =>
       res.json()),
-    fetch(routes.tag.all, http.makeCommonFetchOptions()).then(res => res.json()),
+    fetch(routes.orders.all, http.makeCommonFetchOptions()).then(res => res.json()),
   ]).then(throwIfEmptyArray);
 }
 
@@ -193,16 +193,6 @@ export function getChildEntitiesFor(item, paramEntities) {
   return childEntities;
 }
 
-/**
- * Construct Child Entities For Given Entity
- *
- * @param {Object} tag
- * @param {Array} tags
- * @returns {Boolean}
-*/
-export function tagExists(tag, tags) {
-  return R.findIndex(R.propEq('name', tag.name))(tags) > -1;
-}
 
 /**
  * Create Tree View Data Structure for UI

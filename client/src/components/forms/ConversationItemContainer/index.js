@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { DropTarget } from 'react-dnd';
+
+import DnDPlaceHolder from '../../common/DND/DnDPlaceHolder';
 import ConversationItem from '../ConversationItem';
 import QuickReply from '../QuickReply';
 import {
@@ -8,9 +11,11 @@ import {
   MESSAGE_TYPE_TEXT,
   QUICK_REPLY_MAX_LENGTH,
   TYPE_CONVERSATION,
+  ITEMS,
 } from '../../../utils/config';
 
-class ConversationItemContainer extends Component {
+
+export class ConversationItemContainer extends Component {
   static propTypes = {
     item: PropTypes.shape({
       messageType: PropTypes.string,
@@ -25,6 +30,8 @@ class ConversationItemContainer extends Component {
     handleDeleteItem: PropTypes.func.isRequired,
     childEntities: PropTypes.array.isRequired,
     images: PropTypes.array.isRequired,
+    isOver: PropTypes.bool.isRequired,
+    canDrop: PropTypes.bool.isRequired,
   }
 
   constructor(props) {
@@ -192,9 +199,19 @@ class ConversationItemContainer extends Component {
   }
 
   render() {
+    const { connectDropTarget, isOver, canDrop, setNewIndex } = this.props;
+    let container = (
+      <div className="p-2" key="origItem">
+        <ConversationItem
+          className="m-2"
+          {...this.props}
+        />
+      </div>
+    );
+
     if (this.messageTypeHasDifferentOptions(this.props.item.messageType)) {
-      return (
-        <div className="p-2">
+      container = (
+        <div className="p-2" key="origItem">
           <div className="d-flex flex-row justify-content-start">
             <ConversationItem
               {...this.props}
@@ -224,7 +241,7 @@ class ConversationItemContainer extends Component {
                   onNewItem={() => {
                     this.props.handleChildEntityAddition(this.props.item.type, newItem => {
                       this.handleNextItemSelect(i, newItem.id, newItem.type);
-                    });
+                    }, i);
                   }}
                   showEndOfConversation={this.props.parentItemType === TYPE_CONVERSATION}
                 />
@@ -247,25 +264,45 @@ class ConversationItemContainer extends Component {
                   onNewItem={() => {
                     this.props.handleChildEntityAddition(this.props.item.type, newItem => {
                       this.handleNextItemSelect(i, newItem.id, newItem.type);
-                    });
+                    }, i);
                   }}
                   messageType={this.props.item.messageType}
                   conversations={this.props.conversations}
                   showEndOfConversation={false}
+                  setNewIndex={args => setNewIndex(args)}
                 />
               ))}
           </div>
         </div>
       );
     }
-    return (
-
-      <ConversationItem
-        className="m-2"
-        {...this.props}
-      />
-    );
+    const array = [connectDropTarget(container)];
+    if (isOver && canDrop) array.push(<DnDPlaceHolder key="dndItem" />);
+    return array;
   }
 }
 
-export default ConversationItemContainer;
+const conversationtItemTarget = {
+  drop(props, monitor) {
+    const draggedItem = monitor.getItem();
+    if (draggedItem.index === props.index) {
+      return { newIndex: draggedItem.index };
+    }
+    return { newIndex: props.index };
+  },
+  canDrop(props, monitor) {
+    const draggedItem = monitor.getItem();
+    if (draggedItem && draggedItem.index === props.index) {
+      return false;
+    }
+    return true;
+  },
+};
+
+export default DropTarget(ITEMS.CONVERSATION_ITEM, conversationtItemTarget, (connect, monitor) => ({
+  connectDropTarget: connect.dropTarget(),
+  isOver: monitor.isOver(),
+  isOverCurrent: monitor.isOver({ shallow: true }),
+  canDrop: monitor.canDrop(),
+  itemType: monitor.getItemType(),
+}))(ConversationItemContainer);

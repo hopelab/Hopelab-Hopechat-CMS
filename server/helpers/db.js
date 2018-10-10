@@ -16,7 +16,6 @@ const entityTypes = {
   series: TYPE_SERIES,
   block: TYPE_BLOCK,
   message: TYPE_MESSAGE,
-  tag: 'tag'
 };
 
 const defaultData = {
@@ -72,6 +71,13 @@ const createNewSingleEntity = (type, entity) => entities =>
     id: shortid.generate(),
     name:
       entity.name || `${type} ${getDefaultIndexForPublicEntity(entities)}`,
+    created: Date.now()
+  });
+
+const createNewSingleMsgOrColl = (type, entity) =>
+  Object.assign({}, getDefaultDataForEntityType(type), entity, {
+    id: shortid.generate(),
+    name: entity.name,
     created: Date.now()
   });
 
@@ -177,5 +183,6 @@ module.exports = {
   deleteLinksFromDifferentEntitySets,
   getDBKeyForEntityType,
   createNewSingleEntity,
-  getNewestInList
+  getNewestInList,
+  createNewSingleMsgOrColl
 };

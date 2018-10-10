@@ -15,7 +15,6 @@ describe('DashboardHeader component', () => {
     formConfig: {},
     handleDeleteItem: jest.fn(),
     handleNewChildEntity: jest.fn(),
-    handleAddTag: jest.fn(),
     childEntities: [],
     handleCopyEntity: jest.fn(),
     images: [],

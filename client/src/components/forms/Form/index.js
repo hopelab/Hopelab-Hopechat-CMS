@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import 'react-tagsinput/react-tagsinput.css';
+
+import { DragDropContext } from 'react-dnd';
+
+import HTML5Backend from 'react-dnd-html5-backend';
 
 import ConversationItemContainer from '../ConversationItemContainer';
 import FirstItemSelect from '../FirstItemSelect';
@@ -20,7 +23,6 @@ import {
 const propTypes = {
   item: PropTypes.shape({
     name: PropTypes.string,
-    tags: PropTypes.array,
     type: PropTypes.string,
     isLive: PropTypes.bool,
     children: PropTypes.array,
@@ -35,14 +37,16 @@ const propTypes = {
   handleChildEntityAddition: PropTypes.func,
   conversations: PropTypes.array,
   readOnly: PropTypes.bool.isRequired,
+  setNewIndex: PropTypes.func.isRequired,
+  order: PropTypes.arrayOf(PropTypes.string),
 };
 
 /**
  * Check if Form has given field
 */
-function formHasField(field, fields = []) {
-  return fields.indexOf(field) > -1;
-}
+const formHasField = (field, fields = []) =>
+  fields.indexOf(field) > -1;
+
 
 class Form extends Component {
   constructor(props) {
@@ -56,7 +60,12 @@ class Form extends Component {
   }
 
   render() {
-    const { readOnly, childEntities = [] } = this.props;
+    const { readOnly, childEntities = [], setNewIndex, order } = this.props;
+    const orderedChildren = [];
+    childEntities.forEach(c => {
+      orderedChildren[order.indexOf(c.id) > -1 ? order.indexOf(c.id) : order.length] = c;
+    });
+
     if (!childEntities.length && !readOnly) {
       return (<NextMessage
         parentItemType={this.props.item.type}
@@ -79,12 +88,14 @@ class Form extends Component {
           ? <FirstItemSelect
             childEntities={this.props.childEntities}
             onSelectStart={this.props.updateStartEntity}
+            index={-1}
           /> : null
         }
 
         {formHasField('children', this.props.config.fields) ? (
-          this.props.childEntities.sort((a, b) => ((a.created < b.created) ? -1 : 1)).map((e, i) => (
+          orderedChildren.map((e, i) => (
             <ConversationItemContainer
+              setNewIndex={newIndex => setNewIndex({ newIndex, id: e.id })}
               key={e.id}
               item={e}
               index={i}
@@ -105,5 +116,4 @@ class Form extends Component {
 }
 
 Form.propTypes = propTypes;
-
-export default Form;
+export default DragDropContext(HTML5Backend)(Form);

@@ -1,8 +1,16 @@
 .ConversationItem {
-  background-color: blue;
   color: white;
   font-size: 1.1em;
   border: 1px solid rgb(228,228,228);
+  cursor: move;
+}
+
+.over {
+  opacity: 0.3;
+  border: 4px dashed blue;
+  width: 360px;
+  height: 200px;
+  border-radius: 10px;
 }
 
 .ConversationItem > .card-header {
@@ -23,4 +31,11 @@
 
 .ConversationItem .form-check {
   clear: both;
+}
+
+.ConversationItem input {
+  cursor: text;
+}
+.ConversationItem .card-text {
+  cursor: text;
 }

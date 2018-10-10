@@ -31,7 +31,7 @@ class Dashboard extends Component {
     this.handleRuleChanged = this.handleRuleChanged.bind(this);
   }
 
-  handleChildEntityAddition(selectedOption, callback) {
+  handleChildEntityAddition(selectedOption, callback, addedFromIndex) {
     const { childEntities, itemEditing } = this.props;
     const setNameRelToParent = ({ parent, newInt }) =>
       (`${parent.name.substr(0, 5).toUpperCase()}-${newInt}`);
@@ -42,7 +42,7 @@ class Dashboard extends Component {
         type: itemEditing.type,
         id: itemEditing.id,
       },
-    }, callback);
+    }, callback, addedFromIndex);
   }
 
   handleItemNameChange(name) {
@@ -75,7 +75,7 @@ class Dashboard extends Component {
 
   render() {
     const { props } = this;
-    const { showStudyIdView, studyIds } = props;
+    const { showStudyIdView, studyIds, setNewIndex, order } = props;
     if (showStudyIdView) return <StudyIdView studyIds={studyIds} />;
     return (
       <div className="Dashboard mt-1">
@@ -100,19 +100,19 @@ class Dashboard extends Component {
               toggleReadOnly={props.toggleReadOnly}
             />
             <Form
+              setNewIndex={args => setNewIndex(args)}
               item={props.itemEditing}
               config={props.formConfig[props.itemEditing.type]}
               handleSaveItem={props.handleSaveItem}
               handleDeleteItem={props.handleDeleteItem}
               handleChildEntityAddition={this.handleChildEntityAddition}
               childEntities={props.childEntities}
-              handleAddTag={props.handleAddTag}
               images={props.images}
               conversations={props.conversations}
               videos={props.videos}
-              tags={props.tags}
               updateStartEntity={props.updateStartEntity}
               readOnly={props.readOnly}
+              order={order}
             />
           </div>
         )}

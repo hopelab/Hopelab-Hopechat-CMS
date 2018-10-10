@@ -6,13 +6,15 @@ const DB_CONVERSATIONS = 'conversations';
 const DB_COLLECTIONS = 'collections';
 const DB_COLLECTION_LIST = 'collectionList';
 
+const TYPE_ORDER = 'orders';
+const DB_ORDERS_LIST = 'ordersList';
+
 const DB_SERIES = 'series';
 //deprecated
 const DB_MESSAGES = 'messages';
 const DB_MESSAGE_LIST = 'msglist';
 const DB_BLOCKS = 'blocks';
 const DB_MEDIA = 'media';
-const DB_TAG = 'tag';
 const DB_USERS = 'users';
 const DB_STUDY = 'study';
 
@@ -26,7 +28,6 @@ const MESSAGE_TYPE_QUESTION_WITH_REPLIES = 'questionWithReplies';
 const MESSAGE_TYPE_ANSWER = 'answer';
 const MESSAGE_TYPE_IMAGE = 'image';
 const MESSAGE_TYPE_VIDEO = 'video';
-const TYPE_TAG = 'tag';
 
 const DEFAULT_NAME = 'default';
 
@@ -44,7 +45,6 @@ module.exports = {
   DB_MESSAGES,
   DB_BLOCKS,
   DB_MEDIA,
-  DB_TAG,
   DB_USERS,
   TYPE_CONVERSATION,
   TYPE_COLLECTION,
@@ -56,12 +56,13 @@ module.exports = {
   TYPE_BLOCK,
   MESSAGE_TYPE_IMAGE,
   MESSAGE_TYPE_VIDEO,
-  TYPE_TAG,
   DEFAULT_NAME,
   ONE_DAY_IN_MILLISECONDS,
   ONE_WEEK_IN_MILLISECONDS,
   SUPPORTED_FILE_TYPES,
   DB_MESSAGE_LIST,
   DB_COLLECTION_LIST,
-  DB_STUDY
+  DB_STUDY,
+  TYPE_ORDER,
+  DB_ORDERS_LIST,
 };

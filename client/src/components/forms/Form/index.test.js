@@ -15,7 +15,6 @@ describe('Form component', () => {
     updateStartEntity: jest.fn(),
     images: [],
     videos: [],
-    tags: [],
     config: {
       fields: '',
     },
@@ -23,6 +22,7 @@ describe('Form component', () => {
       type: TYPE_CONVERSATION,
     },
     readOnly: false,
+    setNewIndex: jest.fn(),
   };
   let component;
   beforeEach(() => {

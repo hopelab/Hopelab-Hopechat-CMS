@@ -3,14 +3,14 @@ const {
   DB_SERIES,
   DB_BLOCKS,
   DB_MEDIA,
-  DB_TAG,
   TYPE_MESSAGE,
   ONE_DAY_IN_MILLISECONDS,
   SUPPORTED_FILE_TYPES,
   DB_MESSAGE_LIST,
   DB_COLLECTION_LIST,
   TYPE_COLLECTION,
-  DB_STUDY
+  DB_STUDY,
+  DB_ORDERS_LIST,
 } = require('./constants');
 
 const redisClient = require('./utils/client');
@@ -22,12 +22,13 @@ const getLAsync = promisify(redisClient.lrange).bind(redisClient);
 
 const fileUtils = require('./utils/file');
 const { keyFormatMessageId } = require('./utils/messages');
+const { keyFormatOrderId } = require('./utils/orders');
 const { keyFormatCollectionId } = require('./utils/collections');
 const { formatNameCopy } = require('./utils/general');
 
 const Facebook = require('./services/facebook');
 
-const { createNewSingleEntity } = helpers;
+const { createNewSingleEntity, createNewSingleMsgOrColl } = helpers;
 
 module.exports = store => {
 
@@ -123,9 +124,7 @@ module.exports = store => {
       .catch(e => console.error(e));
 
   const setCollection = collection =>
-    getCollections()
-      .then(createNewSingleEntity(TYPE_COLLECTION, collection))
-      .then(updateCollection)
+    updateCollection(createNewSingleMsgOrColl(TYPE_COLLECTION, collection))
       .then(c => redisClient.lpush(DB_COLLECTION_LIST, c.id))
       .then(getCollections)
       .catch(console.error);
@@ -252,9 +251,7 @@ module.exports = store => {
   // TODO: not ideal to call getMessages 2x. We will deprecate this method when we allow
   // less nonsensical names to be chosen
   const setMessage = message =>
-    getMessages()
-      .then(createNewSingleEntity(TYPE_MESSAGE, message))
-      .then(updateMessage)
+    updateMessage(createNewSingleMsgOrColl(TYPE_MESSAGE, message))
       .then(m => redisClient.lpush(DB_MESSAGE_LIST, m.id))
       .then(getMessages)
       .catch(console.error);
@@ -430,38 +427,6 @@ module.exports = store => {
       return StaticAssetsSvc.getFiles('video').then(resolve);
     });
 
-  /**
-     * Get Tags
-     *
-     * @return {Promise<Object>}
-    */
-  const getTags = () =>
-    new Promise(resolve => {
-      store
-        .getItem(DB_TAG)
-        .then(JSON.parse)
-        .then(resolve)
-        .catch(console.error);
-    });
-
-  /**
-   * Set Tag
-   *
-   * @param {Object} tag
-   * @return {Promise<bool>}
-  */
-  const setTag = tag =>
-    new Promise(resolve => {
-      store
-        .getItem(DB_TAG)
-        .then(JSON.parse)
-        .then(helpers.createNewEntity(helpers.entityTypes.tag, tag))
-        .then(store.setItem(DB_TAG, ONE_DAY_IN_MILLISECONDS))
-        .then(resolve)
-        .catch(console.error);
-    });
-
-
   const getStudyIds = () =>
     new Promise(resolve => {
       store
@@ -471,6 +436,40 @@ module.exports = store => {
         .catch(console.error);
     });
   // createStudyId
+
+  const getOrderById = id => (
+    new Promise(resolve => {
+      store.getItem(keyFormatOrderId(id))
+        .then(order => resolve(JSON.parse(order)))
+        .catch(e => {
+          // no item found matching cacheKey
+          console.error(
+            `error: getOrderById - getJSONItemFromCache(order:${id}})`,
+            e
+          );
+          resolve();
+        });
+    })
+  );
+
+  const getOrders = () =>
+    getLAsync(DB_ORDERS_LIST, 0, -1)
+      .then(orderIds => Promise.all(
+        orderIds.map(id => getOrderById(id)))
+      )
+      .catch(console.error);
+
+  const updateOrder = order =>
+    new Promise(resolve => {
+      redisClient.set(keyFormatOrderId(order.id), JSON.stringify(order));
+      resolve(order);
+    });
+
+  const setOrder = order =>
+    updateOrder(order)
+      .then(order => redisClient.lpush(DB_ORDERS_LIST, order.id))
+      .then(getOrders)
+      .catch(console.error);
 
   return {
     getConversations,
@@ -506,10 +505,12 @@ module.exports = store => {
 
     getVideos,
 
-    getTags,
-    setTag,
-
     getStudyIds,
-    getNameCopyNumber
+    getNameCopyNumber,
+
+    getOrders,
+    getOrderById,
+    setOrder,
+    updateOrder,
   };
 };

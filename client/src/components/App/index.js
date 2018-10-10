@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { pick, omit, isEmpty } from 'ramda';
+import { pick, omit, isEmpty, isNil } from 'ramda';
 
 import './style.css';
 
@@ -143,7 +143,7 @@ class App extends Component {
     return entity;
   };
 
-  handleNewChildEntity = (entity, callback) => {
+  handleNewChildEntity = (entity, callback, addedFromIndex) => {
     this.setState({ loading: true });
     dataUtil
       .post(config.routes[entity.type].create, this.markPosition(entity))
@@ -151,6 +151,21 @@ class App extends Component {
       .then(dataUtil.throwIfEmptyArray)
       .then(res => {
         const addedItem = res.sort((a, b) => (a.created < b.created ? 1 : -1))[0];
+        const itemEditing = this.getFullItemEditing(this.state);
+        const data = omit(['loading'], this.state);
+
+        const childEntities = dataUtil.getChildEntitiesFor(
+          itemEditing,
+          data,
+        );
+        const order = this.getOrdering({ id: itemEditing.id, childEntities });
+        this.changeOrder({
+          id: addedItem.id,
+          newIndex: !isNil(addedFromIndex) ? addedFromIndex + 1 : order.length,
+          itemEditing,
+          isNew: true,
+        });
+
         this.setState(
           {
             [entity.type]: res,
@@ -159,6 +174,7 @@ class App extends Component {
           () => !!(callback) && callback(addedItem),
         );
       })
+      .then(() => this.setOrder)
       .catch(console.error);
   };
 
@@ -216,20 +232,6 @@ class App extends Component {
       .catch(console.error);
   }
 
-  handleAddTag = tag => {
-    if (dataUtil.tagExists(tag, this.state.tag)) {
-      return;
-    }
-
-    dataUtil
-      .post(config.routes[config.TYPE_TAG][config.operations.create], tag)
-      .then(res => res.json())
-      .then(res => {
-        this.setState({ [config.TYPE_TAG]: res });
-      })
-      .catch(console.error);
-  };
-
   handleCopyEntity(entity) {
     const itemToCopy = entity ? {
       ...this.state.itemEditing,
@@ -273,6 +275,8 @@ class App extends Component {
       .then(dataUtil.constructEntityState(item.type))
       .then(nextEntityState => {
         let newState = { loading: false };
+        const itemEditing = this.getFullItemEditing(this.state);
+        this.changeOrder({ id: item.id, itemEditing, isDelete: true });
         if (this.state.itemEditing && item.id === this.state.itemEditing.id) {
           newState = {
             ...newState,
@@ -345,29 +349,69 @@ class App extends Component {
     });
   }
 
+  getOrdering(item) {
+    const { orders } = this.state;
+    const order = orders.find(orderList => orderList.id === item.id) ||
+      this.createOrder(item);
+    return order.ordering;
+  }
+
+  createOrder({ id, childEntities }) {
+    const sorted = childEntities.sort((a, b) => ((a.created < b.created) ? -1 : 1)).map(({ id: cid }) => cid);
+    const ordering = { id, ordering: sorted };
+    this.saveOrdering(ordering);
+    return ordering;
+  }
+
+  saveOrdering(ordering, setLoad) {
+    if (setLoad) this.setState({ loading: true });
+    dataUtil
+      .post(
+        config.routes[config.entities.orders].create,
+        ordering,
+      ).then(res => res.json()).then(orders => this.setState({ orders, loading: false }));
+  }
+
+  changeOrder({ id, newIndex, itemEditing, isNew, isDelete }) {
+    this.setState({ loading: true });
+    const oldOrder = this.getOrdering({ id: itemEditing.id });
+    const oldIndex = oldOrder.indexOf(id);
+    const ordering = oldOrder.slice(0);
+    if (!isNew) ordering.splice(oldIndex, 1);
+    if (!isDelete) ordering.splice(newIndex + (newIndex < oldIndex ? 1 : 0), 0, id);
+    dataUtil
+      .post(
+        config.routes[config.entities.orders].update,
+        { ordering, id: itemEditing.id },
+      ).then(res => res.json()).then(data => {
+        const orders = this.state.orders.map(o => (o.id === data.id ? { ...data } : o));
+        this.setState({ orders, loading: false });
+      });
+  }
+
   render() {
     const { loading, readOnly } = this.state;
     const data = omit(['loading'], this.state);
     if (isEmpty(data)) return <Loader />;
+    const itemEditing = this.getFullItemEditing(this.state);
 
     const entitiesCanCopyTo = dataUtil.getEntitiesCanCopyTo(
-      this.getFullItemEditing(this.state),
+      itemEditing,
       this.state,
     );
 
     const childEntities = dataUtil.getChildEntitiesFor(
-      this.getFullItemEditing(data),
+      itemEditing,
       data,
     );
 
     const treeData = dataUtil.createTreeView({
       data,
       entities: config.entities,
-      active: (this.getFullItemEditing(this.state) || {}).id,
+      active: (itemEditing || {}).id,
     });
 
-    const itemEditing = this.getFullItemEditing(this.state);
-    const { showStudyIdView, studyIds, conversation, image, video, tag, openDeleteModal, itemToDelete } = this.state;
+    const { showStudyIdView, studyIds, conversation, image, video, openDeleteModal, itemToDelete } = this.state;
     return (
       <div className="App row">
         <UploadModal
@@ -414,11 +458,11 @@ class App extends Component {
         }
 
         <Dashboard
+          setNewIndex={({ id, newIndex }) => this.changeOrder({ id, newIndex, itemEditing }, true)}
           formConfig={config.forms}
           handleSaveItem={this.handleSaveItem}
           handleDeleteItem={this.handleDeleteItem}
           handleNewChildEntity={this.handleNewChildEntity}
-          handleAddTag={this.handleAddTag}
           itemEditing={itemEditing}
           childEntities={childEntities}
           conversations={conversation}
@@ -426,12 +470,12 @@ class App extends Component {
           handleCopyEntity={this.handleCopyEntity}
           images={image}
           videos={video}
-          tags={tag}
           updateStartEntity={this.updateStartEntity}
           showStudyIdView={showStudyIdView}
           studyIds={studyIds}
           readOnly={readOnly}
           toggleReadOnly={() => this.toggleReadOnly()}
+          order={itemEditing ? this.getOrdering({ id: itemEditing.id, childEntities }) : null}
         />
       </div>
     );
