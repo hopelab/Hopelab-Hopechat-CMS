@@ -37,9 +37,6 @@
     width: 11px;
     height: 11px;
     line-height: 11px;
-    /* border-radius: 50%; /* the magic */ */
-    /* -moz-border-radius: 50%; */
-    /* -webkit-border-radius: 50%; */
     text-align: center;
     color: white;
     font-size: 10px;
@@ -57,4 +54,29 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.Sidebar .container-fluid {
+  padding-left: 0;
+  padding-right: 0;
+  background-color: rgba(0,0,0, .03);
+}
+
+.Sidebar .blck-box {
+  border: 1px solid black;
+}
+
+.Sidebar .btn.btn-outline-secondary {
+  background-color: white;
+  color: black;
+  margin-top: 0;
+  border-radius: 0;
+}
+
+.Sidebar .btn.btn-outline-secondary:hover {
+  color: #6c757d;;
+}
+
+.Sidebar h4 {
+  margin-left: 10px;
 }
