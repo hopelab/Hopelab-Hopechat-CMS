@@ -7,7 +7,7 @@ describe('Sidebar component', () => {
     addConversation: jest.fn(),
     treeData: {},
     handleTreeToggle: jest.fn(),
-    toggleImageModal: jest.fn(),
+    toggleView: jest.fn(),
     toggleStudyIdView: jest.fn(),
     data: [],
     readOnly: false,
