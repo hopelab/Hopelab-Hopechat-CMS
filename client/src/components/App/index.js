@@ -2,17 +2,13 @@ import React, { Component } from 'react';
 import { pick, omit, isEmpty, isNil } from 'ramda';
 
 import './style.css';
-import { DASHBOARD_COMPONENTS } from '../../utils/constants';
 
 import Loader from '../common/Loader';
 
 import Sidebar from '../Sidebar';
-import AssetLibrary from '../AssetLibrary';
 import Dashboard from '../Dashboard';
 import UploadModal from '../UploadModal';
 import Modal from '../common/Modal';
-import StudyIdView from '../StudyIdView';
-
 
 import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
@@ -26,10 +22,6 @@ class App extends Component {
     this.updateStartEntity = this.updateStartEntity.bind(this);
     this.handleCopyEntity = this.handleCopyEntity.bind(this);
     this.handleCopyItem = this.handleCopyItem.bind(this);
-  }
-
-  componentWillMount() {
-    this.toggleView();
   }
 
   componentDidMount() {
@@ -300,7 +292,8 @@ class App extends Component {
   };
 
   handleTreeToggle = ({ node: pNode, expand }) => {
-    this.toggleView();
+    this.setState({ showStudyIdView: false });
+    /* eslint-disable react/no-direct-mutation-state */
     const node = pNode;
     if (expand) {
       if (node.children) {
@@ -314,6 +307,9 @@ class App extends Component {
       return;
     }
 
+    if (this.state.cursor) {
+      this.state.cursor.active = false;
+    }
     node.active = true;
 
     this.setState({
@@ -332,23 +328,12 @@ class App extends Component {
     });
   }
 
-  toggleView(view) {
-    let component;
-    switch (view) {
-      case DASHBOARD_COMPONENTS.studyIds:
-        if (!this.state.studyIds) {
-          this.loadStudyIds();
-        }
-        component = <StudyIdView />;
-        break;
-      case DASHBOARD_COMPONENTS.assets:
-        component = <AssetLibrary />;
-        break;
-      default:
-        component = <Dashboard />;
-        break;
+  toggleStudyIdView() {
+    const { showStudyIdView } = this.state;
+    if (!this.state.studyIds && !showStudyIdView) {
+      this.loadStudyIds();
     }
-    this.setState({ component, view });
+    this.setState({ showStudyIdView: !showStudyIdView });
   }
 
   toggleReadOnly() {
@@ -404,10 +389,11 @@ class App extends Component {
       });
   }
 
-  getMainProps() {
-    const { studyIds, conversation, image, video, readOnly, view } = this.state;
-    const itemEditing = this.getFullItemEditing(this.state);
+  render() {
+    const { loading, readOnly } = this.state;
     const data = omit(['loading'], this.state);
+    if (isEmpty(data)) return <Loader />;
+    const itemEditing = this.getFullItemEditing(this.state);
 
     const entitiesCanCopyTo = dataUtil.getEntitiesCanCopyTo(
       itemEditing,
@@ -418,56 +404,6 @@ class App extends Component {
       itemEditing,
       data,
     );
-    let mainProps = {};
-    switch (view) {
-      case DASHBOARD_COMPONENTS.studyIds:
-        mainProps = { ...mainProps, studyIds };
-        break;
-      case DASHBOARD_COMPONENTS.assets:
-        mainProps = {
-          ...mainProps,
-          toggleImageModal: () => {
-            this.setState({
-              mediaUpload: {
-                ...this.state.mediaUpload,
-                showModal: !this.state.mediaUpload.showModal,
-              },
-            });
-          },
-        };
-        break;
-      default:
-        mainProps = {
-          ...mainProps,
-          setNewIndex: ({ id, newIndex }) => this.changeOrder({ id, newIndex, itemEditing }, true),
-          formConfig: config.forms,
-          handleSaveItem: this.handleSaveItem,
-          handleDeleteItem: this.handleDeleteItem,
-          handleNewChildEntity: this.handleNewChildEntity,
-          itemEditing,
-          childEntities,
-          conversations: conversation,
-          entitiesCanCopyTo,
-          handleCopyEntity: this.handleCopyEntity,
-          images: image,
-          videos: video,
-          updateStartEntity: this.updateStartEntity,
-          readOnly,
-          toggleReadOnly: () => this.toggleReadOnly(),
-          order: itemEditing ? this.getOrdering({ id: itemEditing.id, childEntities }) : null,
-        };
-    }
-    return mainProps;
-  }
-
-
-  render() {
-    const { loading, readOnly, openDeleteModal, itemToDelete, component } = this.state;
-    const data = omit(['loading'], this.state);
-
-    if (isEmpty(data)) return <Loader />;
-    const itemEditing = this.getFullItemEditing(this.state);
-
 
     const treeData = dataUtil.createTreeView({
       data,
@@ -475,6 +411,7 @@ class App extends Component {
       active: (itemEditing || {}).id,
     });
 
+    const { showStudyIdView, studyIds, conversation, image, video, openDeleteModal, itemToDelete } = this.state;
     return (
       <div className="App row">
         <UploadModal
@@ -494,8 +431,16 @@ class App extends Component {
           treeData={treeData}
           handleTreeToggle={this.handleTreeToggle}
           itemEditing={itemEditing}
-          toggleView={view => this.toggleView(view)}
+          toggleStudyIdView={() => this.toggleStudyIdView()}
           readOnly={readOnly}
+          toggleImageModal={() => {
+            this.setState({
+              mediaUpload: {
+                ...this.state.mediaUpload,
+                showModal: !this.state.mediaUpload.showModal,
+              },
+            });
+          }}
         />
         {loading &&
           <div className="floating-loader">
@@ -512,7 +457,26 @@ class App extends Component {
           />
         }
 
-        {React.cloneElement(component, this.getMainProps())}
+        <Dashboard
+          setNewIndex={({ id, newIndex }) => this.changeOrder({ id, newIndex, itemEditing }, true)}
+          formConfig={config.forms}
+          handleSaveItem={this.handleSaveItem}
+          handleDeleteItem={this.handleDeleteItem}
+          handleNewChildEntity={this.handleNewChildEntity}
+          itemEditing={itemEditing}
+          childEntities={childEntities}
+          conversations={conversation}
+          entitiesCanCopyTo={entitiesCanCopyTo}
+          handleCopyEntity={this.handleCopyEntity}
+          images={image}
+          videos={video}
+          updateStartEntity={this.updateStartEntity}
+          showStudyIdView={showStudyIdView}
+          studyIds={studyIds}
+          readOnly={readOnly}
+          toggleReadOnly={() => this.toggleReadOnly()}
+          order={itemEditing ? this.getOrdering({ id: itemEditing.id, childEntities }) : null}
+        />
       </div>
     );
   }
