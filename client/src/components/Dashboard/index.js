@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 
 import Form from '../forms/Form';
 import DashboardHeader from './DashboardHeader';
+import StudyIdView from '../StudyIdView';
 import './style.css';
 
 const propTypes = {
   handleSaveItem: PropTypes.func,
-  handleNewChildEntity: PropTypes.func,
+  handleNewChildEntity: PropTypes.func.isRequired,
   itemEditing: PropTypes.object,
   childEntities: PropTypes.arrayOf(PropTypes.shape({
     type: PropTypes.string,
@@ -74,7 +75,8 @@ class Dashboard extends Component {
 
   render() {
     const { props } = this;
-    const { setNewIndex, order } = props;
+    const { showStudyIdView, studyIds, setNewIndex, order } = props;
+    if (showStudyIdView) return <StudyIdView studyIds={studyIds} />;
     return (
       <div className="Dashboard mt-1">
         {props.itemEditing !== null && (
@@ -121,8 +123,5 @@ class Dashboard extends Component {
 }
 
 Dashboard.propTypes = propTypes;
-Dashboard.defaultProps = {
-  handleNewChildEntity: () => null,
-};
 
 export default Dashboard;
