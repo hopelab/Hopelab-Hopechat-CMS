@@ -31,6 +31,7 @@ class MediaDropdown extends Component {
 
   renderMediaDropdownItems() {
     const { onSelection, selectedUrl, media } = this.props;
+    console.log(media)
     return media.map(m => (
       <DropdownItem
         key={m.url}

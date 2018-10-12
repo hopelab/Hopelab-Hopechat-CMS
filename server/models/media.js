@@ -1,7 +1,8 @@
 const {
   uploadMedia,
   uploadToFacebookIfVideo,
-  deleteMedia
+  deleteMedia,
+  renameMedia
 } = require('../db')(require('../utils/store'));
 
 /**
@@ -13,5 +14,7 @@ const {
 exports.upload = uploadMedia;
 
 exports.delete = deleteMedia;
+
+exports.rename = renameMedia;
 
 exports.uploadToFacebookIfVideo = uploadToFacebookIfVideo;

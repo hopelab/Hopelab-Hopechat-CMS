@@ -9,16 +9,18 @@ const  R = require('ramda'),
  * @param {String} fileName
  * @returns {Promise}
  */
-const deleteFile = R.curry((s3, fileName) => {
+const getFileMeta = R.curry((s3, fileName) => {
   return new Promise((resolve, reject) => {
-    const params = config.aws.deleteObjectParams(fileName);
-    s3.deleteObject(params, err => {
-      if (err) {
+    const params = config.aws.headObjectParams(fileName);
+    s3.headObject(params, (err, data) => {
+      if (err || !data) {
+        console.error(err);
         reject(err);
+      } else {
+        resolve(data);
       }
-      resolve(null);
     });
   });
 });
 
-module.exports = deleteFile;
+module.exports = getFileMeta;

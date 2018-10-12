@@ -19,4 +19,11 @@ router.get('/delete/:name/:type', (req, res) => {
     .catch(apiErrorResponse);
 });
 
+router.get('/rename/:new/:old', (req, res) => {
+  req.setTimeout(0);
+  Media.rename(req.params.new, req.params.old)
+    .then(() => res.send())
+    .catch(apiErrorResponse);
+});
+
 module.exports = router;

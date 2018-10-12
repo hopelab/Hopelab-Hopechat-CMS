@@ -1,13 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Container, Card,
-CardBody,
-CardHeader,
-CardSubtitle } from 'reactstrap';
-import * as dataUtil from '../../utils/data';
+import { Button, Container, Card, CardBody, CardHeader } from 'reactstrap';
 
 import MediaPreview from '../forms/MediaPreview';
-import { retrieveAssets } from '../../utils/aws';
+import EditableText from '../forms/EditableText';
 import * as config from '../../utils/config';
 
 import './style.css';
@@ -18,9 +14,9 @@ export class AssetLibrary extends React.Component {
 
   }
   render() {
-    const { toggleImageModal, assets, deleteMedia } = this.props;
+    const { toggleImageModal, assets, deleteMedia, renameFile } = this.props;
     return (
-      <div className="col-8 StudyIdView">
+      <div className="col-8 AssetLibrary">
         <div
           className="card-header d-flex flex-row justify-content-between col-12"
         >
@@ -43,11 +39,15 @@ export class AssetLibrary extends React.Component {
             <Card className="col-6" key={a.key + i}>
               <CardBody>
                 <CardHeader className="d-flex flex-row justify-content-between">
-                  {a.key}
-                  <Button color="danger" onClick={() => deleteMedia(a.url, a.type || config.MESSAGE_TYPE_IMAGE)}>Delete</Button>
+                  <EditableText
+                    text={a.key}
+                    onEditWillFinish={val => renameFile(val, a.url, a.type || config.MESSAGE_TYPE_IMAGE)}
+                  />
+                  <Button color="danger" onClick={() => deleteMedia(a.url, a.type || config.MESSAGE_TYPE_IMAGE)}>
+                    Delete
+                  </Button>
                 </CardHeader>
-                <CardSubtitle>{a.url}</CardSubtitle>
-                <MediaPreview {...a} />
+                <MediaPreview {...a} type={a.type || config.MESSAGE_TYPE_IMAGE} />
               </CardBody>
             </Card>
           ))}

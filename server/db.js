@@ -29,6 +29,7 @@ const { formatNameCopy } = require('./utils/general');
 
 const Facebook = require('./services/facebook');
 
+const { cleanString } = fileUtils;
 const { createNewSingleMsgOrColl } = helpers;
 
 module.exports = store => {
@@ -374,7 +375,7 @@ module.exports = store => {
     */
   const uploadMedia = data =>
     new Promise((resolve, reject) => {
-      const file = data.file;
+      const file = { ...data.file , fileName: encodeURI(data.file.name)};
       const StaticAssetsSvc = require('./services/staticAssets/StaticAssets')(
         's3'
       );
@@ -387,7 +388,7 @@ module.exports = store => {
         });
       }
 
-      return StaticAssetsSvc.saveFile(file.name, file).then(resolve);
+      return StaticAssetsSvc.saveFile(cleanString(file.name), file).then(resolve);
     });
 
   const deleteMedia = (name, type) =>
@@ -398,6 +399,19 @@ module.exports = store => {
 
       return StaticAssetsSvc.deleteFile(name)
         .then(type === MESSAGE_TYPE_VIDEO ? getVideos : getImages)
+        .then(resolve)
+        .catch(reject);
+    });
+
+  const renameMedia = (newName, oldName) =>
+    new Promise((resolve, reject) => {
+      const StaticAssetsSvc = require('./services/staticAssets/StaticAssets')(
+        's3'
+      );
+      const { copyFile, deleteFile, getFileMeta } = StaticAssetsSvc;
+      return getFileMeta(oldName)
+        .then(() =>copyFile(newName, oldName))
+        .then(newFile => {if (newFile) deleteFile(oldName); else reject();})
         .then(resolve)
         .catch(reject);
     });
@@ -514,6 +528,7 @@ module.exports = store => {
     getImages,
     uploadMedia,
     deleteMedia,
+    renameMedia,
 
     uploadToFacebookIfVideo,
 

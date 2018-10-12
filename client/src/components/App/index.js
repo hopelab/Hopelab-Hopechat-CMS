@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { pick, omit, isEmpty, isNil } from 'ramda';
+import { pick, omit, isEmpty, isNil, equals } from 'ramda';
 
 import './style.css';
 import { DASHBOARD_COMPONENTS } from '../../utils/constants';
@@ -18,7 +18,8 @@ import StudyIdView from '../StudyIdView';
 import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
 
-const { MESSAGE_TYPE_VIDEO, MESSAGE_TYPE_IMAGE } = config;
+const { MESSAGE_TYPE_VIDEO } = config;
+const { cleanString } = dataUtil;
 
 class App extends Component {
   constructor(props) {
@@ -285,8 +286,27 @@ class App extends Component {
     )
       .then(res => res.json())
       .then(val => {
-        this.setState({ [type === MESSAGE_TYPE_IMAGE ? MESSAGE_TYPE_IMAGE : MESSAGE_TYPE_VIDEO]: val, loading: false });
+        this.setState({ [type]: val, loading: false });
       });
+  }
+
+  renameMedia(newName, url, type) {
+    const urlArray = url.split('/');
+    const fileName = urlArray[urlArray.length - 1];
+    const displayName = fileName.split('.')[0];
+    const newUrl = url.replace(displayName, cleanString(newName));
+    const repl = this.state[type].map(i =>
+      (equals(i.url, url) ?
+        { ...i, url: newUrl, key: cleanString(newName) } : i));
+    const message = this.state.message.map(m => (equals(m.url, url) ? { ...m, url: newUrl } : m));
+    this.setState({ loading: true });
+    fetch(
+      `/media/rename/${cleanString(newName)}/${fileName}`,
+      config.http.makeUploadFetchOptions({
+        method: 'GET',
+      }),
+    )
+      .then(() => this.setState({ loading: false, [type]: repl, message }));
   }
 
   handleDeleteItem = itemToDelete => {
@@ -446,7 +466,7 @@ class App extends Component {
         mainProps = {
           ...mainProps,
           assets: image.concat(video.map(v => ({ ...v, type: MESSAGE_TYPE_VIDEO })))
-            .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)),
+            .sort((a, b) => (a.modifiedAt > b.modifiedAt ? -1 : 1)),
           toggleImageModal: () => {
             this.setState({
               mediaUpload: {
@@ -456,6 +476,7 @@ class App extends Component {
             });
           },
           deleteMedia: (url, type) => this.deleteMedia(url, type),
+          renameFile: (newName, oldName, type) => this.renameMedia(newName, oldName, type),
         };
         break;
       default:

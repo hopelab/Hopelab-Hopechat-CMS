@@ -7,18 +7,19 @@ const  R = require('ramda'),
  * Save a file to amazon s3.
  * @param {Object} aws-sdk instance reference
  * @param {String} fileName
+ * @param {String} newfileName
  * @returns {Promise}
  */
-const deleteFile = R.curry((s3, fileName) => {
+const copyFile = R.curry((s3, newName, oldName) => {
   return new Promise((resolve, reject) => {
-    const params = config.aws.deleteObjectParams(fileName);
-    s3.deleteObject(params, err => {
+    const params = config.aws.copyObjectParams(newName, oldName);
+    s3.copyObject(params, (err, data) => {
       if (err) {
         reject(err);
       }
-      resolve(null);
+      resolve(data);
     });
   });
 });
 
-module.exports = deleteFile;
+module.exports = copyFile;
