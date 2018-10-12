@@ -68,6 +68,15 @@ const config = {
         CacheControl: 'max-age=864000'
       };
     },
+    deleteObjectParams: name => {
+      return {
+        Bucket: R.defaultTo(
+          R.path(['aws', 'bucket'], FALLBACK_DEFAULT_VALUES),
+          R.path(['env', 'AWS_BUCKET'], process)
+        ),
+        Key: name,
+      };
+    },
     config: {
       accessKeyId: R.defaultTo(
         R.path(['aws', 'config', 'accessKeyId'], FALLBACK_DEFAULT_VALUES),

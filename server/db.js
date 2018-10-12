@@ -10,6 +10,7 @@ const {
   DB_COLLECTION_LIST,
   TYPE_COLLECTION,
   DB_STUDY,
+  MESSAGE_TYPE_VIDEO,
   DB_ORDERS_LIST,
 } = require('./constants');
 
@@ -28,7 +29,7 @@ const { formatNameCopy } = require('./utils/general');
 
 const Facebook = require('./services/facebook');
 
-const { createNewSingleEntity, createNewSingleMsgOrColl } = helpers;
+const { createNewSingleMsgOrColl } = helpers;
 
 module.exports = store => {
 
@@ -389,6 +390,18 @@ module.exports = store => {
       return StaticAssetsSvc.saveFile(file.name, file).then(resolve);
     });
 
+  const deleteMedia = (name, type) =>
+    new Promise((resolve, reject) => {
+      const StaticAssetsSvc = require('./services/staticAssets/StaticAssets')(
+        's3'
+      );
+
+      return StaticAssetsSvc.deleteFile(name)
+        .then(type === MESSAGE_TYPE_VIDEO ? getVideos : getImages)
+        .then(resolve)
+        .catch(reject);
+    });
+
   const setVideoMedia = ({key, url}) => ({attachment_id}) =>
     new Promise(resolve => {
       store
@@ -500,6 +513,7 @@ module.exports = store => {
 
     getImages,
     uploadMedia,
+    deleteMedia,
 
     uploadToFacebookIfVideo,
 
@@ -512,5 +526,6 @@ module.exports = store => {
     getOrderById,
     setOrder,
     updateOrder,
+
   };
 };

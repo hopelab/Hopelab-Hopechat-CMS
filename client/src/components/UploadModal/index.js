@@ -53,7 +53,11 @@ class UploadModal extends Component {
             });
           }}
           className="custom-dropzone"
-        />
+        >
+          <p className="mt-8">
+            Or Click here to select from file system
+          </p>
+        </Dropzone>
         { loading ? <i className="fa fa-spinner fa-3x loading" /> : undefined }
       </Modal>
     );

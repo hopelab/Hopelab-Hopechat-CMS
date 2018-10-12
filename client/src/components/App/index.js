@@ -4,6 +4,7 @@ import { pick, omit, isEmpty, isNil } from 'ramda';
 import './style.css';
 import { DASHBOARD_COMPONENTS } from '../../utils/constants';
 
+
 import Loader from '../common/Loader';
 
 import Sidebar from '../Sidebar';
@@ -17,6 +18,7 @@ import StudyIdView from '../StudyIdView';
 import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
 
+const { MESSAGE_TYPE_VIDEO, MESSAGE_TYPE_IMAGE } = config;
 
 class App extends Component {
   constructor(props) {
@@ -72,51 +74,52 @@ class App extends Component {
   };
 
   addImage = (acceptedFiles, rejectedFiles) => {
-    this.setState({ loading: true });
-    if (rejectedFiles) {
+    if (acceptedFiles) {
+      this.setState({ loading: true });
+      const data = new FormData();
+      data.append('file', acceptedFiles[0]);
+
+      fetch(
+        '/media/create',
+        config.http.makeUploadFetchOptions({
+          method: 'POST',
+          body: data,
+        }),
+      )
+        .then(res => res.json())
+        .then(res => {
+          const newState = {
+            loading: false,
+            imageUploadStatus: 'success',
+            mediaUpload: {
+              ...this.state.mediaUpload,
+              showModal: false,
+            },
+          };
+
+          const media = { key: res.key, url: res.url };
+
+          if (res.type === 'image') {
+            newState.image = this.state.image.concat(media);
+          } else {
+            newState.video = this.state.video.concat(media);
+          }
+
+          this.setState(newState);
+
+          this.resetActionMessage('imageUploadStatus', 4000);
+        })
+        .catch(e => {
+          console.error(e);
+          this.setState({
+            imageUploadStatus: 'fail',
+          });
+
+          this.resetActionMessage('imageUploadStatus', 4000);
+        });
+    } else if (rejectedFiles) {
       console.error(JSON.stringify(rejectedFiles));
     }
-    const data = new FormData();
-    data.append('file', acceptedFiles[0]);
-
-    fetch(
-      '/media/create',
-      config.http.makeUploadFetchOptions({
-        method: 'POST',
-        body: data,
-      }),
-    )
-      .then(res => res.json())
-      .then(res => {
-        const newState = {
-          loading: false,
-          imageUploadStatus: 'success',
-          mediaUpload: {
-            ...this.state.mediaUpload,
-            showModal: false,
-          },
-        };
-
-        const media = { key: res.key, url: res.url };
-
-        if (res.type === 'image') {
-          newState.image = this.state.image.concat(media);
-        } else {
-          newState.video = this.state.video.concat(media);
-        }
-
-        this.setState(newState);
-
-        this.resetActionMessage('imageUploadStatus', 4000);
-      })
-      .catch(e => {
-        console.error(e);
-        this.setState({
-          imageUploadStatus: 'fail',
-        });
-
-        this.resetActionMessage('imageUploadStatus', 4000);
-      });
   };
 
   getFullItemEditing(state) {
@@ -268,6 +271,22 @@ class App extends Component {
         this.setState({ ...copiedResults, loading: false });
       })
       .catch(console.error);
+  }
+
+  deleteMedia(url, type) {
+    this.setState({ loading: true });
+    const urlArray = url.split('/');
+    const fullName = urlArray[urlArray.length - 1];
+    fetch(
+      `/media/delete/${fullName}/${type}`,
+      config.http.makeUploadFetchOptions({
+        method: 'GET',
+      }),
+    )
+      .then(res => res.json())
+      .then(val => {
+        this.setState({ [type === MESSAGE_TYPE_IMAGE ? MESSAGE_TYPE_IMAGE : MESSAGE_TYPE_VIDEO]: val, loading: false });
+      });
   }
 
   handleDeleteItem = itemToDelete => {
@@ -426,6 +445,8 @@ class App extends Component {
       case DASHBOARD_COMPONENTS.assets:
         mainProps = {
           ...mainProps,
+          assets: image.concat(video.map(v => ({ ...v, type: MESSAGE_TYPE_VIDEO })))
+            .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)),
           toggleImageModal: () => {
             this.setState({
               mediaUpload: {
@@ -434,6 +455,7 @@ class App extends Component {
               },
             });
           },
+          deleteMedia: (url, type) => this.deleteMedia(url, type),
         };
         break;
       default:
