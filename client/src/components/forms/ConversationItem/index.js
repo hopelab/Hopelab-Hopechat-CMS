@@ -227,11 +227,8 @@ class ConversationItem extends Component {
             onSelection={newUrl => {
               const newItem = {
                 ...item,
-                url: newUrl,
+                url: newUrl || null,
               };
-              if (!url) {
-                delete newItem.url;
-              }
               this.props.handleSaveItem(newItem);
             }}
           />

@@ -1,6 +1,5 @@
 'use strict';
 
-var R = require('ramda');
 const { fileTypeMap } = require('../../../../../utils/file');
 
 var buildPublicLinkList = function(assets, fileType, region, bucket) {
@@ -9,10 +8,10 @@ var buildPublicLinkList = function(assets, fileType, region, bucket) {
     fileTypeMap[fileType] &&
     fileTypeMap[fileType].includes(a.Key.substr(a.Key.lastIndexOf('.') + 1))
   ));
-
   return filteredAssets.map(a => ({
     key: a.Key.replace(/\.[^/.]+$/, ''),
-    url: `https://s3-${region}.amazonaws.com/${bucket}/${a.Key}`
+    url: `https://s3-${region}.amazonaws.com/${bucket}/${a.Key}`,
+    modifiedAt: a.LastModified
   }));
 };
 

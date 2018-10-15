@@ -19,9 +19,16 @@ const fileTypeMap = {
   video: ['avi', 'mp4'],
 };
 
+const cleanString = url => {
+  /* Requires STRING not contain TOKEN */
+  const parts = url.split('.');
+  return parts.slice(0,-1).join('') + '.' + parts.slice(-1);
+};
+
 module.exports = {
   isSupportedFileType,
   isSupportedFont,
   fileSizeExceeds,
   fileTypeMap,
+  cleanString,
 };

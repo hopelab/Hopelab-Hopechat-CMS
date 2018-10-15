@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { pick, omit, isEmpty, isNil } from 'ramda';
+import { pick, omit, isEmpty, isNil, equals } from 'ramda';
 
 import './style.css';
 import { DASHBOARD_COMPONENTS } from '../../utils/constants';
+
 
 import Loader from '../common/Loader';
 
@@ -17,6 +18,8 @@ import StudyIdView from '../StudyIdView';
 import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
 
+const { MESSAGE_TYPE_VIDEO } = config;
+const { cleanString } = dataUtil;
 
 class App extends Component {
   constructor(props) {
@@ -72,51 +75,52 @@ class App extends Component {
   };
 
   addImage = (acceptedFiles, rejectedFiles) => {
-    this.setState({ loading: true });
-    if (rejectedFiles) {
+    if (acceptedFiles) {
+      this.setState({ loading: true });
+      const data = new FormData();
+      data.append('file', acceptedFiles[0]);
+
+      fetch(
+        '/media/create',
+        config.http.makeUploadFetchOptions({
+          method: 'POST',
+          body: data,
+        }),
+      )
+        .then(res => res.json())
+        .then(res => {
+          const newState = {
+            loading: false,
+            imageUploadStatus: 'success',
+            mediaUpload: {
+              ...this.state.mediaUpload,
+              showModal: false,
+            },
+          };
+
+          const media = { key: res.key, url: res.url };
+
+          if (res.type === 'image') {
+            newState.image = this.state.image.concat(media);
+          } else {
+            newState.video = this.state.video.concat(media);
+          }
+
+          this.setState(newState);
+
+          this.resetActionMessage('imageUploadStatus', 4000);
+        })
+        .catch(e => {
+          console.error(e);
+          this.setState({
+            imageUploadStatus: 'fail',
+          });
+
+          this.resetActionMessage('imageUploadStatus', 4000);
+        });
+    } else if (rejectedFiles) {
       console.error(JSON.stringify(rejectedFiles));
     }
-    const data = new FormData();
-    data.append('file', acceptedFiles[0]);
-
-    fetch(
-      '/media/create',
-      config.http.makeUploadFetchOptions({
-        method: 'POST',
-        body: data,
-      }),
-    )
-      .then(res => res.json())
-      .then(res => {
-        const newState = {
-          loading: false,
-          imageUploadStatus: 'success',
-          mediaUpload: {
-            ...this.state.mediaUpload,
-            showModal: false,
-          },
-        };
-
-        const media = { key: res.key, url: res.url };
-
-        if (res.type === 'image') {
-          newState.image = this.state.image.concat(media);
-        } else {
-          newState.video = this.state.video.concat(media);
-        }
-
-        this.setState(newState);
-
-        this.resetActionMessage('imageUploadStatus', 4000);
-      })
-      .catch(e => {
-        console.error(e);
-        this.setState({
-          imageUploadStatus: 'fail',
-        });
-
-        this.resetActionMessage('imageUploadStatus', 4000);
-      });
   };
 
   getFullItemEditing(state) {
@@ -268,6 +272,49 @@ class App extends Component {
         this.setState({ ...copiedResults, loading: false });
       })
       .catch(console.error);
+  }
+
+  deleteMedia(url, type) {
+    this.setState({ loading: true });
+    const urlArray = url.split('/');
+    const fullName = urlArray[urlArray.length - 1];
+    fetch(
+      `/media/delete/${fullName}/${type}`,
+      config.http.makeUploadFetchOptions({
+        method: 'GET',
+      }),
+    )
+      .then(res => res.json())
+      .then(val => {
+        this.setState({ [type]: val, loading: false });
+      });
+  }
+
+  renameMedia(newName, url, type) {
+    const encodedName = cleanString(newName);
+    const urlArray = url.split('/');
+    const fileName = urlArray[urlArray.length - 1];
+    const displayName = fileName.split('.')[0];
+    const newUrl = url.replace(displayName, encodedName);
+    const repl = this.state[type].map(i =>
+      (equals(i.url, url) ?
+        { ...i, url: newUrl, key: encodedName } : i));
+    const affectedMsg = this.state.message.find(m => (equals(m.url, url)));
+    this.setState({ loading: true });
+    fetch(
+      `/media/rename/${encodedName}/${fileName}`,
+      config.http.makeUploadFetchOptions({
+        method: 'GET',
+      }),
+    )
+      .then(() => {
+        this.setState({ [type]: repl });
+        if (affectedMsg) {
+          this.handleSaveItem({ ...affectedMsg, url: newUrl });
+        } else {
+          this.setState({ loading: false });
+        }
+      });
   }
 
   handleDeleteItem = itemToDelete => {
@@ -426,6 +473,8 @@ class App extends Component {
       case DASHBOARD_COMPONENTS.assets:
         mainProps = {
           ...mainProps,
+          assets: image.concat(video.map(v => ({ ...v, type: MESSAGE_TYPE_VIDEO })))
+            .sort((a, b) => (a.modifiedAt > b.modifiedAt ? -1 : 1)),
           toggleImageModal: () => {
             this.setState({
               mediaUpload: {
@@ -434,6 +483,8 @@ class App extends Component {
               },
             });
           },
+          deleteMedia: (url, type) => this.deleteMedia(url, type),
+          renameFile: (newName, oldName, type) => this.renameMedia(newName, oldName, type),
         };
         break;
       default:
@@ -462,18 +513,19 @@ class App extends Component {
 
 
   render() {
-    const { loading, readOnly, openDeleteModal, itemToDelete, component } = this.state;
+    const { loading, readOnly, openDeleteModal, itemToDelete, component, view } = this.state;
     const data = omit(['loading'], this.state);
 
     if (isEmpty(data)) return <Loader />;
-    const itemEditing = this.getFullItemEditing(this.state);
-
+    let itemEditing;
+    if (!view) itemEditing = this.getFullItemEditing(this.state);
 
     const treeData = dataUtil.createTreeView({
       data,
       entities: config.entities,
       active: (itemEditing || {}).id,
     });
+
 
     return (
       <div className="App row">
@@ -494,7 +546,7 @@ class App extends Component {
           treeData={treeData}
           handleTreeToggle={this.handleTreeToggle}
           itemEditing={itemEditing}
-          toggleView={view => this.toggleView(view)}
+          toggleView={newView => this.toggleView(newView)}
           readOnly={readOnly}
         />
         {loading &&
