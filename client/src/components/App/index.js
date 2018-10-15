@@ -291,22 +291,30 @@ class App extends Component {
   }
 
   renameMedia(newName, url, type) {
+    const encodedName = cleanString(newName);
     const urlArray = url.split('/');
     const fileName = urlArray[urlArray.length - 1];
     const displayName = fileName.split('.')[0];
-    const newUrl = url.replace(displayName, cleanString(newName));
+    const newUrl = url.replace(displayName, encodedName);
     const repl = this.state[type].map(i =>
       (equals(i.url, url) ?
-        { ...i, url: newUrl, key: cleanString(newName) } : i));
-    const message = this.state.message.map(m => (equals(m.url, url) ? { ...m, url: newUrl } : m));
+        { ...i, url: newUrl, key: encodedName } : i));
+    const affectedMsg = this.state.message.find(m => (equals(m.url, url)));
     this.setState({ loading: true });
     fetch(
-      `/media/rename/${cleanString(newName)}/${fileName}`,
+      `/media/rename/${encodedName}/${fileName}`,
       config.http.makeUploadFetchOptions({
         method: 'GET',
       }),
     )
-      .then(() => this.setState({ loading: false, [type]: repl, message }));
+      .then(() => {
+        this.setState({ [type]: repl });
+        if (affectedMsg) {
+          this.handleSaveItem({ ...affectedMsg, url: newUrl });
+        } else {
+          this.setState({ loading: false });
+        }
+      });
   }
 
   handleDeleteItem = itemToDelete => {
@@ -505,18 +513,19 @@ class App extends Component {
 
 
   render() {
-    const { loading, readOnly, openDeleteModal, itemToDelete, component } = this.state;
+    const { loading, readOnly, openDeleteModal, itemToDelete, component, view } = this.state;
     const data = omit(['loading'], this.state);
 
     if (isEmpty(data)) return <Loader />;
-    const itemEditing = this.getFullItemEditing(this.state);
-
+    let itemEditing;
+    if (!view) itemEditing = this.getFullItemEditing(this.state);
 
     const treeData = dataUtil.createTreeView({
       data,
       entities: config.entities,
       active: (itemEditing || {}).id,
     });
+
 
     return (
       <div className="App row">
@@ -537,7 +546,7 @@ class App extends Component {
           treeData={treeData}
           handleTreeToggle={this.handleTreeToggle}
           itemEditing={itemEditing}
-          toggleView={view => this.toggleView(view)}
+          toggleView={newView => this.toggleView(newView)}
           readOnly={readOnly}
         />
         {loading &&
