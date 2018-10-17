@@ -12,8 +12,8 @@ import {
   QUICK_REPLY_MAX_LENGTH,
   TYPE_CONVERSATION,
   ITEMS,
+  MESSAGE_TYPE_QUESTION,
 } from '../../../utils/config';
-
 
 export class ConversationItemContainer extends Component {
   static propTypes = {
@@ -81,9 +81,12 @@ export class ConversationItemContainer extends Component {
       const quick_replies = this.props.item.quick_replies.map((qr, i) => { //eslint-disable-line
         if (i !== index) { return qr; }
         if (!id) {
+          const newType = type || MESSAGE_TYPE_QUESTION;
+          const res = newType ? { type: newType } : {};
           return {
             ...qr,
-            payload: JSON.stringify({}),
+            payload: JSON.stringify(res),
+            next: { ...qr.next, type: newType },
           };
         }
 
@@ -92,6 +95,7 @@ export class ConversationItemContainer extends Component {
           payload: JSON.stringify({ id, type }),
         };
       });
+
       this.props.handleSaveItem({
         ...this.props.item,
         quick_replies,
@@ -199,7 +203,7 @@ export class ConversationItemContainer extends Component {
   }
 
   render() {
-    const { connectDropTarget, isOver, canDrop, setNewIndex } = this.props;
+    const { connectDropTarget, isOver, canDrop, setNewIndex, special } = this.props;
     let container = (
       <div className="p-2" key="origItem">
         <ConversationItem
@@ -227,12 +231,14 @@ export class ConversationItemContainer extends Component {
               this.props.item.quick_replies &&
               this.props.item.quick_replies.map((qr, i) => (
                 <QuickReply
+                  special={special}
                   parentItemType={this.props.item.parent.type}
                   key={i}
                   index={i}
                   childEntities={this.props.childEntities}
                   text={qr.title}
                   nextId={JSON.parse(qr.payload || '{}').id}
+                  nextType={JSON.parse(qr.payload || '{}').type}
                   onUpdateText={(...params) => (
                     this.quickReplyHandleChangeText(i, ...params)
                   )}

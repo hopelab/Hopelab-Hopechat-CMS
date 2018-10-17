@@ -32,6 +32,7 @@ class Dashboard extends Component {
 
   handleChildEntityAddition(selectedOption, callback, addedFromIndex) {
     const { childEntities, itemEditing } = this.props;
+
     const setNameRelToParent = ({ parent, newInt }) =>
       (`${parent.name.substr(0, 5).toUpperCase()}-${newInt}`);
     this.props.handleNewChildEntity({
@@ -74,7 +75,7 @@ class Dashboard extends Component {
 
   render() {
     const { props } = this;
-    const { setNewIndex, order } = props;
+    const { setNewIndex, order, special } = props;
     return (
       <div className="Dashboard mt-1">
         {props.itemEditing !== null && (
@@ -96,6 +97,7 @@ class Dashboard extends Component {
               copyToItems={props.entitiesCanCopyTo}
               readOnly={props.readOnly}
               toggleReadOnly={props.toggleReadOnly}
+              special={special}
             />
             <Form
               setNewIndex={args => setNewIndex(args)}
@@ -111,6 +113,7 @@ class Dashboard extends Component {
               updateStartEntity={props.updateStartEntity}
               readOnly={props.readOnly}
               order={order}
+              special={special}
             />
           </div>
         )}
