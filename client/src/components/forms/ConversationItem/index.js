@@ -28,6 +28,7 @@ import {
 } from '../../../utils/config';
 import './style.css';
 
+
 const conversationItemStyles = {
   [TYPE_CONVERSATION]: {
 
@@ -264,7 +265,6 @@ class ConversationItem extends Component {
   render() {
     const { item: { isEvent = false }, index, connectDragSource, className,
       item: { messageType }, special } = this.props;
-
     return connectDragSource(
       <div
         key="ogItem"
@@ -314,12 +314,17 @@ class ConversationItem extends Component {
               parentItemType={this.props.parentItemType}
               childEntities={this.props.childEntities}
               nextId={this.props.item.next ? this.props.item.next.id : undefined}
+              nextType={this.props.item.next ? this.props.item.next.type : undefined}
               showEndOfConversation={this.props.parentItemType === TYPE_CONVERSATION}
               handleNextMessageSelect={(id, type) => {
                 if (this.nextHasChanged(this.props.item, id, type)) {
                   if (!id) {
-                    const item = Object.assign({}, this.props.item);
-                    delete item.next;
+                    const item = { ...this.props.item };
+                    if (type) {
+                      item.next = { ...item.next, type };
+                    } else {
+                      delete item.next;
+                    }
                     this.props.handleSaveItem(item);
                   } else {
                     this.props.handleSaveItem({

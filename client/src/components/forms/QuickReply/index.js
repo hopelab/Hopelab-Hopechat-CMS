@@ -19,6 +19,7 @@ const QuickReply = ({
   messageType,
   parentItemType,
   special,
+  nextType,
 }) => (
   <div className="card" style={{ width: '360px' }}>
     <div
@@ -52,6 +53,7 @@ const QuickReply = ({
             }
             onNewItem={onNewItem}
             showEndOfConversation={showEndOfConversation}
+            nextType={nextType}
           />
         ) : (
           <NextConversation
@@ -82,6 +84,7 @@ QuickReply.propTypes = {
   messageType: PropTypes.string,
   parentItemType: PropTypes.string.isRequired,
   special: PropTypes.string,
+  nextType: PropTypes.string,
 };
 
 QuickReply.defaultProps = {

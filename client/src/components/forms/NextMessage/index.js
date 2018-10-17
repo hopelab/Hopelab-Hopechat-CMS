@@ -9,7 +9,7 @@ import {
 } from 'reactstrap';
 
 import { END_OF_CONVERSATION_ID, forms } from '../../../utils/config';
-import { IS_QUICK_REPLY_RETRY } from '../../../utils/constants';
+import { IS_QUICK_REPLY_RETRY, TYPE_STOP_NOTIFICATIONS, TYPE_BACK_TO_CONVERSATION } from '../../../utils/constants';
 
 import './style.css';
 
@@ -17,10 +17,12 @@ const propTypes = {
   childEntities: PropTypes.array.isRequired,
   nextId: PropTypes.string,
   special: PropTypes.string,
+  nextType: PropTypes.string,
 };
 
 const getNextMessageOptionsForMessage = props => {
-  const { onNewItem, parentItemType, special } = props;
+  const { onNewItem, parentItemType, special, nextType } = props;
+  const nextTypeSelected = !!nextType;
   const newItems = [
     <DropdownItem divider key="divider" />,
     ...forms[parentItemType].children.map(child =>
@@ -34,7 +36,7 @@ const getNextMessageOptionsForMessage = props => {
   let foundActive = false;
   const items = props.childEntities.map(c => {
     const active = c.id === props.nextId;
-    if (active) { foundActive = true; }
+    if (active || nextTypeSelected) foundActive = true;
     return (
       <DropdownItem
         key={c.id}
@@ -49,11 +51,20 @@ const getNextMessageOptionsForMessage = props => {
 
   if (special) {
     items.unshift(<DropdownItem divider key="divider1" />);
+    items.unshift(
+      <DropdownItem
+        key="stop"
+        active={nextType === TYPE_STOP_NOTIFICATIONS}
+        onClick={() => props.handleNextMessageSelect(null, TYPE_STOP_NOTIFICATIONS)}
+      >
+      Stop All Messages
+      </DropdownItem>,
+    );
   }
   items.unshift(<DropdownItem
     key="noselection"
-    active={!foundActive}
-    onClick={() => props.handleNextMessageSelect()}
+    active={special ? nextType === TYPE_BACK_TO_CONVERSATION : !foundActive}
+    onClick={() => props.handleNextMessageSelect(null, TYPE_BACK_TO_CONVERSATION)}
   >
     {special ? 'Back To Conversation' : 'no selection'}
   </DropdownItem>); //eslint-disable-line
@@ -88,18 +99,22 @@ class NextMessage extends Component {
   }
 
   render() {
-    const { childEntities, nextId, special } = this.props;
+    const { childEntities, nextId, special, nextType } = this.props;
     let foundItem;
     let className = '';
     let brokenLink = false;
     if (nextId === END_OF_CONVERSATION_ID) {
       foundItem = { name: 'End Of Conversation' };
       className = 'bg-warning';
-    } else if (!nextId && special === IS_QUICK_REPLY_RETRY) {
+    } else if (!nextId && nextType === TYPE_BACK_TO_CONVERSATION) {
       foundItem = { name: 'Back To Conversation' };
       className = 'bg-warning';
     } else {
       foundItem = childEntities.find(item => item.id === nextId);
+    }
+    if (!nextId && nextType === TYPE_STOP_NOTIFICATIONS) {
+      foundItem = { name: 'Stop all Messages' };
+      className = 'bg-danger';
     }
     if (foundItem) {
       foundItem = foundItem.name;
