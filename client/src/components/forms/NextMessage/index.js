@@ -9,16 +9,18 @@ import {
 } from 'reactstrap';
 
 import { END_OF_CONVERSATION_ID, forms } from '../../../utils/config';
+import { IS_QUICK_REPLY_RETRY } from '../../../utils/constants';
 
 import './style.css';
 
 const propTypes = {
   childEntities: PropTypes.array.isRequired,
   nextId: PropTypes.string,
+  special: PropTypes.string,
 };
 
 const getNextMessageOptionsForMessage = props => {
-  const { onNewItem, parentItemType } = props;
+  const { onNewItem, parentItemType, special } = props;
   const newItems = [
     <DropdownItem divider key="divider" />,
     ...forms[parentItemType].children.map(child =>
@@ -44,25 +46,28 @@ const getNextMessageOptionsForMessage = props => {
     );
   });
 
+
+  if (special) {
+    items.unshift(<DropdownItem divider key="divider1" />);
+  }
   items.unshift(<DropdownItem
     key="noselection"
     active={!foundActive}
     onClick={() => props.handleNextMessageSelect()}
   >
-      no selection
+    {special ? 'Back To Conversation' : 'no selection'}
   </DropdownItem>); //eslint-disable-line
-
-  if (props.showEndOfConversation) {
+  if (props.showEndOfConversation && !special) {
     items.push(<DropdownItem divider key="divider0" />);
-    items.push((
+    items.push(
       <DropdownItem
         key="end-of-conversation-xyz123"
         active={END_OF_CONVERSATION_ID === props.nextId}
         onClick={() => props.handleNextMessageSelect(END_OF_CONVERSATION_ID)}
       >
         End Of Conversation
-      </DropdownItem>
-    ));
+      </DropdownItem>,
+    );
   }
 
   items.push(...newItems);
@@ -83,12 +88,15 @@ class NextMessage extends Component {
   }
 
   render() {
-    const { childEntities, nextId } = this.props;
+    const { childEntities, nextId, special } = this.props;
     let foundItem;
     let className = '';
     let brokenLink = false;
     if (nextId === END_OF_CONVERSATION_ID) {
       foundItem = { name: 'End Of Conversation' };
+      className = 'bg-warning';
+    } else if (!nextId && special === IS_QUICK_REPLY_RETRY) {
+      foundItem = { name: 'Back To Conversation' };
       className = 'bg-warning';
     } else {
       foundItem = childEntities.find(item => item.id === nextId);

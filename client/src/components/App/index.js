@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { pick, omit, isEmpty, isNil, equals } from 'ramda';
 
 import './style.css';
-import { DASHBOARD_COMPONENTS } from '../../utils/constants';
-
 
 import Loader from '../common/Loader';
 
@@ -18,7 +16,10 @@ import StudyIdView from '../StudyIdView';
 import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
 
-const { MESSAGE_TYPE_VIDEO } = config;
+import { DASHBOARD_COMPONENTS, IS_QUICK_REPLY_RETRY,
+  QUICK_REPLY_BLOCK_ID, QUICK_REPLY_BLOCK_NAME } from '../../utils/constants';
+
+const { MESSAGE_TYPE_VIDEO, TYPE_BLOCK } = config;
 const { cleanString } = dataUtil;
 
 class App extends Component {
@@ -40,7 +41,7 @@ class App extends Component {
       .fetchAllDataForApp(config.routes)
       .then(dataUtil.createInitialEntityState)
       .then(data => {
-        this.setState({ ...data });
+        this.setState({ ...data, initialLoad: false });
       })
       .catch(console.error);
   }
@@ -124,7 +125,16 @@ class App extends Component {
   };
 
   getFullItemEditing(state) {
-    const { itemEditing } = state;
+    const { itemEditing, view } = state;
+
+    if (equals(view, DASHBOARD_COMPONENTS.quickReply)) {
+      return {
+        id: QUICK_REPLY_BLOCK_ID,
+        type: TYPE_BLOCK,
+        name: QUICK_REPLY_BLOCK_NAME,
+      };
+    }
+
     if (!itemEditing) {
       return null;
     }
@@ -391,6 +401,9 @@ class App extends Component {
       case DASHBOARD_COMPONENTS.assets:
         component = <AssetLibrary />;
         break;
+      case DASHBOARD_COMPONENTS.quickReply:
+        component = <Dashboard />;
+        break;
       default:
         component = <Dashboard />;
         break;
@@ -453,8 +466,8 @@ class App extends Component {
 
   getMainProps() {
     const { studyIds, conversation, image, video, readOnly, view } = this.state;
-    const itemEditing = this.getFullItemEditing(this.state);
     const data = omit(['loading'], this.state);
+    const itemEditing = this.getFullItemEditing(this.state);
 
     const entitiesCanCopyTo = dataUtil.getEntitiesCanCopyTo(
       itemEditing,
@@ -465,7 +478,24 @@ class App extends Component {
       itemEditing,
       data,
     );
-    let mainProps = {};
+    let mainProps = {
+      setNewIndex: ({ id, newIndex }) => this.changeOrder({ id, newIndex, itemEditing }, true),
+      formConfig: config.forms,
+      handleSaveItem: this.handleSaveItem,
+      handleDeleteItem: this.handleDeleteItem,
+      handleNewChildEntity: this.handleNewChildEntity,
+      itemEditing,
+      childEntities,
+      conversations: conversation,
+      entitiesCanCopyTo,
+      handleCopyEntity: this.handleCopyEntity,
+      images: image,
+      videos: video,
+      updateStartEntity: this.updateStartEntity,
+      readOnly,
+      toggleReadOnly: () => this.toggleReadOnly(),
+      order: itemEditing ? this.getOrdering({ id: itemEditing.id, childEntities }) : null,
+    };
     switch (view) {
       case DASHBOARD_COMPONENTS.studyIds:
         mainProps = { ...mainProps, studyIds };
@@ -487,36 +517,27 @@ class App extends Component {
           renameFile: (newName, oldName, type) => this.renameMedia(newName, oldName, type),
         };
         break;
-      default:
+      case DASHBOARD_COMPONENTS.quickReply:
         mainProps = {
           ...mainProps,
-          setNewIndex: ({ id, newIndex }) => this.changeOrder({ id, newIndex, itemEditing }, true),
-          formConfig: config.forms,
-          handleSaveItem: this.handleSaveItem,
-          handleDeleteItem: this.handleDeleteItem,
-          handleNewChildEntity: this.handleNewChildEntity,
-          itemEditing,
-          childEntities,
-          conversations: conversation,
-          entitiesCanCopyTo,
-          handleCopyEntity: this.handleCopyEntity,
-          images: image,
-          videos: video,
-          updateStartEntity: this.updateStartEntity,
-          readOnly,
-          toggleReadOnly: () => this.toggleReadOnly(),
-          order: itemEditing ? this.getOrdering({ id: itemEditing.id, childEntities }) : null,
+          order: this.getOrdering({ id: QUICK_REPLY_BLOCK_ID }),
+          config: config.forms.conversation,
+          special: IS_QUICK_REPLY_RETRY,
+          updateStartEntity: Function.prototype,
         };
+        break;
+      default:
+        break;
     }
     return mainProps;
   }
 
 
   render() {
-    const { loading, readOnly, openDeleteModal, itemToDelete, component, view } = this.state;
+    const { loading, readOnly, openDeleteModal, itemToDelete, component, view, initialLoad } = this.state;
     const data = omit(['loading'], this.state);
 
-    if (isEmpty(data)) return <Loader />;
+    if (isEmpty(data) || initialLoad) return <Loader />;
     let itemEditing;
     if (!view) itemEditing = this.getFullItemEditing(this.state);
 

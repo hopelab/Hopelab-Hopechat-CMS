@@ -199,7 +199,7 @@ export class ConversationItemContainer extends Component {
   }
 
   render() {
-    const { connectDropTarget, isOver, canDrop, setNewIndex } = this.props;
+    const { connectDropTarget, isOver, canDrop, setNewIndex, special } = this.props;
     let container = (
       <div className="p-2" key="origItem">
         <ConversationItem
@@ -227,6 +227,7 @@ export class ConversationItemContainer extends Component {
               this.props.item.quick_replies &&
               this.props.item.quick_replies.map((qr, i) => (
                 <QuickReply
+                  special={special}
                   parentItemType={this.props.item.parent.type}
                   key={i}
                   index={i}

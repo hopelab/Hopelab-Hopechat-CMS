@@ -68,6 +68,7 @@ class ConversationItem extends Component {
     parentItemType: PropTypes.string,
     connectDragSource: PropTypes.func.isRequired,
     index: PropTypes.number.isRequired,
+    special: PropTypes.string,
   }
 
   constructor(props) {
@@ -261,7 +262,8 @@ class ConversationItem extends Component {
   }
 
   render() {
-    const { item: { isEvent = false }, index, connectDragSource, className, item: { messageType } } = this.props;
+    const { item: { isEvent = false }, index, connectDragSource, className,
+      item: { messageType }, special } = this.props;
 
     return connectDragSource(
       <div
@@ -286,12 +288,14 @@ class ConversationItem extends Component {
             <EditableText
               text={this.props.item.name}
               onEditWillFinish={val => this.editAttribute('name', val)}
+              disabled={!!special && index === 0}
             />
             { this.props.item.messageType && (
               <MessageTypeDropdown
                 selected={this.props.item.messageType}
                 onSelection={this.handleMessageTypeSelection}
                 onDelete={this.handleDeleteMessage}
+                disabled={!!special && index === 0}
               />
             )}
           </div>
@@ -306,6 +310,7 @@ class ConversationItem extends Component {
         {(!this.messageTypeHasDifferentOptions(this.props.item.messageType)) && (
           <div className="card-footer">
             <NextMessage
+              special={special}
               parentItemType={this.props.parentItemType}
               childEntities={this.props.childEntities}
               nextId={this.props.item.next ? this.props.item.next.id : undefined}
