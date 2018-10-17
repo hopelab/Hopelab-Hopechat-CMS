@@ -9,7 +9,7 @@ import {
 } from 'reactstrap';
 
 import { END_OF_CONVERSATION_ID, forms } from '../../../utils/config';
-import { IS_QUICK_REPLY_RETRY, TYPE_STOP_NOTIFICATIONS, TYPE_BACK_TO_CONVERSATION } from '../../../utils/constants';
+import { TYPE_STOP_NOTIFICATIONS, TYPE_BACK_TO_CONVERSATION } from '../../../utils/constants';
 
 import './style.css';
 
@@ -18,71 +18,10 @@ const propTypes = {
   nextId: PropTypes.string,
   special: PropTypes.string,
   nextType: PropTypes.string,
-};
-
-const getNextMessageOptionsForMessage = props => {
-  const { onNewItem, parentItemType, special, nextType } = props;
-  const nextTypeSelected = !!nextType;
-  const newItems = [
-    <DropdownItem divider key="divider" />,
-    ...forms[parentItemType].children.map(child =>
-      (
-        <DropdownItem onClick={() => onNewItem(child)} key={`new-${child}`}>
-          New {child}
-        </DropdownItem>
-      )),
-  ];
-
-  let foundActive = false;
-  const items = props.childEntities.map(c => {
-    const active = c.id === props.nextId;
-    if (active || nextTypeSelected) foundActive = true;
-    return (
-      <DropdownItem
-        key={c.id}
-        active={active}
-        onClick={() => props.handleNextMessageSelect(c.id, c.type)}
-      >
-        {c.name}
-      </DropdownItem>
-    );
-  });
-
-
-  if (special) {
-    items.unshift(<DropdownItem divider key="divider1" />);
-    items.unshift(
-      <DropdownItem
-        key="stop"
-        active={nextType === TYPE_STOP_NOTIFICATIONS}
-        onClick={() => props.handleNextMessageSelect(null, TYPE_STOP_NOTIFICATIONS)}
-      >
-      Stop All Messages
-      </DropdownItem>,
-    );
-  }
-  items.unshift(<DropdownItem
-    key="noselection"
-    active={special ? nextType === TYPE_BACK_TO_CONVERSATION : !foundActive}
-    onClick={() => props.handleNextMessageSelect(null, TYPE_BACK_TO_CONVERSATION)}
-  >
-    {special ? 'Back To Conversation' : 'no selection'}
-  </DropdownItem>); //eslint-disable-line
-  if (props.showEndOfConversation && !special) {
-    items.push(<DropdownItem divider key="divider0" />);
-    items.push(
-      <DropdownItem
-        key="end-of-conversation-xyz123"
-        active={END_OF_CONVERSATION_ID === props.nextId}
-        onClick={() => props.handleNextMessageSelect(END_OF_CONVERSATION_ID)}
-      >
-        End Of Conversation
-      </DropdownItem>,
-    );
-  }
-
-  items.push(...newItems);
-  return items;
+  onNewItem: PropTypes.func.isRequired,
+  parentItemType: PropTypes.string.isRequired,
+  handleNextMessageSelect: PropTypes.func.isRequired,
+  showEndOfConversation: PropTypes.bool,
 };
 
 class NextMessage extends Component {
@@ -98,8 +37,74 @@ class NextMessage extends Component {
     this.setState({ dropdownOpen: !this.state.dropdownOpen });
   }
 
+  getNextMessageOptionsForMessage() {
+    const { onNewItem, parentItemType, special, nextType,
+      childEntities, nextId, handleNextMessageSelect, showEndOfConversation } = this.props;
+    const nextTypeSelected = !!nextType;
+    const newItems = [
+      <DropdownItem divider key="divider" />,
+      ...forms[parentItemType].children.map(child =>
+        (
+          <DropdownItem onClick={() => onNewItem(child)} key={`new-${child}`}>
+            New {child}
+          </DropdownItem>
+        )),
+    ];
+
+    let foundActive = false;
+    const items = childEntities.map(c => {
+      const active = c.id === nextId;
+      if (active || nextTypeSelected) foundActive = true;
+      return (
+        <DropdownItem
+          key={c.id}
+          active={active}
+          onClick={() => handleNextMessageSelect(c.id, c.type)}
+        >
+          {c.name}
+        </DropdownItem>
+      );
+    });
+
+
+    if (special) {
+      items.unshift(<DropdownItem divider key="divider1" />);
+      items.unshift(
+        <DropdownItem
+          key="stop"
+          active={nextType === TYPE_STOP_NOTIFICATIONS}
+          onClick={() => handleNextMessageSelect(null, TYPE_STOP_NOTIFICATIONS)}
+        >
+        Stop All Messages
+        </DropdownItem>,
+      );
+    }
+    items.unshift(<DropdownItem
+      key="noselection"
+      active={special ? nextType === TYPE_BACK_TO_CONVERSATION : !foundActive}
+      onClick={() => handleNextMessageSelect(null, TYPE_BACK_TO_CONVERSATION)}
+    >
+      {special ? 'Back To Conversation' : 'no selection'}
+    </DropdownItem>); //eslint-disable-line
+    if (showEndOfConversation && !special) {
+      items.push(<DropdownItem divider key="divider0" />);
+      items.push(
+        <DropdownItem
+          key="end-of-conversation-xyz123"
+          active={END_OF_CONVERSATION_ID === nextId}
+          onClick={() => handleNextMessageSelect(END_OF_CONVERSATION_ID)}
+        >
+          End Of Conversation
+        </DropdownItem>,
+      );
+    }
+
+    items.push(...newItems);
+    return items;
+  }
+
   render() {
-    const { childEntities, nextId, special, nextType } = this.props;
+    const { childEntities, nextId, nextType } = this.props;
     let foundItem;
     let className = '';
     let brokenLink = false;
@@ -146,7 +151,7 @@ class NextMessage extends Component {
           {foundItem}
         </DropdownToggle>
         <DropdownMenu flip={false}>
-          {getNextMessageOptionsForMessage(this.props)}
+          {this.getNextMessageOptionsForMessage()}
         </DropdownMenu>
         {brokenLink && <div className="broken-link" >Broken Link Present</div>}
       </Dropdown>

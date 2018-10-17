@@ -8,6 +8,8 @@ describe('NextMessage component', () => {
   const props = {
     childEntities: [],
     parentItemType: 'conversation',
+    onNewItem: jest.fn(),
+    handleNextMessageSelect: jest.fn(),
   };
   let component;
 
