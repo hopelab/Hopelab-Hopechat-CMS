@@ -118,7 +118,7 @@ class Dashboard extends Component {
               order={order}
               special={special}
             />
-            {special === IS_CRISIS_RESPONSE_DETECTION && <WordList />}
+            {special === IS_CRISIS_RESPONSE_DETECTION && <WordList special={special} />}
           </div>
         )}
         <div style={{ height: '85vh' }} />

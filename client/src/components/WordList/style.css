@@ -7,3 +7,8 @@
 .WordListView ul .fa.fa-times {
   cursor: pointer;
 }
+
+.WordListView button.btn {
+  width: 100%;
+  background-color: rgba(0, 0, 0,.03);
+}

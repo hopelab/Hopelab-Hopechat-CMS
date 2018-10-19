@@ -16,6 +16,7 @@ const TYPE_STOP_NOTIFICATIONS = 'stop-notifications';
 const TYPE_BACK_TO_CONVERSATION = 'back-to-conversation';
 const CRISIS_RESPONSE_MESSAGE_ID = 'crisis-response-message-id';
 const CRISIS_SEARCH_TERM_LIST = 'crisis-search-term-list';
+const CRISIS_SEARCH_WORD_LIST = 'crisis-search-word-list';
 
 export {
   DASHBOARD_COMPONENTS,
@@ -28,4 +29,5 @@ export {
   CRISIS_RESPONSE_MESSAGE_ID,
   IS_CRISIS_RESPONSE_DETECTION,
   CRISIS_SEARCH_TERM_LIST,
+  CRISIS_SEARCH_WORD_LIST,
 };

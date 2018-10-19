@@ -33,6 +33,7 @@
         "react/jsx-indent-props": ["error", 2],
         // Fixme: temporary disabling for linting pass
         "react/require-default-props": 0,
+        "react/no-did-mount-set-state": 0,
         "react/sort-comp": 0,
         "no-plusplus": 0,
         "jsx-a11y/label-has-for": 0,
