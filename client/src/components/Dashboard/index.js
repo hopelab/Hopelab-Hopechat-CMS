@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
+import * as R from 'ramda';
 import Form from '../forms/Form';
 import WordList from '../WordList';
 import DashboardHeader from './DashboardHeader';
 
-import { IS_CRISIS_RESPONSE_DETECTION } from '../../utils/constants';
+import { IS_CRISIS_RESPONSE_DETECTION, IS_STOP_MESSAGE_DETECTION } from '../../utils/constants';
 import './style.css';
 
 const propTypes = {
@@ -118,7 +118,8 @@ class Dashboard extends Component {
               order={order}
               special={special}
             />
-            {special === IS_CRISIS_RESPONSE_DETECTION && <WordList special={special} />}
+            {R.any(R.equals(special), [IS_CRISIS_RESPONSE_DETECTION, IS_STOP_MESSAGE_DETECTION])
+              && <WordList special={special} />}
           </div>
         )}
         <div style={{ height: '85vh' }} />
