@@ -16,8 +16,9 @@ import StudyIdView from '../StudyIdView';
 import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
 
-import { DASHBOARD_COMPONENTS, IS_QUICK_REPLY_RETRY, CRISIS_RESPONSE_MESSAGE_ID,
-  QUICK_REPLY_BLOCK_ID, QUICK_REPLY_BLOCK_NAME, IS_CRISIS_RESPONSE_DETECTION } from '../../utils/constants';
+import { DASHBOARD_COMPONENTS, IS_QUICK_REPLY_RETRY, CRISIS_RESPONSE_MESSAGE_ID, STOP_MESSAGE_ID,
+  IS_STOP_MESSAGE_DETECTION, QUICK_REPLY_BLOCK_ID, QUICK_REPLY_BLOCK_NAME, RESUME_MESSAGE_ID,
+  IS_CRISIS_RESPONSE_DETECTION } from '../../utils/constants';
 
 const { MESSAGE_TYPE_VIDEO, TYPE_BLOCK } = config;
 const { cleanString } = dataUtil;
@@ -126,27 +127,31 @@ class App extends Component {
 
   getFullItemEditing(state) {
     const { itemEditing, view } = state;
-
-    if (equals(view, DASHBOARD_COMPONENTS.quickReply)) {
-      return {
-        id: QUICK_REPLY_BLOCK_ID,
-        type: TYPE_BLOCK,
-        name: QUICK_REPLY_BLOCK_NAME,
-      };
+    switch (view) {
+      case DASHBOARD_COMPONENTS.quickReply:
+        return {
+          id: QUICK_REPLY_BLOCK_ID,
+          type: TYPE_BLOCK,
+          name: QUICK_REPLY_BLOCK_NAME,
+        };
+      case DASHBOARD_COMPONENTS.crisis:
+        return {
+          id: 'crisis-parent-id',
+          type: TYPE_BLOCK,
+          name: 'Crisis Detection',
+        };
+      case DASHBOARD_COMPONENTS.stop:
+        return {
+          id: 'stop-parent-id',
+          type: TYPE_BLOCK,
+          name: 'Stop Detection',
+        };
+      default:
+        if (!itemEditing) {
+          return null;
+        }
+        return state[itemEditing.type].find(item => item.id === itemEditing.id);
     }
-    if (equals(view, DASHBOARD_COMPONENTS.crisis)) {
-      return {
-        id: 'crisis-parent-id',
-        type: TYPE_BLOCK,
-        name: 'Crisis Detection',
-      };
-    }
-
-    if (!itemEditing) {
-      return null;
-    }
-
-    return state[itemEditing.type].find(item => item.id === itemEditing.id);
   }
 
   markPosition = entity => {
@@ -414,6 +419,9 @@ class App extends Component {
       case DASHBOARD_COMPONENTS.crisis:
         component = <Dashboard />;
         break;
+      case DASHBOARD_COMPONENTS.stop:
+        component = <Dashboard />;
+        break;
       default:
         component = <Dashboard />;
         break;
@@ -488,6 +496,7 @@ class App extends Component {
       itemEditing,
       data,
     );
+
     let mainProps = {
       setNewIndex: ({ id, newIndex }) => this.changeOrder({ id, newIndex, itemEditing }, true),
       formConfig: config.forms,
@@ -542,6 +551,15 @@ class App extends Component {
           order: [CRISIS_RESPONSE_MESSAGE_ID],
           config: config.forms.conversation,
           special: IS_CRISIS_RESPONSE_DETECTION,
+          updateStartEntity: Function.prototype,
+        };
+        break;
+      case DASHBOARD_COMPONENTS.stop:
+        mainProps = {
+          ...mainProps,
+          order: [STOP_MESSAGE_ID, RESUME_MESSAGE_ID],
+          config: config.forms.conversation,
+          special: IS_STOP_MESSAGE_DETECTION,
           updateStartEntity: Function.prototype,
         };
         break;

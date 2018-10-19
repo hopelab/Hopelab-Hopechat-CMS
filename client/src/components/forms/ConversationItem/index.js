@@ -26,6 +26,9 @@ import {
   MESSAGE_TYPE_TRANSITION,
   ITEMS,
 } from '../../../utils/config';
+
+import { IS_STOP_MESSAGE_DETECTION, STOP_MESSAGE_ID } from '../../../utils/constants';
+
 import './style.css';
 
 
@@ -137,7 +140,9 @@ class ConversationItem extends Component {
   }
 
   renderItemContent(item) {
-    const { messageType, url } = item;
+    const { special } = this.props;
+    const { messageType, url, id } = item;
+    const stopRegex = new RegExp(/\$\{RESUME_MESSAGE\}/);
     if (this.messageTypeHasContent(messageType)) {
       const editableText = this.messageTypeHasUrl(messageType) ?
         url : this.props.item.text;
@@ -165,6 +170,11 @@ class ConversationItem extends Component {
               <MediaPreview url={url} type={messageType} />
             )}
           </p>
+          {special === IS_STOP_MESSAGE_DETECTION && id === STOP_MESSAGE_ID &&
+            !stopRegex.test(editableText) &&
+            <span className="bg-danger">
+              The Stop Message must contain the exact string ${'{'}RESUME_MESSAGE{'}'}
+            </span>}
         </div>
       );
     }
@@ -290,7 +300,7 @@ class ConversationItem extends Component {
               onEditWillFinish={val => this.editAttribute('name', val)}
               disabled={!!special && index === 0}
             />
-            { this.props.item.messageType && (
+            { this.props.item.messageType && special !== IS_STOP_MESSAGE_DETECTION && (
               <MessageTypeDropdown
                 selected={this.props.item.messageType}
                 onSelection={this.handleMessageTypeSelection}
@@ -307,7 +317,8 @@ class ConversationItem extends Component {
         </div>
 
         {this.renderItemContent(this.props.item)}
-        {(!this.messageTypeHasDifferentOptions(this.props.item.messageType)) && (
+        {(!this.messageTypeHasDifferentOptions(this.props.item.messageType)) &&
+          special !== IS_STOP_MESSAGE_DETECTION && (
           <div className="card-footer">
             <NextMessage
               special={special}

@@ -4,6 +4,7 @@ import WordList from './';
 
 describe('WordList component', () => {
   const props = {
+    special: '',
   };
   let component;
   beforeEach(() => {
