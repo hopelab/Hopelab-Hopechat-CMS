@@ -4,6 +4,7 @@ const DASHBOARD_COMPONENTS = {
   quickReply: 'quickReply',
   crisis: 'crisis',
   stop: 'stop',
+  eoc: 'endOfConversation',
 };
 
 const QUICK_REPLY_RETRY_ID = 'quick-reply-retry-id';
@@ -14,6 +15,7 @@ const QUICK_REPLY_BLOCK_NAME = 'quick-reply-block-name';
 const IS_QUICK_REPLY_RETRY = 'is-quick-reply-retry-view';
 const IS_CRISIS_RESPONSE_DETECTION = 'is-crisis-response-view';
 const IS_STOP_MESSAGE_DETECTION = 'is-stop-message-view';
+const IS_END_OF_CONVERSATION = 'is-eoc-view';
 
 const TYPE_STOP_NOTIFICATIONS = 'stop-notifications';
 const TYPE_BACK_TO_CONVERSATION = 'back-to-conversation';
@@ -26,6 +28,7 @@ const STOP_SEARCH_TERM_LIST = 'stop-search-term-list';
 const STOP_SEARCH_WORD_LIST = 'stop-search-word-list';
 const STOP_MESSAGE_ID = 'stop-message-id';
 const RESUME_MESSAGE_ID = 'resume-message-id';
+const END_OF_CONVO_ID = 'END-OF-CONVERSATION-ID';
 
 export {
   DASHBOARD_COMPONENTS,
@@ -45,4 +48,6 @@ export {
   STOP_SEARCH_WORD_LIST,
   RESUME_MESSAGE_ID,
   CRISIS_BLOCK_ID,
+  END_OF_CONVO_ID,
+  IS_END_OF_CONVERSATION,
 };

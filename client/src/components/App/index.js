@@ -16,9 +16,9 @@ import StudyIdView from '../StudyIdView';
 import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
 
-import { DASHBOARD_COMPONENTS, IS_QUICK_REPLY_RETRY, STOP_MESSAGE_ID, CRISIS_BLOCK_ID,
+import { DASHBOARD_COMPONENTS, IS_QUICK_REPLY_RETRY, STOP_MESSAGE_ID, CRISIS_BLOCK_ID, END_OF_CONVO_ID,
   IS_STOP_MESSAGE_DETECTION, QUICK_REPLY_BLOCK_ID, QUICK_REPLY_BLOCK_NAME, RESUME_MESSAGE_ID,
-  IS_CRISIS_RESPONSE_DETECTION } from '../../utils/constants';
+  IS_CRISIS_RESPONSE_DETECTION, IS_END_OF_CONVERSATION } from '../../utils/constants';
 
 const { MESSAGE_TYPE_VIDEO, TYPE_BLOCK } = config;
 const { cleanString } = dataUtil;
@@ -143,6 +143,12 @@ class App extends Component {
       case DASHBOARD_COMPONENTS.stop:
         return {
           id: 'stop-parent-id',
+          type: TYPE_BLOCK,
+          name: 'Stop Detection',
+        };
+      case DASHBOARD_COMPONENTS.eoc:
+        return {
+          id: 'end-of-conversation-parent-id',
           type: TYPE_BLOCK,
           name: 'Stop Detection',
         };
@@ -422,6 +428,9 @@ class App extends Component {
       case DASHBOARD_COMPONENTS.stop:
         component = <Dashboard />;
         break;
+      case DASHBOARD_COMPONENTS.eoc:
+        component = <Dashboard />;
+        break;
       default:
         component = <Dashboard />;
         break;
@@ -560,6 +569,15 @@ class App extends Component {
           order: [STOP_MESSAGE_ID, RESUME_MESSAGE_ID],
           config: config.forms.conversation,
           special: IS_STOP_MESSAGE_DETECTION,
+          updateStartEntity: Function.prototype,
+        };
+        break;
+      case DASHBOARD_COMPONENTS.eoc:
+        mainProps = {
+          ...mainProps,
+          order: [END_OF_CONVO_ID],
+          config: config.forms.conversation,
+          special: IS_END_OF_CONVERSATION,
           updateStartEntity: Function.prototype,
         };
         break;

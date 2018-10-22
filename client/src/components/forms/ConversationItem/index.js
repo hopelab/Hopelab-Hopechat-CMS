@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { DragSource } from 'react-dnd';
-
+import { any, equals } from 'ramda';
 import { CheckBox } from '../../common/CheckBox';
 
 import EditableText from '../EditableText';
@@ -27,10 +27,12 @@ import {
   ITEMS,
 } from '../../../utils/config';
 
-import { IS_STOP_MESSAGE_DETECTION, STOP_MESSAGE_ID } from '../../../utils/constants';
+import { IS_STOP_MESSAGE_DETECTION, STOP_MESSAGE_ID, IS_END_OF_CONVERSATION } from '../../../utils/constants';
 
 import './style.css';
 
+
+const noModTypeOrNext = special => !any(equals(special))([IS_END_OF_CONVERSATION, IS_STOP_MESSAGE_DETECTION]);
 
 const conversationItemStyles = {
   [TYPE_CONVERSATION]: {
@@ -300,7 +302,7 @@ class ConversationItem extends Component {
               onEditWillFinish={val => this.editAttribute('name', val)}
               disabled={!!special && index === 0}
             />
-            { this.props.item.messageType && special !== IS_STOP_MESSAGE_DETECTION && (
+            { this.props.item.messageType && !noModTypeOrNext(special) && (
               <MessageTypeDropdown
                 selected={this.props.item.messageType}
                 onSelection={this.handleMessageTypeSelection}
@@ -318,7 +320,7 @@ class ConversationItem extends Component {
 
         {this.renderItemContent(this.props.item)}
         {(!this.messageTypeHasDifferentOptions(this.props.item.messageType)) &&
-          special !== IS_STOP_MESSAGE_DETECTION && (
+          noModTypeOrNext(special) && (
           <div className="card-footer">
             <NextMessage
               special={special}
