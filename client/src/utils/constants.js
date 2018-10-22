@@ -28,7 +28,7 @@ const STOP_SEARCH_TERM_LIST = 'stop-search-term-list';
 const STOP_SEARCH_WORD_LIST = 'stop-search-word-list';
 const STOP_MESSAGE_ID = 'stop-message-id';
 const RESUME_MESSAGE_ID = 'resume-message-id';
-const END_OF_CONVO_ID = 'eoc-message-id';
+const END_OF_CONVO_ID = 'END-OF-CONVERSATION-ID';
 
 export {
   DASHBOARD_COMPONENTS,
