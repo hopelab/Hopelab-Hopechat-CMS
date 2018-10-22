@@ -9,6 +9,7 @@ const DASHBOARD_COMPONENTS = {
 const QUICK_REPLY_RETRY_ID = 'quick-reply-retry-id';
 
 const QUICK_REPLY_BLOCK_ID = 'quick-reply-block-id';
+const CRISIS_BLOCK_ID = 'crisis-parent-id';
 const QUICK_REPLY_BLOCK_NAME = 'quick-reply-block-name';
 const IS_QUICK_REPLY_RETRY = 'is-quick-reply-retry-view';
 const IS_CRISIS_RESPONSE_DETECTION = 'is-crisis-response-view';
@@ -43,4 +44,5 @@ export {
   STOP_SEARCH_TERM_LIST,
   STOP_SEARCH_WORD_LIST,
   RESUME_MESSAGE_ID,
+  CRISIS_BLOCK_ID,
 };
