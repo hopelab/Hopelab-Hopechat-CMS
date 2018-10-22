@@ -302,7 +302,7 @@ class ConversationItem extends Component {
               onEditWillFinish={val => this.editAttribute('name', val)}
               disabled={!!special && index === 0}
             />
-            { this.props.item.messageType && !noModTypeOrNext(special) && (
+            { this.props.item.messageType && noModTypeOrNext(special) && (
               <MessageTypeDropdown
                 selected={this.props.item.messageType}
                 onSelection={this.handleMessageTypeSelection}
