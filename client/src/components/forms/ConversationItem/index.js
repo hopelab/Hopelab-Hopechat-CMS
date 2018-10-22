@@ -332,7 +332,7 @@ class ConversationItem extends Component {
                   if (!id) {
                     const item = { ...this.props.item };
                     if (type) {
-                      item.next = { ...item.next, type };
+                      item.next = { type };
                     } else {
                       delete item.next;
                     }

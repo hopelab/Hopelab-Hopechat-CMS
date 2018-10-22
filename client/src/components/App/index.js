@@ -16,7 +16,7 @@ import StudyIdView from '../StudyIdView';
 import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
 
-import { DASHBOARD_COMPONENTS, IS_QUICK_REPLY_RETRY, CRISIS_RESPONSE_MESSAGE_ID, STOP_MESSAGE_ID,
+import { DASHBOARD_COMPONENTS, IS_QUICK_REPLY_RETRY, STOP_MESSAGE_ID, CRISIS_BLOCK_ID,
   IS_STOP_MESSAGE_DETECTION, QUICK_REPLY_BLOCK_ID, QUICK_REPLY_BLOCK_NAME, RESUME_MESSAGE_ID,
   IS_CRISIS_RESPONSE_DETECTION } from '../../utils/constants';
 
@@ -136,7 +136,7 @@ class App extends Component {
         };
       case DASHBOARD_COMPONENTS.crisis:
         return {
-          id: 'crisis-parent-id',
+          id: CRISIS_BLOCK_ID,
           type: TYPE_BLOCK,
           name: 'Crisis Detection',
         };
@@ -548,7 +548,7 @@ class App extends Component {
       case DASHBOARD_COMPONENTS.crisis:
         mainProps = {
           ...mainProps,
-          order: [CRISIS_RESPONSE_MESSAGE_ID],
+          order: this.getOrdering({ id: CRISIS_BLOCK_ID }),
           config: config.forms.conversation,
           special: IS_CRISIS_RESPONSE_DETECTION,
           updateStartEntity: Function.prototype,
