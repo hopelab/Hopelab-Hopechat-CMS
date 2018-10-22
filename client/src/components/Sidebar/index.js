@@ -55,6 +55,10 @@ class Sidebar extends React.Component {
         name: DASHBOARD_COMPONENTS.stop,
         title: 'Stop Detection',
       },
+      {
+        name: DASHBOARD_COMPONENTS.eoc,
+        title: 'End Of Conversation',
+      },
     ].map(e => (
       <Button
         outline
