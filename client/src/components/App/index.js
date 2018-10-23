@@ -306,6 +306,7 @@ class App extends Component {
     this.setState({ loading: true });
     const urlArray = url.split('/');
     const fullName = urlArray[urlArray.length - 1];
+    const affectedMsg = this.state.message.find(m => (equals(m.url, url)));
     fetch(
       `/media/delete/${fullName}/${type}`,
       config.http.makeUploadFetchOptions({
@@ -314,7 +315,12 @@ class App extends Component {
     )
       .then(res => res.json())
       .then(val => {
-        this.setState({ [type]: val, loading: false });
+        this.setState({ [type]: val });
+        if (affectedMsg) {
+          this.handleSaveItem({ ...affectedMsg, url: null });
+        } else {
+          this.setState({ loading: false });
+        }
       });
   }
 
