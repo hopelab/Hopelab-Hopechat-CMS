@@ -93,6 +93,7 @@ export class ConversationItemContainer extends Component {
         return {
           ...qr,
           payload: JSON.stringify({ id, type }),
+          next: {},
         };
       });
 
