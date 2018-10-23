@@ -27,7 +27,8 @@ import {
   ITEMS,
 } from '../../../utils/config';
 
-import { IS_STOP_MESSAGE_DETECTION, STOP_MESSAGE_ID, IS_END_OF_CONVERSATION } from '../../../utils/constants';
+import { IS_STOP_MESSAGE_DETECTION, STOP_MESSAGE_ID,
+  IS_END_OF_CONVERSATION, IS_CRISIS_RESPONSE_DETECTION } from '../../../utils/constants';
 
 import './style.css';
 
@@ -63,6 +64,11 @@ class ConversationItem extends Component {
       delayInMinutes: PropTypes.number,
       text: PropTypes.string,
       isEvent: PropTypes.bool,
+      quick_replies: PropTypes.arrayOf(PropTypes.shape({
+        payload: PropTypes.shape({}),
+        content_type: PropTypes.string,
+        title: PropTypes.string,
+      })),
     }).isRequired,
     handleSaveItem: PropTypes.func.isRequired,
     handleChildEntityAddition: PropTypes.func,
@@ -132,6 +138,8 @@ class ConversationItem extends Component {
       this.props.handleSaveItem({
         ...this.props.item,
         messageType,
+        quick_replies: equals(messageType, MESSAGE_TYPE_QUESTION_WITH_REPLIES) ?
+          this.props.item.quick_replies : null,
       });
     }
   }
@@ -307,7 +315,7 @@ class ConversationItem extends Component {
                 selected={this.props.item.messageType}
                 onSelection={this.handleMessageTypeSelection}
                 onDelete={this.handleDeleteMessage}
-                disabled={!!special && index === 0}
+                disabled={!!special && special !== IS_CRISIS_RESPONSE_DETECTION && index === 0}
               />
             )}
           </div>
