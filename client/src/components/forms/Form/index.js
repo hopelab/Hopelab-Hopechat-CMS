@@ -39,6 +39,7 @@ const propTypes = {
   readOnly: PropTypes.bool.isRequired,
   setNewIndex: PropTypes.func.isRequired,
   order: PropTypes.arrayOf(PropTypes.string),
+  special: PropTypes.string,
 };
 
 /**
@@ -60,12 +61,18 @@ class Form extends Component {
   }
 
   render() {
-    const { readOnly, childEntities = [], setNewIndex, order } = this.props;
-    const orderedChildren = [];
-    childEntities.forEach(c => {
-      orderedChildren[order.indexOf(c.id) > -1 ? order.indexOf(c.id) : order.length] = c;
-    });
+    const { readOnly, childEntities = [], setNewIndex, order = [], special } = this.props;
 
+    const orderedChildren = [];
+    if (childEntities) {
+      childEntities.forEach(c => {
+        if (order.indexOf(c.id) > -1) {
+          orderedChildren[order.indexOf(c.id)] = c;
+        } else {
+          orderedChildren.push(c);
+        }
+      });
+    }
     if (!childEntities.length && !readOnly) {
       return (<NextMessage
         parentItemType={this.props.item.type}
@@ -83,7 +90,7 @@ class Form extends Component {
     return (
       <div className="d-flex flex-column align-items-start">
         {readOnly && <div className="read-only" /> }
-        { ((this.props.item.type === TYPE_CONVERSATION ||
+        { (!special && (this.props.item.type === TYPE_CONVERSATION ||
           this.props.item.type === TYPE_BLOCK) && this.props.childEntities.length)
           ? <FirstItemSelect
             childEntities={this.props.childEntities}
@@ -107,6 +114,7 @@ class Form extends Component {
               videos={this.props.videos}
               parentItemType={this.props.item.type}
               conversations={this.props.conversations}
+              special={special}
             />
           ))
         ) : null}

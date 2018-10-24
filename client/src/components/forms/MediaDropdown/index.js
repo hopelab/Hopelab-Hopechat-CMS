@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { equals, any } from 'ramda';
 import {
   DropdownMenu,
   Dropdown,
@@ -45,7 +46,8 @@ class MediaDropdown extends Component {
   render() {
     const { media, selectedUrl } = this.props;
     let foundItem = 'choose media';
-    const res = media.find(m => m.url === selectedUrl);
+    const predicate = equals(selectedUrl);
+    const res = media.find(({ url }) => any(predicate, [url, encodeURI(url)]));
     if (res) { foundItem = res.key; }
     return (
       <Dropdown

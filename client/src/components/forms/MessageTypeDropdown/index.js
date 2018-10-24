@@ -14,6 +14,7 @@ class MessageTypeDropdown extends Component {
     selected: PropTypes.string.isRequired,
     onSelection: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
+    disabled: PropTypes.bool,
   };
 
   constructor(props) {
@@ -54,7 +55,7 @@ class MessageTypeDropdown extends Component {
   }
 
   render() {
-    const { selected } = this.props;
+    const { selected, disabled } = this.props;
     const foundItem = messageTypes.find(m => m.id === selected) || { display: 'type' };
     return (
       <Dropdown
@@ -74,10 +75,11 @@ class MessageTypeDropdown extends Component {
           }}
           data-toggle="dropdown"
           aria-expanded={this.state.dropdownOpen}
+          disabled={disabled}
         >
           {foundItem.display}
         </DropdownToggle>
-        <DropdownMenu flip={false}>
+        <DropdownMenu flip={false} disabled={disabled}>
           {this.renderMessageTypeDropdownItems()}
         </DropdownMenu>
       </Dropdown>

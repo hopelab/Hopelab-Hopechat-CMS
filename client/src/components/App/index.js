@@ -1,18 +1,27 @@
 import React, { Component } from 'react';
-import { pick, omit, isEmpty, isNil } from 'ramda';
+import { pick, omit, isEmpty, isNil, equals } from 'ramda';
 
 import './style.css';
 
 import Loader from '../common/Loader';
 
 import Sidebar from '../Sidebar';
+import AssetLibrary from '../AssetLibrary';
 import Dashboard from '../Dashboard';
 import UploadModal from '../UploadModal';
 import Modal from '../common/Modal';
+import StudyIdView from '../StudyIdView';
+
 
 import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
 
+import { DASHBOARD_COMPONENTS, IS_QUICK_REPLY_RETRY, STOP_MESSAGE_ID, CRISIS_BLOCK_ID, END_OF_CONVO_ID,
+  IS_STOP_MESSAGE_DETECTION, QUICK_REPLY_BLOCK_ID, QUICK_REPLY_BLOCK_NAME, RESUME_MESSAGE_ID,
+  IS_CRISIS_RESPONSE_DETECTION, IS_END_OF_CONVERSATION } from '../../utils/constants';
+
+const { MESSAGE_TYPE_VIDEO, TYPE_BLOCK } = config;
+const { cleanString } = dataUtil;
 
 class App extends Component {
   constructor(props) {
@@ -24,12 +33,16 @@ class App extends Component {
     this.handleCopyItem = this.handleCopyItem.bind(this);
   }
 
+  componentWillMount() {
+    this.toggleView();
+  }
+
   componentDidMount() {
     dataUtil
       .fetchAllDataForApp(config.routes)
       .then(dataUtil.createInitialEntityState)
       .then(data => {
-        this.setState({ ...data });
+        this.setState({ ...data, initialLoad: false });
       })
       .catch(console.error);
   }
@@ -64,60 +77,87 @@ class App extends Component {
   };
 
   addImage = (acceptedFiles, rejectedFiles) => {
-    this.setState({ loading: true });
-    if (rejectedFiles) {
+    if (acceptedFiles) {
+      this.setState({ loading: true });
+      const data = new FormData();
+      data.append('file', acceptedFiles[0]);
+
+      fetch(
+        '/media/create',
+        config.http.makeUploadFetchOptions({
+          method: 'POST',
+          body: data,
+        }),
+      )
+        .then(res => res.json())
+        .then(res => {
+          const newState = {
+            loading: false,
+            imageUploadStatus: 'success',
+            mediaUpload: {
+              ...this.state.mediaUpload,
+              showModal: false,
+            },
+          };
+
+          const media = { key: res.key, url: res.url };
+
+          if (res.type === 'image') {
+            newState.image = this.state.image.concat(media);
+          } else {
+            newState.video = this.state.video.concat(media);
+          }
+
+          this.setState(newState);
+
+          this.resetActionMessage('imageUploadStatus', 4000);
+        })
+        .catch(e => {
+          console.error(e);
+          this.setState({
+            imageUploadStatus: 'fail',
+          });
+
+          this.resetActionMessage('imageUploadStatus', 4000);
+        });
+    } else if (rejectedFiles) {
       console.error(JSON.stringify(rejectedFiles));
     }
-    const data = new FormData();
-    data.append('file', acceptedFiles[0]);
-
-    fetch(
-      '/media/create',
-      config.http.makeUploadFetchOptions({
-        method: 'POST',
-        body: data,
-      }),
-    )
-      .then(res => res.json())
-      .then(res => {
-        const newState = {
-          loading: false,
-          imageUploadStatus: 'success',
-          mediaUpload: {
-            ...this.state.mediaUpload,
-            showModal: false,
-          },
-        };
-
-        const media = { key: res.key, url: res.url };
-
-        if (res.type === 'image') {
-          newState.image = this.state.image.concat(media);
-        } else {
-          newState.video = this.state.video.concat(media);
-        }
-
-        this.setState(newState);
-
-        this.resetActionMessage('imageUploadStatus', 4000);
-      })
-      .catch(e => {
-        console.error(e);
-        this.setState({
-          imageUploadStatus: 'fail',
-        });
-
-        this.resetActionMessage('imageUploadStatus', 4000);
-      });
   };
 
   getFullItemEditing(state) {
-    const { itemEditing } = state;
-    if (!itemEditing) {
-      return null;
+    const { itemEditing, view } = state;
+    switch (view) {
+      case DASHBOARD_COMPONENTS.quickReply:
+        return {
+          id: QUICK_REPLY_BLOCK_ID,
+          type: TYPE_BLOCK,
+          name: QUICK_REPLY_BLOCK_NAME,
+        };
+      case DASHBOARD_COMPONENTS.crisis:
+        return {
+          id: CRISIS_BLOCK_ID,
+          type: TYPE_BLOCK,
+          name: 'Crisis Detection',
+        };
+      case DASHBOARD_COMPONENTS.stop:
+        return {
+          id: 'stop-parent-id',
+          type: TYPE_BLOCK,
+          name: 'Stop Detection',
+        };
+      case DASHBOARD_COMPONENTS.eoc:
+        return {
+          id: 'end-of-conversation-parent-id',
+          type: TYPE_BLOCK,
+          name: 'Stop Detection',
+        };
+      default:
+        if (!itemEditing) {
+          return null;
+        }
+        return state[itemEditing.type].find(item => item.id === itemEditing.id);
     }
-
-    return state[itemEditing.type].find(item => item.id === itemEditing.id);
   }
 
   markPosition = entity => {
@@ -262,6 +302,55 @@ class App extends Component {
       .catch(console.error);
   }
 
+  deleteMedia(url, type) {
+    this.setState({ loading: true });
+    const urlArray = url.split('/');
+    const fullName = urlArray[urlArray.length - 1];
+    const affectedMsg = this.state.message.find(m => (equals(m.url, url)));
+    fetch(
+      `/media/delete/${fullName}/${type}`,
+      config.http.makeUploadFetchOptions({
+        method: 'GET',
+      }),
+    )
+      .then(res => res.json())
+      .then(val => {
+        this.setState({ [type]: val });
+        if (affectedMsg) {
+          this.handleSaveItem({ ...affectedMsg, url: null });
+        } else {
+          this.setState({ loading: false });
+        }
+      });
+  }
+
+  renameMedia(newName, url, type) {
+    const encodedName = cleanString(newName);
+    const urlArray = url.split('/');
+    const fileName = urlArray[urlArray.length - 1];
+    const displayName = fileName.split('.')[0];
+    const newUrl = url.replace(displayName, encodedName);
+    const repl = this.state[type].map(i =>
+      (equals(i.url, url) ?
+        { ...i, url: newUrl, key: encodedName } : i));
+    const affectedMsg = this.state.message.find(m => (equals(m.url, url)));
+    this.setState({ loading: true });
+    fetch(
+      `/media/rename/${encodedName}/${fileName}`,
+      config.http.makeUploadFetchOptions({
+        method: 'GET',
+      }),
+    )
+      .then(() => {
+        this.setState({ [type]: repl });
+        if (affectedMsg) {
+          this.handleSaveItem({ ...affectedMsg, url: newUrl });
+        } else {
+          this.setState({ loading: false });
+        }
+      });
+  }
+
   handleDeleteItem = itemToDelete => {
     this.setState({ itemToDelete, openDeleteModal: !this.state.openDeleteModal });
   }
@@ -292,8 +381,7 @@ class App extends Component {
   };
 
   handleTreeToggle = ({ node: pNode, expand }) => {
-    this.setState({ showStudyIdView: false });
-    /* eslint-disable react/no-direct-mutation-state */
+    this.toggleView();
     const node = pNode;
     if (expand) {
       if (node.children) {
@@ -307,9 +395,6 @@ class App extends Component {
       return;
     }
 
-    if (this.state.cursor) {
-      this.state.cursor.active = false;
-    }
     node.active = true;
 
     this.setState({
@@ -328,12 +413,35 @@ class App extends Component {
     });
   }
 
-  toggleStudyIdView() {
-    const { showStudyIdView } = this.state;
-    if (!this.state.studyIds && !showStudyIdView) {
-      this.loadStudyIds();
+  toggleView(view) {
+    let component;
+    switch (view) {
+      case DASHBOARD_COMPONENTS.studyIds:
+        if (!this.state.studyIds) {
+          this.loadStudyIds();
+        }
+        component = <StudyIdView />;
+        break;
+      case DASHBOARD_COMPONENTS.assets:
+        component = <AssetLibrary />;
+        break;
+      case DASHBOARD_COMPONENTS.quickReply:
+        component = <Dashboard />;
+        break;
+      case DASHBOARD_COMPONENTS.crisis:
+        component = <Dashboard />;
+        break;
+      case DASHBOARD_COMPONENTS.stop:
+        component = <Dashboard />;
+        break;
+      case DASHBOARD_COMPONENTS.eoc:
+        component = <Dashboard />;
+        break;
+      default:
+        component = <Dashboard />;
+        break;
     }
-    this.setState({ showStudyIdView: !showStudyIdView });
+    this.setState({ component, view });
   }
 
   toggleReadOnly() {
@@ -389,10 +497,9 @@ class App extends Component {
       });
   }
 
-  render() {
-    const { loading, readOnly } = this.state;
+  getMainProps() {
+    const { studyIds, conversation, image, video, readOnly, view } = this.state;
     const data = omit(['loading'], this.state);
-    if (isEmpty(data)) return <Loader />;
     const itemEditing = this.getFullItemEditing(this.state);
 
     const entitiesCanCopyTo = dataUtil.getEntitiesCanCopyTo(
@@ -405,13 +512,103 @@ class App extends Component {
       data,
     );
 
+    let mainProps = {
+      setNewIndex: ({ id, newIndex }) => this.changeOrder({ id, newIndex, itemEditing }, true),
+      formConfig: config.forms,
+      handleSaveItem: this.handleSaveItem,
+      handleDeleteItem: this.handleDeleteItem,
+      handleNewChildEntity: this.handleNewChildEntity,
+      itemEditing,
+      childEntities,
+      conversations: conversation,
+      entitiesCanCopyTo,
+      handleCopyEntity: this.handleCopyEntity,
+      images: image,
+      videos: video,
+      updateStartEntity: this.updateStartEntity,
+      readOnly,
+      toggleReadOnly: () => this.toggleReadOnly(),
+      order: itemEditing ? this.getOrdering({ id: itemEditing.id, childEntities }) : null,
+    };
+    switch (view) {
+      case DASHBOARD_COMPONENTS.studyIds:
+        mainProps = { ...mainProps, studyIds };
+        break;
+      case DASHBOARD_COMPONENTS.assets:
+        mainProps = {
+          ...mainProps,
+          assets: image.concat(video.map(v => ({ ...v, type: MESSAGE_TYPE_VIDEO })))
+            .sort((a, b) => (a.modifiedAt > b.modifiedAt ? -1 : 1)),
+          toggleImageModal: () => {
+            this.setState({
+              mediaUpload: {
+                ...this.state.mediaUpload,
+                showModal: !this.state.mediaUpload.showModal,
+              },
+            });
+          },
+          deleteMedia: (url, type) => this.deleteMedia(url, type),
+          renameFile: (newName, oldName, type) => this.renameMedia(newName, oldName, type),
+        };
+        break;
+      case DASHBOARD_COMPONENTS.quickReply:
+        mainProps = {
+          ...mainProps,
+          order: this.getOrdering({ id: QUICK_REPLY_BLOCK_ID }),
+          config: config.forms.conversation,
+          special: IS_QUICK_REPLY_RETRY,
+          updateStartEntity: Function.prototype,
+        };
+        break;
+      case DASHBOARD_COMPONENTS.crisis:
+        mainProps = {
+          ...mainProps,
+          order: this.getOrdering({ id: CRISIS_BLOCK_ID }),
+          config: config.forms.conversation,
+          special: IS_CRISIS_RESPONSE_DETECTION,
+          updateStartEntity: Function.prototype,
+        };
+        break;
+      case DASHBOARD_COMPONENTS.stop:
+        mainProps = {
+          ...mainProps,
+          order: [STOP_MESSAGE_ID, RESUME_MESSAGE_ID],
+          config: config.forms.conversation,
+          special: IS_STOP_MESSAGE_DETECTION,
+          updateStartEntity: Function.prototype,
+        };
+        break;
+      case DASHBOARD_COMPONENTS.eoc:
+        mainProps = {
+          ...mainProps,
+          order: [END_OF_CONVO_ID],
+          config: config.forms.conversation,
+          special: IS_END_OF_CONVERSATION,
+          updateStartEntity: Function.prototype,
+        };
+        break;
+      default:
+        break;
+    }
+    return mainProps;
+  }
+
+
+  render() {
+    const { loading, readOnly, openDeleteModal, itemToDelete, component, view, initialLoad } = this.state;
+    const data = omit(['loading'], this.state);
+
+    if (isEmpty(data) || initialLoad) return <Loader />;
+    let itemEditing;
+    if (!view) itemEditing = this.getFullItemEditing(this.state);
+
     const treeData = dataUtil.createTreeView({
       data,
       entities: config.entities,
       active: (itemEditing || {}).id,
     });
 
-    const { showStudyIdView, studyIds, conversation, image, video, openDeleteModal, itemToDelete } = this.state;
+
     return (
       <div className="App row">
         <UploadModal
@@ -431,16 +628,8 @@ class App extends Component {
           treeData={treeData}
           handleTreeToggle={this.handleTreeToggle}
           itemEditing={itemEditing}
-          toggleStudyIdView={() => this.toggleStudyIdView()}
+          toggleView={newView => this.toggleView(newView)}
           readOnly={readOnly}
-          toggleImageModal={() => {
-            this.setState({
-              mediaUpload: {
-                ...this.state.mediaUpload,
-                showModal: !this.state.mediaUpload.showModal,
-              },
-            });
-          }}
         />
         {loading &&
           <div className="floating-loader">
@@ -457,26 +646,7 @@ class App extends Component {
           />
         }
 
-        <Dashboard
-          setNewIndex={({ id, newIndex }) => this.changeOrder({ id, newIndex, itemEditing }, true)}
-          formConfig={config.forms}
-          handleSaveItem={this.handleSaveItem}
-          handleDeleteItem={this.handleDeleteItem}
-          handleNewChildEntity={this.handleNewChildEntity}
-          itemEditing={itemEditing}
-          childEntities={childEntities}
-          conversations={conversation}
-          entitiesCanCopyTo={entitiesCanCopyTo}
-          handleCopyEntity={this.handleCopyEntity}
-          images={image}
-          videos={video}
-          updateStartEntity={this.updateStartEntity}
-          showStudyIdView={showStudyIdView}
-          studyIds={studyIds}
-          readOnly={readOnly}
-          toggleReadOnly={() => this.toggleReadOnly()}
-          order={itemEditing ? this.getOrdering({ id: itemEditing.id, childEntities }) : null}
-        />
+        {React.cloneElement(component, this.getMainProps())}
       </div>
     );
   }

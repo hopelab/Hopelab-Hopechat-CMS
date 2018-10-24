@@ -150,6 +150,7 @@ const messageTypes = [
 */
 const initialState = {
   App: {
+    initialLoad: true,
     conversation: [],
     collection: [],
     series: [],

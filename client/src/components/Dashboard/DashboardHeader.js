@@ -31,6 +31,7 @@ export class DashboardHeader extends Component {
     copyToItems: PropTypes.arrayOf(PropTypes.shape),
     readOnly: PropTypes.bool.isRequired,
     toggleReadOnly: PropTypes.func.isRequired,
+    special: PropTypes.string,
   }
 
   hasLive(type) {
@@ -66,6 +67,7 @@ export class DashboardHeader extends Component {
       copyToItems,
       readOnly,
       toggleReadOnly,
+      special,
     } = this.props;
     return (
       <div
@@ -75,7 +77,7 @@ export class DashboardHeader extends Component {
         <EditableText
           text={itemName}
           onEditWillFinish={onNameChanged}
-          disabled={readOnly}
+          disabled={readOnly || !!special}
         />
         <ReactStrapForm
           className="d-flex"
@@ -85,15 +87,18 @@ export class DashboardHeader extends Component {
             onDelete({ id: itemId, type: itemType, name: itemName });
           }}
         >
-          {itemType === 'conversation' &&
+          {itemType === 'conversation' && !special &&
             (<CopyButton onCopy={onCopy} disabled={readOnly} />)}
-          {entityCanBeCopied(itemType) && (
+          {entityCanBeCopied(itemType) &&
+            !special &&
             <CopyButton
               copyToItems={copyToItems}
               onCopy={onCopy}
               disabled={readOnly}
             />
-          )}
+
+          }
+          {!special &&
           <Button
             className="mr-3"
             color="danger"
@@ -102,6 +107,7 @@ export class DashboardHeader extends Component {
           >
             Delete
           </Button>
+          }
           {this.hasStudy(itemType) && (
             <CheckBox
               onChange={onToggleStudy}

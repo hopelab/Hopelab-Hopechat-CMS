@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { DragSource } from 'react-dnd';
-
+import { any, equals } from 'ramda';
 import { CheckBox } from '../../common/CheckBox';
 
 import EditableText from '../EditableText';
@@ -26,7 +26,14 @@ import {
   MESSAGE_TYPE_TRANSITION,
   ITEMS,
 } from '../../../utils/config';
+
+import { IS_STOP_MESSAGE_DETECTION, STOP_MESSAGE_ID,
+  IS_END_OF_CONVERSATION, IS_CRISIS_RESPONSE_DETECTION } from '../../../utils/constants';
+
 import './style.css';
+
+
+const noModTypeOrNext = special => !any(equals(special))([IS_END_OF_CONVERSATION, IS_STOP_MESSAGE_DETECTION]);
 
 const conversationItemStyles = {
   [TYPE_CONVERSATION]: {
@@ -57,6 +64,11 @@ class ConversationItem extends Component {
       delayInMinutes: PropTypes.number,
       text: PropTypes.string,
       isEvent: PropTypes.bool,
+      quick_replies: PropTypes.arrayOf(PropTypes.shape({
+        payload: PropTypes.shape({}),
+        content_type: PropTypes.string,
+        title: PropTypes.string,
+      })),
     }).isRequired,
     handleSaveItem: PropTypes.func.isRequired,
     handleChildEntityAddition: PropTypes.func,
@@ -68,6 +80,7 @@ class ConversationItem extends Component {
     parentItemType: PropTypes.string,
     connectDragSource: PropTypes.func.isRequired,
     index: PropTypes.number.isRequired,
+    special: PropTypes.string,
   }
 
   constructor(props) {
@@ -125,6 +138,8 @@ class ConversationItem extends Component {
       this.props.handleSaveItem({
         ...this.props.item,
         messageType,
+        quick_replies: equals(messageType, MESSAGE_TYPE_QUESTION_WITH_REPLIES) ?
+          this.props.item.quick_replies : null,
       });
     }
   }
@@ -135,7 +150,9 @@ class ConversationItem extends Component {
   }
 
   renderItemContent(item) {
-    const { messageType, url } = item;
+    const { special } = this.props;
+    const { messageType, url, id } = item;
+    const stopRegex = new RegExp(/\$\{RESUME_MESSAGE\}/);
     if (this.messageTypeHasContent(messageType)) {
       const editableText = this.messageTypeHasUrl(messageType) ?
         url : this.props.item.text;
@@ -163,6 +180,11 @@ class ConversationItem extends Component {
               <MediaPreview url={url} type={messageType} />
             )}
           </p>
+          {special === IS_STOP_MESSAGE_DETECTION && id === STOP_MESSAGE_ID &&
+            !stopRegex.test(editableText) &&
+            <span className="bg-danger">
+              The Stop Message must contain the exact string ${'{'}RESUME_MESSAGE{'}'}
+            </span>}
         </div>
       );
     }
@@ -227,11 +249,8 @@ class ConversationItem extends Component {
             onSelection={newUrl => {
               const newItem = {
                 ...item,
-                url: newUrl,
+                url: newUrl || null,
               };
-              if (!url) {
-                delete newItem.url;
-              }
               this.props.handleSaveItem(newItem);
             }}
           />
@@ -264,8 +283,8 @@ class ConversationItem extends Component {
   }
 
   render() {
-    const { item: { isEvent = false }, index, connectDragSource, className, item: { messageType } } = this.props;
-
+    const { item: { isEvent = false }, index, connectDragSource, className,
+      item: { messageType }, special } = this.props;
     return connectDragSource(
       <div
         key="ogItem"
@@ -289,12 +308,14 @@ class ConversationItem extends Component {
             <EditableText
               text={this.props.item.name}
               onEditWillFinish={val => this.editAttribute('name', val)}
+              disabled={!!special && index === 0}
             />
-            { this.props.item.messageType && (
+            { this.props.item.messageType && noModTypeOrNext(special) && (
               <MessageTypeDropdown
                 selected={this.props.item.messageType}
                 onSelection={this.handleMessageTypeSelection}
                 onDelete={this.handleDeleteMessage}
+                disabled={!!special && special !== IS_CRISIS_RESPONSE_DETECTION && index === 0}
               />
             )}
           </div>
@@ -306,18 +327,25 @@ class ConversationItem extends Component {
         </div>
 
         {this.renderItemContent(this.props.item)}
-        {(!this.messageTypeHasDifferentOptions(this.props.item.messageType)) && (
+        {(!this.messageTypeHasDifferentOptions(this.props.item.messageType)) &&
+          noModTypeOrNext(special) && (
           <div className="card-footer">
             <NextMessage
+              special={special}
               parentItemType={this.props.parentItemType}
               childEntities={this.props.childEntities}
               nextId={this.props.item.next ? this.props.item.next.id : undefined}
+              nextType={this.props.item.next ? this.props.item.next.type : undefined}
               showEndOfConversation={this.props.parentItemType === TYPE_CONVERSATION}
               handleNextMessageSelect={(id, type) => {
                 if (this.nextHasChanged(this.props.item, id, type)) {
                   if (!id) {
-                    const item = Object.assign({}, this.props.item);
-                    delete item.next;
+                    const item = { ...this.props.item };
+                    if (type) {
+                      item.next = { type };
+                    } else {
+                      delete item.next;
+                    }
                     this.props.handleSaveItem(item);
                   } else {
                     this.props.handleSaveItem({
