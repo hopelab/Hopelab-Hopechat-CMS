@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'reactstrap';
+import { Button, Container as BootContainer } from 'reactstrap';
 import './style.css';
+import { DASHBOARD_COMPONENTS } from '../../utils/constants';
 
 import { Treebeard, decorators, Container } from '../TreeBeard';
 
@@ -11,8 +12,7 @@ const propTypes = {
   addConversation: PropTypes.func.isRequired,
   treeData: PropTypes.object.isRequired,
   handleTreeToggle: PropTypes.func.isRequired,
-  toggleImageModal: PropTypes.func.isRequired,
-  toggleStudyIdView: PropTypes.func.isRequired,
+  toggleView: PropTypes.func.isRequired,
   readOnly: PropTypes.bool.isRequired,
 };
 
@@ -33,40 +33,64 @@ class Sidebar extends React.Component {
 
   render() {
     const { expandAll } = this.state;
-    const { readOnly, toggleImageModal, addConversation, toggleStudyIdView, treeData, handleTreeToggle } = this.props;
+    const { readOnly, addConversation, toggleView, treeData, handleTreeToggle } = this.props;
+    const buttonArray = [
+      {
+        name: DASHBOARD_COMPONENTS.studyIds,
+        title: 'Study Ids',
+      },
+      {
+        name: DASHBOARD_COMPONENTS.assets,
+        title: 'Asset Library',
+      },
+      {
+        name: DASHBOARD_COMPONENTS.quickReply,
+        title: 'Quick Reply Retry',
+      },
+      {
+        name: DASHBOARD_COMPONENTS.crisis,
+        title: 'Crisis Detection',
+      },
+      {
+        name: DASHBOARD_COMPONENTS.stop,
+        title: 'Stop Detection',
+      },
+      {
+        name: DASHBOARD_COMPONENTS.eoc,
+        title: 'End Of Conversation',
+      },
+    ].map(e => (
+      <Button
+        outline
+        color="secondary"
+        size="lg"
+        block
+        onClick={() => toggleView(e.name)}
+        key={e.name}
+      >
+        {e.title}
+      </Button>
+    ));
     return (
       <aside className="Sidebar col-md-4 pl-3 pt-1">
         <div className="card" style={{ borderColor: 'white' }}>
-          <div className="card-header d-flex flex-row justify-content-between">
-            <span style={{ fontSize: '1.1em' }}>Conversations</span>
-            <div>
-              <Button
-                disabled={readOnly}
-                color="primary"
-                className="ml-1"
-                onClick={toggleImageModal}
-              >
-                <i className="fa fa-picture-o" aria-hidden="true" />&nbsp;
-                <i className="fa fa-video-camera" aria-hidden="true" />
-              </Button>
-              <Button
-                disabled={readOnly}
-                color="primary"
-                className="ml-1"
-                onClick={addConversation}
-              >
-                New
-              </Button>
+          <BootContainer fluid >
+            <h4>Components</h4>
+            <div className="blck-box">
+              {buttonArray}
             </div>
 
-          </div>
+          </BootContainer>
           <div className="card-header d-flex flex-row justify-content-between">
+            <h4>Conversations</h4>
+
             <Button
-              color="warning"
+              disabled={readOnly}
+              color="primary"
               className="ml-1"
-              onClick={() => toggleStudyIdView()}
+              onClick={addConversation}
             >
-              Study Ids
+              New
             </Button>
             <Button
               color="secondary"

@@ -55,3 +55,7 @@
 .custom-dropzone.failure {
     border-color: maroon;
 }
+
+.custom-dropzone span {
+  margin: auto;
+}

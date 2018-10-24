@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
+import * as R from 'ramda';
 import Form from '../forms/Form';
+import WordList from '../WordList';
 import DashboardHeader from './DashboardHeader';
-import StudyIdView from '../StudyIdView';
+
+import { IS_CRISIS_RESPONSE_DETECTION, IS_STOP_MESSAGE_DETECTION } from '../../utils/constants';
 import './style.css';
 
 const propTypes = {
   handleSaveItem: PropTypes.func,
-  handleNewChildEntity: PropTypes.func.isRequired,
+  handleNewChildEntity: PropTypes.func,
   itemEditing: PropTypes.object,
   childEntities: PropTypes.arrayOf(PropTypes.shape({
     type: PropTypes.string,
@@ -33,6 +35,7 @@ class Dashboard extends Component {
 
   handleChildEntityAddition(selectedOption, callback, addedFromIndex) {
     const { childEntities, itemEditing } = this.props;
+
     const setNameRelToParent = ({ parent, newInt }) =>
       (`${parent.name.substr(0, 5).toUpperCase()}-${newInt}`);
     this.props.handleNewChildEntity({
@@ -75,8 +78,7 @@ class Dashboard extends Component {
 
   render() {
     const { props } = this;
-    const { showStudyIdView, studyIds, setNewIndex, order } = props;
-    if (showStudyIdView) return <StudyIdView studyIds={studyIds} />;
+    const { setNewIndex, order, special } = props;
     return (
       <div className="Dashboard mt-1">
         {props.itemEditing !== null && (
@@ -98,6 +100,7 @@ class Dashboard extends Component {
               copyToItems={props.entitiesCanCopyTo}
               readOnly={props.readOnly}
               toggleReadOnly={props.toggleReadOnly}
+              special={special}
             />
             <Form
               setNewIndex={args => setNewIndex(args)}
@@ -113,7 +116,10 @@ class Dashboard extends Component {
               updateStartEntity={props.updateStartEntity}
               readOnly={props.readOnly}
               order={order}
+              special={special}
             />
+            {R.any(R.equals(special), [IS_CRISIS_RESPONSE_DETECTION, IS_STOP_MESSAGE_DETECTION])
+              && <WordList special={special} />}
           </div>
         )}
         <div style={{ height: '85vh' }} />
@@ -123,5 +129,8 @@ class Dashboard extends Component {
 }
 
 Dashboard.propTypes = propTypes;
+Dashboard.defaultProps = {
+  handleNewChildEntity: () => null,
+};
 
 export default Dashboard;

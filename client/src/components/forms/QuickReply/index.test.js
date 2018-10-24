@@ -11,6 +11,7 @@ describe('QuickReply component', () => {
     childEntities: [],
     showEndOfConversation: true,
     parentItemType: '',
+    onNewItem: jest.fn(),
   };
   let component;
   beforeEach(() => {

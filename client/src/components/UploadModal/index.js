@@ -52,8 +52,10 @@ class UploadModal extends Component {
               onUpload(accepted, rejected);
             });
           }}
-          className="custom-dropzone"
-        />
+          className="custom-dropzone d-flex justify-content-center"
+        >
+          <span>Or click here to select from file system</span>
+        </Dropzone>
         { loading ? <i className="fa fa-spinner fa-3x loading" /> : undefined }
       </Modal>
     );

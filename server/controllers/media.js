@@ -8,10 +8,22 @@ router.post('/create', (req, res) => {
   req.setTimeout(0);
   Media.upload(req.files)
     .then(Media.uploadToFacebookIfVideo)
-    .then(console.log) // eslint-disable-line no-console
+    .then(() => res.send(getS3Info(req.files.file)))
     .catch(apiErrorResponse);
+});
 
-  return res.send(getS3Info(req.files.file));
+router.get('/delete/:name/:type', (req, res) => {
+  req.setTimeout(0);
+  Media.delete(req.params.name, req.params.type)
+    .then(media => res.send(media))
+    .catch(apiErrorResponse);
+});
+
+router.get('/rename/:new/:old', (req, res) => {
+  req.setTimeout(0);
+  Media.rename(req.params.new, req.params.old)
+    .then(() => res.send())
+    .catch(apiErrorResponse);
 });
 
 module.exports = router;

@@ -257,3 +257,5 @@ export function createTreeView({ active, data, entities: paramEntities }) {
 
   return tree;
 }
+
+export const cleanString = str => encodeURI(str);

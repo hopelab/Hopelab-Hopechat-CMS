@@ -68,6 +68,41 @@ const config = {
         CacheControl: 'max-age=864000'
       };
     },
+    deleteObjectParams: name => {
+      return {
+        Bucket: R.defaultTo(
+          R.path(['aws', 'bucket'], FALLBACK_DEFAULT_VALUES),
+          R.path(['env', 'AWS_BUCKET'], process)
+        ),
+        Key: name,
+      };
+    },
+    copyObjectParams: (newName, oldName) => {
+      const Bucket = R.defaultTo(
+        R.path(['aws', 'bucket'], FALLBACK_DEFAULT_VALUES),
+        R.path(['env', 'AWS_BUCKET'], process)
+      );
+      const ext = oldName.split('.')[oldName.split('.').length - 1];
+      return {
+        Bucket,
+        ACL: R.defaultTo(
+          R.path(['aws', 'acl'], FALLBACK_DEFAULT_VALUES),
+          R.path(['env', 'AWS_ACL'], process)
+        ),
+        CopySource: `${Bucket}/${oldName}`,
+        Key: `${newName}.${ext}`
+      };
+    },
+    headObjectParams: name => {
+      const Bucket = R.defaultTo(
+        R.path(['aws', 'bucket'], FALLBACK_DEFAULT_VALUES),
+        R.path(['env', 'AWS_BUCKET'], process)
+      );
+      return {
+        Bucket,
+        Key: name
+      };
+    },
     config: {
       accessKeyId: R.defaultTo(
         R.path(['aws', 'config', 'accessKeyId'], FALLBACK_DEFAULT_VALUES),
