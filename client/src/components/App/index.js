@@ -21,7 +21,7 @@ import { DASHBOARD_COMPONENTS, IS_QUICK_REPLY_RETRY, STOP_MESSAGE_ID, CRISIS_BLO
   IS_CRISIS_RESPONSE_DETECTION, IS_END_OF_CONVERSATION } from '../../utils/constants';
 
 const { MESSAGE_TYPE_VIDEO, TYPE_BLOCK } = config;
-const { cleanString } = dataUtil;
+const { cleanString, copyOrder } = dataUtil;
 
 class App extends Component {
   constructor(props) {
@@ -297,6 +297,24 @@ class App extends Component {
       })
       .then(res => res.json())
       .then(copiedResults => {
+        const created = copiedResults[itemToCopy.type]
+          .filter(a => a.created)
+          .sort((a, b) => (a.created < b.created ? 1 : -1))[0];
+        if (created && config.forms[itemToCopy.type].children.length) {
+          const data = omit(['loading'], copiedResults);
+
+          const oldChildEntities = dataUtil.getChildEntitiesFor(
+            itemToCopy,
+            data,
+          );
+          const newChildEntity = dataUtil.getChildEntitiesFor(
+            created,
+            data,
+          );
+          const oldOrder = this.getOrdering(itemToCopy);
+          const ordering = copyOrder(oldOrder, oldChildEntities, newChildEntity);
+          this.saveOrdering({ ordering, id: created.id }, false);
+        }
         this.setState({ ...copiedResults, loading: false });
       })
       .catch(console.error);
