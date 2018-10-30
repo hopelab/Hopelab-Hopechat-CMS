@@ -65,7 +65,7 @@ class ConversationItem extends Component {
       text: PropTypes.string,
       isEvent: PropTypes.bool,
       quick_replies: PropTypes.arrayOf(PropTypes.shape({
-        payload: PropTypes.shape({}),
+        payload: PropTypes.string,
         content_type: PropTypes.string,
         title: PropTypes.string,
       })),

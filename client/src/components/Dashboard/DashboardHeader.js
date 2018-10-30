@@ -122,7 +122,7 @@ export class DashboardHeader extends Component {
               onChange={onToggleLive}
               className="mr-1"
               checked={!!(isLive)}
-              label="Live"
+              label="Default"
               disabled={readOnly}
             />
           )}

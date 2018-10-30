@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { pick, omit, isEmpty, isNil, equals } from 'ramda';
+import { pick, omit, isEmpty, isNil, equals, find, propEq } from 'ramda';
 
 import './style.css';
 
@@ -253,7 +253,15 @@ class App extends Component {
   }
 
   handleSaveItem(item, callback) {
+    const { itemEditing, conversation } = this.state;
     this.setState({ loading: true });
+    let affectedConversation;
+    if (!equals(item.isLive, itemEditing.isLive)) {
+      if (item.isLive) {
+        // meaning we need to make some item 'notLive'
+        affectedConversation = find(propEq('isLive', true))(conversation);
+      }
+    }
     const route = item.id ? config.operations.update : config.operations.create;
     dataUtil
       .post(
@@ -262,11 +270,15 @@ class App extends Component {
       )
       .then(res => res.json())
       .then(res => {
-        this.setState({ loading: false });
-        if (Array.isArray(res)) {
-          this.handleUploadNonMessage(res, item, callback);
+        if (affectedConversation) {
+          this.handleSaveItem({ ...affectedConversation, isLive: false });
         } else {
-          this.handleUploadMessage(res, item, callback);
+          this.setState({ loading: false });
+          if (Array.isArray(res)) {
+            this.handleUploadNonMessage(res, item, callback);
+          } else {
+            this.handleUploadMessage(res, item, callback);
+          }
         }
       })
       .catch(console.error);
