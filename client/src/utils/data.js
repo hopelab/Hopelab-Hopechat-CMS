@@ -259,3 +259,10 @@ export function createTreeView({ active, data, entities: paramEntities }) {
 }
 
 export const cleanString = str => encodeURI(str);
+
+export const copyOrder = (oldOrder, oldChildEntities, newChildEntities) =>
+  oldOrder.slice().map(id => {
+    const oldChild = R.find(R.propEq('id', id))(oldChildEntities);
+    const newChild = newChildEntities.find(({ name }) => name.includes(`${oldChild.name} copy-`));
+    return newChild.id;
+  });
