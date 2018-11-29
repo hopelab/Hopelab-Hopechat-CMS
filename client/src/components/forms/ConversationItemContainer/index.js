@@ -59,7 +59,7 @@ export class ConversationItemContainer extends Component {
     return this.transitionHandleNextItemSelect(index, id, type);
   }
 
-  transitionHandleNextItemSelect(index, id) {
+  transitionHandleNextItemSelect(index, id, nextChild) {
     if (!this.props.item.nextConversations) { return; }
     const nextConversations = this.props.item.nextConversations.map((nC, i) => {
       if (i !== index) { return nC; }
@@ -67,6 +67,7 @@ export class ConversationItemContainer extends Component {
       return {
         ...nC,
         id,
+        nextChild,
       };
     });
 
@@ -122,9 +123,7 @@ export class ConversationItemContainer extends Component {
         ...this.props.item,
         quick_replies,
       });
-    } else if (
-      this.props.item.messageType === MESSAGE_TYPE_TRANSITION
-    ) {
+    } else if (this.props.item.messageType === MESSAGE_TYPE_TRANSITION) {
       const nextConversations = this.props.item.nextConversations.map((nC, i) => (i === index ?
         {
           ...nC,
@@ -203,8 +202,14 @@ export class ConversationItemContainer extends Component {
     }
   }
 
+  messageToTransitionTo({ nextChild, id }) {
+    if (nextChild) return nextChild;
+    const { messages } = this.props;
+    return messages.find(({ start, parent: { id: parentId } = {} }) => parentId === id && start).id;
+  }
+
   render() {
-    const { connectDropTarget, isOver, canDrop, setNewIndex, special } = this.props;
+    const { connectDropTarget, isOver, canDrop, setNewIndex, special, messages } = this.props;
     let container = (
       <div className="p-2" key="origItem">
         <ConversationItem
@@ -263,6 +268,8 @@ export class ConversationItemContainer extends Component {
                   childEntities={this.props.childEntities}
                   text={nC.text}
                   nextId={nC.id}
+                  messages={messages}
+                  nextChild={this.messageToTransitionTo(nC)}
                   onUpdateText={(...params) => (
                     this.quickReplyHandleChangeText(i, ...params)
                   )}
