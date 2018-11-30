@@ -17,6 +17,10 @@
   background-color: #006ad3;
 }
 
+.Inner .card small {
+  position: absolute;
+}
+
 .ConversationItem > .card-block {
   background-color: #2c76d1;
   font-size: .8em;

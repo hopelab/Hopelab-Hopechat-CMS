@@ -67,7 +67,8 @@ const QuickReply = ({
                 (...params) => onNextItemSelect(index, ...params, nextChild)
               }
             />
-            <NextMessage
+            <hr />
+            <small>Select Message:</small><NextMessage
               special={special}
               parentItemType={parentItemType}
               childEntities={messages.filter(({ parent: { id } = {} }) => id === nextId)}
