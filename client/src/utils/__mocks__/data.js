@@ -21,7 +21,7 @@ export const post = jest.fn().mockReturnValue(new Promise(resolve =>
   resolve({ json: () => convoPostRes })));
 
 export const updateStart = jest.fn().mockReturnValue(new Promise(resolve =>
-  resolve({ messages: {} })));
+  resolve({ messages: [] })));
 
 const fetchAllDataForAppMock = jest.fn().mockReturnValue(new Promise(resolve => resolve()));
 export const fetchAllDataForApp = fetchAllDataForAppMock;
