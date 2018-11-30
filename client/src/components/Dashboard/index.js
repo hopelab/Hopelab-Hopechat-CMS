@@ -78,7 +78,7 @@ class Dashboard extends Component {
 
   render() {
     const { props } = this;
-    const { setNewIndex, order, special } = props;
+    const { setNewIndex, order, special, messages } = props;
     return (
       <div className="Dashboard mt-1">
         {props.itemEditing !== null && (
@@ -117,6 +117,7 @@ class Dashboard extends Component {
               readOnly={props.readOnly}
               order={order}
               special={special}
+              messages={messages}
             />
             {R.any(R.equals(special), [IS_CRISIS_RESPONSE_DETECTION, IS_STOP_MESSAGE_DETECTION])
               && <WordList special={special} />}

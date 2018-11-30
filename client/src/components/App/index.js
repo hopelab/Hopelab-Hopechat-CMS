@@ -528,7 +528,7 @@ class App extends Component {
   }
 
   getMainProps() {
-    const { studyIds, conversation, image, video, readOnly, view } = this.state;
+    const { studyIds, conversation, image, video, readOnly, view, message, collection } = this.state;
     const data = omit(['loading'], this.state);
     const itemEditing = this.getFullItemEditing(this.state);
 
@@ -559,6 +559,7 @@ class App extends Component {
       readOnly,
       toggleReadOnly: () => this.toggleReadOnly(),
       order: itemEditing ? this.getOrdering({ id: itemEditing.id, childEntities }) : null,
+      messages: message.concat(collection),
     };
     switch (view) {
       case DASHBOARD_COMPONENTS.studyIds:

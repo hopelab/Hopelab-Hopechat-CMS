@@ -40,7 +40,7 @@ describe('main app component', () => {
     await expect(app.state().video[0]).toBeUndefined();
     await app.instance().updateStartEntity('conversation');
     await app.update();
-    await expect(app.state().message).toEqual({});
+    await expect(app.state().message).toEqual([]);
   });
 
   it('handles Tree Toggle', async () => {

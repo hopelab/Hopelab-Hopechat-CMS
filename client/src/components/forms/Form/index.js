@@ -34,6 +34,7 @@ const propTypes = {
   updateStartEntity: PropTypes.func.isRequired,
   images: PropTypes.array.isRequired,
   videos: PropTypes.array.isRequired,
+  messages: PropTypes.array.isRequired,
   handleChildEntityAddition: PropTypes.func,
   conversations: PropTypes.array,
   readOnly: PropTypes.bool.isRequired,
@@ -61,7 +62,7 @@ class Form extends Component {
   }
 
   render() {
-    const { readOnly, childEntities = [], setNewIndex, order = [], special } = this.props;
+    const { readOnly, childEntities = [], setNewIndex, order = [], special, messages } = this.props;
 
     const orderedChildren = [];
     if (childEntities) {
@@ -115,6 +116,7 @@ class Form extends Component {
               parentItemType={this.props.item.type}
               conversations={this.props.conversations}
               special={special}
+              messages={messages}
             />
           ))
         ) : null}
