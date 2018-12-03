@@ -212,7 +212,7 @@ export class ConversationItemContainer extends Component {
   }
 
   render() {
-    const { connectDropTarget, isOver, canDrop, setNewIndex, special, messages } = this.props;
+    const { connectDropTarget, isOver, canDrop, setNewIndex, special, messages, index } = this.props;
     let container = (
       <div className="p-2" key="origItem">
         <ConversationItem
@@ -252,11 +252,11 @@ export class ConversationItemContainer extends Component {
                     this.quickReplyHandleChangeText(i, ...params)
                   )}
                   onDeleteReply={() => this.quickReplyHandleDelete(i)}
-                  onNextItemSelect={this.handleNextItemSelect}
-                  onNewItem={() => {
-                    this.props.handleChildEntityAddition(this.props.item.type, newItem => {
-                      this.handleNextItemSelect(i, newItem.id, newItem.type);
-                    }, i);
+                  onNextItemSelect={args => this.handleNextItemSelect({ ...args })}
+                  onNewItem={type => {
+                    this.props.handleChildEntityAddition(type, newItem => {
+                      this.handleNextItemSelect({ index: i, id: newItem.id, type });
+                    }, index);
                   }}
                   showEndOfConversation={this.props.parentItemType === TYPE_CONVERSATION}
                 />
@@ -280,8 +280,8 @@ export class ConversationItemContainer extends Component {
                   onNextItemSelect={this.handleNextItemSelect}
                   onNewItem={() => {
                     this.props.handleChildEntityAddition(this.props.item.type, newItem => {
-                      this.handleNextItemSelect(i, newItem.id, newItem.type);
-                    }, i);
+                      this.handleNextItemSelect({ index: i, id: newItem.id, type: newItem.type });
+                    }, index);
                   }}
                   messageType={this.props.item.messageType}
                   conversations={this.props.conversations}
