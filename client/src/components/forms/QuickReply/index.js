@@ -52,7 +52,7 @@ const QuickReply = ({
             childEntities={childEntities}
             nextId={nextId}
             handleNextMessageSelect={
-              (...params) => onNextItemSelect(index, ...params)
+              id => onNextItemSelect({ index, id })
             }
             onNewItem={onNewItem}
             showEndOfConversation={showEndOfConversation}
@@ -64,7 +64,7 @@ const QuickReply = ({
               conversations={conversations}
               nextId={nextId}
               handleConversationSelect={
-                (...params) => onNextItemSelect(index, ...params, nextChild)
+                (id, type) => onNextItemSelect({ index, id, type, nextChild: null })
               }
             />
             <hr />
@@ -74,7 +74,7 @@ const QuickReply = ({
               childEntities={messages.filter(({ parent: { id } = {} }) => id === nextId)}
               nextId={nextChild}
               handleNextMessageSelect={
-                (...params) => onNextItemSelect(index, nextId, ...params)
+                newNextChild => onNextItemSelect({ index, id: nextId, nextChild: newNextChild })
               }
               onNewItem={Function.prototype}
               showEndOfConversation={false}

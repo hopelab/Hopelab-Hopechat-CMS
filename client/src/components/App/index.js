@@ -190,7 +190,9 @@ class App extends Component {
       .then(res => res.json())
       .then(dataUtil.throwIfEmptyArray)
       .then(res => {
-        const addedItem = res.sort((a, b) => (a.created < b.created ? 1 : -1))[0];
+        const addedItem = res
+          .filter(({ parent: { id } = {}, created }) => (id === entity.parent.id && created))
+          .sort((a, b) => (a.created < b.created ? 1 : -1))[0];
         const itemEditing = this.getFullItemEditing(this.state);
         const data = omit(['loading'], this.state);
 

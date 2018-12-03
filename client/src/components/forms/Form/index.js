@@ -63,17 +63,18 @@ class Form extends Component {
 
   render() {
     const { readOnly, childEntities = [], setNewIndex, order = [], special, messages } = this.props;
-
+    let mutableChildren = childEntities.slice();
     const orderedChildren = [];
     if (childEntities) {
-      childEntities.forEach(c => {
-        if (order.indexOf(c.id) > -1) {
-          orderedChildren[order.indexOf(c.id)] = c;
-        } else {
-          orderedChildren.push(c);
+      order.forEach(oId => {
+        const child = childEntities.find(({ id }) => id === oId);
+        if (child) {
+          orderedChildren.push(child);
+          mutableChildren = mutableChildren.filter(({ id }) => child.id !== id);
         }
       });
     }
+    mutableChildren.forEach(c => orderedChildren.push(c));
     if (!childEntities.length && !readOnly) {
       return (<NextMessage
         parentItemType={this.props.item.type}
