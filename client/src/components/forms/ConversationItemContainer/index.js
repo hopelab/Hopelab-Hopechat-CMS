@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { DropTarget } from 'react-dnd';
-
+import { defaultTo } from 'ramda';
 import DnDPlaceHolder from '../../common/DND/DnDPlaceHolder';
 import ConversationItem from '../ConversationItem';
 import QuickReply from '../QuickReply';
@@ -51,12 +51,12 @@ export class ConversationItemContainer extends Component {
     );
   }
 
-  handleNextItemSelect(index, id, type) {
+  handleNextItemSelect({ index, id, type, nextChild }) {
     if (this.props.item.messageType === MESSAGE_TYPE_QUESTION_WITH_REPLIES) {
       return this.quickReplyHandleNextItemSelect(index, id, type);
     }
 
-    return this.transitionHandleNextItemSelect(index, id, type);
+    return this.transitionHandleNextItemSelect(index, id, nextChild);
   }
 
   transitionHandleNextItemSelect(index, id, nextChild) {
@@ -205,7 +205,10 @@ export class ConversationItemContainer extends Component {
   messageToTransitionTo({ nextChild, id }) {
     if (nextChild) return nextChild;
     const { messages } = this.props;
-    return messages.find(({ start, parent: { id: parentId } = {} }) => parentId === id && start).id;
+    return defaultTo(
+      { id: null },
+      messages.find(({ start, parent: { id: parentId } = {} }) => parentId === id && start),
+    ).id;
   }
 
   render() {
@@ -296,7 +299,7 @@ export class ConversationItemContainer extends Component {
   }
 }
 
-const conversationtItemTarget = {
+const conversationItemTarget = {
   drop(props, monitor) {
     const draggedItem = monitor.getItem();
     if (draggedItem.index === props.index) {
@@ -313,7 +316,7 @@ const conversationtItemTarget = {
   },
 };
 
-export default DropTarget(ITEMS.CONVERSATION_ITEM, conversationtItemTarget, (connect, monitor) => ({
+export default DropTarget(ITEMS.CONVERSATION_ITEM, conversationItemTarget, (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
   isOver: monitor.isOver(),
   isOverCurrent: monitor.isOver({ shallow: true }),
