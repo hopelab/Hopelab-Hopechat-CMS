@@ -64,7 +64,7 @@ const QuickReply = ({
               conversations={conversations}
               nextId={nextId}
               handleConversationSelect={
-                (id, type) => onNextItemSelect({ index, id, type, nextChild })
+                (id, type) => onNextItemSelect({ index, id, type, nextChild: null })
               }
             />
             <hr />
