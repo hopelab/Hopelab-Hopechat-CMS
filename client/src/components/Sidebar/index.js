@@ -77,13 +77,13 @@ class Sidebar extends React.Component {
             <div className="top-bar-height justify-content-end flex-column d-flex">
               <h4>Components</h4>
             </div>
-            <div>
+            <div className="wt-bdr-rt mt-3">
               {buttonArray}
             </div>
           </BootContainer>
-          <div className="Conversations">
+          <div className="Conversations wt-bdr-rt">
             <div className="d-flex flex-row justify-content-around mt-2 align-items-end header">
-              <h4>Conversations</h4>
+              <h4 style={{ fontWeight: 500 }}>Conversations</h4>
               <Button
                 disabled={readOnly}
                 color="danger"
@@ -102,7 +102,6 @@ class Sidebar extends React.Component {
               <Treebeard
                 data={treeData}
                 onToggle={handleTreeToggle}
-                // decorators={decorators}
                 expandAll={expandAll}
                 selectedItem={selectedItem}
               />

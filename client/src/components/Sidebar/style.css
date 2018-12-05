@@ -2,6 +2,7 @@
   padding-right: 0;
   position: sticky;
   top: 0;
+  min-width: 485px;
 }
 
 .Sidebar .Inner {
@@ -62,6 +63,8 @@
   margin-top: 0;
   border-radius: 0;
   border: none;
+  font-size: 16px;
+  height: 54px;
 }
 
 .Sidebar .btn.btn-primary.selected {
@@ -99,4 +102,12 @@
 .App .Sidebar .Conversations {
   background-color: rgba(0,0,0,0);
   color: #1C2A56;
+  min-height: 100vh
+}
+
+.App .Sidebar .wt-bdr-rt .btn{
+  padding-left: 33px;
+}
+.App .Sidebar .wt-bdr-rt {
+  border-right: 2px white solid;
 }

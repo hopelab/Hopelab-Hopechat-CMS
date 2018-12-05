@@ -1,6 +1,5 @@
 .nav-pills {
   position: relative;
-  display: table;
 }
 
 .nav-pills .nav-item {
@@ -12,7 +11,7 @@
   border-bottom-left-radius: 6px;
   padding-top: 0;
   padding-bottom: 0;
-  display: table-cell;
+  border: none;
 }
 
 .live-circle {

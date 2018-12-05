@@ -25,6 +25,11 @@
   color: #fff;
   height: 100%;
   overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  font-family: HelveticaNeue;
 }
 
 .btn-primary, .bg-primary {
@@ -115,4 +120,5 @@ h4 {
   text-transform: uppercase;
   font-size: 20px;
   line-height: 24px;
+  font-weight: 600;
 }

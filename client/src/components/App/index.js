@@ -31,6 +31,7 @@ class App extends Component {
     this.updateStartEntity = this.updateStartEntity.bind(this);
     this.handleCopyEntity = this.handleCopyEntity.bind(this);
     this.handleCopyItem = this.handleCopyItem.bind(this);
+    this.handleTreeToggle = this.handleTreeToggle.bind(this);
   }
 
   componentWillMount() {
@@ -412,7 +413,7 @@ class App extends Component {
       .catch(console.error);
   };
 
-  handleTreeToggle = ({ node: pNode, expand }) => {
+  handleTreeToggle({ node: pNode, expand }) {
     this.toggleView();
     const node = pNode;
     if (expand) {
@@ -432,8 +433,9 @@ class App extends Component {
     this.setState({
       cursor: node,
       itemEditing: node.type ? pick(['id', 'type'], node) : this.state.itemEditing,
+      loading: false,
     });
-  };
+  }
 
   updateStartEntity(entity, oldEntity) {
     const { collection, message } = this.state;
@@ -456,18 +458,6 @@ class App extends Component {
         break;
       case DASHBOARD_COMPONENTS.assets:
         component = <AssetLibrary />;
-        break;
-      case DASHBOARD_COMPONENTS.quickReply:
-        component = <Dashboard />;
-        break;
-      case DASHBOARD_COMPONENTS.crisis:
-        component = <Dashboard />;
-        break;
-      case DASHBOARD_COMPONENTS.stop:
-        component = <Dashboard />;
-        break;
-      case DASHBOARD_COMPONENTS.eoc:
-        component = <Dashboard />;
         break;
       default:
         component = <Dashboard />;
@@ -643,7 +633,7 @@ class App extends Component {
 
 
     return (
-      <div className="App row">
+      <div className="App row darkblue-bg">
         <UploadModal
           isOpen={this.state.mediaUpload.showModal}
           onHide={() => this.setState({
@@ -663,6 +653,7 @@ class App extends Component {
           itemEditing={itemEditing}
           toggleView={newView => this.toggleView(newView)}
           readOnly={readOnly}
+          selectedItem={view || (itemEditing ? itemEditing.id : '')}
         />
         {loading &&
           <div className="floating-loader">

@@ -8,8 +8,6 @@ class Container extends React.Component {
   }
 
   handleClick({ expand, onClick }) {
-    this.setState({ loading: true }, () => setTimeout(() => this.setState({ loading: false }), 500));
-
     onClick({ expand });
   }
 
