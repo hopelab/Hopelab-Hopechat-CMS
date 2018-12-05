@@ -1,5 +1,7 @@
 .nav-pills {
   position: relative;
+  width: 100%;
+  padding-left: 0;
 }
 
 .nav-pills .nav-item {

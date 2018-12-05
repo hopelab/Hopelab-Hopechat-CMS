@@ -40,11 +40,10 @@ class TreeNode extends React.Component {
   }
 
   render() {
-    const { style } = this.props;
     const animations = this.animations();
 
     return (
-      <li ref={ref => { this.topLevelRef = ref; }} style={style.base}>
+      <li ref={ref => { this.topLevelRef = ref; }} >
         {this.renderHeader(animations)}
 
         {this.renderDrawer(animations)}
@@ -77,7 +76,7 @@ class TreeNode extends React.Component {
   }
 
   renderHeader(animations) {
-    const { node, level, style, selectedItem } = this.props;
+    const { node, level, selectedItem } = this.props;
     const { expanded } = this.state;
     return (
       <NodeHeader
@@ -87,7 +86,6 @@ class TreeNode extends React.Component {
         onExpand={() => this.onExpand()}
         expanded={expanded}
         level={level}
-        style={style}
         selectedItem={selectedItem}
       />
     );
@@ -96,21 +94,20 @@ class TreeNode extends React.Component {
   renderChildren() {
     const { expanded } = this.state;
     if (!expanded) return null;
-    const { animations, node, style, expandAll, level, selectedItem } = this.props;
+    const { animations, node, expandAll, level, selectedItem } = this.props;
 
     let { children } = node;
     if (!Array.isArray(children)) {
       children = children ? [children] : [];
     }
     return (
-      <ul style={style.subtree} ref={ref => { this.subtreeRef = ref; }} className="nav nav-pills">
+      <ul ref={ref => { this.subtreeRef = ref; }} className="nav nav-pills">
         {children.map((child, index) => (
           <TreeNode
             {...this.eventBubbles()}
             animations={animations}
             key={child.id || index}
             node={child}
-            style={style}
             expandAll={expandAll}
             level={level + 1}
             selectedItem={selectedItem}
@@ -130,7 +127,6 @@ class TreeNode extends React.Component {
 }
 
 TreeNode.propTypes = {
-  style: PropTypes.object.isRequired,
   node: PropTypes.object.isRequired,
   animations: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
     .isRequired,

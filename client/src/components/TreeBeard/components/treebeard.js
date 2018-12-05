@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import TreeNode from './node';
-import style from '../../../utils/treeTheme';
 import defaultAnimations from '../themes/animations';
 import Loader from '../../common/Loader';
 
@@ -27,14 +26,13 @@ class TreeBeard extends React.Component {
       }
     }
     return (
-      <ul style={style.tree.base} ref={ref => { this.treeBaseRef = ref; }} className="nav-pills">
+      <ul ref={ref => { this.treeBaseRef = ref; }} className="nav-pills">
         {data.map((node, index) => (
           <TreeNode
             animations={animations}
             key={node.id || index}
             node={node}
             onToggle={onToggle}
-            style={style.tree.node}
             expandAll={expandAll}
             level={1}
             selectedItem={selectedItem}
