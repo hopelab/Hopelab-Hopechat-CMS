@@ -67,7 +67,7 @@ class Form extends Component {
     const orderedChildren = [];
     if (childEntities) {
       order.forEach(oId => {
-        const child = childEntities.find(({ id }) => id === oId);
+        const child = mutableChildren.find(({ id }) => id === oId);
         if (child) {
           orderedChildren.push(child);
           mutableChildren = mutableChildren.filter(({ id }) => child.id !== id);

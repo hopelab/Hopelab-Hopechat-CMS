@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { pick, omit, isEmpty, isNil, equals, find, propEq } from 'ramda';
+import { pick, omit, isEmpty, isNil, equals, find, propEq, uniq } from 'ramda';
 
 import './style.css';
 
@@ -474,7 +474,7 @@ class App extends Component {
   loadStudyIds() {
     fetch('/study/all').then(res => {
       res.json().then(studyIds => {
-        this.setState({ studyIds });
+        this.setState({ studyIds: uniq(studyIds) });
       });
     });
   }
