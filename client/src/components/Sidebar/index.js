@@ -74,7 +74,7 @@ class Sidebar extends React.Component {
       <aside className="Sidebar col-md-4 pl-3 pt-1">
         <div className="card darkblue-bg">
           <BootContainer fluid >
-            <div className="top-bar-height justify-content-end flex-column d-flex">
+            <div className="top-bar-height justify-content-end flex-column d-flex Components">
               <h4>Components</h4>
             </div>
             <div className="wt-bdr-rt mt-3">
@@ -83,7 +83,7 @@ class Sidebar extends React.Component {
           </BootContainer>
           <div className="Conversations wt-bdr-rt">
             <div className="d-flex flex-row justify-content-around mt-2 align-items-end header">
-              <h4 style={{ fontWeight: 500 }}>Conversations</h4>
+              <h4>Conversations</h4>
               <Button
                 disabled={readOnly}
                 color="danger"
