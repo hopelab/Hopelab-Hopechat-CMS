@@ -433,7 +433,6 @@ class App extends Component {
     this.setState({
       cursor: node,
       itemEditing: node.type ? pick(['id', 'type'], node) : this.state.itemEditing,
-      loading: false,
     });
   }
 
