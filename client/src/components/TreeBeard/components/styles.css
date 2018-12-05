@@ -1,11 +1,18 @@
-.PoolContainer {
-  cursor: pointer;
-  border: dashed 1px #fff;
-  line-height: 19px;
+.nav-pills {
+  position: relative;
+  display: table;
 }
 
-div.focused {
-  border: dashed 1px rgb(66, 139, 202);
+.nav-pills .nav-item {
+  cursor: pointer;
+  line-height: 19px;
+  width: 100%;
+  border-radius: 0;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  padding-top: 0;
+  padding-bottom: 0;
+  display: table-cell;
 }
 
 .live-circle {

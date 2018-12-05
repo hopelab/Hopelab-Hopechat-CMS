@@ -82,7 +82,7 @@ class Dashboard extends Component {
     return (
       <div className="Dashboard mt-1">
         {props.itemEditing !== null && (
-          <div className="Inner card" style={{ borderColor: 'white' }}>
+          <div className="Inner card">
             <DashboardHeader
               itemName={props.itemEditing.name}
               itemType={props.itemEditing.type}

@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
+    overflow: scroll;
 }
 
 .App .floating-loader {
@@ -9,6 +10,7 @@
   top: 0;
   right: 0;
   z-index: 3;
+  color: white;
 }
 
 .App button.disabled {
@@ -17,4 +19,16 @@
 
 .App .dropdown div.disabled {
   cursor: not-allowed;
+}
+
+.App .col-8 .container-fluid {
+  padding-top: 35px;
+  border-top: 1px;
+  background-color: var(--light-blue);
+  margin-left: -3px;
+  padding-bottom: 100px;
+}
+
+.App .top-bar-height {
+  height: 80px;
 }

@@ -11,7 +11,7 @@ import './style.css';
 export const AssetLibrary = ({ toggleImageModal, assets, deleteMedia, renameFile }) => (
   <div className="col-8 AssetLibrary">
     <div
-      className="card-header d-flex flex-row justify-content-between col-12"
+      className="card-header d-flex flex-row justify-content-between col-12 top-bar-height"
     >
       <div
         className="d-flex flex-row justify-content-between"

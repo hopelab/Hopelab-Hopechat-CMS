@@ -1,0 +1,118 @@
+:root {
+  --primary-bg-color: #1C2A56;
+  --primary-bg-color-hover: #313F6D;
+  --default-bg-color: #e3e1e1;
+  --info-bg-color: skyblue;
+  --warning-bg-color: #F18779;
+  --danger-bg-color: #741881;
+  --danger-bg-color-hover: #45014F;
+  --secondary-bg-color: #A8C7D6;
+  --message: #0D7294;
+  --message-secondary: #84B0BF;
+  --transition: yellow;
+  --block: #939263;
+  --block-secondary: #bfbfb2;
+  --collection: #0D9474;
+  --collection-secondary: #83A99D;
+  --series: #795683;
+  --series-secondary: #ADA1B0;
+  --dark-blue: var(--primary-bg-color);
+  --light-blue: #A8C7D6;
+  --card-grey: var(--default-bg-color);
+}
+
+#root {
+  color: #fff;
+  height: 100%;
+  overflow: hidden;
+}
+
+.btn-primary, .bg-primary {
+  background-color: var(--primary-bg-color);
+}
+
+.btn-default, .bg-default {
+  background-color: var(--default-bg-color);
+}
+
+.btn-info, .bg-info {
+  background-color: var(--info-bg-color);
+}
+
+.btn-warning, .bg-warning {
+  background-color: var(--warning-bg-color);
+}
+
+.btn-danger, .bg-danger {
+  background-color: var(--danger-bg-color);
+  border-color: #3B3940;
+}
+
+.btn-danger:hover {
+  background-color: var(--danger-bg-color-hover);
+  color: white;
+  border: none;
+}
+
+.btn-secondary, .bg-secondary {
+  background-color: var(--secondary-bg-color);
+}
+
+.btn-outline-secondary {
+  background-color: white;
+  color: var(--secondary-bg-color);
+  border: none;
+}
+
+.btn-outline-primary {
+  background-color: white;
+  color: var(--primary-bg-color);
+  border: none;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary-bg-color-hover);
+  color: white;
+  border: none;
+}
+
+.transition {
+  background-color: var(--transition);
+}
+
+.message {
+  background-color: var(--message);
+}
+
+.block {
+  background-color: var(--block);
+}
+
+.collection {
+  background-color: var(--collection);
+}
+
+.series {
+  background-color: var(--series);
+}
+
+.darkblue-bg {
+  background-color: var(--dark-blue);
+  border: none;
+}
+
+.darkblue {
+  color: var(--dark-blue);
+  border-color: var(--dark-blue);
+}
+
+.lightblue {
+  color: var(--light-blue);
+}
+
+h4 {
+  font-family: AvenirNext-Medium;
+  text-transform: uppercase;
+  font-size: 20px;
+  line-height: 24px;
+}

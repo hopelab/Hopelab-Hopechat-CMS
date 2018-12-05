@@ -9,6 +9,7 @@ describe('header component', () => {
     onExpand: jest.fn(),
     expanded: false,
     terminal: false,
+    number: 1,
   };
   let component;
   beforeEach(() => {

@@ -1,19 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Button } from 'reactstrap';
 
 class Container extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      focused: false,
-    };
-  }
-
-  onSetFocus() {
-    this.setState({ focused: !this.state.focused });
+  state = {
+    loading: false,
   }
 
   handleClick({ expand, onClick }) {
+    this.setState({ loading: true }, () => setTimeout(() => this.setState({ loading: false }), 500));
+
     onClick({ expand });
   }
 
@@ -22,38 +18,30 @@ class Container extends React.Component {
   }
 
   render() {
-    const { onClick, node, expanded, terminal } = this.props;
-    const { focused } = this.state;
-
+    const { onClick, node, expanded, terminal, level, selected } = this.props;
+    const { loading } = this.state;
     return (
-      <div
-        role="button"
-        tabIndex={0}
-        className={`PoolContainer ${focused ? 'focused' : ''}`}
-        style={{
-          color: node.active ? '#fff' : '#333',
-          background: node.active ? '#428bca' : 'transparent',
-        }}
-        onMouseOver={() => { this.onSetFocus(); }}
-        onMouseOut={() => { this.onSetFocus(); }}
-        onFocus={() => { this.onSetFocus(); }}
-        onBlur={() => { this.onSetFocus(); }}
-        onClick={() => {
-          this.handleClick({ expand: false, onClick });
-        }}
+      <Button
+        outline={!selected}
+        color={`${selected ? 'default' : 'primary'}`}
+        className="d-flex align-items-center justify-content-start nav-item"
+        onClick={() => this.handleClick({ expand: false, onClick })}
       >
+        <span style={{ paddingLeft: `${level * 10}px` }} />
+
         {!terminal &&
         <i
-          className={`fa fa-chevron-${expanded ? 'down' : 'right'}`}
+          className={`fa fa-caret-${expanded ? 'down' : 'right'}`}
           onClick={() => this.expand()}
           role="button"
           tabIndex={0}
         />}
-        <span>
+        <span className="nav-link">
           {node.name}&nbsp;
         </span>
         {node.isLive ? <i className="fa fa-circle live-circle" /> : null}
-      </div>
+        {loading && <i className="fa fa-spinner fa-pulse" />}
+      </Button>
     );
   }
 }
@@ -61,9 +49,11 @@ class Container extends React.Component {
 Container.propTypes = {
   onClick: PropTypes.func,
   node: PropTypes.object,
+  level: PropTypes.number.isRequired,
   onExpand: PropTypes.func.isRequired,
   expanded: PropTypes.bool.isRequired,
   terminal: PropTypes.bool.isRequired,
+  selected: PropTypes.bool,
 };
 
 export default Container;

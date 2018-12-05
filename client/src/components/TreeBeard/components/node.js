@@ -39,35 +39,26 @@ class TreeNode extends React.Component {
     };
   }
 
-  decorators() {
-    // Merge Any Node Based Decorators Into The Pack
-    const { decorators, node } = this.props;
-    const nodeDecorators = node.decorators || {};
-
-    return Object.assign({}, decorators, nodeDecorators);
-  }
-
   render() {
     const { style } = this.props;
-    const decorators = this.decorators();
     const animations = this.animations();
 
     return (
       <li ref={ref => { this.topLevelRef = ref; }} style={style.base}>
-        {this.renderHeader(decorators, animations)}
+        {this.renderHeader(animations)}
 
-        {this.renderDrawer(decorators, animations)}
+        {this.renderDrawer(animations)}
       </li>
     );
   }
 
-  renderDrawer(decorators, animations) {
+  renderDrawer(animations) {
     const { node: { toggled } } = this.props;
 
     if (!animations && !toggled) {
       return null;
     } else if (!animations && toggled) {
-      return this.renderChildren(decorators, animations);
+      return this.renderChildren();
     }
 
     const { animation, duration, ...restAnimationInfo } = animations.drawer;
@@ -76,7 +67,7 @@ class TreeNode extends React.Component {
         {...restAnimationInfo}
         ref={ref => { this.velocityRef = ref; }}
       >
-        {toggled ? this.renderChildren(decorators, animations) : null}
+        {toggled ? this.renderChildren() : null}
       </VelocityTransitionGroup>
     );
   }
@@ -85,59 +76,46 @@ class TreeNode extends React.Component {
     this.setState({ expanded: !this.state.expanded });
   }
 
-  renderHeader(decorators, animations) {
-    const { node, style } = this.props;
+  renderHeader(animations) {
+    const { node, level, style, selectedItem } = this.props;
     const { expanded } = this.state;
     return (
       <NodeHeader
         animations={animations}
-        decorators={decorators}
         node={Object.assign({}, node)}
         onClick={this.onClick}
         onExpand={() => this.onExpand()}
         expanded={expanded}
+        level={level}
         style={style}
+        selectedItem={selectedItem}
       />
     );
   }
 
-  renderChildren(decorators) {
+  renderChildren() {
     const { expanded } = this.state;
     if (!expanded) return null;
-    const { animations, decorators: propDecorators, node, style, expandAll } = this.props;
-    if (node.loading) {
-      return this.renderLoading(decorators);
-    }
+    const { animations, node, style, expandAll, level, selectedItem } = this.props;
 
     let { children } = node;
     if (!Array.isArray(children)) {
       children = children ? [children] : [];
     }
     return (
-      <ul style={style.subtree} ref={ref => { this.subtreeRef = ref; }}>
+      <ul style={style.subtree} ref={ref => { this.subtreeRef = ref; }} className="nav nav-pills">
         {children.map((child, index) => (
           <TreeNode
             {...this.eventBubbles()}
             animations={animations}
-            decorators={propDecorators}
             key={child.id || index}
             node={child}
             style={style}
             expandAll={expandAll}
+            level={level + 1}
+            selectedItem={selectedItem}
           />
         ))}
-      </ul>
-    );
-  }
-
-  renderLoading(decorators) {
-    const { style } = this.props;
-
-    return (
-      <ul style={style.subtree}>
-        <li>
-          <decorators.Loading style={style.loading} />
-        </li>
       </ul>
     );
   }
@@ -154,10 +132,14 @@ class TreeNode extends React.Component {
 TreeNode.propTypes = {
   style: PropTypes.object.isRequired,
   node: PropTypes.object.isRequired,
-  decorators: PropTypes.object.isRequired,
   animations: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
     .isRequired,
   onToggle: PropTypes.func,
+  level: PropTypes.number,
+};
+
+TreeNode.defaultProps = {
+  level: 1,
 };
 
 export default TreeNode;

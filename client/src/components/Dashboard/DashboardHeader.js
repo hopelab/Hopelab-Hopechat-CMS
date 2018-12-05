@@ -71,7 +71,7 @@ export class DashboardHeader extends Component {
     } = this.props;
     return (
       <div
-        className="card-header d-flex flex-row justify-content-start align-items-center"
+        className="card-header d-flex flex-row justify-content-start align-items-center top-bar-height"
         style={{ flexWrap: 'wrap' }}
       >
         <EditableText
