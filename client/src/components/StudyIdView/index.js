@@ -8,15 +8,11 @@ export const StudyIdView = ({ studyIds }) => {
   return (
     <div className="col-8 StudyIdView">
       <div
-        className="card-header d-flex flex-row justify-content-between col-12"
+        className="card-header d-flex flex-column justify-content-end col-12 top-bar-height"
       >
-        <div
-          className="d-flex flex-row justify-content-between"
-        >
-          <h4>Total # of used Study Ids (used/original): <strong>({studyIds.length}</strong> / 200)</h4>
-        </div>
+        <h4>Total # of used Study Ids (used/original): <strong>({studyIds.length}</strong> / 200)</h4>
       </div>
-      <div>
+      <div className="container-fluid">
         {studyIds.map(id => <ul key={id}>{id}</ul>)}
       </div>
     </div>
