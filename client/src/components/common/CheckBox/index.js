@@ -3,12 +3,11 @@ import PropTypes from 'prop-types';
 import './styles.css';
 
 export const CheckBox = ({ checked, onChange, label, disabled }) => (
-  <div className="form-check">
-    <input className="form-check-input" type="checkbox" checked={checked} onChange={onChange} disabled={disabled} />
-    <label className="form-check-label">
-      {label}
-    </label>
-  </div>
+  <span onClick={onChange} role="button" tabIndex={0} className={`CheckBox ${disabled ? 'disabled' : ''}`}>
+    <input type="checkbox" checked={checked} />
+    <span />
+    <label>{label}</label>
+  </span>
 );
 
 CheckBox.propTypes = {

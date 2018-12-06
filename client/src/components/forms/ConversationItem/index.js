@@ -288,7 +288,7 @@ class ConversationItem extends Component {
     return connectDragSource(
       <div
         key="ogItem"
-        className={`card ConversationItem ${className}`}
+        className={`card ConversationItem ${className || ''} ${this.props.item && this.props.item.type}`}
         style={{
           width: '360px',
         }}

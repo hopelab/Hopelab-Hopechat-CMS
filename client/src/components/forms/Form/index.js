@@ -90,7 +90,7 @@ class Form extends Component {
       />);
     }
     return (
-      <div className="d-flex flex-column align-items-start">
+      <div>
         {readOnly && <div className="read-only" /> }
         { (!special && (this.props.item.type === TYPE_CONVERSATION ||
           this.props.item.type === TYPE_BLOCK) && this.props.childEntities.length)

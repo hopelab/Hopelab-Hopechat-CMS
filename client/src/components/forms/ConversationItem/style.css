@@ -1,8 +1,16 @@
 .ConversationItem {
   color: white;
   font-size: 1.1em;
-  border: 1px solid rgb(228,228,228);
+  border: none;
   cursor: move;
+}
+
+.App .Inner .ConversationItem.message .card-header{
+  background-color: var(--message)
+}
+
+.App .Inner .ConversationItem.message .card-block{
+  background-color: var(--message-secondary)
 }
 
 .over {
@@ -22,15 +30,9 @@
 }
 
 .ConversationItem > .card-block {
-  background-color: #2c76d1;
   font-size: .8em;
-  padding: 0.4em;
-}
-
-.ConversationItem > .card-footer {
-  background-color: rgb(245,245,245);
-  color: rgb(130, 138, 144);
-  padding: 0.4em;
+  padding: 20px;
+  min-height: 156px;
 }
 
 .ConversationItem .form-check {

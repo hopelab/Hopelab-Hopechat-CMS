@@ -1,3 +1,6 @@
+.WordListView{
+  margin-top: 30px;
+}
 .WordListView ul {
   border: 1px solid black;
   margin-bottom: 0;

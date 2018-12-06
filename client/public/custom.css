@@ -9,6 +9,7 @@
   --secondary-bg-color: #A8C7D6;
   --message: #0D7294;
   --message-secondary: #84B0BF;
+  --message-transition: #9b9b9b;
   --transition: yellow;
   --block: #939263;
   --block-secondary: #bfbfb2;
@@ -28,10 +29,6 @@
   -webkit-font-smoothing: antialiased;
 }
 
-* {
-  font-family: HelveticaNeue;
-}
-
 .btn-primary, .bg-primary {
   background-color: var(--primary-bg-color);
 }
@@ -45,7 +42,7 @@
 }
 
 .btn-warning, .bg-warning {
-  background-color: var(--warning-bg-color);
+  background-color: var(--warning-bg-color) !important;
 }
 
 .btn-danger, .bg-danger {
@@ -60,7 +57,7 @@
 }
 
 .btn-secondary, .bg-secondary {
-  background-color: var(--secondary-bg-color);
+  background-color: var(--secondary-bg-color) !important;
 }
 
 .btn-outline-secondary {
@@ -99,6 +96,14 @@
 
 .series {
   background-color: var(--series);
+}
+
+.bg-secondary-series {
+  background-color: var(--series-secondary);
+}
+
+.bg-message-transition {
+  background-color: var(--message-transition);
 }
 
 .darkblue-bg {

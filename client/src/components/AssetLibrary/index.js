@@ -9,7 +9,7 @@ import * as config from '../../utils/config';
 import './style.css';
 
 export const AssetLibrary = ({ toggleImageModal, assets, deleteMedia, renameFile }) => (
-  <div className="col-8 AssetLibrary">
+  <div className="col-8 bg-secondary">
     <div
       className="card-header d-flex flex-row justify-content-between col-12 top-bar-height"
     >
@@ -27,7 +27,7 @@ export const AssetLibrary = ({ toggleImageModal, assets, deleteMedia, renameFile
         </Button>
       </div>
     </div>
-    <Container fluid>
+    <div>
       {assets.map((a, i) => (
         <Card className="col-6" key={a.key + i}>
           <CardBody>
@@ -44,7 +44,7 @@ export const AssetLibrary = ({ toggleImageModal, assets, deleteMedia, renameFile
           </CardBody>
         </Card>
       ))}
-    </Container>
+    </div>
   </div>
 );
 

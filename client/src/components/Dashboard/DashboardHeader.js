@@ -74,11 +74,17 @@ export class DashboardHeader extends Component {
         className="card-header d-flex flex-row justify-content-start align-items-center top-bar-height"
         style={{ flexWrap: 'wrap' }}
       >
-        <EditableText
-          text={itemName}
-          onEditWillFinish={onNameChanged}
-          disabled={readOnly || !!special}
-        />
+        <Button
+          color="secondary"
+          size="lg"
+          style={{ cursor: special ? 'default' : 'text' }}
+        >
+          <EditableText
+            text={special ? itemName.toUpperCase() : itemName}
+            onEditWillFinish={onNameChanged}
+            disabled={readOnly || !!special}
+          />
+        </Button>
         <ReactStrapForm
           className="d-flex"
           style={{ flex: '1 0', whiteSpace: 'nowrap' }}

@@ -3,15 +3,14 @@
     padding: 0;
 }
 
-.Dashboard .Inner.card .card-header {
+.Dashboard .Inner .card-header {
   background-color: var(--dark-blue);
 }
 
-.Dashboard .Inner.card {
-  background-color: var(--default-bg-color);
-  padding-bottom: 100px;
+.Dashboard .Inner {
   border: none;
   margin: -3px;
+  border-radius: 8px;
 }
 
 .FormContainer {
@@ -30,6 +29,16 @@
 }
 
 .Dashboard .card-header span {
-  min-width: 100px;
   margin-right: 1rem;
+}
+
+.Dashboard .top-bar-height .btn {
+  font-size: 24px;
+  font-family: AvenirNext-Medium;
+  min-width: 340px;
+}
+
+.Dashboard .card {
+  border: none;
+  height: 100%;
 }
