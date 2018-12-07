@@ -5,6 +5,8 @@ import Loader from '../common/Loader';
 
 describe('StudyIdView component', () => {
   const props = {
+    readOnly: false,
+    toggleReadOnly: jest.fn(),
   };
   let component;
   it('should render', () => {
