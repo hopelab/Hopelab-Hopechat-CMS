@@ -259,11 +259,9 @@ class App extends Component {
     const { itemEditing, conversation } = this.state;
     this.setState({ loading: true });
     let affectedConversation;
-    if (item && itemEditing && !equals(item.isLive, itemEditing.isLive)) {
-      if (item && item.isLive) {
-        // meaning we need to make some item 'notLive'
-        affectedConversation = find(propEq('isLive', true))(conversation);
-      }
+    if (item && itemEditing && item.isLive && !equals(item.isLive, itemEditing.isLive)) {
+      // meaning we need to make some item 'notLive'
+      affectedConversation = find(propEq('isLive', true))(conversation);
     }
     const route = item.id ? config.operations.update : config.operations.create;
     dataUtil
