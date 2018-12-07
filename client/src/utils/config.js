@@ -139,7 +139,7 @@ const QUICK_REPLY_MAX_LENGTH = 20;
 const messageTypes = [
   { id: MESSAGE_TYPE_TEXT, display: 'Text' },
   { id: MESSAGE_TYPE_QUESTION, display: 'Question' },
-  { id: MESSAGE_TYPE_QUESTION_WITH_REPLIES, display: 'Question+Replies' },
+  { id: MESSAGE_TYPE_QUESTION_WITH_REPLIES, display: 'Question + Replies' },
   { id: MESSAGE_TYPE_IMAGE, display: 'Image' },
   { id: MESSAGE_TYPE_VIDEO, display: 'Video' },
   { id: MESSAGE_TYPE_TRANSITION, display: 'Transition' },

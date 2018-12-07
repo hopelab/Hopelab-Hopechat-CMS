@@ -235,7 +235,7 @@ export class ConversationItemContainer extends Component {
             >+
             </button>
           </div>
-          <div className="d-flex flex-row">
+          <div className="d-inline-flex flex-row">
             { this.props.item.messageType === MESSAGE_TYPE_QUESTION_WITH_REPLIES &&
               this.props.item.quick_replies &&
               this.props.item.quick_replies.map((qr, i) => (

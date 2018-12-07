@@ -80,7 +80,7 @@ class Dashboard extends Component {
     const { props } = this;
     const { setNewIndex, order, special, messages } = props;
     return (
-      <div className="Dashboard mt-1">
+      <div className="Dashboard mt-1 offset-5">
         {props.itemEditing !== null && (
           [
             <DashboardHeader
@@ -102,7 +102,7 @@ class Dashboard extends Component {
               toggleReadOnly={props.toggleReadOnly}
               special={special}
             />,
-            <div className={`Inner ${special ? 'bg-secondary' : ''}`}>
+            <div className={`Inner ${special ? 'bg-secondary' : 'bg-default'}`}>
               <Form
                 setNewIndex={args => setNewIndex(args)}
                 item={props.itemEditing}
@@ -125,7 +125,6 @@ class Dashboard extends Component {
             </div>,
           ]
         )}
-        <div style={{ height: '85vh' }} />
       </div>
     );
   }

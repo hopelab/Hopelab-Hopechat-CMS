@@ -5,6 +5,10 @@
   cursor: move;
 }
 
+.App .Dashboard .work-space .card {
+  width: 412px;
+}
+
 .App .Inner .ConversationItem.message .card-header{
   background-color: var(--message)
 }
@@ -21,8 +25,8 @@
   border-radius: 10px;
 }
 
-.ConversationItem > .card-header {
-  background-color: #006ad3;
+.Dashboard .ConversationItem .card-header .d-flex *{
+  white-space: normal;
 }
 
 .Inner .card small {
@@ -42,6 +46,17 @@
 .ConversationItem input {
   cursor: text;
 }
+
 .ConversationItem .card-text {
   cursor: text;
+}
+
+.ConversationItem .message-type {
+  background-color: var(--message-transition);
+  border-radius: 4px;
+  max-width: 95px;
+  min-width: 84px;
+  font-size: 16px;
+  padding-left: 7px;
+  padding-right: 3px;
 }

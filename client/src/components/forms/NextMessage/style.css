@@ -2,10 +2,7 @@
   border-radius: 4px;
 }
 
-.dropdown div {
-  cursor: pointer;
-  border-radius: 4px;
-}
+
 
 .dropdown-menu button.dropdown-item {
   cursor: pointer;
@@ -24,6 +21,12 @@
   color: black;
   font-size: 16px;
   font-family: HelveticaNeue;
+}
+
+.card .card-footer .dropdown div {
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 14px;
 }
 
 .broken-link {

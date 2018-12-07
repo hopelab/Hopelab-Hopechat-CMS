@@ -24,7 +24,7 @@ const QuickReply = ({
   // nextChild specifies which collection or message in the next conversation to transition to
   nextChild,
 }) => (
-  <div className="card" style={{ width: '360px' }}>
+  <div className="card">
     <div
       className="card-header d-flex flex-row justify-content-between"
       style={{

@@ -67,12 +67,7 @@ class MessageTypeDropdown extends Component {
           tag="div"
           caret
           onClick={this.toggle}
-          className="pl-2 pr-2"
-          style={{
-            backgroundColor: '#757f86',
-            borderRadius: '20px',
-            color: 'white',
-          }}
+          className="message-type"
           data-toggle="dropdown"
           aria-expanded={this.state.dropdownOpen}
           disabled={disabled}

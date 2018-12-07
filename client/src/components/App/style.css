@@ -3,6 +3,7 @@
   flex-direction: row;
   flex-wrap: nowrap;
   overflow: scroll;
+  /* height: 100vh; */
 }
 
 .App .floating-loader {
@@ -21,6 +22,12 @@
   cursor: not-allowed;
 }
 
+/* works for AssetLibrary */
+.App .work-space {
+  padding: 22px 26px;
+  border-radius: 8px;
+}
+
 .App .col-8 .container-fluid {
   padding-top: 35px;
   border-top: 1px;
@@ -30,5 +37,26 @@
 }
 
 .App .top-bar-height {
-  height: 130px;
+  height: var(--top-bar-height);
+}
+
+.App .read-only {
+  height: 100%;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, .1);
+  position: absolute;
+  width: 100%;
+  top: var(--top-bar-height);
+  left: 0;
+}
+
+.App .hidden {
+  display: none;
+}
+
+.App .btn {
+  border-radius: 4px;
+}
+.App {
+  background-color: var(--dark-blue);
 }

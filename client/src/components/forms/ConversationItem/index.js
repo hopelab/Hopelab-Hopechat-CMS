@@ -289,9 +289,6 @@ class ConversationItem extends Component {
       <div
         key="ogItem"
         className={`card ConversationItem ${className || ''} ${this.props.item && this.props.item.type}`}
-        style={{
-          width: '360px',
-        }}
       >
         <div
           className={`card-header d-flex flex-column ${messageType === MESSAGE_TYPE_TRANSITION ? 'bg-warning' : ''}`}
@@ -299,12 +296,7 @@ class ConversationItem extends Component {
             ...conversationItemStyles[this.props.item.type],
           }}
         >
-          <div
-            className="d-flex flex-row justify-content-between"
-            style={{
-              flexWrap: 'wrap',
-            }}
-          >
+          <div className="d-flex flex-row justify-content-between">
             <EditableText
               text={this.props.item.name}
               onEditWillFinish={val => this.editAttribute('name', val)}
