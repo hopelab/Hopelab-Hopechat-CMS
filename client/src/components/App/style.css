@@ -3,7 +3,6 @@
   flex-direction: row;
   flex-wrap: nowrap;
   overflow: scroll;
-  /* height: 100vh; */
 }
 
 .App .floating-loader {
