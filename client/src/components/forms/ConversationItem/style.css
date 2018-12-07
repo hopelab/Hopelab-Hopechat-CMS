@@ -9,6 +9,16 @@
   width: 412px;
 }
 
+.App .Inner .ConversationItem.message .card-header span, label{
+  margin-left: 0;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.App .Inner .ConversationItem.message .card-header{
+  padding-bottom: 0;
+}
+
 .App .Inner .ConversationItem.message .card-header{
   background-color: var(--message)
 }

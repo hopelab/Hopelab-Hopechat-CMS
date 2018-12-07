@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import onClickOutside from 'react-onclickoutside';
+import './style.css';
 
 export class EditableText extends Component {
   static propTypes = {

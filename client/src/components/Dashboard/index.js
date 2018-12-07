@@ -101,8 +101,9 @@ class Dashboard extends Component {
               readOnly={props.readOnly}
               toggleReadOnly={props.toggleReadOnly}
               special={special}
+              key="header"
             />,
-            <div className={`Inner ${special ? 'bg-secondary' : 'bg-default'}`}>
+            <div className={`Inner ${special ? 'bg-secondary' : 'bg-default'}`} key="form">
               <Form
                 setNewIndex={args => setNewIndex(args)}
                 item={props.itemEditing}
@@ -121,7 +122,7 @@ class Dashboard extends Component {
                 messages={messages}
               />
               {R.any(R.equals(special), [IS_CRISIS_RESPONSE_DETECTION, IS_STOP_MESSAGE_DETECTION])
-                && <WordList special={special} />}
+                && <WordList special={special} key="wordlist" />}
             </div>,
           ]
         )}

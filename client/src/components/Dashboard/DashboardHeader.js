@@ -73,8 +73,9 @@ export class DashboardHeader extends Component {
     } = this.props;
     return (
       [
-        <div className={readOnly ? 'read-only' : 'hidden'} />,
+        <div className={readOnly ? 'read-only' : 'hidden'} key="read-only-div" />,
         <div
+          key="header"
           className="card-header d-flex flex-row justify-content-start
             align-items-center top-bar-height bg-primary-override"
         >
@@ -99,7 +100,7 @@ export class DashboardHeader extends Component {
           >
             {children && children}
             {itemType === 'conversation' && !special &&
-              (<CopyButton onCopy={onCopy} disabled={readOnly} />)}
+              (<CopyButton onCopy={onCopy} disabled={readOnly} key="copy" />)}
             {entityCanBeCopied(itemType) &&
               !special &&
               <CopyButton

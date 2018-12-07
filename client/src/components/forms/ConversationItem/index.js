@@ -283,7 +283,7 @@ class ConversationItem extends Component {
   }
 
   render() {
-    const { item: { isEvent = false }, index, connectDragSource, className,
+    const { item: { isEvent = false, name }, index, connectDragSource, className,
       item: { messageType }, special } = this.props;
     return connectDragSource(
       <div
@@ -297,11 +297,19 @@ class ConversationItem extends Component {
           }}
         >
           <div className="d-flex flex-row justify-content-between">
-            <EditableText
-              text={this.props.item.name}
-              onEditWillFinish={val => this.editAttribute('name', val)}
-              disabled={!!special && index === 0}
-            />
+            <div className="d-flex flex-column justify-content-start">
+              <EditableText
+                text={name}
+                onEditWillFinish={val => this.editAttribute('name', val)}
+                disabled={!!special && index === 0}
+              />
+              <CheckBox
+                checked={isEvent}
+                onChange={() => this.makeEvent()}
+                label="Track Events"
+                size="16px"
+              />
+            </div>
             { this.props.item.messageType && noModTypeOrNext(special) && (
               <MessageTypeDropdown
                 selected={this.props.item.messageType}
@@ -311,11 +319,6 @@ class ConversationItem extends Component {
               />
             )}
           </div>
-          <CheckBox
-            checked={isEvent}
-            onChange={() => this.makeEvent()}
-            label="Track Events"
-          />
         </div>
 
         {this.renderItemContent(this.props.item)}

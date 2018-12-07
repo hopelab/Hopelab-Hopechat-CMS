@@ -135,7 +135,7 @@ class NextMessage extends Component {
       className = 'bg-danger text-light';
     } else {
       foundItem = 'choose next';
-      className = 'bg-danger text-light';
+      className = 'bg-danger-override text-light';
     }
     return (
       <Dropdown

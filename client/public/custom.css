@@ -71,6 +71,10 @@
   border-color: #3B3940;
 }
 
+.bg-danger-override {
+  background-color: var(--danger-bg-color);
+}
+
 .btn-danger:hover {
   background-color: var(--danger-bg-color-hover);
   color: white;

@@ -33,8 +33,8 @@ export const StudyIdView = ({ studyIds, readOnly, toggleReadOnly }) => {
 
 StudyIdView.propTypes = {
   studyIds: PropTypes.arrayOf(PropTypes.string),
-  readOnly: PropTypes.bool.isRequired,
-  toggleReadOnly: PropTypes.func.isRequired,
+  readOnly: PropTypes.bool,
+  toggleReadOnly: PropTypes.func,
 };
 
 export default StudyIdView;
