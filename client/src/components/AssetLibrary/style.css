@@ -27,13 +27,3 @@
   font-weight: 500;
   line-height: 1.04;
 }
-
-.AssetLibrary .btn.btn-default {
-  text-transform: uppercase;
-  font-family: AvenirNext-Medium;
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 1.25;
-  margin-left: 26px;
-  padding: 16px;
-}

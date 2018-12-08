@@ -2,14 +2,14 @@
   --primary-bg-color: #1C2A56;
   --primary-bg-color-hover: #313F6D;
   --default-bg-color: #e3e1e1;
-  --info-bg-color: skyblue;
+  --info-bg-color: #5BC0BE;
   --warning-bg-color: #F18779;
+  --warning-bg-color-hover: #CB594A;
   --danger-bg-color: #741881;
   --danger-bg-color-hover: #45014F;
   --secondary-bg-color: #A8C7D6;
   --message: #0D7294;
   --message-secondary: #84B0BF;
-  --message-transition: #9b9b9b;
   --transition: yellow;
   --block: #939263;
   --block-secondary: #bfbfb2;
@@ -21,6 +21,7 @@
   --light-blue: #A8C7D6;
   --card-grey: var(--default-bg-color);
   --card-header-text: #373a3c;
+  --next-message: #9b9b9b;
   --top-bar-height: 130px;
 }
 
@@ -50,8 +51,8 @@
   padding: 0;
 }
 
-.btn-primary.selected {
-
+.bg-default-override {
+  background-color: var(--default-bg-color);
 }
 
 .btn-default, .bg-default {
@@ -62,8 +63,17 @@
   background-color: var(--info-bg-color);
 }
 
+.bg-info-override {
+  background-color: var(--info-bg-color);
+}
+
+.btn-warning:hover, .bg-warning:hover {
+  background-color: var(--warning-bg-color-hover);
+}
+
 .btn-warning, .bg-warning {
-  background-color: var(--warning-bg-color) !important;
+  background-color: var(--warning-bg-color);
+  border: var(--warning-bg-color);
 }
 
 .btn-danger, .bg-danger {
@@ -78,11 +88,15 @@
 .btn-danger:hover {
   background-color: var(--danger-bg-color-hover);
   color: white;
-  border: none;
+  border: var(--danger-bg-color) 1px solid;
+}
+
+.bg-secondary-override {
+  background-color: var(--secondary-bg-color);
 }
 
 .btn-secondary, .bg-secondary {
-  background-color: var(--secondary-bg-color) !important;
+  background-color: var(--secondary-bg-color);
 }
 
 .btn-outline-secondary {
@@ -127,8 +141,8 @@
   background-color: var(--series-secondary);
 }
 
-.bg-message-transition {
-  background-color: var(--message-transition);
+.bg-path {
+  background-color: var(--next-message);
 }
 
 .darkblue-bg {

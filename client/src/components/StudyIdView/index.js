@@ -24,7 +24,7 @@ export const StudyIdView = ({ studyIds, readOnly, toggleReadOnly }) => {
       >
         <h4>Used Study Ids (used/original): <strong>({studyIds.length}</strong> / 200)</h4>
       </DashboardHeader>
-      <div className="container-fluid work-space bg-secondary">
+      <div className="container-fluid work-space bg-secondary-override">
         {studyIds.map(id => <ul key={id}>{id}</ul>)}
       </div>
     </div>

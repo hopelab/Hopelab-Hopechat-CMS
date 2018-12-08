@@ -23,6 +23,16 @@
   font-family: HelveticaNeue;
 }
 
+.card .card-footer .dropdown .dropdown-menu.show ::-webkit-scrollbar {
+  width: 0px;  /* remove scrollbar space */
+  background: transparent;  /* optional: just make scrollbar invisible */
+}
+
+.card .card-footer .dropdown .dropdown-menu.show {
+    max-height: 400px;
+    overflow: scroll;
+}
+
 .card .card-footer .dropdown div {
   cursor: pointer;
   border-radius: 4px;

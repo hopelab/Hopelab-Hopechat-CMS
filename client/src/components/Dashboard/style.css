@@ -49,3 +49,18 @@
   border: none;
   height: 100%;
 }
+
+
+.Dashboard .card-header.bg-primary-override .btn {
+  text-transform: uppercase;
+  font-family: AvenirNext-Medium;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.25;
+  margin-left: 26px;
+  padding: 16px;
+}
+
+.Dashboard .card-header.bg-primary-override .btn.dropdown-toggle {
+  margin-left: 0;
+}

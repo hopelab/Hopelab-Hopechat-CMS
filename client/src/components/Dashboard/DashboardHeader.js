@@ -80,7 +80,7 @@ export class DashboardHeader extends Component {
             align-items-center top-bar-height bg-primary-override"
         >
           <Button
-            color="secondary"
+            color={special ? 'secondary' : 'default'}
             size="lg"
             style={{ cursor: special ? 'default' : 'text' }}
             className="header-btn"

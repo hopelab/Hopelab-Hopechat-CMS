@@ -32,7 +32,7 @@ export const AssetLibrary = ({ toggleImageModal, assets, deleteMedia, renameFile
         New Asset
       </Button>
     </DashboardHeader>
-    <div className="bg-secondary work-space">
+    <div className="bg-secondary-override work-space">
       {assets.map((a, i) => (
         <Card key={a.key + i}>
           <CardHeader className="d-flex flex-row justify-content-between bg-default align-items-center">
