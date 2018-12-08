@@ -82,7 +82,7 @@ class Sidebar extends React.Component {
             </div>
           </BootContainer>
           <div className="Conversations wt-bdr-rt">
-            <div className="d-flex flex-row justify-content-around mt-2 align-items-end header">
+            <div className="d-flex flex-row justify-content-around align-items-end header">
               <h4>Conversations</h4>
               <Button
                 className="btn-text"

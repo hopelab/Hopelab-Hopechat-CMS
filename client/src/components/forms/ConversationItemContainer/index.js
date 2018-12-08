@@ -214,9 +214,8 @@ export class ConversationItemContainer extends Component {
   render() {
     const { connectDropTarget, isOver, canDrop, setNewIndex, special, messages, index } = this.props;
     let container = (
-      <div className="p-2" key="origItem">
+      <div key="origItem" className="mb-4 ml-2">
         <ConversationItem
-          className="m-2"
           {...this.props}
         />
       </div>
@@ -224,7 +223,7 @@ export class ConversationItemContainer extends Component {
 
     if (this.messageTypeHasDifferentOptions(this.props.item.messageType)) {
       container = (
-        <div className="p-2" key="origItem">
+        <div key="origItem" className="mb-4 ml-2">
           <div className="d-flex flex-row justify-content-start">
             <ConversationItem
               {...this.props}

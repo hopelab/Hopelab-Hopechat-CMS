@@ -17,7 +17,7 @@ import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
 
 import { DASHBOARD_COMPONENTS, IS_QUICK_REPLY_RETRY, STOP_MESSAGE_ID, CRISIS_BLOCK_ID, END_OF_CONVO_ID,
-  IS_STOP_MESSAGE_DETECTION, QUICK_REPLY_BLOCK_ID, QUICK_REPLY_BLOCK_NAME, RESUME_MESSAGE_ID,
+  IS_STOP_MESSAGE_DETECTION, QUICK_REPLY_BLOCK_ID, QUICK_REPLY_BLOCK_NAME, RESUME_MESSAGE_ID, INTRO_CONVERSATION_ID,
   IS_CRISIS_RESPONSE_DETECTION, IS_END_OF_CONVERSATION } from '../../utils/constants';
 
 const { MESSAGE_TYPE_VIDEO, TYPE_BLOCK } = config;
@@ -531,6 +531,8 @@ class App extends Component {
       data,
     );
 
+    const special = (itemEditing && itemEditing.id === INTRO_CONVERSATION_ID) ? INTRO_CONVERSATION_ID : undefined;
+
     let mainProps = {
       setNewIndex: ({ id, newIndex }) => this.changeOrder({ id, newIndex, itemEditing }, true),
       formConfig: config.forms,
@@ -549,6 +551,7 @@ class App extends Component {
       toggleReadOnly: () => this.toggleReadOnly(),
       order: itemEditing ? this.getOrdering({ id: itemEditing.id, childEntities }) : null,
       messages: message.concat(collection),
+      special,
     };
     switch (view) {
       case DASHBOARD_COMPONENTS.studyIds:

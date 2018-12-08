@@ -14,10 +14,6 @@ import MediaPreview from '../MediaPreview';
 
 import {
   TYPE_CONVERSATION,
-  TYPE_COLLECTION,
-  TYPE_SERIES,
-  TYPE_BLOCK,
-  TYPE_MESSAGE,
   MESSAGE_TYPE_QUESTION,
   MESSAGE_TYPE_QUESTION_WITH_REPLIES,
   MESSAGE_TYPE_TEXT,
@@ -34,24 +30,6 @@ import './style.css';
 
 
 const noModTypeOrNext = special => !any(equals(special))([IS_END_OF_CONVERSATION, IS_STOP_MESSAGE_DETECTION]);
-
-const conversationItemStyles = {
-  [TYPE_CONVERSATION]: {
-
-  },
-  [TYPE_COLLECTION]: {
-    backgroundColor: 'rgb(82, 175, 82)',
-  },
-  [TYPE_SERIES]: {
-    backgroundColor: 'rgb(82, 175, 82)',
-  },
-  [TYPE_BLOCK]: {
-
-  },
-  [TYPE_MESSAGE]: {
-
-  },
-};
 
 class ConversationItem extends Component {
   static propTypes = {
@@ -292,9 +270,6 @@ class ConversationItem extends Component {
       >
         <div
           className={`card-header d-flex flex-column ${messageType === MESSAGE_TYPE_TRANSITION ? 'bg-warning' : ''}`}
-          style={{
-            ...conversationItemStyles[this.props.item.type],
-          }}
         >
           <div className="d-flex flex-row justify-content-between">
             <div className="d-flex flex-column justify-content-start">

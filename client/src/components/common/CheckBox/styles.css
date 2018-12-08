@@ -30,7 +30,7 @@
 }
 
 .CheckBox input[type="checkbox"]:checked + span {
-  background: var(--danger-bg-color) -19px top no-repeat;
+  background: var(--info-bg-color) -19px top no-repeat;
   -webkit-box-shadow: inset 0px 0px 14px 0px rgba(255,255,255,1);
   -moz-box-shadow: inset 0px 0px 14px 0px rgba(255,255,255,1);
   box-shadow: inset 0px 0px 14px 0px rgba(255,255,255,1);

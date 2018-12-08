@@ -71,6 +71,7 @@ class FirstItemSelect extends Component {
               onClick={this.toggle}
               data-toggle="dropdown"
               aria-expanded={this.state.dropdownOpen}
+              caret
             >
               {foundItem}
             </DropdownToggle>

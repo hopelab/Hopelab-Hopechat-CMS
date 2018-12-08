@@ -5,7 +5,7 @@ import Form from '../forms/Form';
 import WordList from '../WordList';
 import DashboardHeader from './DashboardHeader';
 
-import { IS_CRISIS_RESPONSE_DETECTION, IS_STOP_MESSAGE_DETECTION } from '../../utils/constants';
+import { IS_CRISIS_RESPONSE_DETECTION, IS_STOP_MESSAGE_DETECTION, INTRO_CONVERSATION_ID } from '../../utils/constants';
 import './style.css';
 
 const propTypes = {
@@ -103,7 +103,11 @@ class Dashboard extends Component {
               special={special}
               key="header"
             />,
-            <div className={`Inner ${special ? 'bg-secondary' : 'bg-default'}`} key="form">
+            <div
+              className={`Inner
+                ${(special && special !== INTRO_CONVERSATION_ID) ? 'bg-secondary-override' : 'bg-default-override'}`}
+              key="form"
+            >
               <Form
                 setNewIndex={args => setNewIndex(args)}
                 item={props.itemEditing}

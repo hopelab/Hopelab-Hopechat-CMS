@@ -45,18 +45,18 @@ class CopyButton extends Component {
         <Button
           disabled={disabled}
           id="caret"
-          onClick={e => e && e.preventDefault()}
-          color="primary"
+          onClick={this.toggle}
+          color="info"
         >
           Copy To
         </Button>
-        <DropdownToggle caret color="primary" disabled={disabled} />
+        <DropdownToggle caret color="info" disabled={disabled} />
         <DropdownMenu flip={false}>
           {this.renderCopyToItems()}
         </DropdownMenu>
       </ButtonDropdown>
     ) : (
-      <Button color="primary" onClick={onCopy} disabled={disabled}>Copy</Button>
+      <Button color="info" onClick={onCopy} disabled={disabled}>Copy</Button>
     );
   }
 }
