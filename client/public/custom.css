@@ -76,6 +76,11 @@
   border: var(--warning-bg-color);
 }
 
+.bg-warning-override {
+  background-color: var(--warning-bg-color);
+  border: var(--warning-bg-color);
+}
+
 .btn-danger, .bg-danger {
   background-color: var(--danger-bg-color);
   border-color: #3B3940;

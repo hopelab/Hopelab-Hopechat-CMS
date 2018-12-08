@@ -51,7 +51,7 @@ class RulesDropdown extends Component {
       >
         <DropdownToggle
           caret
-          color='warning'
+          color="warning"
           onClick={this.toggle}
           disabled={disabled}
           className={`${disabled ? 'disabled' : ''}`}

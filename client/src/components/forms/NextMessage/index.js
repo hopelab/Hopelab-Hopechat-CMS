@@ -119,11 +119,11 @@ class NextMessage extends Component {
     }
     if (!nextId && nextType === TYPE_STOP_NOTIFICATIONS) {
       foundItem = { name: 'Stop all Messages' };
-      className = 'bg-warning';
+      className = 'bg-warning-override';
     }
     if (foundItem) {
       foundItem = foundItem.name;
-      className = 'bg-path';
+      if (!className.length) className = 'bg-path';
     } else if (!foundItem && !childEntities.length) {
       foundItem = 'choose first';
       className = 'btn btn-outline-primary btn-lg';
