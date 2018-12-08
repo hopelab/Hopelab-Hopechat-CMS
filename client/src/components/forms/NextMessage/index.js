@@ -123,7 +123,7 @@ class NextMessage extends Component {
     }
     if (foundItem) {
       foundItem = foundItem.name;
-      if (!className.length) className = 'bg-path';
+      className = className || 'bg-path';
     } else if (!foundItem && !childEntities.length) {
       foundItem = 'choose first';
       className = 'btn btn-outline-primary btn-lg';

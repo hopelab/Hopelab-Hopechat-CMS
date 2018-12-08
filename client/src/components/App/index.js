@@ -531,8 +531,7 @@ class App extends Component {
       data,
     );
 
-    let special;
-    if (itemEditing && itemEditing.id === INTRO_CONVERSATION_ID) special = INTRO_CONVERSATION_ID;
+    const special = (itemEditing && itemEditing.id === INTRO_CONVERSATION_ID) ? INTRO_CONVERSATION_ID : undefined;
 
     let mainProps = {
       setNewIndex: ({ id, newIndex }) => this.changeOrder({ id, newIndex, itemEditing }, true),
