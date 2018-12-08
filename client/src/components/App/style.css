@@ -9,7 +9,7 @@
   position: fixed;
   top: 0;
   right: 0;
-  z-index: 3;
+  z-index: 4;
   color: white;
 }
 
@@ -21,6 +21,12 @@
   cursor: not-allowed;
 }
 
+/* works for AssetLibrary */
+.App .work-space {
+  padding: 22px 26px;
+  border-radius: 8px;
+}
+
 .App .col-8 .container-fluid {
   padding-top: 35px;
   border-top: 1px;
@@ -30,5 +36,26 @@
 }
 
 .App .top-bar-height {
-  height: 80px;
+  height: var(--top-bar-height);
+}
+
+.App .read-only {
+  height: 100%;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, .1);
+  position: absolute;
+  width: 100%;
+  top: var(--top-bar-height);
+  left: 0;
+}
+
+.App .hidden {
+  display: none;
+}
+
+.App .btn {
+  border-radius: 4px;
+}
+.App {
+  background-color: var(--dark-blue);
 }

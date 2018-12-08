@@ -1,48 +1,32 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import EditableText from '../EditableText';
+import { CheckBox } from '../../common/CheckBox';
 
-class DelayCheckbox extends Component {
-  static propTypes = {
-    delayChecked: PropTypes.bool.isRequired,
-    delayInDays: PropTypes.string,
-    onDelayChecked: PropTypes.func.isRequired,
-    onDelayInDaysWillFinish: PropTypes.func.isRequired,
-  }
+const DelayCheckbox = ({ delayChecked, delayInDays, onDelayInDaysWillFinish, onDelayChecked }) => (
+  <div className="d-flex justify-content-between">
+    <CheckBox
+      checked={delayChecked}
+      onChange={() => onDelayChecked(!delayChecked)}
+      label="Delay?"
+      size="16px"
+    />
+    {
+      delayChecked &&
+      <EditableText
+        placeholder=" delay in days"
+        onEditWillFinish={onDelayInDaysWillFinish}
+        text={delayInDays}
+      />
+    }
+  </div>
+);
 
-  constructor(props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  handleChange(e) {
-    this.props.onDelayChecked(e.target.checked);
-  }
-
-  render() {
-    const { delayChecked, delayInDays, onDelayInDaysWillFinish } = this.props;
-    return (
-      <div className="d-flex justify-content-between">
-        <span>
-          <input
-            type="checkbox"
-            checked={delayChecked}
-            onChange={this.handleChange}
-          />
-          &nbsp;Delay?
-        </span>
-        {
-          delayChecked &&
-          <EditableText
-            placeholder=" delay in days"
-            onEditWillFinish={onDelayInDaysWillFinish}
-            text={delayInDays}
-          />
-        }
-      </div>
-    );
-  }
-}
-
+DelayCheckbox.propTypes = {
+  delayChecked: PropTypes.bool.isRequired,
+  delayInDays: PropTypes.string,
+  onDelayChecked: PropTypes.func.isRequired,
+  onDelayInDaysWillFinish: PropTypes.func.isRequired,
+};
 
 export default DelayCheckbox;

@@ -71,8 +71,8 @@ class Sidebar extends React.Component {
       </Button>
     ));
     return (
-      <aside className="Sidebar col-md-4 pl-3 pt-1">
-        <div className="card darkblue-bg">
+      <aside className="Sidebar col-md-5">
+        <div className="darkblue-bg sidebar-guts">
           <BootContainer fluid >
             <div className="top-bar-height justify-content-end flex-column d-flex Components">
               <h4>Components</h4>
@@ -85,6 +85,7 @@ class Sidebar extends React.Component {
             <div className="d-flex flex-row justify-content-around mt-2 align-items-end header">
               <h4>Conversations</h4>
               <Button
+                className="btn-text"
                 disabled={readOnly}
                 color="danger"
                 onClick={addConversation}
@@ -92,6 +93,7 @@ class Sidebar extends React.Component {
                 New
               </Button>
               <Button
+                className="btn-text"
                 color="danger"
                 onClick={() => this.expandAll()}
               >
@@ -107,7 +109,6 @@ class Sidebar extends React.Component {
               />
             </div>
           </div>
-
         </div>
       </aside>
     );

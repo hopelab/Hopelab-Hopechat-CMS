@@ -80,9 +80,9 @@ class Dashboard extends Component {
     const { props } = this;
     const { setNewIndex, order, special, messages } = props;
     return (
-      <div className="Dashboard mt-1">
+      <div className="Dashboard mt-1 offset-5">
         {props.itemEditing !== null && (
-          <div className="Inner card">
+          [
             <DashboardHeader
               itemName={props.itemEditing.name}
               itemType={props.itemEditing.type}
@@ -101,29 +101,31 @@ class Dashboard extends Component {
               readOnly={props.readOnly}
               toggleReadOnly={props.toggleReadOnly}
               special={special}
-            />
-            <Form
-              setNewIndex={args => setNewIndex(args)}
-              item={props.itemEditing}
-              config={props.formConfig[props.itemEditing.type]}
-              handleSaveItem={props.handleSaveItem}
-              handleDeleteItem={props.handleDeleteItem}
-              handleChildEntityAddition={this.handleChildEntityAddition}
-              childEntities={props.childEntities}
-              images={props.images}
-              conversations={props.conversations}
-              videos={props.videos}
-              updateStartEntity={props.updateStartEntity}
-              readOnly={props.readOnly}
-              order={order}
-              special={special}
-              messages={messages}
-            />
-            {R.any(R.equals(special), [IS_CRISIS_RESPONSE_DETECTION, IS_STOP_MESSAGE_DETECTION])
-              && <WordList special={special} />}
-          </div>
+              key="header"
+            />,
+            <div className={`Inner ${special ? 'bg-secondary' : 'bg-default'}`} key="form">
+              <Form
+                setNewIndex={args => setNewIndex(args)}
+                item={props.itemEditing}
+                config={props.formConfig[props.itemEditing.type]}
+                handleSaveItem={props.handleSaveItem}
+                handleDeleteItem={props.handleDeleteItem}
+                handleChildEntityAddition={this.handleChildEntityAddition}
+                childEntities={props.childEntities}
+                images={props.images}
+                conversations={props.conversations}
+                videos={props.videos}
+                updateStartEntity={props.updateStartEntity}
+                readOnly={props.readOnly}
+                order={order}
+                special={special}
+                messages={messages}
+              />
+              {R.any(R.equals(special), [IS_CRISIS_RESPONSE_DETECTION, IS_STOP_MESSAGE_DETECTION])
+                && <WordList special={special} key="wordlist" />}
+            </div>,
+          ]
         )}
-        <div style={{ height: '85vh' }} />
       </div>
     );
   }

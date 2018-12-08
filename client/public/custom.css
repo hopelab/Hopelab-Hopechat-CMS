@@ -9,6 +9,7 @@
   --secondary-bg-color: #A8C7D6;
   --message: #0D7294;
   --message-secondary: #84B0BF;
+  --message-transition: #9b9b9b;
   --transition: yellow;
   --block: #939263;
   --block-secondary: #bfbfb2;
@@ -19,6 +20,17 @@
   --dark-blue: var(--primary-bg-color);
   --light-blue: #A8C7D6;
   --card-grey: var(--default-bg-color);
+  --card-header-text: #373a3c;
+  --top-bar-height: 130px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  height: 0;
+}
+::-webkit-scrollbar {
+  width: 0px;  /* remove scrollbar space */
+  background: transparent;  /* optional: just make scrollbar invisible */
 }
 
 #root {
@@ -26,14 +38,20 @@
   height: 100%;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
-}
-
-* {
-  font-family: HelveticaNeue;
+  scroll-behavior: smooth;
 }
 
 .btn-primary, .bg-primary {
   background-color: var(--primary-bg-color);
+}
+
+.bg-primary-override {
+  background-color: var(--primary-bg-color);
+  padding: 0;
+}
+
+.btn-primary.selected {
+
 }
 
 .btn-default, .bg-default {
@@ -45,12 +63,16 @@
 }
 
 .btn-warning, .bg-warning {
-  background-color: var(--warning-bg-color);
+  background-color: var(--warning-bg-color) !important;
 }
 
 .btn-danger, .bg-danger {
   background-color: var(--danger-bg-color);
   border-color: #3B3940;
+}
+
+.bg-danger-override {
+  background-color: var(--danger-bg-color);
 }
 
 .btn-danger:hover {
@@ -60,7 +82,7 @@
 }
 
 .btn-secondary, .bg-secondary {
-  background-color: var(--secondary-bg-color);
+  background-color: var(--secondary-bg-color) !important;
 }
 
 .btn-outline-secondary {
@@ -101,6 +123,14 @@
   background-color: var(--series);
 }
 
+.bg-secondary-series {
+  background-color: var(--series-secondary);
+}
+
+.bg-message-transition {
+  background-color: var(--message-transition);
+}
+
 .darkblue-bg {
   background-color: var(--dark-blue);
   border: none;
@@ -121,4 +151,17 @@ h4 {
   font-size: 20px;
   line-height: 24px;
   font-weight: 200;
+}
+
+.btn-text {
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.31;
+  letter-spacing: normal;
+  color: #ffffff;
+  text-transform: uppercase;
+  border-radius: 4px;
+  min-width: 102px;
 }

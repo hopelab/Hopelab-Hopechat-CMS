@@ -13,8 +13,6 @@ import NextMessage from '../NextMessage';
 
 import { createInitialFormState } from '../../../utils/data';
 
-import './style.css';
-
 import {
   TYPE_BLOCK,
   TYPE_CONVERSATION,
@@ -90,8 +88,7 @@ class Form extends Component {
       />);
     }
     return (
-      <div className="d-flex flex-column align-items-start">
-        {readOnly && <div className="read-only" /> }
+      <div className="work-space">
         { (!special && (this.props.item.type === TYPE_CONVERSATION ||
           this.props.item.type === TYPE_BLOCK) && this.props.childEntities.length)
           ? <FirstItemSelect

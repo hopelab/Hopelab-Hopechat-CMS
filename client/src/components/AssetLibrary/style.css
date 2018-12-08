@@ -1,19 +1,39 @@
-.AssetLibrary .card {
-  background-color: #C8C8C8;
+.App .AssetLibrary .card .card-header{
+  font-size: 20px;
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: var(--card-header-text);
+}
+
+.App .AssetLibrary .card {
   padding: 0;
   margin-top: 2rem;
+  width: 494px;
 }
 
 .AssetLibrary .card .card-body {
-  padding: 0;
+  padding: 21px 18px;
+}
+.App .AssetLibrary .card-header form {
+  margin-left: 26px;
 }
 
-.AssetLibrary .card .card-header {
-  background-color: #858C93;
-  width: 100%;
+.AssetLibrary .btn.btn-secondary {
+  padding: 16px 80px;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.04;
 }
 
-.AssetLibrary {
-  padding-left: 0;
-  height: 100vh;
+.AssetLibrary .btn.btn-default {
+  text-transform: uppercase;
+  font-family: AvenirNext-Medium;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.25;
+  margin-left: 26px;
+  padding: 16px;
 }

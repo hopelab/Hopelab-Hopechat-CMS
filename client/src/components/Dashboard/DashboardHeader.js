@@ -32,6 +32,7 @@ export class DashboardHeader extends Component {
     readOnly: PropTypes.bool.isRequired,
     toggleReadOnly: PropTypes.func.isRequired,
     special: PropTypes.string,
+    children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]),
   }
 
   hasLive(type) {
@@ -68,81 +69,93 @@ export class DashboardHeader extends Component {
       readOnly,
       toggleReadOnly,
       special,
+      children,
     } = this.props;
     return (
-      <div
-        className="card-header d-flex flex-row justify-content-start align-items-center top-bar-height"
-        style={{ flexWrap: 'wrap' }}
-      >
-        <EditableText
-          text={itemName}
-          onEditWillFinish={onNameChanged}
-          disabled={readOnly || !!special}
-        />
-        <ReactStrapForm
-          className="d-flex"
-          style={{ flex: '1 0', whiteSpace: 'nowrap' }}
-          onSubmit={e => {
-            e.preventDefault();
-            onDelete({ id: itemId, type: itemType, name: itemName });
-          }}
+      [
+        <div className={readOnly ? 'read-only' : 'hidden'} key="read-only-div" />,
+        <div
+          key="header"
+          className="card-header d-flex flex-row justify-content-start
+            align-items-center top-bar-height bg-primary-override"
         >
-          {itemType === 'conversation' && !special &&
-            (<CopyButton onCopy={onCopy} disabled={readOnly} />)}
-          {entityCanBeCopied(itemType) &&
-            !special &&
-            <CopyButton
-              copyToItems={copyToItems}
-              onCopy={onCopy}
-              disabled={readOnly}
-            />
-
-          }
-          {!special &&
           <Button
-            className="mr-3"
-            color="danger"
-            disabled={readOnly}
-            type="submit"
+            color="secondary"
+            size="lg"
+            style={{ cursor: special ? 'default' : 'text' }}
+            className="header-btn"
           >
-            Delete
+            <EditableText
+              text={special ? itemName.toUpperCase() : itemName}
+              onEditWillFinish={onNameChanged}
+              disabled={readOnly || !!special}
+            />
           </Button>
-          }
-          {this.hasStudy(itemType) && (
-            <CheckBox
-              onChange={onToggleStudy}
-              className="mr-1"
-              checked={!!(isStudy)}
-              label="Study"
-              disabled={readOnly}
-            />
-          )}
-          {this.hasLive(itemType) && (
-            <CheckBox
-              onChange={onToggleLive}
-              className="mr-1"
-              checked={!!(isLive)}
-              label="Default"
-              disabled={readOnly}
-            />
-          )}
-          {this.hasRules(itemType) && (
-            <div>
-              <RulesDropdown
-                rules={this.getRules(itemType)}
-                selected={rule}
-                onSelection={onRuleChanged}
+          <ReactStrapForm
+            className="d-flex flex-row align-items-center flex-nowrap"
+            onSubmit={e => {
+              e.preventDefault();
+              onDelete({ id: itemId, type: itemType, name: itemName });
+            }}
+          >
+            {children && children}
+            {itemType === 'conversation' && !special &&
+              (<CopyButton onCopy={onCopy} disabled={readOnly} key="copy" />)}
+            {entityCanBeCopied(itemType) &&
+              !special &&
+              <CopyButton
+                copyToItems={copyToItems}
+                onCopy={onCopy}
                 disabled={readOnly}
               />
-            </div>
-          )}
-          <CheckBox
-            checked={readOnly}
-            onChange={toggleReadOnly}
-            label="Read-Only"
-          />
-        </ReactStrapForm>
-      </div>
+
+            }
+            {!special &&
+            <Button
+              className="mr-3"
+              color="danger"
+              disabled={readOnly}
+              type="submit"
+            >
+              Delete
+            </Button>
+            }
+            {this.hasStudy(itemType) && (
+              <CheckBox
+                onChange={onToggleStudy}
+                className="mr-1"
+                checked={!!(isStudy)}
+                label="Study"
+                disabled={readOnly}
+              />
+            )}
+            {this.hasLive(itemType) && (
+              <CheckBox
+                onChange={onToggleLive}
+                className="mr-1"
+                checked={!!(isLive)}
+                label="Default"
+                disabled={readOnly}
+              />
+            )}
+            {this.hasRules(itemType) && (
+              <div>
+                <RulesDropdown
+                  rules={this.getRules(itemType)}
+                  selected={rule}
+                  onSelection={onRuleChanged}
+                  disabled={readOnly}
+                />
+              </div>
+            )}
+            <CheckBox
+              checked={readOnly}
+              onChange={toggleReadOnly}
+              label="Read-Only"
+            />
+          </ReactStrapForm>
+        </div>,
+      ]
     );
   }
 }

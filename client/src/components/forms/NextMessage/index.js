@@ -8,7 +8,7 @@ import {
   DropdownToggle,
 } from 'reactstrap';
 
-import { END_OF_CONVERSATION_ID, forms } from '../../../utils/config';
+import { END_OF_CONVERSATION_ID, forms, TYPE_MESSAGE } from '../../../utils/config';
 import { TYPE_STOP_NOTIFICATIONS, TYPE_BACK_TO_CONVERSATION } from '../../../utils/constants';
 
 import './style.css';
@@ -113,16 +113,19 @@ class NextMessage extends Component {
       className = 'bg-warning';
     } else if (!nextId && nextType === TYPE_BACK_TO_CONVERSATION) {
       foundItem = { name: 'Back To Conversation' };
-      className = 'bg-warning';
+      className = 'bg-secondary-series';
     } else {
       foundItem = childEntities.find(item => item.id === nextId);
     }
     if (!nextId && nextType === TYPE_STOP_NOTIFICATIONS) {
       foundItem = { name: 'Stop all Messages' };
-      className = 'bg-danger';
+      className = 'bg-warning';
     }
     if (foundItem) {
       foundItem = foundItem.name;
+      if (nextType === TYPE_MESSAGE) {
+        className = 'bg-message-transition';
+      }
     } else if (!foundItem && !childEntities.length) {
       foundItem = 'choose first';
       className = 'btn btn-outline-primary btn-lg';
@@ -132,7 +135,7 @@ class NextMessage extends Component {
       className = 'bg-danger text-light';
     } else {
       foundItem = 'choose next';
-      className = 'bg-danger text-light';
+      className = 'bg-danger-override text-light';
     }
     return (
       <Dropdown
