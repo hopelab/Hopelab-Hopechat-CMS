@@ -25,12 +25,14 @@
   --next-message: #9b9b9b;
   --top-bar-height: 130px;
   --quick-reply-border: #e5e5e5;
+  --table-text: #2a2c2e;
 }
 
 ::-webkit-scrollbar-thumb {
   background: transparent;
   height: 0;
 }
+
 ::-webkit-scrollbar {
   width: 0px;  /* remove scrollbar space */
   background: transparent;  /* optional: just make scrollbar invisible */
