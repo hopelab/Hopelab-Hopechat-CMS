@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { DragSource } from 'react-dnd';
 import { any, equals } from 'ramda';
-import { CheckBox } from '../../common/CheckBox';
+import { Button } from 'reactstrap';
 
+import { CheckBox } from '../../common/CheckBox';
 import EditableText from '../EditableText';
 import DelayCheckbox from '../DelayCheckbox';
 import NextMessage from '../NextMessage';
@@ -262,7 +263,7 @@ class ConversationItem extends Component {
 
   render() {
     const { item: { isEvent = false, name }, index, connectDragSource, className,
-      item: { messageType }, special } = this.props;
+      item: { messageType, type: itemType, id: itemId }, special, handleDeleteItem } = this.props;
     return connectDragSource(
       <div
         key="ogItem"
@@ -271,7 +272,7 @@ class ConversationItem extends Component {
         <div
           className={`card-header d-flex flex-column ${messageType === MESSAGE_TYPE_TRANSITION ? 'bg-warning' : ''}`}
         >
-          <div className="d-flex flex-row justify-content-between">
+          <div className="d-flex flex-row justify-content-between align-items-center">
             <div className="d-flex flex-column justify-content-start">
               <EditableText
                 text={name}
@@ -292,6 +293,15 @@ class ConversationItem extends Component {
                 onDelete={this.handleDeleteMessage}
                 disabled={!!special && special !== IS_CRISIS_RESPONSE_DETECTION && index === 0}
               />
+            )}
+            {!this.props.item.messageType && noModTypeOrNext(special) && (
+              <Button
+                className="btn-text"
+                color="danger"
+                onClick={() => handleDeleteItem({ type: itemType, id: itemId })}
+              >
+              Delete
+              </Button>
             )}
           </div>
         </div>

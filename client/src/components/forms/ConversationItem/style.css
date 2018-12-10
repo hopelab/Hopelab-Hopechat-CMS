@@ -16,7 +16,7 @@
 }
 
 .App .Inner .ConversationItem.message .card-header{
-  padding-bottom: 0;
+  padding-bottom: 9px;
 }
 
 .App .Inner .ConversationItem.message .card-header{
@@ -86,7 +86,7 @@
 }
 
 .ConversationItem .message-type {
-  background-color: var(--message-transition);
+  background-color: var(--next-message);
   border-radius: 4px;
   max-width: 95px;
   min-width: 84px;
