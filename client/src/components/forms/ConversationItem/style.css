@@ -49,11 +49,11 @@
 }
 
 .App .Inner .ConversationItem.collection .card-header{
-  background-color: var(--collections);
+  background-color: var(--collection);
 }
 
 .App .Inner .ConversationItem.series .card-block{
-  background-color: var(--collections-secondary);
+  background-color: var(--collection-secondary);
 }
 
 .App .Inner .ConversationItem.block .card-header{
