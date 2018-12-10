@@ -1,0 +1,7 @@
+.Dashboard .Inner .d-inline-flex .card .card-header{
+  flex-wrap: wrap;
+  background-color: white;
+  color: black;
+  border: 1px var(--quick-reply-border) solid;
+  border-radius: 4px;
+}

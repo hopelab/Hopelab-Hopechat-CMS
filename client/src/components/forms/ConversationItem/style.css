@@ -7,6 +7,7 @@
 
 .App .Dashboard .work-space .card {
   width: 412px;
+  background-color: rgba(0,0,0,0);
 }
 
 .App .Inner .ConversationItem .card-header span, label{
@@ -19,36 +20,48 @@
   padding-bottom: 9px;
 }
 
+.App .Inner .ConversationItem.message.transition .card-block.transition-secondary{
+  background-color: var(--transition-secondary);
+  min-height: 0;
+  height: 62px;
+  line-height: 16px;
+}
+
+.App .Inner .ConversationItem.message.transition .card-header{
+    background-color: var(--transition);
+}
+
 .App .Inner .ConversationItem.message .card-header{
-  background-color: var(--message)
+  background-color: var(--message);
 }
 
 .App .Inner .ConversationItem.message .card-block{
-  background-color: var(--message-secondary)
+  min-height: 156px;
+  background-color: var(--message-secondary);
 }
 
 .App .Inner .ConversationItem.series .card-header{
-  background-color: var(--series)
+  background-color: var(--series);
 }
 
 .App .Inner .ConversationItem.series .card-block{
-  background-color: var(--series-secondary)
+  background-color: var(--series-secondary);
 }
 
 .App .Inner .ConversationItem.collection .card-header{
-  background-color: var(--collections)
+  background-color: var(--collections);
 }
 
 .App .Inner .ConversationItem.series .card-block{
-  background-color: var(--collections-secondary)
+  background-color: var(--collections-secondary);
 }
 
 .App .Inner .ConversationItem.block .card-header{
-  background-color: var(--block)
+  background-color: var(--block);
 }
 
 .App .Inner .ConversationItem.series .card-block{
-  background-color: var(--block-secondary)
+  background-color: var(--block-secondary);
 }
 
 .over {
@@ -70,7 +83,6 @@
 .ConversationItem > .card-block {
   font-size: .8em;
   padding: 20px;
-  min-height: 156px;
 }
 
 .ConversationItem .form-check {

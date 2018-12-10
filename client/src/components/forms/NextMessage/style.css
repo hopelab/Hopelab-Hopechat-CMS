@@ -33,10 +33,17 @@
     overflow: scroll;
 }
 
+.card .card-footer .dropdown div.bg-path {
+  background-color: var(--next-message);
+  border: none;
+}
+
 .card .card-footer .dropdown div {
+  border: 1px var(--quick-reply-border) solid;
   cursor: pointer;
   border-radius: 4px;
   padding: 14px;
+  background-color: white;
 }
 
 .broken-link {

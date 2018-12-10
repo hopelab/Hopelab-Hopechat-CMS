@@ -4,6 +4,7 @@ import EditableText from '../EditableText';
 import NextMessage from '../NextMessage';
 import NextConversation from '../NextConversation';
 import { MESSAGE_TYPE_QUESTION_WITH_REPLIES, TYPE_MESSAGE } from '../../../utils/config';
+import './style.css';
 
 const QuickReply = ({
   text,
@@ -27,11 +28,6 @@ const QuickReply = ({
   <div className="card">
     <div
       className="card-header d-flex flex-row justify-content-between"
-      style={{
-        flexWrap: 'wrap',
-        backgroundColor: 'white',
-        color: 'black',
-      }}
     >
       <EditableText
         text={text}
@@ -67,8 +63,7 @@ const QuickReply = ({
                 (id, type) => onNextItemSelect({ index, id, type, nextChild: null })
               }
             />
-            <hr />
-            <small>Select Message:</small><NextMessage
+            <NextMessage
               special={special}
               parentItemType={parentItemType}
               childEntities={messages.filter(({ parent: { id } = {} }) => id === nextId)}
