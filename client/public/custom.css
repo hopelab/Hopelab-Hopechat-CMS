@@ -10,7 +10,8 @@
   --secondary-bg-color: #A8C7D6;
   --message: #0D7294;
   --message-secondary: #84B0BF;
-  --transition: yellow;
+  --transition: #ce7436;
+  --transition-secondary: #ca9988;
   --block: #939263;
   --block-secondary: #bfbfb2;
   --collection: #0D9474;
@@ -23,6 +24,7 @@
   --card-header-text: #373a3c;
   --next-message: #9b9b9b;
   --top-bar-height: 130px;
+  --quick-reply-border: #e5e5e5;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -124,6 +126,10 @@
 
 .transition {
   background-color: var(--transition);
+}
+
+.transition-secondary {
+  background-color: var(--transition-secondary);
 }
 
 .message {

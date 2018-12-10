@@ -173,7 +173,7 @@ class ConversationItem extends Component {
       const minutesInHour = 60;
       const hoursInDay = 24;
       return (
-        <div className="card-block">
+        <div className="card-block transition-secondary">
           <div className="card-text">
             <DelayCheckbox
               delayChecked={
@@ -267,10 +267,12 @@ class ConversationItem extends Component {
     return connectDragSource(
       <div
         key="ogItem"
-        className={`card ConversationItem ${className || ''} ${this.props.item && this.props.item.type}`}
+        className={`card ConversationItem ${className || ''}
+        ${this.props.item && this.props.item.type}
+          ${messageType === MESSAGE_TYPE_TRANSITION && MESSAGE_TYPE_TRANSITION}`}
       >
         <div
-          className={`card-header d-flex flex-column ${messageType === MESSAGE_TYPE_TRANSITION ? 'bg-warning' : ''}`}
+          className="card-header d-flex flex-column"
         >
           <div className="d-flex flex-row justify-content-between align-items-center">
             <div className="d-flex flex-column justify-content-start">
