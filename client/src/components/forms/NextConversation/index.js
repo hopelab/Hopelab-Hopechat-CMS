@@ -74,7 +74,7 @@ class NextConversation extends Component {
     }
     return (
       <Dropdown
-        style={{ cursor: 'pointer' }}
+        style={{ cursor: 'pointer', backgroundColor: '#fff' }}
         isOpen={this.state.dropdownOpen}
         toggle={this.toggle}
       >
