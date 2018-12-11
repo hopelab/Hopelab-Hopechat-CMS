@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
+import { INTRO_CONVERSATION_ID } from '../../../utils/constants';
 
 class Container extends React.Component {
   state = {
@@ -18,6 +19,14 @@ class Container extends React.Component {
   render() {
     const { onClick, node, expanded, terminal, level, selected } = this.props;
     const { loading } = this.state;
+    const isIntro = node.id === INTRO_CONVERSATION_ID;
+    const nameText = (
+      <span className={`nav-link ${isIntro ? 'intro' : ''}`}>
+        {node.name}&nbsp;
+        {isIntro && '(START)'}
+        {node.isLive ? <i className="fa fa-circle live-circle" /> : null}
+      </span>
+    );
     return (
       <Button
         outline={!selected}
@@ -34,10 +43,7 @@ class Container extends React.Component {
           role="button"
           tabIndex={0}
         />}
-        <span className="nav-link">
-          {node.name}&nbsp;
-        </span>
-        {node.isLive ? <i className="fa fa-circle live-circle" /> : null}
+        {nameText}
         {loading && <i className="fa fa-spinner fa-pulse" />}
       </Button>
     );

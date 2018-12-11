@@ -16,6 +16,10 @@
   border: none;
 }
 
+.nav-pills .nav-item .intro {
+  color: var(--intro-color);
+}
+
 .live-circle {
   color: #29AB87;
 }
