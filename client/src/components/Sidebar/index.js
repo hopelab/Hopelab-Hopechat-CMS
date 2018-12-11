@@ -71,7 +71,7 @@ class Sidebar extends React.Component {
       </Button>
     ));
     return (
-      <aside className="Sidebar col-md-5">
+      <aside className="Sidebar col-md-3">
         <div className="darkblue-bg sidebar-guts">
           <BootContainer fluid >
             <div className="top-bar-height justify-content-end flex-column d-flex Components">
@@ -82,23 +82,25 @@ class Sidebar extends React.Component {
             </div>
           </BootContainer>
           <div className="Conversations wt-bdr-rt">
-            <div className="d-flex flex-row justify-content-around align-items-end header">
-              <h4>Conversations</h4>
-              <Button
-                className="btn-text"
-                disabled={readOnly}
-                color="danger"
-                onClick={addConversation}
-              >
-                New
-              </Button>
-              <Button
-                className="btn-text"
-                color="danger"
-                onClick={() => this.expandAll()}
-              >
-                {expandAll ? 'Collapse' : 'Expand'}
-              </Button>
+            <div className="d-flex flex-column header">
+              <h4 className="text-left">Conversations</h4>
+              <div className="d-flex flex-row justify-content-around">
+                <Button
+                  className="btn-text"
+                  disabled={readOnly}
+                  color="danger"
+                  onClick={addConversation}
+                >
+                  New
+                </Button>
+                <Button
+                  className="btn-text"
+                  color="danger"
+                  onClick={() => this.expandAll()}
+                >
+                  {expandAll ? 'Collapse' : 'Expand'}
+                </Button>
+              </div>
             </div>
             <div className="Inner">
               <Treebeard

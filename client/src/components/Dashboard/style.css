@@ -1,7 +1,6 @@
 .Dashboard {
   height: 100vh;
   padding: 0;
-  z-index: 3;
   min-width: fit-content;
 }
 
