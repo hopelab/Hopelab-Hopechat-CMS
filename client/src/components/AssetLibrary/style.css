@@ -16,7 +16,9 @@
 
 .AssetLibrary .card .card-body {
   padding: 21px 18px;
+  background-color: #fff;
 }
+
 .App .AssetLibrary .card-header form {
   margin-left: 26px;
 }
