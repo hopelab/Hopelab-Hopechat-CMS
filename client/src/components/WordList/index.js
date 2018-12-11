@@ -118,12 +118,13 @@ export class WordList extends React.Component {
                     />
                   </td>
                   <td>
-                    <i
-                      className="fa fa-times"
-                      style={{ cursor: 'pointer' }}
-                      aria-hidden="true"
+                    <button
+                      style={{ border: 'none', background: 'none', cursor: 'pointer' }}
                       onClick={() => this.deleteValue(term, type)}
-                    />
+                      aria-hidden="true"
+
+                    >X
+                    </button>
                   </td>
                 </tr>
               ))}

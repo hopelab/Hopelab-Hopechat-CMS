@@ -357,29 +357,31 @@ class App extends Component {
 
   renameMedia(newName, url, type) {
     const encodedName = cleanString(newName);
-    const urlArray = url.split('/');
-    const fileName = urlArray[urlArray.length - 1];
-    const displayName = fileName.split('.')[0];
-    const newUrl = url.replace(displayName, encodedName);
-    const repl = this.state[type].map(i =>
-      (equals(i.url, url) ?
-        { ...i, url: newUrl, key: encodedName } : i));
-    const affectedMsg = this.state.message.find(m => (equals(m.url, url)));
-    this.setState({ loading: true });
-    fetch(
-      `/media/rename/${encodedName}/${fileName}`,
-      config.http.makeUploadFetchOptions({
-        method: 'GET',
-      }),
-    )
-      .then(() => {
-        this.setState({ [type]: repl });
-        if (affectedMsg) {
-          this.handleSaveItem({ ...affectedMsg, url: newUrl });
-        } else {
-          this.setState({ loading: false });
-        }
-      });
+    if (encodedName.length) {
+      const urlArray = url.split('/');
+      const fileName = urlArray[urlArray.length - 1];
+      const displayName = fileName.split('.')[0];
+      const newUrl = url.replace(displayName, encodedName);
+      const repl = this.state[type].map(i =>
+        (equals(i.url, url) ?
+          { ...i, url: newUrl, key: encodedName } : i));
+      const affectedMsg = this.state.message.find(m => (equals(m.url, url)));
+      this.setState({ loading: true });
+      fetch(
+        `/media/rename/${encodedName}/${fileName}`,
+        config.http.makeUploadFetchOptions({
+          method: 'GET',
+        }),
+      )
+        .then(() => {
+          this.setState({ [type]: repl });
+          if (affectedMsg) {
+            this.handleSaveItem({ ...affectedMsg, url: newUrl });
+          } else {
+            this.setState({ loading: false });
+          }
+        });
+    }
   }
 
   handleDeleteItem = itemToDelete => {

@@ -36,8 +36,9 @@
 }
 
 .App .Inner .ConversationItem.message .card-block{
-  min-height: 156px;
+  min-height: 60px;
   background-color: var(--message-secondary);
+  color: black;
 }
 
 .App .Inner .ConversationItem.series .card-header{
