@@ -84,7 +84,7 @@ class Sidebar extends React.Component {
           <div className="Conversations wt-bdr-rt">
             <div className="d-flex flex-column header">
               <h4 className="text-left">Conversations</h4>
-              <div className="d-flex flex-row justify-content-around">
+              <div className="d-flex flex-row justify-content-start">
                 <Button
                   className="btn-text"
                   disabled={readOnly}
