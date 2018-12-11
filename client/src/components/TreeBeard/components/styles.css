@@ -28,6 +28,7 @@
   color: var(--collection);
   background-color: var(--collection);
 }
+
 .tooltip.bs-tooltip-auto[x-placement^=top] .arrow::before, .tooltip.bs-tooltip-top .arrow::before {
   border-top-color: var(--collection) !important;
 }

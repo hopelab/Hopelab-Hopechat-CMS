@@ -63,3 +63,12 @@
 .Dashboard .card-header.bg-primary-override .btn.dropdown-toggle {
   margin-left: 0;
 }
+
+.Dashboard #start-dropdown {
+  background-color: #fff;
+  text-align: center;
+}
+
+.tooltip.bs-tooltip-auto[x-placement^=right] .arrow::before, .tooltip.bs-tooltip-right .arrow::before {
+  border-right-color: var(--collection) !important;
+}
