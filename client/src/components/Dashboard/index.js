@@ -80,7 +80,7 @@ class Dashboard extends Component {
     const { props } = this;
     const { setNewIndex, order, special, messages } = props;
     return (
-      <div className="Dashboard mt-1 offset-5">
+      <div className="Dashboard mt-1 offset-3">
         {props.itemEditing !== null && (
           [
             <DashboardHeader

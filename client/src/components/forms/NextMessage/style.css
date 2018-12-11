@@ -2,8 +2,6 @@
   border-radius: 4px;
 }
 
-
-
 .dropdown-menu button.dropdown-item {
   cursor: pointer;
 }
@@ -45,12 +43,12 @@
   padding: 14px;
 }
 
-.broken-link {
+.card .card-footer div.broken-link {
   position: fixed;
   bottom: 5px;
   left: 0;
   width: 100%;
   z-index: 5;
-  background-color: #dc3545;
+  background-color: var(--warning-bg-color);
   color: #eee;
 }
