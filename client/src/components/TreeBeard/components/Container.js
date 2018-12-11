@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'reactstrap';
+import { Button, UncontrolledTooltip } from 'reactstrap';
 import { INTRO_CONVERSATION_ID } from '../../../utils/constants';
 
 class Container extends React.Component {
@@ -23,8 +23,26 @@ class Container extends React.Component {
     const nameText = (
       <span className={`nav-link ${isIntro ? 'intro' : ''}`}>
         {node.name}&nbsp;
-        {isIntro && '(START)'}
-        {node.isLive ? <i className="fa fa-circle live-circle" /> : null}
+        {isIntro && [
+          <span href="#" id="start-tooltip" >(START)</span>,
+          <UncontrolledTooltip
+            placement="top"
+            target="start-tooltip"
+            innerClassName="custom-tt"
+          >
+            All new users start here. This conversation does not loop or send notifications.
+          </UncontrolledTooltip>,
+        ]}
+        {node.isLive && [
+          <i className="fa fa-circle live-circle" id="default-tooltip" />,
+          <UncontrolledTooltip
+            placement="top"
+            target="default-tooltip"
+            innerClassName="custom-tt"
+          >
+            If a user’s conversation is deleted or broken they will join this conversation.
+          </UncontrolledTooltip>,
+        ]}
       </span>
     );
     return (
