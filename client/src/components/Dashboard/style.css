@@ -1,7 +1,6 @@
 .Dashboard {
   height: 100vh;
   padding: 0;
-  min-width: fit-content;
 }
 
 .Dashboard .Inner .card-header {
@@ -10,7 +9,7 @@
 
 .Dashboard .Inner {
   border: none;
-  margin: -3px;
+  margin-left: 7px;
   border-radius: 8px;
   min-height: 100vh;
 }
@@ -35,7 +34,6 @@
 }
 
 .Dashboard .card-header.top-bar-height {
-  min-width: 60vw;
 }
 
 .Dashboard .top-bar-height .header-btn {
@@ -62,4 +60,13 @@
 
 .Dashboard .card-header.bg-primary-override .btn.dropdown-toggle {
   margin-left: 0;
+}
+
+.Dashboard #start-dropdown {
+  background-color: #fff;
+  text-align: center;
+}
+
+.tooltip.bs-tooltip-auto[x-placement^=right] .arrow::before, .tooltip.bs-tooltip-right .arrow::before {
+  border-right-color: var(--collection) !important;
 }

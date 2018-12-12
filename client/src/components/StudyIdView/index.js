@@ -9,7 +9,7 @@ import './style.css';
 export const StudyIdView = ({ studyIds, readOnly, toggleReadOnly }) => {
   if (!studyIds) return <Loader />;
   return (
-    <div className="offset-5 bg-primary-override StudyIdView Dashboard">
+    <div className="offset-3 bg-primary-override StudyIdView Dashboard">
       <DashboardHeader
         itemName="Study Ids"
         special="Asset Library"

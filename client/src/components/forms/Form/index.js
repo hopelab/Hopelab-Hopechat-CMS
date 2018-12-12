@@ -18,6 +18,10 @@ import {
   TYPE_CONVERSATION,
 } from '../../../utils/config';
 
+import {
+  INTRO_CONVERSATION_ID,
+} from '../../../utils/constants';
+
 const propTypes = {
   item: PropTypes.shape({
     name: PropTypes.string,
@@ -87,15 +91,19 @@ class Form extends Component {
         }}
       />);
     }
+    const isIntroOrNotSpecial = special === INTRO_CONVERSATION_ID || !special;
+    const shouldHaveFirstItemSelect = (isIntroOrNotSpecial && (this.props.item.type === TYPE_CONVERSATION ||
+      this.props.item.type === TYPE_BLOCK) && this.props.childEntities.length);
+
     return (
       <div className="work-space">
-        { (!special && (this.props.item.type === TYPE_CONVERSATION ||
-          this.props.item.type === TYPE_BLOCK) && this.props.childEntities.length)
-          ? <FirstItemSelect
-            childEntities={this.props.childEntities}
-            onSelectStart={this.props.updateStartEntity}
-            index={-1}
-          /> : null
+        {shouldHaveFirstItemSelect &&
+        <FirstItemSelect
+          childEntities={this.props.childEntities}
+          onSelectStart={this.props.updateStartEntity}
+          index={-1}
+          isIntro={special === INTRO_CONVERSATION_ID}
+        />
         }
 
         {formHasField('children', this.props.config.fields) ? (

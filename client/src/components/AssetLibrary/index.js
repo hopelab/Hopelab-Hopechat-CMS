@@ -10,7 +10,7 @@ import DashboardHeader from '../Dashboard/DashboardHeader';
 import './style.css';
 
 export const AssetLibrary = ({ toggleImageModal, assets, deleteMedia, renameFile, readOnly, toggleReadOnly }) => (
-  <div className="offset-5 bg-primary-override AssetLibrary Dashboard">
+  <div className="offset-3 bg-primary-override AssetLibrary Dashboard">
     <DashboardHeader
       itemName="Asset Library"
       special="Asset Library"
