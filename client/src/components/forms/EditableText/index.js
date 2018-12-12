@@ -10,6 +10,7 @@ export class EditableText extends Component {
     isTextArea: PropTypes.bool,
     placeholder: PropTypes.string,
     disabled: PropTypes.bool,
+    alwaysEdit: PropTypes.bool,
   }
 
   static defaultProps = {
@@ -39,7 +40,8 @@ export class EditableText extends Component {
   }
 
   handleClickOutside(e) {
-    if (this.state.editing &&
+    const { alwaysEdit } = this.props;
+    if ((this.state.editing || alwaysEdit) &&
         e.target !== this.input) {
       if (this.state.text !== this.props.text) {
         this.props.onEditWillFinish(this.state.text);
@@ -51,8 +53,9 @@ export class EditableText extends Component {
   }
 
   handleEnterKey(e) {
+    const { alwaysEdit } = this.props;
     if (e.keyCode === 13 &&
-        this.state.editing &&
+        (this.state.editing || alwaysEdit) &&
         this.input === document.activeElement) {
       this.props.onEditWillFinish(this.state.text);
       if (!this.emptyText(this.state.text)) {
@@ -66,7 +69,7 @@ export class EditableText extends Component {
   }
 
   render() {
-    const { disabled } = this.props;
+    const { disabled, alwaysEdit } = this.props;
     const input = this.props.isTextArea ? (
       <textarea
         type="text"
@@ -89,7 +92,7 @@ export class EditableText extends Component {
       />
     );
 
-    return ((this.state.editing || this.emptyText(this.state.text)) && !disabled) ? (
+    return ((this.state.editing || alwaysEdit || this.emptyText(this.state.text)) && !disabled) ? (
       input
     ) : (
       <span

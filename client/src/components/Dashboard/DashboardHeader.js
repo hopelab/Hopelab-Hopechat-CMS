@@ -12,6 +12,7 @@ import CheckBox from '../common/CheckBox';
 
 import { entityCanBeCopied } from '../../utils/data';
 import { forms } from '../../utils/config';
+import { INTRO_CONVERSATION_ID } from '../../utils/constants';
 
 
 export class DashboardHeader extends Component {
@@ -71,6 +72,7 @@ export class DashboardHeader extends Component {
       special,
       children,
     } = this.props;
+    const introOrNotSpecial = special === INTRO_CONVERSATION_ID || !special;
     return (
       [
         <div className={readOnly ? 'read-only' : 'hidden'} key="read-only-div" />,
@@ -80,15 +82,16 @@ export class DashboardHeader extends Component {
             align-items-center top-bar-height bg-primary-override"
         >
           <Button
-            color={special ? 'secondary' : 'default'}
+            color={!introOrNotSpecial ? 'transparent' : 'default'}
             size="lg"
-            style={{ cursor: special ? 'default' : 'text' }}
+            style={{ cursor: !introOrNotSpecial ? 'default' : 'text' }}
             className="header-btn"
           >
             <EditableText
-              text={special ? itemName.toUpperCase() : itemName}
+              text={!introOrNotSpecial ? itemName.toUpperCase() : itemName}
               onEditWillFinish={onNameChanged}
-              disabled={readOnly || !!special}
+              disabled={readOnly || !introOrNotSpecial}
+              alwaysEdit={introOrNotSpecial}
             />
           </Button>
           <ReactStrapForm

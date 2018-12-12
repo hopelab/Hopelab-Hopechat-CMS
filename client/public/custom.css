@@ -127,6 +127,11 @@
   border: none;
 }
 
+.btn-transparent {
+  background: transparent;
+  color: white;
+}
+
 .transition {
   background-color: var(--transition);
 }
