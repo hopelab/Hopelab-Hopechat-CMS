@@ -125,7 +125,7 @@ class NextMessage extends Component {
       foundItem = foundItem.name;
       className = className || 'bg-path';
     } else if (!foundItem && !childEntities.length) {
-      foundItem = 'choose first';
+      foundItem = 'Choose First';
       className = 'btn btn-outline-primary btn-lg';
     } else if (nextId) {
       brokenLink = true;
@@ -140,7 +140,7 @@ class NextMessage extends Component {
         style={{ cursor: 'pointer' }}
         isOpen={this.state.dropdownOpen}
         toggle={this.toggle}
-        className="text-center"
+        className="text-left"
       >
         <DropdownToggle
           tag="div"

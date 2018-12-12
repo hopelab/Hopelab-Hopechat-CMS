@@ -37,10 +37,13 @@
 }
 
 .card .card-footer .dropdown div {
+  padding: 14px;
+}
+
+.card .card-footer .dropdown div.next-convo {
   border: 1px var(--quick-reply-border) solid;
   cursor: pointer;
   border-radius: 4px;
-  padding: 14px;
 }
 
 .card .card-footer div.broken-link {

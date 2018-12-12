@@ -59,15 +59,15 @@ class MessageTypeDropdown extends Component {
     const foundItem = messageTypes.find(m => m.id === selected) || { display: 'type' };
     return (
       <Dropdown
-        style={{ cursor: 'pointer' }}
+        style={{ cursor: 'pointer'}}
         isOpen={this.state.dropdownOpen}
         toggle={this.toggle}
+        className="message-type"
       >
         <DropdownToggle
           tag="div"
           caret
           onClick={this.toggle}
-          className="message-type"
           data-toggle="dropdown"
           aria-expanded={this.state.dropdownOpen}
           disabled={disabled}
