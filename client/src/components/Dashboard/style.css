@@ -1,7 +1,6 @@
 .Dashboard {
   height: 100vh;
   padding: 0;
-  min-width: fit-content;
 }
 
 .Dashboard .Inner .card-header {
@@ -10,7 +9,7 @@
 
 .Dashboard .Inner {
   border: none;
-  margin: -3px;
+  margin-left: 7px;
   border-radius: 8px;
   min-height: 100vh;
 }
@@ -35,7 +34,6 @@
 }
 
 .Dashboard .card-header.top-bar-height {
-  min-width: 60vw;
 }
 
 .Dashboard .top-bar-height .header-btn {
