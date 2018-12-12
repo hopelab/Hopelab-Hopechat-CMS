@@ -85,7 +85,7 @@ export class DashboardHeader extends Component {
             color={!introOrNotSpecial ? 'transparent' : 'default'}
             size="lg"
             style={{ cursor: !introOrNotSpecial ? 'default' : 'text' }}
-            className="header-btn"
+            className="text-left header-btn"
           >
             <EditableText
               text={!introOrNotSpecial ? itemName.toUpperCase() : itemName}
