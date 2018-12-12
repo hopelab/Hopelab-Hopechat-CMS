@@ -91,7 +91,7 @@ class FirstItemSelect extends Component {
             delay={{ hide: 50 }}
           >
           This indicates the first message of the conversation. This message serves as the daily notification.
-          </UncontrolledTooltip>},
+          </UncontrolledTooltip>}
       </div>
     );
     const { connectDropTarget, isOver } = this.props;

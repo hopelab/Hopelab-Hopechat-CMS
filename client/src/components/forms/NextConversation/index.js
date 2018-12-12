@@ -80,6 +80,7 @@ class NextConversation extends Component {
       >
         <DropdownToggle
           tag="div"
+          className="next-convo"
           onClick={this.toggle}
           data-toggle="dropdown"
           style={style}

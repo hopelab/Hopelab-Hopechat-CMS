@@ -104,6 +104,5 @@
   max-width: 95px;
   min-width: 84px;
   font-size: 16px;
-  padding-left: 7px;
-  padding-right: 3px;
+  padding: 8px 6px
 }
