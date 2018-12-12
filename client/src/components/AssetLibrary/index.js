@@ -27,6 +27,7 @@ export const AssetLibrary = ({ toggleImageModal, assets, deleteMedia, renameFile
         color="default"
         className="ml-1"
         onClick={toggleImageModal}
+        disabled={readOnly}
       >
         <i className="fa fa-plus" aria-hidden="true" />&nbsp;
         New Asset
@@ -39,8 +40,13 @@ export const AssetLibrary = ({ toggleImageModal, assets, deleteMedia, renameFile
             <EditableText
               text={a.key}
               onEditWillFinish={val => renameFile(val, a.url, a.type || config.MESSAGE_TYPE_IMAGE)}
+              disabled={readOnly}
             />
-            <Button color="primary btn-text" onClick={() => deleteMedia(a.url, a.type || config.MESSAGE_TYPE_IMAGE)}>
+            <Button
+              disabled={readOnly}
+              color="primary btn-text"
+              onClick={() => deleteMedia(a.url, a.type || config.MESSAGE_TYPE_IMAGE)}
+            >
               Delete
             </Button>
           </CardHeader>

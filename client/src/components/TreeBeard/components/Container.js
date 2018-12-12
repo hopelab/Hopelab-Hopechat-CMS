@@ -24,21 +24,23 @@ class Container extends React.Component {
       <span className={`nav-link ${isIntro ? 'intro' : ''}`}>
         {node.name}&nbsp;
         {isIntro && [
-          <span href="#" id="start-tooltip" >(START)</span>,
+          <span href="#" id="start-tooltip" key="start-tooltip-span" >(START)</span>,
           <UncontrolledTooltip
             placement="top"
             target="start-tooltip"
             innerClassName="custom-tt"
+            key="start-tooltip"
           >
             All new users start here. This conversation does not loop or send notifications.
           </UncontrolledTooltip>,
         ]}
         {node.isLive && [
-          <i className="fa fa-circle live-circle" id="default-tooltip" />,
+          <i className="fa fa-circle live-circle" id="default-tooltip" key="default-tt-icon" />,
           <UncontrolledTooltip
             placement="top"
             target="default-tooltip"
             innerClassName="custom-tt"
+            key="default-tt"
           >
             If a user’s conversation is deleted or broken they will join this conversation.
           </UncontrolledTooltip>,

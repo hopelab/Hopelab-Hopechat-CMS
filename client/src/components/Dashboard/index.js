@@ -105,6 +105,7 @@ class Dashboard extends Component {
             />,
             <div
               className={`Inner
+                ${props.readOnly ? 'read-only' : ''}
                 ${(special && special !== INTRO_CONVERSATION_ID) ? 'bg-secondary-override' : 'bg-default-override'}`}
               key="form"
             >
@@ -120,7 +121,6 @@ class Dashboard extends Component {
                 conversations={props.conversations}
                 videos={props.videos}
                 updateStartEntity={props.updateStartEntity}
-                readOnly={props.readOnly}
                 order={order}
                 special={special}
                 messages={messages}

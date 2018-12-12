@@ -75,7 +75,6 @@ export class DashboardHeader extends Component {
     const introOrNotSpecial = special === INTRO_CONVERSATION_ID || !special;
     return (
       [
-        <div className={readOnly ? 'read-only' : 'hidden'} key="read-only-div" />,
         <div
           key="header"
           className="card-header d-flex flex-row justify-content-start
