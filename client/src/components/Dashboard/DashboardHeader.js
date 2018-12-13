@@ -8,7 +8,7 @@ import {
 import EditableText from '../forms/EditableText';
 import RulesDropdown from '../forms/RulesDropdown';
 import CopyButton from '../forms/CopyButton';
-import CheckBox from '../common/CheckBox';
+import Toggle from '../common/Toggle';
 
 import { entityCanBeCopied } from '../../utils/data';
 import { forms } from '../../utils/config';
@@ -77,7 +77,7 @@ export class DashboardHeader extends Component {
       [
         <div
           key="header"
-          className="card-header d-flex flex-row justify-content-start
+          className="card-header d-flex flex-row justify-content-start DashboardHeader
             align-items-center top-bar-height bg-primary-override"
         >
           <Button
@@ -122,23 +122,29 @@ export class DashboardHeader extends Component {
               Delete
             </Button>
             }
-            {this.hasStudy(itemType) && (
-              <CheckBox
-                onChange={onToggleStudy}
-                className="mr-1"
-                checked={!!(isStudy)}
-                label="Study"
-                disabled={readOnly}
-              />
+            {this.hasStudy(itemType) && !special && (
+              [
+                <Toggle
+                  key="study-toggle"
+                  className="mr-1"
+                  checked={!!(isStudy)}
+                  disabled={readOnly}
+                  onChange={onToggleStudy}
+                />,
+                <label key="study-label">Study</label>,
+              ]
             )}
-            {this.hasLive(itemType) && (
-              <CheckBox
-                onChange={onToggleLive}
-                className="mr-1"
-                checked={!!(isLive)}
-                label="Default"
-                disabled={readOnly}
-              />
+            {this.hasLive(itemType) && !special && (
+              [
+                <Toggle
+                  key="default-toggle"
+                  className="mr-1"
+                  checked={!!(isLive)}
+                  disabled={readOnly}
+                  onChange={onToggleLive}
+                />,
+                <label key="default-label">Default</label>,
+              ]
             )}
             {this.hasRules(itemType) && (
               <div>
@@ -150,11 +156,12 @@ export class DashboardHeader extends Component {
                 />
               </div>
             )}
-            <CheckBox
+            <Toggle
+              key="readonly-toggle"
               checked={readOnly}
               onChange={toggleReadOnly}
-              label="Read-Only"
             />
+            <label key="readonly-label">Read-Only</label>
           </ReactStrapForm>
         </div>,
       ]

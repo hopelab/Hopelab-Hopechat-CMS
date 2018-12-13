@@ -72,3 +72,9 @@
 .tooltip.bs-tooltip-auto[x-placement^=right] .arrow::before, .tooltip.bs-tooltip-right .arrow::before {
   border-right-color: var(--collection) !important;
 }
+
+.Dashboard .DashboardHeader label {
+  font-size: 20px;
+  font-family: AvenirNext-Medium;
+  margin: 0 9px;
+}

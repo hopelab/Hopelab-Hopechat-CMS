@@ -25,3 +25,5 @@ export const updateStart = jest.fn().mockReturnValue(new Promise(resolve =>
 
 const fetchAllDataForAppMock = jest.fn().mockReturnValue(new Promise(resolve => resolve()));
 export const fetchAllDataForApp = fetchAllDataForAppMock;
+
+export const getCreated = jest.fn(({ list }) => list[list.length - 1]);

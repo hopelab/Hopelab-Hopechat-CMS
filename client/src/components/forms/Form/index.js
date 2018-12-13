@@ -39,7 +39,6 @@ const propTypes = {
   messages: PropTypes.array.isRequired,
   handleChildEntityAddition: PropTypes.func,
   conversations: PropTypes.array,
-  readOnly: PropTypes.bool.isRequired,
   setNewIndex: PropTypes.func.isRequired,
   order: PropTypes.arrayOf(PropTypes.string),
   special: PropTypes.string,
@@ -64,7 +63,7 @@ class Form extends Component {
   }
 
   render() {
-    const { readOnly, childEntities = [], setNewIndex, order = [], special, messages } = this.props;
+    const { childEntities = [], setNewIndex, order = [], special, messages } = this.props;
     let mutableChildren = childEntities.slice();
     const orderedChildren = [];
     if (childEntities) {
@@ -77,7 +76,7 @@ class Form extends Component {
       });
     }
     mutableChildren.forEach(c => orderedChildren.push(c));
-    if (!childEntities.length && !readOnly) {
+    if (!childEntities.length) {
       return (<NextMessage
         parentItemType={this.props.item.type}
         childEntities={this.props.childEntities}
@@ -89,6 +88,7 @@ class Form extends Component {
             });
           });
         }}
+        handleNextMessageSelect={Function.prototype}
       />);
     }
     const isIntroOrNotSpecial = special === INTRO_CONVERSATION_ID || !special;

@@ -18,10 +18,10 @@ import * as config from '../../utils/config';
 
 import { DASHBOARD_COMPONENTS, IS_QUICK_REPLY_RETRY, STOP_MESSAGE_ID, CRISIS_BLOCK_ID, END_OF_CONVO_ID,
   IS_STOP_MESSAGE_DETECTION, QUICK_REPLY_BLOCK_ID, QUICK_REPLY_BLOCK_NAME, RESUME_MESSAGE_ID, INTRO_CONVERSATION_ID,
-  IS_CRISIS_RESPONSE_DETECTION, IS_END_OF_CONVERSATION } from '../../utils/constants';
+  IS_CRISIS_RESPONSE_DETECTION, IS_END_OF_CONVERSATION, FULL_ITEM_EDITING_PROPS } from '../../utils/constants';
 
 const { MESSAGE_TYPE_VIDEO, TYPE_BLOCK } = config;
-const { cleanString, copyOrder } = dataUtil;
+const { cleanString, copyOrder, getCreated } = dataUtil;
 
 class App extends Component {
   constructor(props) {
@@ -66,7 +66,7 @@ class App extends Component {
         this.setState({
           loading: false,
           itemEditing:
-              pick(['id', 'type'], conversation[conversation.length - 1]),
+              pick(FULL_ITEM_EDITING_PROPS, getCreated({ list: conversation })),
           ...res,
         });
       })
@@ -191,9 +191,7 @@ class App extends Component {
       .then(res => res.json())
       .then(dataUtil.throwIfEmptyArray)
       .then(res => {
-        const addedItem = res
-          .filter(({ parent: { id } = {}, created }) => (id === entity.parent.id && created))
-          .sort((a, b) => (a.created < b.created ? 1 : -1))[0];
+        const addedItem = getCreated({ list: res, parent: entity.parent });
         const itemEditing = this.getFullItemEditing(this.state);
         const data = omit(['loading'], this.state);
 
@@ -310,9 +308,7 @@ class App extends Component {
       })
       .then(res => res.json())
       .then(copiedResults => {
-        const created = copiedResults[itemToCopy.type]
-          .filter(a => a.created)
-          .sort((a, b) => (a.created < b.created ? 1 : -1))[0];
+        const created = getCreated({ list: copiedResults[itemToCopy.type] });
         if (created && config.forms[itemToCopy.type].children.length) {
           const data = omit(['loading'], copiedResults);
 
@@ -432,7 +428,7 @@ class App extends Component {
 
     this.setState({
       cursor: node,
-      itemEditing: node.type ? pick(['id', 'type'], node) : this.state.itemEditing,
+      itemEditing: node.type ? pick(FULL_ITEM_EDITING_PROPS, node) : this.state.itemEditing,
     });
   }
 
