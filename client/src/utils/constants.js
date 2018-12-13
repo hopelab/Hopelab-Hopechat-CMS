@@ -33,6 +33,7 @@ const END_OF_CONVO_ID = 'END-OF-CONVERSATION-ID';
 const INTRO_CONVERSATION_ID = 'intro-conversation';
 
 const FULL_ITEM_EDITING_PROPS = ['id', 'type', 'isLive'];
+const DEVELOPMENT_ENV = 'development';
 
 export {
   DASHBOARD_COMPONENTS,
@@ -56,4 +57,5 @@ export {
   IS_END_OF_CONVERSATION,
   INTRO_CONVERSATION_ID,
   FULL_ITEM_EDITING_PROPS,
+  DEVELOPMENT_ENV,
 };
