@@ -266,3 +266,8 @@ export const copyOrder = (oldOrder, oldChildEntities, newChildEntities) =>
     const newChild = newChildEntities.find(({ name }) => name.includes(`${oldChild.name} copy-`));
     return newChild.id;
   });
+
+export const getCreated = ({ list, parent: { id: parentId = null } }) =>
+  list
+    .filter(({ parent: { id = null } = {}, created }) => (id === parentId && created))
+    .sort((a, b) => (a.created < b.created ? 1 : -1))[0];
