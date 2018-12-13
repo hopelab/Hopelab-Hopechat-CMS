@@ -66,7 +66,7 @@ class App extends Component {
         this.setState({
           loading: false,
           itemEditing:
-              pick(FULL_ITEM_EDITING_PROPS, getCreated(conversation)),
+              pick(FULL_ITEM_EDITING_PROPS, getCreated({ list: conversation })),
           ...res,
         });
       })
@@ -308,9 +308,7 @@ class App extends Component {
       })
       .then(res => res.json())
       .then(copiedResults => {
-        const created = copiedResults[itemToCopy.type]
-          .filter(a => a.created)
-          .sort((a, b) => (a.created < b.created ? 1 : -1))[0];
+        const created = getCreated({ list: copiedResults[itemToCopy.type] });
         if (created && config.forms[itemToCopy.type].children.length) {
           const data = omit(['loading'], copiedResults);
 

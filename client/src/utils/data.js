@@ -267,7 +267,7 @@ export const copyOrder = (oldOrder, oldChildEntities, newChildEntities) =>
     return newChild.id;
   });
 
-export const getCreated = ({ list, parent: { id: parentId = null } }) =>
+export const getCreated = ({ list, parent: { id: parentId = null } = {} }) =>
   list
     .filter(({ parent: { id = null } = {}, created }) => (id === parentId && created))
     .sort((a, b) => (a.created < b.created ? 1 : -1))[0];

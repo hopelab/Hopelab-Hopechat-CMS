@@ -88,6 +88,7 @@ class Form extends Component {
             });
           });
         }}
+        handleNextMessageSelect={Function.prototype}
       />);
     }
     const isIntroOrNotSpecial = special === INTRO_CONVERSATION_ID || !special;
