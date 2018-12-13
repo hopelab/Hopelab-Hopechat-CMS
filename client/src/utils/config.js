@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-
+import { DEVELOPMENT_ENV } from './constants';
 /**
  * CMS Entities
 */
@@ -148,6 +148,8 @@ const messageTypes = [
 /**
  * Initial State for pieces of UI state
 */
+const { NODE_ENV = 'production' } = process.env;
+
 const initialState = {
   App: {
     initialLoad: true,
@@ -167,7 +169,7 @@ const initialState = {
     imageUploadStatus: '',
     showStudyIdView: false,
     loading: false,
-    readOnly: false,
+    readOnly: NODE_ENV !== DEVELOPMENT_ENV,
   },
 
   conversation: {
