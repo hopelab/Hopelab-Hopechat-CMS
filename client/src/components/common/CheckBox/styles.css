@@ -39,3 +39,10 @@
 .CheckBox input[type="checkbox"] + span {
   margin-right: 4px;
 }
+
+.inside-check {
+    vertical-align: top;
+    color: white;
+    opacity: 0.8;
+    font-size: 14px;
+}

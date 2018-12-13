@@ -8,6 +8,13 @@
   z-index: 2;
 }
 
+.Sidebar .Components {
+  background-image: url('../../img/HopeChat.png');
+  background-repeat: no-repeat;
+  background-size: 80%;
+  background-position: center 20%;
+}
+
 .Sidebar .sidebar-guts {
   position: absolute;
   overflow-y: scroll;

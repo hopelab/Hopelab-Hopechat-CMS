@@ -13,7 +13,9 @@ export const CheckBox = ({ checked, onChange, label, disabled, size }) => (
     className={`CheckBox ${disabled ? 'disabled' : ''}`}
   >
     <input type="checkbox" checked={checked} onChange={Function.prototype} />
-    <span style={{ width: size, height: size, borderRadius: getBorderRadius(size) }} />
+    <span style={{ width: size, height: size, borderRadius: getBorderRadius(size) }}>
+      {checked && <i className="fa fa-check inside-check" />}
+    </span>
     <label>{label}</label>
   </span>
 );

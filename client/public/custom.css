@@ -16,6 +16,7 @@
   --block-secondary: #bfbfb2;
   --collection: #0D9474;
   --intro-color: #0D9274;
+  --bg-primary-hover: #0D7294;
   --collection-secondary: #83A99D;
   --series: #795683;
   --series-secondary: #ADA1B0;
@@ -74,6 +75,10 @@
 
 .btn-warning:hover, .bg-warning:hover {
   background-color: var(--warning-bg-color-hover);
+}
+
+.btn-primary:hover, .bg-primary:hover, btn-primary:active {
+  background-color: var(--bg-primary-hover) !important;
 }
 
 .btn-warning, .bg-warning {
