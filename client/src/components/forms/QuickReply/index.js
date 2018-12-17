@@ -48,7 +48,7 @@ const QuickReply = ({
             childEntities={childEntities}
             nextId={nextId}
             handleNextMessageSelect={
-              id => onNextItemSelect({ index, id })
+              (id, type) => onNextItemSelect({ index, id, type })
             }
             onNewItem={onNewItem}
             showEndOfConversation={showEndOfConversation}
