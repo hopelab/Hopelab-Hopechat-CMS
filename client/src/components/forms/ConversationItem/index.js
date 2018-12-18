@@ -119,6 +119,8 @@ class ConversationItem extends Component {
         messageType,
         quick_replies: equals(messageType, MESSAGE_TYPE_QUESTION_WITH_REPLIES) ?
           this.props.item.quick_replies : null,
+        next: equals(messageType, MESSAGE_TYPE_QUESTION_WITH_REPLIES) ?
+          null : this.props.item.next,
       });
     }
   }
