@@ -24,8 +24,8 @@ import {
   ITEMS,
 } from '../../../utils/config';
 
-import { IS_STOP_MESSAGE_DETECTION, STOP_MESSAGE_ID,
-  IS_END_OF_CONVERSATION, IS_CRISIS_RESPONSE_DETECTION } from '../../../utils/constants';
+import { IS_STOP_MESSAGE_DETECTION, STOP_MESSAGE_ID, QUICK_REPLY_RETRY_ID,
+  IS_END_OF_CONVERSATION, IS_CRISIS_RESPONSE_DETECTION, INTRO_CONVERSATION_ID } from '../../../utils/constants';
 
 import './style.css';
 
@@ -293,7 +293,8 @@ class ConversationItem extends Component {
                 selected={this.props.item.messageType}
                 onSelection={this.handleMessageTypeSelection}
                 onDelete={this.handleDeleteMessage}
-                disabled={!!special && special !== IS_CRISIS_RESPONSE_DETECTION && index === 0}
+                disabled={!!special && [IS_CRISIS_RESPONSE_DETECTION, INTRO_CONVERSATION_ID].indexOf(special) < 0
+                  && itemId === QUICK_REPLY_RETRY_ID}
               />
             )}
             {!this.props.item.messageType && noModTypeOrNext(special) && (
