@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import EditableText from '../EditableText';
 import NextMessage from '../NextMessage';
 import NextConversation from '../NextConversation';
-import { MESSAGE_TYPE_QUESTION_WITH_REPLIES } from '../../../utils/config';
+import { MESSAGE_TYPE_QUESTION_WITH_REPLIES, TYPE_MESSAGE } from '../../../utils/config';
+import './style.css';
 
 const QuickReply = ({
   text,
@@ -20,15 +21,13 @@ const QuickReply = ({
   parentItemType,
   special,
   nextType,
+  messages,
+  // nextChild specifies which collection or message in the next conversation to transition to
+  nextChild,
 }) => (
-  <div className="card" style={{ width: '360px' }}>
+  <div className="card">
     <div
       className="card-header d-flex flex-row justify-content-between"
-      style={{
-        flexWrap: 'wrap',
-        backgroundColor: 'white',
-        color: 'black',
-      }}
     >
       <EditableText
         text={text}
@@ -49,20 +48,34 @@ const QuickReply = ({
             childEntities={childEntities}
             nextId={nextId}
             handleNextMessageSelect={
-              (...params) => onNextItemSelect(index, ...params)
+              (id, type) => onNextItemSelect({ index, id, type })
             }
             onNewItem={onNewItem}
             showEndOfConversation={showEndOfConversation}
             nextType={nextType}
           />
         ) : (
-          <NextConversation
-            conversations={conversations}
-            nextId={nextId}
-            handleConversationSelect={
-              (...params) => onNextItemSelect(index, ...params)
-            }
-          />
+          <div>
+            <NextConversation
+              conversations={conversations}
+              nextId={nextId}
+              handleConversationSelect={
+                (id, type) => onNextItemSelect({ index, id, type, nextChild: null })
+              }
+            />
+            <NextMessage
+              special={special}
+              parentItemType={parentItemType}
+              childEntities={messages.filter(({ parent: { id } = {} }) => id === nextId)}
+              nextId={nextChild}
+              handleNextMessageSelect={
+                newNextChild => onNextItemSelect({ index, id: nextId, nextChild: newNextChild })
+              }
+              onNewItem={Function.prototype}
+              showEndOfConversation={false}
+              nextType={TYPE_MESSAGE}
+            />
+          </div>
         )
       }
     </div>
@@ -85,6 +98,8 @@ QuickReply.propTypes = {
   parentItemType: PropTypes.string.isRequired,
   special: PropTypes.string,
   nextType: PropTypes.string,
+  messages: PropTypes.array,
+  nextChild: PropTypes.string,
 };
 
 QuickReply.defaultProps = {

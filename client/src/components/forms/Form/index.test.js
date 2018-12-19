@@ -23,6 +23,7 @@ describe('Form component', () => {
     },
     readOnly: false,
     setNewIndex: jest.fn(),
+    messages: [],
   };
   let component;
   beforeEach(() => {

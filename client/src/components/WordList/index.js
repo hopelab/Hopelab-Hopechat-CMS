@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as R from 'ramda';
+import { Table, Button } from 'reactstrap';
 import EditableText from '../forms/EditableText';
 import Loader from '../common/Loader';
 
@@ -102,22 +103,37 @@ export class WordList extends React.Component {
 
   wordList({ phrase, list, type }, index) {
     return (
-      <div key={index + list}>
+      <div key={index + list} className="mb-5">
         <p>{phrase}</p>
-        {list.map((term, i) =>
-          (
-            <ul className="d-flex justify-content-between align-items-center" key={i}>
-              <EditableText
-                text={term}
-                onEditWillFinish={newTerm => this.modifyValue(newTerm, i, type)}
-                placeholder="Enter new term here"
-              />
-              <i className="fa fa-times" aria-hidden="true" onClick={() => this.deleteValue(term, type)} />
-            </ul>
-          ))}
-        <button className="text-center btn" onClick={() => this.modifyValue(' ', null, type)}>
+        <Table striped className="mb-0">
+          <tbody>
+            {list.map((term, i) =>
+              (
+                <tr className="d-flex justify-content-between align-items-center" key={i}>
+                  <td>
+                    <EditableText
+                      text={term}
+                      onEditWillFinish={newTerm => this.modifyValue(newTerm, i, type)}
+                      placeholder="Enter new term here"
+                    />
+                  </td>
+                  <td>
+                    <button
+                      style={{ border: 'none', background: 'none', cursor: 'pointer' }}
+                      onClick={() => this.deleteValue(term, type)}
+                      aria-hidden="true"
+
+                    >X
+                    </button>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </Table>
+        <Button block className="text-center message" onClick={() => this.modifyValue(' ', null, type)}>
+          <i className="fa fa-plus" />
           Add Word/Phrase
-        </button>
+        </Button>
       </div>
     );
   }
@@ -127,6 +143,7 @@ export class WordList extends React.Component {
     const { terms, words, loading } = this.state;
     if (loading) return <Loader />;
     let items = [];
+    let listTitle = 'stop detection';
     switch (special) {
       case IS_CRISIS_RESPONSE_DETECTION:
         items = [
@@ -142,6 +159,7 @@ export class WordList extends React.Component {
             type: TERMS_TYPE,
           },
         ];
+        listTitle = 'crisis detection';
         break;
       case IS_STOP_MESSAGE_DETECTION:
         items = [
@@ -149,6 +167,7 @@ export class WordList extends React.Component {
             phrase: 'Detection of these EXACT words/phrases will trigger the bot to send the Stop Message',
             list: words,
             type: WORDS_TYPE,
+            title: 'stop detection',
           },
           {
             phrase: 'Detection of these words/phrases ANYWHERE ' +
@@ -162,7 +181,8 @@ export class WordList extends React.Component {
     }
     if (!items.length) return null;
     return (
-      <div className="col-8 WordListView">
+      <div className="col-8 WordListView pb-4">
+        <h4>{listTitle}</h4>
         {items.map((item, i) => this.wordList(item, i))}
       </div>
     );

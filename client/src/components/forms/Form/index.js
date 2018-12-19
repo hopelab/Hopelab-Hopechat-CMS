@@ -13,12 +13,14 @@ import NextMessage from '../NextMessage';
 
 import { createInitialFormState } from '../../../utils/data';
 
-import './style.css';
-
 import {
   TYPE_BLOCK,
   TYPE_CONVERSATION,
 } from '../../../utils/config';
+
+import {
+  INTRO_CONVERSATION_ID,
+} from '../../../utils/constants';
 
 const propTypes = {
   item: PropTypes.shape({
@@ -34,9 +36,9 @@ const propTypes = {
   updateStartEntity: PropTypes.func.isRequired,
   images: PropTypes.array.isRequired,
   videos: PropTypes.array.isRequired,
+  messages: PropTypes.array.isRequired,
   handleChildEntityAddition: PropTypes.func,
   conversations: PropTypes.array,
-  readOnly: PropTypes.bool.isRequired,
   setNewIndex: PropTypes.func.isRequired,
   order: PropTypes.arrayOf(PropTypes.string),
   special: PropTypes.string,
@@ -61,19 +63,20 @@ class Form extends Component {
   }
 
   render() {
-    const { readOnly, childEntities = [], setNewIndex, order = [], special } = this.props;
-
+    const { childEntities = [], setNewIndex, order = [], special, messages } = this.props;
+    let mutableChildren = childEntities.slice();
     const orderedChildren = [];
     if (childEntities) {
-      childEntities.forEach(c => {
-        if (order.indexOf(c.id) > -1) {
-          orderedChildren[order.indexOf(c.id)] = c;
-        } else {
-          orderedChildren.push(c);
+      order.forEach(oId => {
+        const child = mutableChildren.find(({ id }) => id === oId);
+        if (child) {
+          orderedChildren.push(child);
+          mutableChildren = mutableChildren.filter(({ id }) => child.id !== id);
         }
       });
     }
-    if (!childEntities.length && !readOnly) {
+    mutableChildren.forEach(c => orderedChildren.push(c));
+    if (!childEntities.length) {
       return (<NextMessage
         parentItemType={this.props.item.type}
         childEntities={this.props.childEntities}
@@ -85,18 +88,22 @@ class Form extends Component {
             });
           });
         }}
+        handleNextMessageSelect={Function.prototype}
       />);
     }
+    const isIntroOrNotSpecial = special === INTRO_CONVERSATION_ID || !special;
+    const shouldHaveFirstItemSelect = (isIntroOrNotSpecial && (this.props.item.type === TYPE_CONVERSATION ||
+      this.props.item.type === TYPE_BLOCK) && this.props.childEntities.length);
+
     return (
-      <div className="d-flex flex-column align-items-start">
-        {readOnly && <div className="read-only" /> }
-        { (!special && (this.props.item.type === TYPE_CONVERSATION ||
-          this.props.item.type === TYPE_BLOCK) && this.props.childEntities.length)
-          ? <FirstItemSelect
-            childEntities={this.props.childEntities}
-            onSelectStart={this.props.updateStartEntity}
-            index={-1}
-          /> : null
+      <div className="work-space">
+        {shouldHaveFirstItemSelect &&
+        <FirstItemSelect
+          childEntities={this.props.childEntities}
+          onSelectStart={this.props.updateStartEntity}
+          index={-1}
+          isIntro={special === INTRO_CONVERSATION_ID}
+        />
         }
 
         {formHasField('children', this.props.config.fields) ? (
@@ -115,6 +122,7 @@ class Form extends Component {
               parentItemType={this.props.item.type}
               conversations={this.props.conversations}
               special={special}
+              messages={messages}
             />
           ))
         ) : null}

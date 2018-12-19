@@ -30,6 +30,11 @@ const STOP_MESSAGE_ID = 'stop-message-id';
 const RESUME_MESSAGE_ID = 'resume-message-id';
 const END_OF_CONVO_ID = 'END-OF-CONVERSATION-ID';
 
+const INTRO_CONVERSATION_ID = 'intro-conversation';
+
+const FULL_ITEM_EDITING_PROPS = ['id', 'type', 'isLive'];
+const DEVELOPMENT_ENV = 'development';
+
 export {
   DASHBOARD_COMPONENTS,
   QUICK_REPLY_RETRY_ID,
@@ -50,4 +55,7 @@ export {
   CRISIS_BLOCK_ID,
   END_OF_CONVO_ID,
   IS_END_OF_CONVERSATION,
+  INTRO_CONVERSATION_ID,
+  FULL_ITEM_EDITING_PROPS,
+  DEVELOPMENT_ENV,
 };

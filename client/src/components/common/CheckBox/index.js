@@ -2,13 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './styles.css';
 
-export const CheckBox = ({ checked, onChange, label, disabled }) => (
-  <div className="form-check">
-    <input className="form-check-input" type="checkbox" checked={checked} onChange={onChange} disabled={disabled} />
-    <label className="form-check-label">
-      {label}
-    </label>
-  </div>
+const getBorderRadius = size =>
+  (size ? `${Math.ceil(parseInt(size.split('px')[0], 10) / 4)}px` : '8px');
+
+export const CheckBox = ({ checked, onChange, label, disabled, size }) => (
+  <span
+    onClick={onChange}
+    role="button"
+    tabIndex={0}
+    className={`CheckBox ${disabled ? 'disabled' : ''}`}
+  >
+    <input type="checkbox" checked={checked} onChange={Function.prototype} />
+    <span style={{ width: size, height: size, borderRadius: getBorderRadius(size) }}>
+      {checked && <i className="fa fa-check inside-check" />}
+    </span>
+    <label>{label}</label>
+  </span>
 );
 
 CheckBox.propTypes = {
@@ -16,6 +25,11 @@ CheckBox.propTypes = {
   onChange: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
+  size: PropTypes.string,
+};
+
+CheckBox.defaultProps = {
+  size: '31px',
 };
 
 export default CheckBox;

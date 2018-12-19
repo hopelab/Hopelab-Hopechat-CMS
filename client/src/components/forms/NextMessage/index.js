@@ -113,18 +113,19 @@ class NextMessage extends Component {
       className = 'bg-warning';
     } else if (!nextId && nextType === TYPE_BACK_TO_CONVERSATION) {
       foundItem = { name: 'Back To Conversation' };
-      className = 'bg-warning';
+      className = 'bg-secondary-series';
     } else {
       foundItem = childEntities.find(item => item.id === nextId);
     }
     if (!nextId && nextType === TYPE_STOP_NOTIFICATIONS) {
       foundItem = { name: 'Stop all Messages' };
-      className = 'bg-danger';
+      className = 'bg-warning-override';
     }
     if (foundItem) {
       foundItem = foundItem.name;
+      className = className || 'bg-path';
     } else if (!foundItem && !childEntities.length) {
-      foundItem = 'choose first';
+      foundItem = 'Choose First';
       className = 'btn btn-outline-primary btn-lg';
     } else if (nextId) {
       brokenLink = true;
@@ -132,14 +133,14 @@ class NextMessage extends Component {
       className = 'bg-danger text-light';
     } else {
       foundItem = 'choose next';
-      className = 'bg-danger text-light';
+      className = 'bg-danger-override text-light';
     }
     return (
       <Dropdown
         style={{ cursor: 'pointer' }}
         isOpen={this.state.dropdownOpen}
         toggle={this.toggle}
-        className="text-center"
+        className="text-left"
       >
         <DropdownToggle
           tag="div"
@@ -147,6 +148,7 @@ class NextMessage extends Component {
           data-toggle="dropdown"
           className={className}
           aria-expanded={this.state.dropdownOpen}
+          caret
         >
           {foundItem}
         </DropdownToggle>

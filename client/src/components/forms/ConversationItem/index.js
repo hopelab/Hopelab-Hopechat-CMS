@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { DragSource } from 'react-dnd';
 import { any, equals } from 'ramda';
-import { CheckBox } from '../../common/CheckBox';
+import { Button } from 'reactstrap';
 
+import { CheckBox } from '../../common/CheckBox';
 import EditableText from '../EditableText';
 import DelayCheckbox from '../DelayCheckbox';
 import NextMessage from '../NextMessage';
@@ -14,10 +15,6 @@ import MediaPreview from '../MediaPreview';
 
 import {
   TYPE_CONVERSATION,
-  TYPE_COLLECTION,
-  TYPE_SERIES,
-  TYPE_BLOCK,
-  TYPE_MESSAGE,
   MESSAGE_TYPE_QUESTION,
   MESSAGE_TYPE_QUESTION_WITH_REPLIES,
   MESSAGE_TYPE_TEXT,
@@ -27,31 +24,13 @@ import {
   ITEMS,
 } from '../../../utils/config';
 
-import { IS_STOP_MESSAGE_DETECTION, STOP_MESSAGE_ID,
-  IS_END_OF_CONVERSATION, IS_CRISIS_RESPONSE_DETECTION } from '../../../utils/constants';
+import { IS_STOP_MESSAGE_DETECTION, STOP_MESSAGE_ID, QUICK_REPLY_RETRY_ID,
+  IS_END_OF_CONVERSATION, IS_CRISIS_RESPONSE_DETECTION, INTRO_CONVERSATION_ID } from '../../../utils/constants';
 
 import './style.css';
 
 
 const noModTypeOrNext = special => !any(equals(special))([IS_END_OF_CONVERSATION, IS_STOP_MESSAGE_DETECTION]);
-
-const conversationItemStyles = {
-  [TYPE_CONVERSATION]: {
-
-  },
-  [TYPE_COLLECTION]: {
-    backgroundColor: 'rgb(82, 175, 82)',
-  },
-  [TYPE_SERIES]: {
-    backgroundColor: 'rgb(82, 175, 82)',
-  },
-  [TYPE_BLOCK]: {
-
-  },
-  [TYPE_MESSAGE]: {
-
-  },
-};
 
 class ConversationItem extends Component {
   static propTypes = {
@@ -65,7 +44,7 @@ class ConversationItem extends Component {
       text: PropTypes.string,
       isEvent: PropTypes.bool,
       quick_replies: PropTypes.arrayOf(PropTypes.shape({
-        payload: PropTypes.shape({}),
+        payload: PropTypes.string,
         content_type: PropTypes.string,
         title: PropTypes.string,
       })),
@@ -140,6 +119,8 @@ class ConversationItem extends Component {
         messageType,
         quick_replies: equals(messageType, MESSAGE_TYPE_QUESTION_WITH_REPLIES) ?
           this.props.item.quick_replies : null,
+        next: equals(messageType, MESSAGE_TYPE_QUESTION_WITH_REPLIES) ?
+          null : this.props.item.next,
       });
     }
   }
@@ -194,7 +175,7 @@ class ConversationItem extends Component {
       const minutesInHour = 60;
       const hoursInDay = 24;
       return (
-        <div className="card-block">
+        <div className="card-block transition-secondary">
           <div className="card-text">
             <DelayCheckbox
               delayChecked={
@@ -283,47 +264,51 @@ class ConversationItem extends Component {
   }
 
   render() {
-    const { item: { isEvent = false }, index, connectDragSource, className,
-      item: { messageType }, special } = this.props;
+    const { item: { isEvent = false, name }, index, connectDragSource, className,
+      item: { messageType, type: itemType, id: itemId }, special, handleDeleteItem } = this.props;
     return connectDragSource(
       <div
         key="ogItem"
-        className={`card ConversationItem ${className}`}
-        style={{
-          width: '360px',
-        }}
+        className={`card ConversationItem ${className || ''}
+        ${this.props.item && this.props.item.type}
+          ${messageType === MESSAGE_TYPE_TRANSITION && MESSAGE_TYPE_TRANSITION}`}
       >
         <div
-          className={`card-header d-flex flex-column ${messageType === MESSAGE_TYPE_TRANSITION ? 'bg-warning' : ''}`}
-          style={{
-            ...conversationItemStyles[this.props.item.type],
-          }}
+          className="card-header d-flex flex-column"
         >
-          <div
-            className="d-flex flex-row justify-content-between"
-            style={{
-              flexWrap: 'wrap',
-            }}
-          >
-            <EditableText
-              text={this.props.item.name}
-              onEditWillFinish={val => this.editAttribute('name', val)}
-              disabled={!!special && index === 0}
-            />
+          <div className="d-flex flex-row justify-content-between align-items-center">
+            <div className="d-flex flex-column justify-content-start">
+              <EditableText
+                text={name}
+                onEditWillFinish={val => this.editAttribute('name', val)}
+                disabled={!!special && index === 0}
+              />
+              <CheckBox
+                checked={isEvent}
+                onChange={() => this.makeEvent()}
+                label="Track Events"
+                size="16px"
+              />
+            </div>
             { this.props.item.messageType && noModTypeOrNext(special) && (
               <MessageTypeDropdown
                 selected={this.props.item.messageType}
                 onSelection={this.handleMessageTypeSelection}
                 onDelete={this.handleDeleteMessage}
-                disabled={!!special && special !== IS_CRISIS_RESPONSE_DETECTION && index === 0}
+                disabled={!!special && [IS_CRISIS_RESPONSE_DETECTION, INTRO_CONVERSATION_ID].indexOf(special) < 0
+                  && itemId === QUICK_REPLY_RETRY_ID}
               />
             )}
+            {!this.props.item.messageType && noModTypeOrNext(special) && (
+              <Button
+                className="btn-text"
+                color="danger"
+                onClick={() => handleDeleteItem({ type: itemType, id: itemId })}
+              >
+              Delete
+              </Button>
+            )}
           </div>
-          <CheckBox
-            checked={isEvent}
-            onChange={() => this.makeEvent()}
-            label="Track Events"
-          />
         </div>
 
         {this.renderItemContent(this.props.item)}

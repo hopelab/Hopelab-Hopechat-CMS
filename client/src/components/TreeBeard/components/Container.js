@@ -1,16 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Button, UncontrolledTooltip } from 'reactstrap';
+import { INTRO_CONVERSATION_ID } from '../../../utils/constants';
 
 class Container extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      focused: false,
-    };
-  }
-
-  onSetFocus() {
-    this.setState({ focused: !this.state.focused });
+  state = {
+    loading: false,
   }
 
   handleClick({ expand, onClick }) {
@@ -22,38 +17,55 @@ class Container extends React.Component {
   }
 
   render() {
-    const { onClick, node, expanded, terminal } = this.props;
-    const { focused } = this.state;
-
+    const { onClick, node, expanded, terminal, level, selected } = this.props;
+    const { loading } = this.state;
+    const isIntro = node.id === INTRO_CONVERSATION_ID;
+    const nameText = (
+      <span className={`nav-link ${isIntro ? 'intro' : ''}`}>
+        {node.name}&nbsp;
+        {isIntro && [
+          <span href="#" id="start-tooltip" key="start-tooltip-span" >(START)</span>,
+          <UncontrolledTooltip
+            placement="top"
+            target="start-tooltip"
+            innerClassName="custom-tt"
+            key="start-tooltip"
+          >
+            All new users start here. This conversation does not loop or send notifications.
+          </UncontrolledTooltip>,
+        ]}
+        {node.isLive && [
+          <i className="fa fa-circle live-circle" id="default-tooltip" key="default-tt-icon" />,
+          <UncontrolledTooltip
+            placement="top"
+            target="default-tooltip"
+            innerClassName="custom-tt"
+            key="default-tt"
+          >
+            If a user’s conversation is deleted or broken they will join this conversation.
+          </UncontrolledTooltip>,
+        ]}
+      </span>
+    );
     return (
-      <div
-        role="button"
-        tabIndex={0}
-        className={`PoolContainer ${focused ? 'focused' : ''}`}
-        style={{
-          color: node.active ? '#fff' : '#333',
-          background: node.active ? '#428bca' : 'transparent',
-        }}
-        onMouseOver={() => { this.onSetFocus(); }}
-        onMouseOut={() => { this.onSetFocus(); }}
-        onFocus={() => { this.onSetFocus(); }}
-        onBlur={() => { this.onSetFocus(); }}
-        onClick={() => {
-          this.handleClick({ expand: false, onClick });
-        }}
+      <Button
+        outline={!selected}
+        color={`${selected ? 'default' : 'primary'}`}
+        className="d-flex align-items-center justify-content-start nav-item"
+        onClick={() => this.handleClick({ expand: false, onClick })}
       >
+        <span style={{ paddingLeft: `${level * 10}px` }} />
+
         {!terminal &&
         <i
-          className={`fa fa-chevron-${expanded ? 'down' : 'right'}`}
+          className={`fa fa-caret-${expanded ? 'down' : 'right'}`}
           onClick={() => this.expand()}
           role="button"
           tabIndex={0}
         />}
-        <span>
-          {node.name}&nbsp;
-        </span>
-        {node.isLive ? <i className="fa fa-circle live-circle" /> : null}
-      </div>
+        {nameText}
+        {loading && <i className="fa fa-spinner fa-pulse" />}
+      </Button>
     );
   }
 }
@@ -61,9 +73,11 @@ class Container extends React.Component {
 Container.propTypes = {
   onClick: PropTypes.func,
   node: PropTypes.object,
+  level: PropTypes.number.isRequired,
   onExpand: PropTypes.func.isRequired,
   expanded: PropTypes.bool.isRequired,
   terminal: PropTypes.bool.isRequired,
+  selected: PropTypes.bool,
 };
 
 export default Container;

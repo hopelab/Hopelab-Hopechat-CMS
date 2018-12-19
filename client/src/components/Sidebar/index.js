@@ -6,14 +6,13 @@ import { DASHBOARD_COMPONENTS } from '../../utils/constants';
 
 import { Treebeard, decorators, Container } from '../TreeBeard';
 
-import treeTheme from '../../utils/treeTheme';
-
 const propTypes = {
   addConversation: PropTypes.func.isRequired,
   treeData: PropTypes.object.isRequired,
   handleTreeToggle: PropTypes.func.isRequired,
   toggleView: PropTypes.func.isRequired,
   readOnly: PropTypes.bool.isRequired,
+  selectedItem: PropTypes.string,
 };
 
 decorators.Container = Container;
@@ -33,7 +32,7 @@ class Sidebar extends React.Component {
 
   render() {
     const { expandAll } = this.state;
-    const { readOnly, addConversation, toggleView, treeData, handleTreeToggle } = this.props;
+    const { readOnly, addConversation, toggleView, treeData, handleTreeToggle, selectedItem } = this.props;
     const buttonArray = [
       {
         name: DASHBOARD_COMPONENTS.studyIds,
@@ -59,61 +58,58 @@ class Sidebar extends React.Component {
         name: DASHBOARD_COMPONENTS.eoc,
         title: 'End Of Conversation',
       },
-    ].map(e => (
+    ].map(({ name, title }) => (
       <Button
-        outline
-        color="secondary"
+        color="primary"
         size="lg"
         block
-        onClick={() => toggleView(e.name)}
-        key={e.name}
+        onClick={() => toggleView(name)}
+        key={name}
+        className={`text-left ${selectedItem === name ? 'selected' : ''}`}
       >
-        {e.title}
+        {title}
       </Button>
     ));
     return (
-      <aside className="Sidebar col-md-4 pl-3 pt-1">
-        <div className="card" style={{ borderColor: 'white' }}>
+      <aside className="Sidebar col-md-3">
+        <div className="darkblue-bg sidebar-guts">
           <BootContainer fluid >
-            <h4>Components</h4>
-            <div className="blck-box">
+            <div className="top-bar-height justify-content-end flex-column d-flex Components">
+              <h4>Components</h4>
+            </div>
+            <div className="wt-bdr-rt mt-3">
               {buttonArray}
             </div>
-
           </BootContainer>
-          <div className="card-header d-flex flex-row justify-content-between">
-            <h4>Conversations</h4>
-
-            <Button
-              disabled={readOnly}
-              color="primary"
-              className="ml-1"
-              onClick={addConversation}
-            >
-              New
-            </Button>
-            <Button
-              color="secondary"
-              className="ml-1"
-              onClick={() => this.expandAll()}
-            >
-              <i
-                className={`fa fa-chevron-${expandAll ? 'down' : 'right'}`}
-                onClick={() => this.expand()}
-                role="button"
-                tabIndex={0}
+          <div className="Conversations wt-bdr-rt">
+            <div className="d-flex flex-column header">
+              <h4 className="text-left">Conversations</h4>
+              <div className="d-flex flex-row justify-content-start">
+                <Button
+                  className="btn-text"
+                  disabled={readOnly}
+                  color="danger"
+                  onClick={addConversation}
+                >
+                  New
+                </Button>
+                <Button
+                  className="btn-text"
+                  color="danger"
+                  onClick={() => this.expandAll()}
+                >
+                  {expandAll ? 'Collapse' : 'Expand'}
+                </Button>
+              </div>
+            </div>
+            <div className="Inner">
+              <Treebeard
+                data={treeData}
+                onToggle={handleTreeToggle}
+                expandAll={expandAll}
+                selectedItem={selectedItem}
               />
-              {expandAll ? 'Collapse All' : 'Expand All'}
-            </Button>
-          </div>
-          <div className="Inner">
-            <Treebeard
-              style={treeTheme}
-              data={treeData}
-              onToggle={handleTreeToggle}
-              decorators={decorators}
-              expandAll={expandAll}
-            />
+            </div>
           </div>
         </div>
       </aside>

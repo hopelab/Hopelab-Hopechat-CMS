@@ -41,7 +41,7 @@ describe('database module functions', () => {
     });
     it('getCollectionById should not return if the id does not exist', done => {
       testModule.getCollectionById('foo').then(res => {
-        expect(res).toBeUndefined();
+        expect(res).toEqual({id: null});
         done();
       });
     });
@@ -83,7 +83,7 @@ describe('database module functions', () => {
     });
     it('getMessagesById should not return if it doesnt exist', done => {
       testModule.getMessageById("foo").then(res => {
-        expect(res).toBeUndefined();
+        expect(res).toEqual({id: null});
         done();
       });
     });

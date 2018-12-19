@@ -113,7 +113,7 @@ module.exports = store => {
             `error: getMessageById - getJSONItemFromCache(collection:${id}})`,
             e
           );
-          resolve();
+          resolve({ id: null });
         });
     })
   );
@@ -223,7 +223,7 @@ module.exports = store => {
             `error: getMessageById - getJSONItemFromCache(message:${id}})`,
             e
           );
-          resolve();
+          resolve({id: null});
         });
     })
   );

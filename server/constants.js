@@ -34,7 +34,7 @@ const DEFAULT_NAME = 'default';
 const ONE_DAY_IN_MILLISECONDS = 1000 * 60 * 60 * 24;
 const ONE_WEEK_IN_MILLISECONDS = 1000 * 60 * 60 * 24 * 7 * 4;
 
-const SUPPORTED_FILE_TYPES = ['image/jpeg', 'image/png', 'video/mp4', 'video/x-msvideo'];
+const SUPPORTED_FILE_TYPES = ['image/jpeg', 'image/png', 'video/mp4', 'video/x-msvideo', 'image/gif'];
 
 module.exports = {
   REST_PORT,

@@ -1,11 +1,18 @@
 .Dashboard {
-    height: 100vh;
-    padding: 0;
+  height: 100vh;
+  padding: 0;
+}
+
+.Dashboard .Inner .card-header {
+  background-color: var(--dark-blue);
 }
 
 .Dashboard .Inner {
-    border: 1px solid #333;
-    border-radius: 10px;
+  border: none;
+  margin-left: 7px;
+  border-radius: 8px;
+  min-height: 100vh;
+  min-width: 75vw;
 }
 
 .FormContainer {
@@ -23,7 +30,51 @@
   cursor: pointer;
 }
 
-.Dashboard .card-header span {
-  min-width: 100px;
-  margin-right: 1rem;
+.Dashboard .card-header .d-flex *{
+  white-space: nowrap;
+}
+
+.Dashboard .card-header.top-bar-height {
+}
+
+.Dashboard .top-bar-height .header-btn {
+  font-size: 24px;
+  font-family: AvenirNext-Medium;
+  min-width: 340px;
+}
+
+.Dashboard .card {
+  border: none;
+  height: 100%;
+}
+
+
+.Dashboard .card-header.bg-primary-override .btn {
+  text-transform: uppercase;
+  font-family: AvenirNext-Medium;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.25;
+  margin-left: 26px;
+  padding: 16px;
+}
+
+.Dashboard .card-header.bg-primary-override .btn.dropdown-toggle {
+  margin-left: 0;
+}
+
+.Dashboard #start-dropdown {
+  background-color: #fff;
+  text-align: center;
+  border-radius: 4px;
+}
+
+.tooltip.bs-tooltip-auto[x-placement^=right] .arrow::before, .tooltip.bs-tooltip-right .arrow::before {
+  border-right-color: var(--collection) !important;
+}
+
+.Dashboard .DashboardHeader label {
+  font-size: 20px;
+  font-family: AvenirNext-Medium;
+  margin: 0 9px;
 }

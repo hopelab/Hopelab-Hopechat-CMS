@@ -1,14 +1,18 @@
 .App {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  overflow: scroll;
 }
 
 .App .floating-loader {
   position: fixed;
   top: 0;
   right: 0;
-  z-index: 3;
+  z-index: 4;
+  color: white;
+  mix-blend-mode: difference;
+  background-color: rgba(0,0,0,.3);
 }
 
 .App button.disabled {
@@ -17,4 +21,40 @@
 
 .App .dropdown div.disabled {
   cursor: not-allowed;
+}
+
+/* works for AssetLibrary */
+.App .work-space {
+  padding: 22px 26px;
+  border-radius: 8px;
+  margin-left: 7px;
+
+}
+
+.App .col-8 .container-fluid {
+  padding-top: 35px;
+  border-top: 1px;
+  background-color: var(--light-blue);
+  margin-left: -3px;
+  padding-bottom: 100px;
+}
+
+.App .top-bar-height {
+  height: var(--top-bar-height);
+}
+
+.App .read-only {
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.App .hidden {
+  display: none;
+}
+
+.App .btn {
+  border-radius: 4px;
+}
+.App {
+  background-color: var(--dark-blue);
 }

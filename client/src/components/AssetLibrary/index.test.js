@@ -12,7 +12,8 @@ describe('DashboardHeader component', () => {
     deleteMedia: jest.fn(),
     renameFile: jest.fn(),
     assets: [],
-
+    readOnly: false,
+    toggleReadOnly: jest.fn(),
   };
   let component;
   beforeEach(() => {

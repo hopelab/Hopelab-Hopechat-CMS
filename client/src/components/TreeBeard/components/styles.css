@@ -1,11 +1,43 @@
-.PoolContainer {
-  cursor: pointer;
-  border: dashed 1px #fff;
-  line-height: 19px;
+.nav-pills {
+  position: relative;
+  width: 100%;
+  padding-left: 0;
 }
 
-div.focused {
-  border: dashed 1px rgb(66, 139, 202);
+.nav-pills .nav-item {
+  cursor: pointer;
+  line-height: 19px;
+  width: 100%;
+  border-radius: 0;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  padding-top: 0;
+  padding-bottom: 0;
+  border: none;
+}
+
+.nav-pills .nav-item .intro {
+  color: var(--intro-color);
+}
+
+.tooltip.show {
+  opacity: 1;
+}
+
+.tooltip.show .tooltip-arrow{
+  color: var(--collection);
+  background-color: var(--collection);
+}
+
+.tooltip.bs-tooltip-auto[x-placement^=top] .arrow::before, .tooltip.bs-tooltip-top .arrow::before {
+  border-top-color: var(--collection) !important;
+}
+
+.custom-tt {
+  background-color: var(--collection);
+  opacity: 1;
+  font-family: HelveticaNeue;
+  font-size: 14px;
 }
 
 .live-circle {

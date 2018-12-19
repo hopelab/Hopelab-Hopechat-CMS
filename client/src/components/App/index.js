@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { pick, omit, isEmpty, isNil, equals } from 'ramda';
+import { pick, omit, isEmpty, isNil, equals, find, propEq, uniq } from 'ramda';
 
 import './style.css';
 
@@ -17,11 +17,11 @@ import * as dataUtil from '../../utils/data';
 import * as config from '../../utils/config';
 
 import { DASHBOARD_COMPONENTS, IS_QUICK_REPLY_RETRY, STOP_MESSAGE_ID, CRISIS_BLOCK_ID, END_OF_CONVO_ID,
-  IS_STOP_MESSAGE_DETECTION, QUICK_REPLY_BLOCK_ID, QUICK_REPLY_BLOCK_NAME, RESUME_MESSAGE_ID,
-  IS_CRISIS_RESPONSE_DETECTION, IS_END_OF_CONVERSATION } from '../../utils/constants';
+  IS_STOP_MESSAGE_DETECTION, QUICK_REPLY_BLOCK_ID, QUICK_REPLY_BLOCK_NAME, RESUME_MESSAGE_ID, INTRO_CONVERSATION_ID,
+  IS_CRISIS_RESPONSE_DETECTION, IS_END_OF_CONVERSATION, FULL_ITEM_EDITING_PROPS } from '../../utils/constants';
 
 const { MESSAGE_TYPE_VIDEO, TYPE_BLOCK } = config;
-const { cleanString, copyOrder } = dataUtil;
+const { cleanString, copyOrder, getCreated } = dataUtil;
 
 class App extends Component {
   constructor(props) {
@@ -31,6 +31,7 @@ class App extends Component {
     this.updateStartEntity = this.updateStartEntity.bind(this);
     this.handleCopyEntity = this.handleCopyEntity.bind(this);
     this.handleCopyItem = this.handleCopyItem.bind(this);
+    this.handleTreeToggle = this.handleTreeToggle.bind(this);
   }
 
   componentWillMount() {
@@ -65,7 +66,7 @@ class App extends Component {
         this.setState({
           loading: false,
           itemEditing:
-              pick(['id', 'type'], conversation[conversation.length - 1]),
+              pick(FULL_ITEM_EDITING_PROPS, getCreated({ list: conversation })),
           ...res,
         });
       })
@@ -190,7 +191,7 @@ class App extends Component {
       .then(res => res.json())
       .then(dataUtil.throwIfEmptyArray)
       .then(res => {
-        const addedItem = res.sort((a, b) => (a.created < b.created ? 1 : -1))[0];
+        const addedItem = getCreated({ list: res, parent: entity.parent });
         const itemEditing = this.getFullItemEditing(this.state);
         const data = omit(['loading'], this.state);
 
@@ -253,7 +254,13 @@ class App extends Component {
   }
 
   handleSaveItem(item, callback) {
+    const { itemEditing, conversation } = this.state;
     this.setState({ loading: true });
+    let affectedConversation;
+    if (item && itemEditing && item.isLive && !equals(item.isLive, itemEditing.isLive)) {
+      // meaning we need to make some item 'notLive'
+      affectedConversation = find(propEq('isLive', true))(conversation);
+    }
     const route = item.id ? config.operations.update : config.operations.create;
     dataUtil
       .post(
@@ -262,11 +269,15 @@ class App extends Component {
       )
       .then(res => res.json())
       .then(res => {
-        this.setState({ loading: false });
-        if (Array.isArray(res)) {
-          this.handleUploadNonMessage(res, item, callback);
+        if (affectedConversation) {
+          this.handleSaveItem({ ...affectedConversation, isLive: false });
         } else {
-          this.handleUploadMessage(res, item, callback);
+          this.setState({ loading: false });
+          if (Array.isArray(res)) {
+            this.handleUploadNonMessage(res, item, callback);
+          } else {
+            this.handleUploadMessage(res, item, callback);
+          }
         }
       })
       .catch(console.error);
@@ -297,9 +308,7 @@ class App extends Component {
       })
       .then(res => res.json())
       .then(copiedResults => {
-        const created = copiedResults[itemToCopy.type]
-          .filter(a => a.created)
-          .sort((a, b) => (a.created < b.created ? 1 : -1))[0];
+        const created = getCreated({ list: copiedResults[itemToCopy.type] });
         if (created && config.forms[itemToCopy.type].children.length) {
           const data = omit(['loading'], copiedResults);
 
@@ -344,29 +353,31 @@ class App extends Component {
 
   renameMedia(newName, url, type) {
     const encodedName = cleanString(newName);
-    const urlArray = url.split('/');
-    const fileName = urlArray[urlArray.length - 1];
-    const displayName = fileName.split('.')[0];
-    const newUrl = url.replace(displayName, encodedName);
-    const repl = this.state[type].map(i =>
-      (equals(i.url, url) ?
-        { ...i, url: newUrl, key: encodedName } : i));
-    const affectedMsg = this.state.message.find(m => (equals(m.url, url)));
-    this.setState({ loading: true });
-    fetch(
-      `/media/rename/${encodedName}/${fileName}`,
-      config.http.makeUploadFetchOptions({
-        method: 'GET',
-      }),
-    )
-      .then(() => {
-        this.setState({ [type]: repl });
-        if (affectedMsg) {
-          this.handleSaveItem({ ...affectedMsg, url: newUrl });
-        } else {
-          this.setState({ loading: false });
-        }
-      });
+    if (encodedName.length) {
+      const urlArray = url.split('/');
+      const fileName = urlArray[urlArray.length - 1];
+      const displayName = fileName.split('.')[0];
+      const newUrl = url.replace(displayName, encodedName);
+      const repl = this.state[type].map(i =>
+        (equals(i.url, url) ?
+          { ...i, url: newUrl, key: encodedName } : i));
+      const affectedMsg = this.state.message.find(m => (equals(m.url, url)));
+      this.setState({ loading: true });
+      fetch(
+        `/media/rename/${encodedName}/${fileName}`,
+        config.http.makeUploadFetchOptions({
+          method: 'GET',
+        }),
+      )
+        .then(() => {
+          this.setState({ [type]: repl });
+          if (affectedMsg) {
+            this.handleSaveItem({ ...affectedMsg, url: newUrl });
+          } else {
+            this.setState({ loading: false });
+          }
+        });
+    }
   }
 
   handleDeleteItem = itemToDelete => {
@@ -398,7 +409,7 @@ class App extends Component {
       .catch(console.error);
   };
 
-  handleTreeToggle = ({ node: pNode, expand }) => {
+  handleTreeToggle({ node: pNode, expand }) {
     this.toggleView();
     const node = pNode;
     if (expand) {
@@ -417,9 +428,9 @@ class App extends Component {
 
     this.setState({
       cursor: node,
-      itemEditing: node.type ? pick(['id', 'type'], node) : this.state.itemEditing,
+      itemEditing: node.type ? pick(FULL_ITEM_EDITING_PROPS, node) : this.state.itemEditing,
     });
-  };
+  }
 
   updateStartEntity(entity, oldEntity) {
     const { collection, message } = this.state;
@@ -443,18 +454,6 @@ class App extends Component {
       case DASHBOARD_COMPONENTS.assets:
         component = <AssetLibrary />;
         break;
-      case DASHBOARD_COMPONENTS.quickReply:
-        component = <Dashboard />;
-        break;
-      case DASHBOARD_COMPONENTS.crisis:
-        component = <Dashboard />;
-        break;
-      case DASHBOARD_COMPONENTS.stop:
-        component = <Dashboard />;
-        break;
-      case DASHBOARD_COMPONENTS.eoc:
-        component = <Dashboard />;
-        break;
       default:
         component = <Dashboard />;
         break;
@@ -470,7 +469,7 @@ class App extends Component {
   loadStudyIds() {
     fetch('/study/all').then(res => {
       res.json().then(studyIds => {
-        this.setState({ studyIds });
+        this.setState({ studyIds: uniq(studyIds) });
       });
     });
   }
@@ -516,7 +515,7 @@ class App extends Component {
   }
 
   getMainProps() {
-    const { studyIds, conversation, image, video, readOnly, view } = this.state;
+    const { studyIds, conversation, image, video, readOnly, view, message, collection } = this.state;
     const data = omit(['loading'], this.state);
     const itemEditing = this.getFullItemEditing(this.state);
 
@@ -529,6 +528,8 @@ class App extends Component {
       itemEditing,
       data,
     );
+
+    const special = (itemEditing && itemEditing.id === INTRO_CONVERSATION_ID) ? INTRO_CONVERSATION_ID : undefined;
 
     let mainProps = {
       setNewIndex: ({ id, newIndex }) => this.changeOrder({ id, newIndex, itemEditing }, true),
@@ -547,6 +548,8 @@ class App extends Component {
       readOnly,
       toggleReadOnly: () => this.toggleReadOnly(),
       order: itemEditing ? this.getOrdering({ id: itemEditing.id, childEntities }) : null,
+      messages: message.concat(collection),
+      special,
     };
     switch (view) {
       case DASHBOARD_COMPONENTS.studyIds:
@@ -628,7 +631,7 @@ class App extends Component {
 
 
     return (
-      <div className="App row">
+      <div className="App row darkblue-bg">
         <UploadModal
           isOpen={this.state.mediaUpload.showModal}
           onHide={() => this.setState({
@@ -648,6 +651,7 @@ class App extends Component {
           itemEditing={itemEditing}
           toggleView={newView => this.toggleView(newView)}
           readOnly={readOnly}
+          selectedItem={view || (itemEditing ? itemEditing.id : '')}
         />
         {loading &&
           <div className="floating-loader">

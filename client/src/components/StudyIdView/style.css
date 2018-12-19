@@ -1,5 +1,4 @@
 .StudyIdView {
-  height: 100%;
   padding-left: 0;
   padding-right: 0;
 }
@@ -7,4 +6,8 @@
 .StudyIdView ul {
   padding-bottom: 0;
   margin-bottom: 0;
+}
+
+.StudyIdView .container-fluid {
+  border-radius: 8px;
 }

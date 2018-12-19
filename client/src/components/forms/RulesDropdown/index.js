@@ -50,16 +50,11 @@ class RulesDropdown extends Component {
         toggle={this.toggle}
       >
         <DropdownToggle
-          tag="div"
           caret
+          color="warning"
           onClick={this.toggle}
           disabled={disabled}
-          className={`pt-1 pb-1 pl-2 pr-2 ${disabled ? 'disabled' : ''}`}
-          style={{
-            border: '1px solid  #c6c6c6',
-            backgroundColor: '#e2e2e2',
-            borderRadius: '5px',
-          }}
+          className={`${disabled ? 'disabled' : ''}`}
           data-toggle="dropdown"
           aria-expanded={this.state.dropdownOpen}
         >

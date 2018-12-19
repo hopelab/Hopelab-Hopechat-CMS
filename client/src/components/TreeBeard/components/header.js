@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import shallowEqual from 'shallowequal';
 import deepEqual from 'deep-equal';
+import Container from './Container';
 
 class NodeHeader extends React.Component {
   shouldComponentUpdate(nextProps) {
@@ -24,35 +25,33 @@ class NodeHeader extends React.Component {
   }
 
   render() {
-    const { animations, decorators, node, onClick, style, onExpand, expanded } = this.props;
-    const { active, children } = node;
+    const { animations, node, onClick, onExpand, expanded, level, selectedItem } = this.props;
+    const { children, id } = node;
     const terminal = !children || !children.length;
-    const container = [style.link, active ? style.activeLink : null];
-    const headerStyles = Object.assign({ container }, style);
     return (
-      <decorators.Container
+      <Container
         animations={animations}
-        decorators={decorators}
         node={node}
         onClick={onClick}
-        style={headerStyles}
         terminal={terminal}
         onExpand={() => onExpand()}
         expanded={expanded}
+        level={level}
+        selected={selectedItem === id}
       />
     );
   }
 }
 
 NodeHeader.propTypes = {
-  style: PropTypes.object.isRequired,
-  decorators: PropTypes.object.isRequired,
   animations: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
     .isRequired,
   node: PropTypes.object.isRequired,
   onClick: PropTypes.func,
   onExpand: PropTypes.func.isRequired,
   expanded: PropTypes.bool.isRequired,
+  level: PropTypes.number.isRequired,
+  selectedItem: PropTypes.string,
 };
 
 export default NodeHeader;

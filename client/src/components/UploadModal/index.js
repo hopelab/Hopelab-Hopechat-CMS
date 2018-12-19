@@ -46,7 +46,7 @@ class UploadModal extends Component {
       >
         <span>Drag and Drop Image Below To Upload</span>
         <Dropzone
-          accept="image/jpeg, image/png, video/mp4, video/x-msvideo"
+          accept="image/jpeg, image/png, video/mp4, video/x-msvideo, image/gif"
           onDrop={(accepted, rejected) => {
             this.setState({ loading: true }, () => {
               onUpload(accepted, rejected);

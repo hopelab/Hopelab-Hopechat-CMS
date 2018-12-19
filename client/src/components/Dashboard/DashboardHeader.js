@@ -8,10 +8,11 @@ import {
 import EditableText from '../forms/EditableText';
 import RulesDropdown from '../forms/RulesDropdown';
 import CopyButton from '../forms/CopyButton';
-import CheckBox from '../common/CheckBox';
+import Toggle from '../common/Toggle';
 
 import { entityCanBeCopied } from '../../utils/data';
 import { forms } from '../../utils/config';
+import { INTRO_CONVERSATION_ID } from '../../utils/constants';
 
 
 export class DashboardHeader extends Component {
@@ -32,6 +33,7 @@ export class DashboardHeader extends Component {
     readOnly: PropTypes.bool.isRequired,
     toggleReadOnly: PropTypes.func.isRequired,
     special: PropTypes.string,
+    children: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]),
   }
 
   hasLive(type) {
@@ -68,81 +70,101 @@ export class DashboardHeader extends Component {
       readOnly,
       toggleReadOnly,
       special,
+      children,
     } = this.props;
+    const introOrNotSpecial = special === INTRO_CONVERSATION_ID || !special;
     return (
-      <div
-        className="card-header d-flex flex-row justify-content-start align-items-center"
-        style={{ flexWrap: 'wrap' }}
-      >
-        <EditableText
-          text={itemName}
-          onEditWillFinish={onNameChanged}
-          disabled={readOnly || !!special}
-        />
-        <ReactStrapForm
-          className="d-flex"
-          style={{ flex: '1 0', whiteSpace: 'nowrap' }}
-          onSubmit={e => {
-            e.preventDefault();
-            onDelete({ id: itemId, type: itemType, name: itemName });
-          }}
+      [
+        <div
+          key="header"
+          className="card-header d-flex flex-row justify-content-start DashboardHeader
+            align-items-center top-bar-height bg-primary-override"
         >
-          {itemType === 'conversation' && !special &&
-            (<CopyButton onCopy={onCopy} disabled={readOnly} />)}
-          {entityCanBeCopied(itemType) &&
-            !special &&
-            <CopyButton
-              copyToItems={copyToItems}
-              onCopy={onCopy}
-              disabled={readOnly}
-            />
-
-          }
-          {!special &&
           <Button
-            className="mr-3"
-            color="danger"
-            disabled={readOnly}
-            type="submit"
+            color={!introOrNotSpecial ? 'transparent' : 'default'}
+            size="lg"
+            style={{ cursor: !introOrNotSpecial ? 'default' : 'text' }}
+            className="text-left header-btn"
           >
-            Delete
+            <EditableText
+              text={!introOrNotSpecial ? itemName.toUpperCase() : itemName}
+              onEditWillFinish={onNameChanged}
+              disabled={readOnly || !introOrNotSpecial}
+              alwaysEdit={introOrNotSpecial}
+            />
           </Button>
-          }
-          {this.hasStudy(itemType) && (
-            <CheckBox
-              onChange={onToggleStudy}
-              className="mr-1"
-              checked={!!(isStudy)}
-              label="Study"
-              disabled={readOnly}
-            />
-          )}
-          {this.hasLive(itemType) && (
-            <CheckBox
-              onChange={onToggleLive}
-              className="mr-1"
-              checked={!!(isLive)}
-              label="Live"
-              disabled={readOnly}
-            />
-          )}
-          {this.hasRules(itemType) && (
-            <div>
-              <RulesDropdown
-                rules={this.getRules(itemType)}
-                selected={rule}
-                onSelection={onRuleChanged}
+          <ReactStrapForm
+            className="d-flex flex-row align-items-center flex-nowrap"
+            onSubmit={e => {
+              e.preventDefault();
+              onDelete({ id: itemId, type: itemType, name: itemName });
+            }}
+          >
+            {children && children}
+            {itemType === 'conversation' && !special &&
+              (<CopyButton onCopy={onCopy} disabled={readOnly} key="copy" />)}
+            {entityCanBeCopied(itemType) &&
+              !special &&
+              <CopyButton
+                copyToItems={copyToItems}
+                onCopy={onCopy}
                 disabled={readOnly}
               />
-            </div>
-          )}
-          <CheckBox
-            checked={readOnly}
-            onChange={toggleReadOnly}
-            label="Read-Only"
-          />
-        </ReactStrapForm>
-      </div>
+
+            }
+            {!special &&
+            <Button
+              className="mr-3"
+              color="danger"
+              disabled={readOnly}
+              type="submit"
+            >
+              Delete
+            </Button>
+            }
+            {this.hasStudy(itemType) && !special && (
+              [
+                <Toggle
+                  key="study-toggle"
+                  className="mr-1"
+                  checked={!!(isStudy)}
+                  disabled={readOnly}
+                  onChange={onToggleStudy}
+                />,
+                <label key="study-label">Study</label>,
+              ]
+            )}
+            {this.hasLive(itemType) && !special && (
+              [
+                <Toggle
+                  key="default-toggle"
+                  className="mr-1"
+                  checked={!!(isLive)}
+                  disabled={readOnly}
+                  onChange={onToggleLive}
+                />,
+                <label key="default-label">Default</label>,
+              ]
+            )}
+            {this.hasRules(itemType) && (
+              <div>
+                <RulesDropdown
+                  rules={this.getRules(itemType)}
+                  selected={rule}
+                  onSelection={onRuleChanged}
+                  disabled={readOnly}
+                />
+              </div>
+            )}
+            <Toggle
+              key="readonly-toggle"
+              checked={readOnly}
+              onChange={toggleReadOnly}
+            />
+            <label key="readonly-label">Read-Only</label>
+          </ReactStrapForm>
+        </div>,
+      ]
     );
   }
 }

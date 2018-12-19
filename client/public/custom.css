@@ -1,0 +1,205 @@
+:root {
+  --primary-bg-color: #1C2A56;
+  --primary-bg-color-hover: #313F6D;
+  --default-bg-color: #e3e1e1;
+  --info-bg-color: #5BC0BE;
+  --warning-bg-color: #F18779;
+  --warning-bg-color-hover: #CB594A;
+  --danger-bg-color: #741881;
+  --danger-bg-color-hover: #45014F;
+  --secondary-bg-color: #A8C7D6;
+  --message: #0D7294;
+  --message-secondary: #84B0BF;
+  --transition: #ce7436;
+  --transition-secondary: #ca9988;
+  --block: #939263;
+  --block-secondary: #bfbfb2;
+  --collection: #0D9474;
+  --intro-color: #0D9274;
+  --bg-primary-hover: #0D7294;
+  --collection-secondary: #83A99D;
+  --series: #795683;
+  --series-secondary: #ADA1B0;
+  --dark-blue: var(--primary-bg-color);
+  --light-blue: #A8C7D6;
+  --card-grey: var(--default-bg-color);
+  --card-header-text: #373a3c;
+  --next-message: #9b9b9b;
+  --top-bar-height: 130px;
+  --quick-reply-border: #e5e5e5;
+  --table-text: #2a2c2e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  height: 0;
+}
+
+::-webkit-scrollbar {
+  width: 0px;  /* remove scrollbar space */
+  background: transparent;  /* optional: just make scrollbar invisible */
+}
+
+#root {
+  color: #fff;
+  height: 100%;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+}
+
+.btn-primary, .bg-primary {
+  background-color: var(--primary-bg-color);
+}
+
+.bg-primary-override {
+  background-color: var(--primary-bg-color);
+  padding: 0;
+}
+
+.bg-default-override {
+  background-color: var(--default-bg-color);
+}
+
+.btn-default, .bg-default {
+  background-color: var(--default-bg-color);
+}
+
+.btn-info, .bg-info {
+  background-color: var(--info-bg-color);
+}
+
+.bg-info-override {
+  background-color: var(--info-bg-color);
+}
+
+.btn-warning:hover, .bg-warning:hover {
+  background-color: var(--warning-bg-color-hover);
+}
+
+.btn-primary:hover, .bg-primary:hover, btn-primary:active {
+  background-color: var(--bg-primary-hover) !important;
+}
+
+.btn-warning, .bg-warning {
+  background-color: var(--warning-bg-color);
+  border: var(--warning-bg-color);
+}
+
+.bg-warning-override {
+  background-color: var(--warning-bg-color);
+  border: var(--warning-bg-color);
+}
+
+.btn-danger, .bg-danger {
+  background-color: var(--danger-bg-color);
+  border-color: #3B3940;
+}
+
+.bg-danger-override {
+  background-color: var(--danger-bg-color);
+}
+
+.btn-danger:hover {
+  background-color: var(--danger-bg-color-hover);
+  color: white;
+  border: var(--danger-bg-color) 1px solid;
+}
+
+.bg-secondary-override {
+  background-color: var(--secondary-bg-color);
+}
+
+.btn-secondary, .bg-secondary {
+  background-color: var(--secondary-bg-color);
+}
+
+.btn-outline-secondary {
+  background-color: white;
+  color: var(--secondary-bg-color);
+  border: none;
+}
+
+.btn-outline-primary {
+  background-color: white;
+  color: var(--primary-bg-color);
+  border: none;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary-bg-color-hover);
+  color: white;
+  border: none;
+}
+
+.btn-transparent {
+  background: transparent;
+  color: white;
+}
+
+.transition {
+  background-color: var(--transition);
+}
+
+.transition-secondary {
+  background-color: var(--transition-secondary);
+}
+
+.message {
+  background-color: var(--message);
+}
+
+.block {
+  background-color: var(--block);
+}
+
+.collection {
+  background-color: var(--collection);
+}
+
+.series {
+  background-color: var(--series);
+}
+
+.bg-secondary-series {
+  background-color: var(--series-secondary);
+}
+
+.bg-path {
+  background-color: var(--next-message);
+}
+
+.darkblue-bg {
+  background-color: var(--dark-blue);
+  border: none;
+}
+
+.darkblue {
+  color: var(--dark-blue);
+  border-color: var(--dark-blue);
+}
+
+.lightblue {
+  color: var(--light-blue);
+}
+
+h4 {
+  font-family: AvenirNext-Medium;
+  text-transform: uppercase;
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 200;
+}
+
+.btn-text {
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.31;
+  letter-spacing: normal;
+  color: #ffffff;
+  text-transform: uppercase;
+  border-radius: 4px;
+  min-width: 102px;
+}

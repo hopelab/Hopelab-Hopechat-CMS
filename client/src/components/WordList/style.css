@@ -1,3 +1,8 @@
+.WordListView{
+  margin-top: 30px;
+  padding-left: 26px;
+}
+
 .WordListView ul {
   border: 1px solid black;
   margin-bottom: 0;
@@ -8,7 +13,35 @@
   cursor: pointer;
 }
 
+.WordListView p {
+  font-size: 18px;
+  color: var(--primary-bg-color);
+}
+
+.WordListView h4 {
+  font-size: 18px;
+  text-transform: uppercase;
+  color: white;
+  font-weight: 500;
+}
+
+.WordListView .table.table-striped tr td{
+  border-top: none;
+}
+
+.WordListView .table.table-striped tr {
+  padding: 16px 22px;
+  cursor: text;
+}
+
+.WordListView .table.table-striped {
+  background-color: white;
+  color: var(--table-text);
+}
+
 .WordListView button.btn {
-  width: 100%;
-  background-color: rgba(0, 0, 0,.03);
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: 600;
+  padding: 10px;
 }

@@ -5,7 +5,7 @@ import Form from '../forms/Form';
 import WordList from '../WordList';
 import DashboardHeader from './DashboardHeader';
 
-import { IS_CRISIS_RESPONSE_DETECTION, IS_STOP_MESSAGE_DETECTION } from '../../utils/constants';
+import { IS_CRISIS_RESPONSE_DETECTION, IS_STOP_MESSAGE_DETECTION, INTRO_CONVERSATION_ID } from '../../utils/constants';
 import './style.css';
 
 const propTypes = {
@@ -78,11 +78,11 @@ class Dashboard extends Component {
 
   render() {
     const { props } = this;
-    const { setNewIndex, order, special } = props;
+    const { setNewIndex, order, special, messages } = props;
     return (
-      <div className="Dashboard mt-1">
+      <div className="Dashboard mt-1 offset-3">
         {props.itemEditing !== null && (
-          <div className="Inner card" style={{ borderColor: 'white' }}>
+          [
             <DashboardHeader
               itemName={props.itemEditing.name}
               itemType={props.itemEditing.type}
@@ -101,28 +101,35 @@ class Dashboard extends Component {
               readOnly={props.readOnly}
               toggleReadOnly={props.toggleReadOnly}
               special={special}
-            />
-            <Form
-              setNewIndex={args => setNewIndex(args)}
-              item={props.itemEditing}
-              config={props.formConfig[props.itemEditing.type]}
-              handleSaveItem={props.handleSaveItem}
-              handleDeleteItem={props.handleDeleteItem}
-              handleChildEntityAddition={this.handleChildEntityAddition}
-              childEntities={props.childEntities}
-              images={props.images}
-              conversations={props.conversations}
-              videos={props.videos}
-              updateStartEntity={props.updateStartEntity}
-              readOnly={props.readOnly}
-              order={order}
-              special={special}
-            />
-            {R.any(R.equals(special), [IS_CRISIS_RESPONSE_DETECTION, IS_STOP_MESSAGE_DETECTION])
-              && <WordList special={special} />}
-          </div>
+              key="header"
+            />,
+            <div
+              className={`Inner
+                ${props.readOnly ? 'read-only' : ''}
+                ${(special && special !== INTRO_CONVERSATION_ID) ? 'bg-secondary-override' : 'bg-default-override'}`}
+              key="form"
+            >
+              <Form
+                setNewIndex={args => setNewIndex(args)}
+                item={props.itemEditing}
+                config={props.formConfig[props.itemEditing.type]}
+                handleSaveItem={props.handleSaveItem}
+                handleDeleteItem={props.handleDeleteItem}
+                handleChildEntityAddition={this.handleChildEntityAddition}
+                childEntities={props.childEntities}
+                images={props.images}
+                conversations={props.conversations}
+                videos={props.videos}
+                updateStartEntity={props.updateStartEntity}
+                order={order}
+                special={special}
+                messages={messages}
+              />
+              {R.any(R.equals(special), [IS_CRISIS_RESPONSE_DETECTION, IS_STOP_MESSAGE_DETECTION])
+                && <WordList special={special} key="wordlist" />}
+            </div>,
+          ]
         )}
-        <div style={{ height: '85vh' }} />
       </div>
     );
   }

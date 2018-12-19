@@ -7,6 +7,7 @@ import {
   DropdownMenu,
   DropdownItem,
   DropdownToggle,
+  UncontrolledTooltip,
 } from 'reactstrap';
 
 import DnDPlaceHolder from '../../common/DND/DnDPlaceHolder';
@@ -21,6 +22,7 @@ const propTypes = {
   onSelectStart: PropTypes.func.isRequired,
   connectDropTarget: PropTypes.func.isRequired,
   isOver: PropTypes.bool.isRequired,
+  isIntro: PropTypes.bool,
 };
 
 const getNextMessageOptionsForMessage = (childEntities, onSelectStart) => {
@@ -51,7 +53,7 @@ class FirstItemSelect extends Component {
   }
 
   render() {
-    const { childEntities, onSelectStart } = this.props;
+    const { childEntities, onSelectStart, isIntro } = this.props;
     let foundItem = childEntities.find(item => item.start);
     if (foundItem) {
       foundItem = `Start: ${foundItem.name}`;
@@ -65,12 +67,14 @@ class FirstItemSelect extends Component {
             style={{ cursor: 'pointer' }}
             isOpen={this.state.dropdownOpen}
             toggle={this.toggle}
+            id="start-dropdown"
           >
             <DropdownToggle
               tag="div"
               onClick={this.toggle}
               data-toggle="dropdown"
               aria-expanded={this.state.dropdownOpen}
+              caret
             >
               {foundItem}
             </DropdownToggle>
@@ -79,6 +83,15 @@ class FirstItemSelect extends Component {
             </DropdownMenu>
           </Dropdown>
         </div>
+        {!isIntro &&
+          <UncontrolledTooltip
+            placement="right"
+            target="start-dropdown"
+            innerClassName="custom-tt"
+            delay={{ hide: 50 }}
+          >
+          This indicates the first message of the conversation. This message serves as the daily notification.
+          </UncontrolledTooltip>}
       </div>
     );
     const { connectDropTarget, isOver } = this.props;

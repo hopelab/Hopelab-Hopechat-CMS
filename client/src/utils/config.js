@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-
+import { DEVELOPMENT_ENV } from './constants';
 /**
  * CMS Entities
 */
@@ -139,7 +139,7 @@ const QUICK_REPLY_MAX_LENGTH = 20;
 const messageTypes = [
   { id: MESSAGE_TYPE_TEXT, display: 'Text' },
   { id: MESSAGE_TYPE_QUESTION, display: 'Question' },
-  { id: MESSAGE_TYPE_QUESTION_WITH_REPLIES, display: 'Question+Replies' },
+  { id: MESSAGE_TYPE_QUESTION_WITH_REPLIES, display: 'Question + Replies' },
   { id: MESSAGE_TYPE_IMAGE, display: 'Image' },
   { id: MESSAGE_TYPE_VIDEO, display: 'Video' },
   { id: MESSAGE_TYPE_TRANSITION, display: 'Transition' },
@@ -148,6 +148,8 @@ const messageTypes = [
 /**
  * Initial State for pieces of UI state
 */
+const { NODE_ENV = 'production' } = process.env;
+
 const initialState = {
   App: {
     initialLoad: true,
@@ -167,7 +169,7 @@ const initialState = {
     imageUploadStatus: '',
     showStudyIdView: false,
     loading: false,
-    readOnly: false,
+    readOnly: NODE_ENV !== DEVELOPMENT_ENV,
   },
 
   conversation: {
