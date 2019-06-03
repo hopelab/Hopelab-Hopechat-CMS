@@ -308,7 +308,7 @@ class App extends Component {
       })
       .then(res => res.json())
       .then(copiedResults => {
-        const created = getCreated({ list: copiedResults[itemToCopy.type] });
+        const created = getCreated({ list: copiedResults[itemToCopy.type], parent: itemToCopy.parent });
         if (created && config.forms[itemToCopy.type].children.length) {
           const data = omit(['loading'], copiedResults);
 
