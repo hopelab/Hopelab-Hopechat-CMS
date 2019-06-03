@@ -32,7 +32,8 @@ describe('main app component', () => {
     await expect(app.state().video[0]).toBeUndefined();
     await app.instance().addImage([{}]);
     await app.update();
-    await expect(app.state().imageUploadStatus).toBeTruthy();
+    await expect(app.state().imageUploadStatus).toBeDefined();
+    await app.update();
     await expect(app.state().video[0]).not.toBeUndefined();
   });
 
