@@ -1,0 +1,24 @@
+# Create ~/.profile or .env file and set the following env variables
+# Don't forget to load this values befores starting the service witm pm2: pm2 reload cms --update-env
+
+# Address to the redis db
+export REDIS_HOST=
+
+# Port to connect to the redis db
+export REDIS_PORT=6379
+
+# Enviroment: dev | staging | prod
+export NODE_ENV=staging
+
+# Name of the bucket where the assets are stored
+export AWS_BUCKET=
+
+# Default Access list to the assets bucket 
+export AWS_ACL=public-read
+
+# Default Region for AWS services
+export AWS_REGION="us-west-2"
+
+# AWS Access key id and secret, required for accessing S2
+export AWS_ACCESS_KEY_ID=
+export AWS_SECRET_ACCESS_KEY=
