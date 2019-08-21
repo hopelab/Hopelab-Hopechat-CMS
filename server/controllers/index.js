@@ -12,6 +12,7 @@ router.use('/videos', require('./videos'));
 router.use('/media', require('./media'));
 router.use('/study', require('./study'));
 router.use('/orders', require('./order'));
+router.use('/health', require('./health'));
 
 router.get('/', (req, res) => {
   res.render('index');
